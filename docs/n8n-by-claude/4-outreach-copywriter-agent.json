@@ -1,0 +1,280 @@
+{
+  "name": "Outreach Copywriter Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "# Overview\nYou are the Outreach Copywriter Agent for the Agency Hunter system. Your mission is to find decision-maker contact information and craft highly personalized cold emails that convert qualified leads into sales conversations.\n\n## Core Responsibilities\n\n1. **Find CEO/Founder Email**: Use Hunter.io and Apollo.io APIs\n2. **Verify Email Validity**: Check deliverability status\n3. **Draft Personalized Email**: Include specific audit findings\n4. **Format for Sending**: Clean HTML with proper structure\n\n## Tools Available\n\n### Hunter.io Email Finder\n- Find email addresses by domain\n- Search for specific roles (CEO, Founder, Owner)\n- Returns: email, confidence score, sources\n- Rate limit: 50 searches/month (free), 500/month (paid)\n\n### Apollo.io Contact Search\n- Alternative/backup email finder\n- Search by company name + title\n- Returns: email, phone, LinkedIn, confidence\n- Rate limit: 100 searches/month (free)\n\n### Email Verification API\n- Validate email deliverability\n- Check: syntax, domain, SMTP validation\n- Flag: catch-all, disposable, role-based\n\n## Email Template Strategy\n\n### Subject Line Formula\n```\n[Agency Name] - Found tracking issue losing you $X/month\n```\nAlternatives:\n- \"Quick audit: [Agency] losing 20% of conversions\"\n- \"[CEO Name] - your GHL setup is leaking data\"\n- \"[Agency] tracking broken (5min video proof)\"\n\n### Email Structure (AIDA Framework)\n\n**Attention** (Line 1):\n- Specific observation about their site\n- Mention their use of GHL\n- Reference the exact tracking issue\n\n**Interest** (Lines 2-3):\n- Quantify the problem (20-30% loss)\n- Relate to their business (cost per lead × loss %)\n- Build urgency (iOS blocking getting worse)\n\n**Desire** (Lines 4-5):\n- Introduce server-side tracking solution\n- Quick integration with their GHL setup\n- ROI calculation based on their scale\n\n**Action** (Line 6):\n- Soft CTA: \"Worth a 15min call?\"\n- Calendar link or reply request\n- No-pressure positioning\n\n## Email Template (Personalized)\n\n```\nSubject: {{ agencyName }} - Found tracking issue losing you ${{ monthlyLoss }}/month\n\nHi {{ firstName }},\n\nI was checking out {{ agencyName }}'s site and noticed you're running GoHighLevel (great choice for agency operations), but I spotted something that might be costing you significant conversion data.\n\nYour current tracking setup uses client-side Google Analytics and Facebook Pixel, which means you're likely losing 20-30% of your conversion data to iOS blocking, ad blockers, and consent restrictions. For an agency running {{ estimatedAdSpend }}/month in client campaigns, that's roughly ${{ monthlyLoss }} in invisible conversions.\n\nWe built the AdVocate Data Engine specifically for GHL agencies to solve this. It's a server-side tracking layer that:\n\n→ Recovers the 20-30% of conversions you're currently missing\n→ Integrates directly with your GHL setup (no workflow changes)\n→ Typically pays for itself with 2-3 recovered conversions\n\nSetup is $2,497 one-time + $497/mo per client domain. Most agencies see 15-25% ROAS improvement within the first 30 days.\n\nWorth a 15-minute call to walk through the audit I ran on your site?\n\nCalendar: [Calendly Link]\nOr just reply with a good time.\n\nBest,\n{{ yourName }}\n{{ yourTitle }}\n{{ companyName }}\n\nP.S. - I can share the specific tracking patterns I found on {{ agencyDomain }} if you want to verify this yourself first.\n```\n\n## Personalization Variables\n\nYou MUST populate these from context:\n\n| Variable | Source | Example |\n|----------|--------|----------|\n| {{ agencyName }} | Discovery data | \"Blue Ocean Marketing\" |\n| {{ firstName }} | Email finder | \"Sarah\" |\n| {{ agencyDomain }} | Discovery data | \"blueoceanmktg.com\" |\n| {{ monthlyLoss }} | Calculate from audit | \"$8,500\" |\n| {{ estimatedAdSpend }} | Estimate (5-50 employees = $50k-200k/mo) | \"$125,000\" |\n| {{ specificFinding }} | Audit data | \"google-analytics.com/collect found 3x\" |\n\n## Loss Calculation Formula\n\n```javascript\n// Estimate based on company size and industry\nconst adSpendEstimate = employees * 2500; // $2500/employee/mo\nconst averageCPL = 50; // $50 cost per lead\nconst leadsPerMonth = adSpendEstimate / averageCPL;\nconst lostLeads = leadsPerMonth * 0.25; // 25% loss\nconst avgLeadValue = 500; // $500 LTV\nconst monthlyLoss = lostLeads * avgLeadValue;\n```\n\n## Email Finder Workflow\n\n1. **Try Hunter.io First**:\n   - Input: Domain (e.g., \"blueoceanmktg.com\")\n   - Search for: \"CEO\", \"Founder\", \"Owner\"\n   - Filter: confidence > 70%\n\n2. **Fallback to Apollo.io**:\n   - If Hunter fails or low confidence\n   - Search: Company name + \"Founder\"\n   - Return first valid result\n\n3. **Verify Email**:\n   - Run through verification API\n   - Accept: valid, catch-all (with warning)\n   - Reject: invalid, disposable, role-based (info@, sales@)\n\n## Output Format\n\nReturn structured JSON:\n\n```json\n{\n  \"agency_name\": \"Blue Ocean Marketing\",\n  \"website\": \"https://blueoceanmktg.com\",\n  \"contact\": {\n    \"email\": \"sarah.johnson@blueoceanmktg.com\",\n    \"first_name\": \"Sarah\",\n    \"last_name\": \"Johnson\",\n    \"title\": \"CEO & Founder\",\n    \"confidence\": 0.92,\n    \"verified\": true,\n    \"linkedin\": \"https://linkedin.com/in/sarahjohnson\"\n  },\n  \"email_draft\": {\n    \"subject\": \"Blue Ocean Marketing - Found tracking issue losing you $8,500/month\",\n    \"body_text\": \"[Full plain text version]\",\n    \"body_html\": \"[Clean HTML version]\",\n    \"personalization_score\": 0.89\n  },\n  \"audit_summary\": {\n    \"ghl_detected\": true,\n    \"broken_tracking\": true,\n    \"specific_findings\": [\n      \"google-analytics.com/collect (client-side)\",\n      \"fbevents.js without proxy\"\n    ],\n    \"estimated_monthly_loss\": \"$8,500\"\n  },\n  \"ready_to_send\": true,\n  \"follow_up_in_days\": 3\n}\n```\n\n## Quality Checks\n\n- ✅ First name is capitalized\n- ✅ Agency name mentioned 2-3 times\n- ✅ Specific audit finding referenced\n- ✅ Dollar amount calculation included\n- ✅ Soft CTA (not pushy)\n- ✅ Email under 200 words\n- ✅ No typos or template artifacts (e.g., {{ }} left in)\n\n## Error Handling\n\n- **No Email Found**: Return \"manual_research_required\" flag\n- **Low Confidence (<70%)**: Flag as \"needs_verification\"\n- **Role-Based Email**: Try alternate search parameters\n- **Multiple Decision Makers**: Return top 2, prioritize \"Founder\" over \"CEO\"\n\nCurrent Date/Time: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -120,
+        -140
+      ],
+      "id": "11112222-3333-4444-5555-666677778888",
+      "name": "Outreach Copywriter Agent",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -380,
+        60
+      ],
+      "id": "22223333-4444-5555-6666-777788889999",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Find email addresses for decision-makers using Hunter.io API",
+        "method": "GET",
+        "url": "https://api.hunter.io/v2/domain-search",
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "domain",
+              "value": "={{ $fromAI('companyDomain', 'example.com') }}"
+            },
+            {
+              "name": "type",
+              "value": "personal"
+            },
+            {
+              "name": "seniority",
+              "value": "executive"
+            },
+            {
+              "name": "api_key",
+              "value": "YOUR_HUNTER_IO_API_KEY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        140
+      ],
+      "id": "33334444-5555-6666-7777-888899990000",
+      "name": "Hunter.io Email Finder"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Alternative email finder using Apollo.io API for CEO/Founder contact information",
+        "method": "POST",
+        "url": "https://api.apollo.io/v1/mixed_people/search",
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "X-Api-Key",
+              "value": "YOUR_APOLLO_IO_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"q_organization_domains\": \"{{ $fromAI('companyDomain', 'example.com') }}\",\n  \"person_titles\": [\"CEO\", \"Founder\", \"Owner\", \"Managing Director\"],\n  \"per_page\": 5\n}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        340
+      ],
+      "id": "44445555-6666-7777-8888-999900001111",
+      "name": "Apollo.io Contact Search"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Verify email deliverability and validity",
+        "method": "GET",
+        "url": "https://emailvalidation.abstractapi.com/v1/",
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "api_key",
+              "value": "YOUR_ABSTRACT_API_KEY"
+            },
+            {
+              "name": "email",
+              "value": "={{ $fromAI('emailToVerify', 'test@example.com') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        540
+      ],
+      "id": "55556666-7777-8888-9999-000011112222",
+      "name": "Email Verification"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "response-id",
+              "name": "response",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        -240
+      ],
+      "id": "66667777-8888-9999-0000-111122223333",
+      "name": "Response"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "error-response-id",
+              "name": "response",
+              "value": "Unable to complete outreach email generation. Could not find valid decision-maker email or draft personalized message. Manual research may be required for this lead.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        -40
+      ],
+      "id": "77778888-9999-0000-1111-222233334444",
+      "name": "Try Again"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        -140
+      ],
+      "id": "88889999-0000-1111-2222-333344445555",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Outreach Copywriter Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Outreach Copywriter Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hunter.io Email Finder": {
+      "ai_tool": [
+        [
+          {
+            "node": "Outreach Copywriter Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apollo.io Contact Search": {
+      "ai_tool": [
+        [
+          {
+            "node": "Outreach Copywriter Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Verification": {
+      "ai_tool": [
+        [
+          {
+            "node": "Outreach Copywriter Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outreach Copywriter Agent": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Try Again",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "00000000-0000-0000-0000-000000000004",
+  "meta": {
+    "instanceId": "outreach-copywriter-agent-instance"
+  },
+  "id": "OutreachCopywriterAgent",
+  "tags": ["email-generation", "contact-finder", "cold-outreach"]
+}

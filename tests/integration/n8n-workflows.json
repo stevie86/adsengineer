@@ -1,0 +1,162 @@
+{
+  "name": "AdVocate Test Suite - n8n Workflows",
+  "version": "1.0.0", 
+  "description": "Integration tests for n8n automation workflows and notification routing",
+  "tests": [
+    {
+      "name": "Notification Router - Multi-Channel Testing",
+      "description": "Test notification routing across Pushbullet, Apprise, and future Telegram channels",
+      "type": "integration",
+      "steps": [
+        {
+          "action": "setup-test-webhooks",
+          "description": "Configure test endpoints to receive notifications",
+          "expected": "All webhook endpoints respond correctly"
+        },
+        {
+          "action": "trigger-lead-notification",
+          "description": "Send lead event through notification router",
+          "expected": "Pushbullet notification received with correct data"
+        },
+        {
+          "action": "trigger-signup-notification",
+          "description": "Send signup event through notification router",
+          "expected": "Waitlist notification delivered successfully"
+        },
+        {
+          "action": "trigger-error-notification",
+          "description": "Send error event through notification router",
+          "expected": "Error notification routed and logged"
+        },
+        {
+          "action": "test-failover-logic",
+          "description": "Test notification failover between channels",
+          "expected": "Backup channel activated when primary fails"
+        }
+      ]
+    },
+    {
+      "name": "Hunter Army Manager - Bulk Operations",
+      "description": "Test bulk campaign management and slave worker coordination",
+      "type": "integration",
+      "steps": [
+        {
+          "action": "bulk-campaign-creation",
+          "description": "Create campaign with 100+ target agencies",
+          "expected": "Campaign created and tasks distributed to slaves"
+        },
+        {
+          "action": "slave-task-distribution",
+          "description": "Test parallel task assignment to multiple slave workers",
+          "expected": "All slaves receive assignments and acknowledge"
+        },
+        {
+          "action": "progress-tracking",
+          "description": "Monitor real-time progress across distributed tasks",
+          "expected": "Progress updates aggregated correctly in manager dashboard"
+        },
+        {
+          "action": "bulk-results-aggregation",
+          "description": "Collect and deduplicate results from multiple slaves",
+          "expected": "Final agency list contains no duplicates and is ranked"
+        },
+        {
+          "action": "error-recovery-testing",
+          "description": "Test slave failure handling and reassignment",
+          "expected": "Failed tasks reassigned and completed successfully"
+        }
+      ]
+    },
+    {
+      "name": "Auto-Registration System - Agency Onboarding",
+      "description": "Test master key authentication and automatic page detection",
+      "type": "integration",
+      "steps": [
+        {
+          "action": "master-key-authentication",
+          "description": "Test agency login with master key",
+          "expected": "Agency authenticated and sub-accounts accessible"
+        },
+        {
+          "action": "page-discovery-scanning",
+          "description": "Scan for new GHL pages in agency account",
+          "expected": "New pages detected and queued for registration"
+        },
+        {
+          "action": "automatic-page-registration",
+          "description": "Auto-register detected pages for optimization",
+          "expected": "Pages automatically configured with tracking and optimization"
+        },
+        {
+          "action": "bulk-registration-api",
+          "description": "Test bulk agency registration endpoint",
+          "expected": "Multiple agencies registered simultaneously with correct configurations"
+        }
+      ]
+    },
+    {
+      "name": "Multi-Customer Optimization - GHL Integration",
+      "description": "Test multi-tenant GHL ad spend optimization platform",
+      "type": "integration",
+      "steps": [
+        {
+          "action": "customer-onboarding-flow",
+          "description": "Test complete customer registration and GHL connection",
+          "expected": "Customer account created and GHL API connected successfully"
+        },
+        {
+          "action": "ad-spend-analysis",
+          "description": "Analyze historical ad spend and calculate optimization opportunities",
+          "expected": "Recommendations generated with clear ROI projections"
+        },
+        {
+          "action": "budget-optimization-engine",
+          "description": "Test automated budget allocation and bid adjustments",
+          "expected": "Budget changes applied to GHL campaigns with measurable improvements"
+        },
+        {
+          "action": "multi-customer-dashboard",
+          "description": "Test dashboard switching and data isolation",
+          "expected": "Customer data properly separated and accessible only by authorized users"
+        }
+      ]
+    }
+  ],
+  "setup": {
+    "n8n_environment": {
+      "test_credentials": {
+        "pushbullet": "test_pushbullet_token",
+        "telegram": "test_telegram_bot_token"
+      },
+      "test_webhooks": {
+        "manager": "https://n8n-test.example.com/webhook",
+        "slave": "https://n8n-test.example.com/webhook"
+      }
+    },
+    "external_services": {
+      "mock_ghl_api": true,
+      "mock_apprise_api": true,
+      "test_database": "multi_tenant_test"
+    }
+  },
+  "fixtures": {
+    "bulk_customers": [
+      {
+        "name": "Alpha Agency",
+        "domain": "alpha.com",
+        "ad_spend": 5000,
+        "vertical": "dental"
+      }
+    ],
+    "test_agencies": [
+      {
+        "name": "Test Agency",
+        "master_key": "test_master_key_123",
+        "pages": [
+          "https://test-agency.com/landing-1",
+          "https://test-agency.com/landing-2"
+        ]
+      }
+    ]
+  }
+}

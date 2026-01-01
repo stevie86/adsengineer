@@ -1,0 +1,270 @@
+{
+  "name": "Hunter Slave Worker",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "assignment",
+        "options": {
+          "responseMode": "onReceived",
+            "responseData": "allEntries"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "id": "assignment-webhook",
+      "name": "Receive Assignment"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "valid-assignment",
+                "leftValue": "={{ $json.type }}",
+                "rightValue": "assignment",
+                "operator": {
+                  "type": "string",
+                    "operation": "equals"
+                }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [200, 0],
+      "id": "is-assignment",
+      "name": "Valid Assignment?"
+    },
+    {
+      "parameters": {
+        "values": {
+          "assignments": [
+            {
+              "id": "acknowledge",
+                "name": "status",
+                "value": "acknowledged",
+                "type": "string"
+            },
+            {
+              "id": "campaign-id",
+                "name": "campaign_id",
+                "value": "={{ $json.campaign_id }}",
+                "type": "string"
+            },
+            {
+              "id": "task-id",
+                "name": "task_id", 
+                "value": "={{ $json.task_id }}",
+                "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [400, 0],
+      "id": "acknowledge-task",
+      "name": "Acknowledge Task"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.target.domain }}",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [600, 0],
+      "id": "scan-website",
+      "name": "Scan Website"
+    },
+    {
+      "parameters": {
+        "url": "https://builtwith.com/{{ $json.target.domain }}",
+        "method": "GET", 
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [800, 0],
+      "id": "detect-tech-stack",
+      "name": "Detect Tech Stack"
+    },
+    {
+      "parameters": {
+        "url": "https://www.linkedin.com/company/{{ $json.target.domain }}",
+        "method": "GET",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1000, 0],
+      "id": "find-contacts",
+      "name": "Find Contacts"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process and score the discovered agency\nconst website = $input.first().json;\nconst techStack = $input.first().json;\nconst contacts = $input.first().json;\n\n// Confidence scoring\nlet confidenceScore = 0.5; // base score\n\nif (techStack && techStack.technologies) {\n  confidenceScore += techStack.technologies.includes('wordpress') ? 0.2 : 0;\n  confidenceScore += techStack.technologies.includes('go-high-level') ? 0.2 : 0;\n  confidenceScore += techStack.technologies.includes('elementor') ? 0.1 : 0;\n}\n\nif (contacts && contacts.length > 0) {\n  confidenceScore += 0.2;\n}\n\nif (website && website.status === 200) {\n  confidenceScore += 0.1;\n}\n\nconst agency = {\n  name: $json.target.domain,\n  website: `https://${$json.target.domain}`,\n  tech_stack: techStack.technologies || [],\n  contacts: contacts || [],\n  confidence_score: Math.min(confidenceScore, 1.0),\n  discovered_at: new Date().toISOString()\n};\n\nreturn [{ json: agency }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1200, 0],
+      "id": "process-findings",
+      "name": "Process Findings"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.webhook }}",
+        "method": "POST",
+        "jsonParameters": true,
+        "body": {
+          "type": "status_update",
+          "campaign_id": "={{ $json.campaign_id }}",
+          "task_id": "={{ $json.task_id }}",
+          "status": "completed",
+          "data": {
+            "agency": "={{ $json.agency }}"
+          },
+          "timestamp": "={{ $now }}"
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1400, 0],
+      "id": "report-back",
+      "name": "Report Back to Manager"
+    },
+    {
+      "parameters": {
+        "values": {
+          "assignments": [
+            {
+              "id": "success",
+                "name": "message",
+                "value": "Assignment completed and reported",
+                "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1600, 0],
+      "id": "success-response",
+      "name": "Success Response"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Receive Assignment": {
+      "main": [
+        [
+          {
+            "node": "Valid Assignment?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid Assignment?": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Acknowledge Task": {
+      "main": [
+        [
+          {
+            "node": "Scan Website",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scan Website": {
+      "main": [
+        [
+          {
+            "node": "Detect Tech Stack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detect Tech Stack": {
+      "main": [
+        [
+          {
+            "node": "Find Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Contacts": {
+      "main": [
+        [
+          {
+            "node": "Process Findings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Findings": {
+      "main": [
+        [
+          {
+            "node": "Report Back to Manager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Report Back to Manager": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "00000000-0000-0000-0000-000000000002",
+  "meta": {
+    "instanceId": "hunter-army-slave"
+  },
+  "id": "HunterSlaveWorker",
+  "tags": ["slave", "hunter", "discovery"]
+}

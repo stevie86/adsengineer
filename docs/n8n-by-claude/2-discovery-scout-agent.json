@@ -1,0 +1,285 @@
+{
+  "name": "Discovery Scout Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "# Overview\nYou are the Discovery Scout Agent for the Agency Hunter system. Your mission is to find marketing agencies in specified geographic locations using search APIs.\n\n## Primary Function\nGenerate lists of marketing agencies that could be potential clients for the AdVocate Data Engine server-side tracking solution.\n\n## Tools Available\n\n### Google Maps API Search\n- Search for businesses by category and location\n- Filter by \"marketing agency\", \"digital marketing\", \"advertising agency\"\n- Extract: name, address, phone, website, rating\n- Radius-based geographic targeting\n\n### SerpAPI (Alternative Search)\n- Google search results scraping\n- Query: \"marketing agencies in [City]\"\n- Parse structured results\n- Fallback when Maps API rate-limited\n\n### BuiltWith API (Initial Tech Check)\n- Quick technology stack preview\n- Check if website exists and is active\n- Identify CMS/platform indicators\n- Pre-filter agencies with websites\n\n## Search Strategy\n\n### Target Categories\n- Marketing agencies\n- Digital marketing agencies\n- Advertising agencies\n- Performance marketing agencies\n- Growth marketing agencies\n\n### Geographic Priorities (US Tier 1/2 Cities)\n**Tier 1:**\n- New York, NY\n- Los Angeles, CA\n- Chicago, IL\n- San Francisco, CA\n- Miami, FL\n- Austin, TX\n\n**Tier 2:**\n- Denver, CO\n- Seattle, WA\n- Boston, MA\n- Atlanta, GA\n- Phoenix, AZ\n- San Diego, CA\n\n### Filtering Criteria\n- Must have a website URL\n- Must be operational (not closed)\n- Prefer 5-50 employee range indicators\n- Skip: freelancers, enterprise (500+), non-marketing businesses\n\n## Data Structure Output\n\nFor each discovered agency, return:\n```json\n{\n  \"agency_name\": \"ABC Marketing Group\",\n  \"website\": \"https://abcmarketing.com\",\n  \"address\": \"123 Main St, Austin, TX 78701\",\n  \"phone\": \"+1-512-555-0100\",\n  \"google_rating\": \"4.8\",\n  \"google_reviews_count\": 42,\n  \"category\": \"Digital Marketing Agency\",\n  \"discovery_date\": \"2025-12-30\",\n  \"discovery_method\": \"Google Maps API\"\n}\n```\n\n## Search Workflow\n\n1. **Receive Query**: Parse city/state or specific search instructions\n2. **Execute Search**: Use Google Maps API as primary method\n3. **Parse Results**: Extract all relevant fields\n4. **Filter**: Remove entries without websites\n5. **Deduplicate**: Check against already-discovered agencies\n6. **Format Output**: Return structured JSON list\n\n## API Rate Limits\n- Google Maps: 100 requests/day (free tier)\n- SerpAPI: 100 searches/month (free tier)\n- BuiltWith: 50 lookups/month (free tier)\n\n## Error Handling\n- If API rate limit hit: Switch to backup method\n- If no results: Suggest nearby cities or broader search terms\n- If invalid city name: Request clarification\n\n## Example Queries You'll Receive\n- \"Find marketing agencies in Austin, TX\"\n- \"Search for digital marketing companies in Denver with 10-50 employees\"\n- \"Get 20 advertising agencies in Miami metro area\"\n\nCurrent Date/Time: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -120,
+        -140
+      ],
+      "id": "11111111-2222-3333-4444-555555555555",
+      "name": "Discovery Scout Agent",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -380,
+        60
+      ],
+      "id": "22222222-3333-4444-5555-666666666666",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Search for businesses using Google Maps API",
+        "method": "GET",
+        "url": "https://maps.googleapis.com/maps/api/place/textsearch/json",
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "query",
+              "value": "={{ $fromAI('searchQuery', 'marketing agency') }}"
+            },
+            {
+              "name": "location",
+              "value": "={{ $fromAI('cityCoordinates', '30.2672,-97.7431') }}"
+            },
+            {
+              "name": "radius",
+              "value": "={{ $fromAI('radiusMeters', '25000') }}"
+            },
+            {
+              "name": "key",
+              "value": "YOUR_GOOGLE_MAPS_API_KEY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        140
+      ],
+      "id": "33333333-4444-5555-6666-777777777777",
+      "name": "Google Maps Search"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Search for agencies using SerpAPI Google Search scraper",
+        "method": "GET",
+        "url": "https://serpapi.com/search",
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "q",
+              "value": "={{ $fromAI('searchQuery', 'marketing agencies Austin TX') }}"
+            },
+            {
+              "name": "location",
+              "value": "={{ $fromAI('location', 'Austin, Texas, United States') }}"
+            },
+            {
+              "name": "num",
+              "value": "={{ $fromAI('resultCount', '20') }}"
+            },
+            {
+              "name": "api_key",
+              "value": "YOUR_SERPAPI_KEY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        340
+      ],
+      "id": "44444444-5555-6666-7777-888888888888",
+      "name": "SerpAPI Alternative Search"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Check if website exists and get basic tech info using BuiltWith API",
+        "method": "GET",
+        "url": "https://api.builtwith.com/v20/api.json",
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "KEY",
+              "value": "YOUR_BUILTWITH_API_KEY"
+            },
+            {
+              "name": "LOOKUP",
+              "value": "={{ $fromAI('websiteUrl', 'example.com') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        540
+      ],
+      "id": "55555555-6666-7777-8888-999999999999",
+      "name": "BuiltWith Quick Check"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "response-id",
+              "name": "response",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        -240
+      ],
+      "id": "66666666-7777-8888-9999-aaaaaaaaaaaa",
+      "name": "Response"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "error-response-id",
+              "name": "response",
+              "value": "Unable to complete agency discovery. API rate limits may have been reached or search parameters were invalid. Please try again with different search criteria.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        -40
+      ],
+      "id": "77777777-8888-9999-aaaa-bbbbbbbbbbbb",
+      "name": "Try Again"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        -140
+      ],
+      "id": "88888888-9999-aaaa-bbbb-cccccccccccc",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Discovery Scout Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Discovery Scout Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Maps Search": {
+      "ai_tool": [
+        [
+          {
+            "node": "Discovery Scout Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI Alternative Search": {
+      "ai_tool": [
+        [
+          {
+            "node": "Discovery Scout Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BuiltWith Quick Check": {
+      "ai_tool": [
+        [
+          {
+            "node": "Discovery Scout Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discovery Scout Agent": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Try Again",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "00000000-0000-0000-0000-000000000002",
+  "meta": {
+    "instanceId": "discovery-scout-agent-instance"
+  },
+  "id": "DiscoveryScoutAgent",
+  "tags": ["lead-discovery", "google-maps", "agency-finder"]
+}

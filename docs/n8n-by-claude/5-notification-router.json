@@ -1,0 +1,285 @@
+{
+  "name": "Notification Router",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "notify",
+        "options": {
+          "responseMode": "onReceived",
+          "responseData": "allEntries"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-200, 0],
+      "id": "notif-webhook-001",
+      "name": "Webhook Trigger",
+      "webhookId": "notification-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-lead",
+              "leftValue": "={{ $json.event_type }}",
+              "rightValue": "new_lead",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "id": "notif-if-lead",
+      "name": "Is Lead?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-signup",
+              "leftValue": "={{ $json.event_type }}",
+              "rightValue": "new_signup",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [0, 200],
+      "id": "notif-if-signup",
+      "name": "Is Signup?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-error",
+              "leftValue": "={{ $json.event_type }}",
+              "rightValue": "error",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [0, 400],
+      "id": "notif-if-error",
+      "name": "Is Error?"
+    },
+    {
+      "parameters": {
+        "title": "🎯 New Lead Captured",
+        "body": "=Email: {{ $json.data.email }}\nGCLID: {{ $json.data.gclid || 'None' }}\nValue: ${{ Math.round($json.data.lead_value_cents / 100) }}\nSource: {{ $json.data.utm_source || 'Direct' }}"
+      },
+      "type": "n8n-nodes-base.pushbullet",
+      "typeVersion": 1,
+      "position": [250, 0],
+      "id": "notif-push-lead",
+      "name": "Notify Lead",
+      "credentials": {
+        "pushbulletOAuth2Api": {
+          "id": "YOUR_PUSHBULLET_CREDENTIAL_ID",
+          "name": "Pushbullet account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "title": "📝 New Waitlist Signup",
+        "body": "=Email: {{ $json.data.email }}\nAgency: {{ $json.data.agency_name || 'Not provided' }}\nAd Spend: {{ $json.data.monthly_ad_spend || 'Not provided' }}"
+      },
+      "type": "n8n-nodes-base.pushbullet",
+      "typeVersion": 1,
+      "position": [250, 200],
+      "id": "notif-push-signup",
+      "name": "Notify Signup",
+      "credentials": {
+        "pushbulletOAuth2Api": {
+          "id": "YOUR_PUSHBULLET_CREDENTIAL_ID",
+          "name": "Pushbullet account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "title": "🚨 Error Alert",
+        "body": "=Error: {{ $json.data.message }}\nEndpoint: {{ $json.data.endpoint || 'Unknown' }}\nTime: {{ $json.timestamp }}"
+      },
+      "type": "n8n-nodes-base.pushbullet",
+      "typeVersion": 1,
+      "position": [250, 400],
+      "id": "notif-push-error",
+      "name": "Notify Error",
+      "credentials": {
+        "pushbulletOAuth2Api": {
+          "id": "YOUR_PUSHBULLET_CREDENTIAL_ID",
+          "name": "Pushbullet account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "assignments": [
+            {
+              "id": "response-success",
+              "name": "success",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "response-message",
+              "name": "message",
+              "value": "Notification sent",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [450, 200],
+      "id": "notif-response",
+      "name": "Success Response"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Is Lead?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Is Signup?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Is Error?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Lead?": {
+      "main": [
+        [
+          {
+            "node": "Notify Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Signup?": {
+      "main": [
+        [
+          {
+            "node": "Notify Signup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Error?": {
+      "main": [
+        [
+          {
+            "node": "Notify Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Lead": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Signup": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Error": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "00000000-0000-0000-0000-000000000005",
+  "meta": {
+    "instanceId": "notification-router-instance"
+  },
+  "id": "NotificationRouter",
+  "tags": ["notifications", "alerts", "pushbullet"]
+}

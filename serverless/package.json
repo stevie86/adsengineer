@@ -1,0 +1,37 @@
+{
+  "name": "advocate-cloud",
+  "version": "1.0.0",
+  "description": "Serverless advertising optimization platform",
+  "packageManager": "pnpm@10.27.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev --port 8090",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging",
+    "types:check": "tsc --noEmit",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "api-health-check": "node scripts/api-health-check.js",
+    "api-version-check": "node scripts/api-version-check.js",
+    "webhook-compatibility-test": "node scripts/webhook-compatibility-test.js",
+    "check-api-deprecations": "node scripts/check-api-deprecations.js",
+    "migrate-to-vps": "bash scripts/migrate-to-vps.sh",
+    "vps-health-check": "bash scripts/health-check.sh"
+  },
+  "dependencies": {
+    "@hono/swagger-ui": "^0.5.0",
+    "@hono/zod-openapi": "^0.18.0",
+    "google-ads-api": "^23.0.0",
+    "hono": "^4.0.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240512.0",
+    "@types/jest": "^29.5.0",
+    "typescript": "^5.6.0",
+    "vitest": "^1.0.0",
+    "wrangler": "^4.54.0"
+  },
+  "license": "UNLICENSED"
+}

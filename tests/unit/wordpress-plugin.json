@@ -1,0 +1,215 @@
+# AdVocate Test Suite
+
+## Overview
+
+Comprehensive test suite covering WordPress plugin, Cloudflare Worker API, n8n workflows, and notification systems.
+
+## Test Structure
+
+```
+tests/
+├── unit/                     # Unit tests
+│   ├── wordpress-plugin/     # Plugin core functionality
+│   ├── cloudflare-worker/   # API endpoints
+│   ├── notification-service/ # Notification routing
+│   └── utils/               # Helper functions
+├── integration/               # Integration tests  
+│   ├── plugin-to-api/       # End-to-end plugin->worker flow
+│   ├── n8n-workflows/      # Workflow automation tests
+│   └── multi-customer/       # Multi-tenant scenarios
+├── e2e/                      # End-to-end scenarios
+│   ├── agency-onboarding/    # Full customer journey
+│   ├── ad-optimization/    # Real ad optimization cycles
+│   └── hunter-army/         # Bulk agency discovery
+├── performance/               # Load and stress tests
+│   ├── load-testing/        # High traffic scenarios
+│   └── memory-usage/       # Resource efficiency
+└── fixtures/                  # Test data and mocks
+    ├── sample-agencies.json
+    ├── ghl-responses.json
+    └── ad-spend-data.json
+```
+
+## Testing Framework
+
+### **Unit Tests** (Jest + WordPress Test Framework)
+<tool_call>write
+<arg_key>content</arg_key>
+<arg_value>{
+  "name": "AdVocate Test Suite - WordPress Plugin",
+  "version": "1.0.0",
+  "description": "Unit tests for WordPress plugin core functionality",
+  "tests": [
+    {
+      "name": "GCLID Capture - Form Submission",
+      "description": "Test GCLID is captured from URL parameters and stored in lead session",
+      "type": "integration",
+      "steps": [
+        {
+          "action": "load-page-with-gclid",
+          "description": "Navigate to page with GCLID parameter",
+          "expected": "GCLID stored in session and form field populated"
+        },
+        {
+          "action": "submit-form-without-gclid",
+          "description": "Submit form without GCLID to test session handling",
+          "expected": "New lead session created"
+        },
+        {
+          "action": "verify-gclid-persistence",
+          "description": "GCLID persists across multiple page loads",
+          "expected": "GCLID available in hidden field"
+        }
+      ]
+    },
+    {
+      "name": "Conversion Tracking - Value Attribution",
+      "description": "Test lead value calculation and conversion events",
+      "type": "integration",
+      "steps": [
+        {
+          "action": "set-customer-value",
+          "description": "Set customer value in admin settings",
+          "expected": "Value stored in database"
+        },
+        {
+          "action": "simulate-conversion",
+          "description": "Trigger conversion event via webhook",
+          "expected": "Conversion recorded with correct value and GCLID"
+        },
+        {
+          "action": "verify-attribution",
+          "description": "Check if conversion is properly attributed to original GCLID",
+          "expected": "Conversion linked to correct lead and session"
+        }
+      ]
+    },
+    {
+      "name": "API Communication - Lead Submission",
+      "description": "Test WordPress to Cloud API communication",
+      "type": "integration",
+      "steps": [
+        {
+          "action": "create-lead-in-wordpress",
+          "description": "Create lead using WordPress function",
+          "expected": "Lead created in local database"
+        },
+        {
+          "action": "sync-to-cloud-api",
+          "description": "WordPress calls Cloud API to submit lead",
+          "expected": "Lead received by Cloud API with matching data"
+        },
+        {
+          "action": "verify-api-response",
+          "description": "Check Cloud API response and WordPress sync status",
+          "expected": "WordPress lead status updated to 'synced'"
+        }
+      ]
+    },
+    {
+      "name": "Settings Management - Configuration Persistence",
+      "description": "Test plugin settings are saved and retrieved correctly",
+      "type": "unit",
+      "steps": [
+        {
+          "action": "save-api-key",
+          "description": "Save API key in WordPress options",
+          "expected": "API key stored in database and returned in getter"
+        },
+        {
+          "action": "save-site-id",
+          "description": "Save site ID configuration",
+          "expected": "Site ID validated and stored"
+        },
+        {
+          "action": "toggle-tracking",
+          "description": "Enable/disable conversion tracking",
+          "expected": "Tracking setting updated and reflected in frontend"
+        },
+        {
+          "action": "validate-settings",
+          "description": "Test all settings validation functions",
+          "expected": "Invalid settings rejected with proper error messages"
+        }
+      ]
+    },
+    {
+      "name": "Security - Authentication & Authorization",
+      "description": "Test JWT token generation and validation",
+      "type": "security",
+      "steps": [
+        {
+          "action": "generate-jwt-token",
+          "description": "Create JWT token for site",
+          "expected": "Valid JWT token generated"
+        },
+        {
+          "action": "validate-jwt-token",
+          "description": "Validate JWT token with correct secret",
+          "expected": "Token validation succeeds"
+        },
+        {
+          "action": "invalid-token-access",
+          "description": "Attempt API access with invalid token",
+          "expected": "401 Unauthorized response"
+        },
+        {
+          "action": "expired-token-handling",
+          "description": "Test with expired JWT token",
+          "expected": "Token rejected and refresh required"
+        },
+        {
+          "action": "cross-site-request-forgery",
+          "description": "Attempt API call from different origin",
+          "expected": "Request blocked with CORS error"
+        }
+      ]
+    },
+    {
+      "name": "Performance - Database Queries",
+      "description": "Test database query efficiency and caching",
+      "type": "performance",
+      "steps": [
+        {
+          "action": "bulk-lead-insertion",
+          "description": "Insert 1000 leads and measure query time",
+          "expected": "Query completes within 2 seconds"
+        },
+        {
+          "action": "lead-search-pagination",
+          "description": "Test lead listing with pagination",
+          "expected": "Pagination works correctly without memory issues"
+        },
+        {
+          "action": "cache-hit-miss-ratio",
+          "description": "Test query caching effectiveness",
+          "expected": "Cache hit rate >80% for frequent queries"
+        }
+      ]
+    }
+  ],
+  "setup": {
+    "wordpress": {
+      "version": ">=6.0",
+      "plugins": ["woocommerce", "contact-form-7", "elementor"],
+      "test_data": {
+        "sample_gclid": "EAIaIQv3i3m8e7vOZ-1572532743",
+        "sample_customer_value": 50000,
+        "sample_conversion_data": {
+          "lead_id": "lead_123",
+          "conversion_value": 75000
+        }
+      }
+    },
+    "cloud_api": {
+      "base_url": "https://advocate-cloud.adsengineer.workers.dev",
+      "test_site_id": "test_site_001",
+      "test_jwt_secret": "test_jwt_secret_key_123456"
+    }
+  },
+  "teardown": {
+    "cleanup_database": true,
+    "cleanup_options": true,
+    "reset_wordpress_options": true
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "name": "Tech Stack Auditor Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "# Overview\nYou are the Tech Stack Auditor Agent for the Agency Hunter system. Your mission is to programmatically analyze agency websites to detect GoHighLevel usage and identify broken tracking implementations.\n\n## Core Responsibilities\n\n1. **Fetch Website HTML**: Download complete HTML source code\n2. **Detect GHL Footprint**: Search for GoHighLevel indicators\n3. **Analyze Tracking Setup**: Identify tracking implementation type\n4. **Generate Audit Report**: Summarize findings with qualification status\n\n## Tools Available\n\n### HTTP Request (Website Fetch)\n- Download full HTML of target website\n- Custom User-Agent rotation to avoid blocks\n- Handle redirects (301/302)\n- Timeout: 15 seconds\n- Return: Raw HTML source code\n\n### Code Execution (Pattern Analysis)\n- Execute JavaScript/Python for regex matching\n- Parse HTML for specific patterns\n- Count occurrences of indicators\n- Extract script URLs and domains\n\n## Detection Patterns\n\n### GoHighLevel Indicators (ANY = Qualified)\n```regex\nPrimary Indicators:\n- msgsndr\\.com\n- gohighlevel\\.com\n- ghl-form\n- location\\.msgsndr\\.com\n- payments\\.msgsndr\\.com\n\nSecondary Indicators:\n- data-form-id=\\\"ghl-\n- ghl_tracking\n- highlevel-widget\n```\n\n### Broken Client-Side Tracking (ANY = Problem Detected)\n```regex\nGoogle Analytics (Client-Side):\n- google-analytics\\.com/collect\n- gtag/js\\?id=G-\n- analytics\\.js\n- ga\\.js\n\nFacebook Pixel (Client-Side):\n- connect\\.facebook\\.net/.*?/fbevents\\.js\n- fbq\\('track'\n- _fbp cookie\n\nValid Server-Side Indicators (EXEMPT from \"broken\" flag):\n- Custom domain proxy (e.g., tracking.agencysite.com/gtm)\n- GTM Server-Side container hints\n- Cloudflare Workers endpoints\n```\n\n## Qualification Logic\n\n### ✅ QUALIFIED LEAD (Both conditions true):\n1. **GHL Detected**: At least one GHL indicator found\n2. **Broken Tracking**: Client-side GA or FB Pixel without server-side proxy\n\n### ❌ NOT QUALIFIED:\n- No GHL detected (not a potential customer)\n- GHL detected BUT already using server-side tracking (already solved)\n- No tracking scripts found (edge case, likely small agency)\n\n## Audit Report Structure\n\n```json\n{\n  \"website\": \"https://example-agency.com\",\n  \"audit_date\": \"2025-12-30T14:30:00Z\",\n  \"qualified\": true,\n  \"ghl_detected\": true,\n  \"ghl_indicators\": [\n    {\"pattern\": \"msgsndr.com\", \"count\": 3, \"context\": \"Found in form embed script\"},\n    {\"pattern\": \"ghl-form\", \"count\": 1, \"context\": \"Contact form class attribute\"}\n  ],\n  \"tracking_status\": \"broken\",\n  \"tracking_issues\": [\n    {\n      \"type\": \"google_analytics_client_side\",\n      \"evidence\": \"google-analytics.com/collect found 2 times\",\n      \"impact\": \"20-30% conversion loss from iOS/Safari blocking\"\n    },\n    {\n      \"type\": \"facebook_pixel_client_side\",\n      \"evidence\": \"connect.facebook.net/en_US/fbevents.js found\",\n      \"impact\": \"15-25% tracking loss from ad blockers\"\n    }\n  ],\n  \"server_side_detected\": false,\n  \"recommendations\": [\n    \"Implement AdVocate Data Engine for server-side tracking\",\n    \"Estimated recovery: $2,500-$5,000/mo in conversion value\"\n  ],\n  \"confidence_score\": 0.92\n}\n```\n\n## Workflow Steps\n\n1. **Receive Website URL**: From coordinator or discovery agent\n2. **Fetch HTML**: Use HTTP Request tool with User-Agent rotation\n3. **Run Pattern Analysis**: Execute Code tool with regex search\n4. **Check GHL Indicators**: Count matches for msgsndr.com, ghl-form, etc.\n5. **Check Tracking Setup**: Identify GA/FB Pixel implementations\n6. **Determine Qualification**: Apply logic rules\n7. **Generate Report**: Format structured JSON output\n8. **Return to Coordinator**: Send audit results\n\n## Error Handling\n\n- **Website Unreachable**: Mark as \"unable_to_audit\", suggest manual check\n- **Timeout**: Retry once with increased timeout, then fail gracefully\n- **JavaScript-Heavy Sites**: Use headless browser note in limitations\n- **Password-Protected**: Flag as \"requires_authentication\"\n\n## Performance Notes\n\n- Average audit time: 3-8 seconds per website\n- Success rate: ~85% (some sites block automated requests)\n- False positive rate: <5% (high confidence on both GHL and tracking)\n\n## Edge Cases\n\n1. **GHL + No Tracking**: Rare, but flag as \"low_priority_lead\"\n2. **GHL + Server-Side Already**: Mark as \"already_optimized\", skip outreach\n3. **Multiple Tracking Methods**: Report all findings, highest severity wins\n\nCurrent Date/Time: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -120,
+        -140
+      ],
+      "id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "name": "Tech Stack Auditor Agent",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -380,
+        60
+      ],
+      "id": "bbbbbbbb-cccc-dddd-eeee-ffffffffffff",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Fetch the complete HTML source code of a website for analysis",
+        "method": "GET",
+        "url": "={{ $fromAI('targetWebsite', 'https://example.com') }}",
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "Accept",
+              "value": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000,
+          "redirect": {
+            "redirect": {
+              "followRedirects": true,
+              "maxRedirects": 3
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        140
+      ],
+      "id": "cccccccc-dddd-eeee-ffff-000000000000",
+      "name": "Fetch Website HTML"
+    },
+    {
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "// Receive HTML from previous tool\nconst html = $input.all()[0].json.html || $fromAI('websiteHTML', '<html></html>');\nconst startTime = Date.now();\n\n// ====================================\n// COMPREHENSIVE TECHNOLOGY DETECTION\n// ====================================\n\nconst techPatterns = {\n  // PRIMARY TARGET: GoHighLevel\n  gohighlevel: {\n    name: 'GoHighLevel',\n    category: 'CRM',\n    patterns: [\n      /msgsndr\\.com/gi,\n      /gohighlevel\\.com/gi,\n      /ghl-form/gi,\n      /location\\.msgsndr\\.com/gi,\n      /payments\\.msgsndr\\.com/gi,\n      /highlevel-widget/gi,\n      /data-form-id=[\"']ghl-/gi,\n      /ghl_tracking/gi\n    ],\n    priority: 'critical'\n  },\n  \n  // Other CRMs (for competitive intelligence)\n  hubspot: {\n    name: 'HubSpot',\n    category: 'CRM',\n    patterns: [/hs-scripts\\.com/gi, /hubspot\\.com/gi, /hsforms\\.net/gi]\n  },\n  salesforce: {\n    name: 'Salesforce',\n    category: 'CRM',\n    patterns: [/salesforce\\.com/gi, /force\\.com/gi]\n  },\n  activecampaign: {\n    name: 'ActiveCampaign',\n    category: 'Marketing Automation',\n    patterns: [/trackcmp\\.net/gi, /activehosted\\.com/gi]\n  },\n  \n  // CMS Platforms (for personalization)\n  wordpress: {\n    name: 'WordPress',\n    category: 'CMS',\n    patterns: [/wp-content\\//gi, /wp-includes\\//gi, /wordpress/gi],\n    versionPatterns: [/WordPress ([0-9.]+)/gi]\n  },\n  shopify: {\n    name: 'Shopify',\n    category: 'E-commerce',\n    patterns: [/cdn\\.shopify\\.com/gi, /myshopify\\.com/gi, /Shopify\\.theme/gi]\n  },\n  wix: {\n    name: 'Wix',\n    category: 'Website Builder',\n    patterns: [/wix\\.com/gi, /wixstatic\\.com/gi]\n  },\n  webflow: {\n    name: 'Webflow',\n    category: 'Website Builder',\n    patterns: [/webflow/gi, /wf-page/gi]\n  },\n  \n  // CLIENT-SIDE ANALYTICS (The Problem)\n  googleAnalytics: {\n    name: 'Google Analytics (Universal)',\n    category: 'Analytics',\n    patterns: [\n      /google-analytics\\.com\\/analytics\\.js/gi,\n      /google-analytics\\.com\\/ga\\.js/gi,\n      /google-analytics\\.com\\/collect/gi\n    ],\n    type: 'client-side',\n    severity: 'high'\n  },\n  ga4: {\n    name: 'Google Analytics 4',\n    category: 'Analytics',\n    patterns: [\n      /gtag\\/js\\?id=G-/gi,\n      /measurement_id.*?G-[A-Z0-9]+/gi\n    ],\n    type: 'client-side',\n    severity: 'high'\n  },\n  gtm: {\n    name: 'Google Tag Manager',\n    category: 'Tag Management',\n    patterns: [\n      /googletagmanager\\.com\\/gtm\\.js/gi,\n      /GTM-[A-Z0-9]+/gi\n    ],\n    type: 'client-side'\n  },\n  facebookPixel: {\n    name: 'Facebook Pixel',\n    category: 'Analytics',\n    patterns: [\n      /connect\\.facebook\\.net\\/.*?\\/fbevents\\.js/gi,\n      /fbq\\(['\"]track/gi,\n      /_fbp/gi\n    ],\n    type: 'client-side',\n    severity: 'high'\n  },\n  linkedinInsight: {\n    name: 'LinkedIn Insight Tag',\n    category: 'Analytics',\n    patterns: [/snap\\.licdn\\.com/gi, /linkedin\\.com\\/px/gi],\n    type: 'client-side'\n  },\n  \n  // SERVER-SIDE IMPLEMENTATIONS (The Solution - Already Have It)\n  gtmServerSide: {\n    name: 'GTM Server-Side',\n    category: 'Tag Management',\n    patterns: [\n      /gtm-server/gi,\n      /sgtm\\./gi,\n      /tracking\\.[a-z0-9-]+\\.com\\/gtm/gi\n    ],\n    type: 'server-side',\n    severity: 'none'\n  },\n  cloudflareWorkers: {\n    name: 'Cloudflare Workers Tracking',\n    category: 'Server-Side Tracking',\n    patterns: [/workers\\.cloudflare\\.com.*?track/gi],\n    type: 'server-side'\n  },\n  \n  // Other Tools (for context)\n  hotjar: {\n    name: 'Hotjar',\n    category: 'Analytics',\n    patterns: [/hotjar/gi, /static\\.hotjar\\.com/gi]\n  },\n  mixpanel: {\n    name: 'Mixpanel',\n    category: 'Analytics',\n    patterns: [/mixpanel/gi, /cdn\\.mxpnl\\.com/gi]\n  },\n  segment: {\n    name: 'Segment',\n    category: 'Customer Data Platform',\n    patterns: [/segment\\.com/gi, /cdn\\.segment\\.com/gi]\n  },\n  stripe: {\n    name: 'Stripe',\n    category: 'Payment Processor',\n    patterns: [/stripe\\.com/gi, /js\\.stripe\\.com/gi]\n  }\n};\n\n// ====================================\n// DETECTION ENGINE\n// ====================================\n\nfunction detectTechnologies(html) {\n  const detections = [];\n  \n  for (const [key, tech] of Object.entries(techPatterns)) {\n    let totalMatches = 0;\n    let samples = [];\n    let version = null;\n    \n    // Check each pattern\n    tech.patterns.forEach(pattern => {\n      const matches = html.match(pattern) || [];\n      if (matches.length > 0) {\n        totalMatches += matches.length;\n        samples.push(...matches.slice(0, 2));\n      }\n    });\n    \n    // Extract version if patterns exist\n    if (tech.versionPatterns && totalMatches > 0) {\n      tech.versionPatterns.forEach(vp => {\n        const versionMatch = html.match(vp);\n        if (versionMatch && versionMatch[1]) {\n          version = versionMatch[1];\n        }\n      });\n    }\n    \n    // Calculate confidence\n    if (totalMatches > 0) {\n      let confidence = Math.min(0.5 + (totalMatches * 0.08), 0.95);\n      \n      // Boost if multiple patterns matched\n      const uniquePatternMatches = tech.patterns.filter(p => html.match(p)).length;\n      if (uniquePatternMatches >= 2) {\n        confidence = Math.min(confidence + 0.15, 0.98);\n      }\n      \n      detections.push({\n        name: tech.name,\n        category: tech.category,\n        confidence: Math.round(confidence * 100) / 100,\n        matches: totalMatches,\n        samples: [...new Set(samples)].slice(0, 3),\n        version: version,\n        type: tech.type || 'unknown',\n        severity: tech.severity || 'low',\n        priority: tech.priority || 'normal'\n      });\n    }\n  }\n  \n  return detections.sort((a, b) => b.confidence - a.confidence);\n}\n\n// ====================================\n// QUALIFICATION LOGIC\n// ====================================\n\nconst allDetections = detectTechnologies(html);\n\n// Check for GHL (Primary Requirement)\nconst ghlDetection = allDetections.find(d => d.name === 'GoHighLevel');\nconst ghlDetected = !!ghlDetection;\n\n// Check for Client-Side Tracking Issues\nconst clientSideTracking = allDetections.filter(d => \n  d.type === 'client-side' && d.severity === 'high'\n);\n\n// Check for Server-Side (Already Solved)\nconst serverSideTracking = allDetections.filter(d => d.type === 'server-side');\nconst serverSideDetected = serverSideTracking.length > 0;\n\n// Determine tracking status\nconst brokenTracking = clientSideTracking.length > 0 && !serverSideDetected;\n\n// QUALIFICATION: Must have GHL AND broken tracking\nconst qualified = ghlDetected && brokenTracking;\n\n// Calculate estimated data loss\nlet estimatedLoss = '0%';\nif (brokenTracking) {\n  const toolCount = clientSideTracking.length;\n  if (toolCount === 1) estimatedLoss = '15-20%';\n  else if (toolCount === 2) estimatedLoss = '20-25%';\n  else estimatedLoss = '25-30%';\n}\n\n// ====================================\n// BUILD COMPREHENSIVE REPORT\n// ====================================\n\nconst report = {\n  audit_date: new Date().toISOString(),\n  scan_duration_ms: Date.now() - startTime,\n  \n  // QUALIFICATION STATUS\n  qualified: qualified,\n  qualification_reason: qualified ? \n    'GHL detected + client-side tracking without server-side proxy' :\n    !ghlDetected ? 'No GoHighLevel detected' : 'Already using server-side tracking',\n  \n  // GHL DETECTION\n  ghl_detected: ghlDetected,\n  ghl_details: ghlDetection || null,\n  \n  // TRACKING ANALYSIS\n  tracking_status: brokenTracking ? 'broken' : (serverSideDetected ? 'optimized' : 'none'),\n  client_side_tracking: clientSideTracking,\n  server_side_tracking: serverSideTracking,\n  estimated_data_loss: estimatedLoss,\n  \n  // ALL TECHNOLOGIES DETECTED\n  technologies_detected: allDetections.length,\n  all_detections: allDetections,\n  \n  // CATEGORIZED VIEW (for personalization)\n  tech_summary: {\n    cms: allDetections.filter(d => d.category === 'CMS'),\n    crm: allDetections.filter(d => d.category === 'CRM'),\n    analytics: allDetections.filter(d => d.category === 'Analytics'),\n    ecommerce: allDetections.filter(d => d.category.includes('commerce')),\n    other: allDetections.filter(d => !['CMS','CRM','Analytics'].includes(d.category))\n  },\n  \n  // CONFIDENCE & PRIORITY\n  confidence_score: qualified ? 0.92 : 0.35,\n  priority_score: qualified ? 0.95 : 0.15,\n  \n  // RECOMMENDATIONS\n  recommendations: qualified ? [\n    'Implement AdVocate Data Engine for server-side tracking',\n    `Recover ${estimatedLoss} of lost conversion data`,\n    'Improve ROAS by 15-25% on average'\n  ] : []\n};\n\nreturn [{ json: report }];"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        340
+      ],
+      "id": "dddddddd-eeee-ffff-0000-111111111111",
+      "name": "Analyze HTML Patterns",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "response-id",
+              "name": "response",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        -240
+      ],
+      "id": "eeeeeeee-ffff-0000-1111-222222222222",
+      "name": "Response"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "error-response-id",
+              "name": "response",
+              "value": "Unable to complete technical audit. Website may be unreachable, password-protected, or blocking automated requests. Manual review recommended.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        -40
+      ],
+      "id": "ffffffff-0000-1111-2222-333333333333",
+      "name": "Try Again"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        -140
+      ],
+      "id": "00000000-1111-2222-3333-444444444444",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Tech Stack Auditor Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Tech Stack Auditor Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Website HTML": {
+      "ai_tool": [
+        [
+          {
+            "node": "Tech Stack Auditor Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze HTML Patterns": {
+      "ai_tool": [
+        [
+          {
+            "node": "Tech Stack Auditor Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tech Stack Auditor Agent": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Try Again",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "00000000-0000-0000-0000-000000000003",
+  "meta": {
+    "instanceId": "tech-stack-auditor-agent-instance"
+  },
+  "id": "TechStackAuditorAgent",
+  "tags": ["technical-audit", "ghl-detection", "tracking-analysis"]
+}

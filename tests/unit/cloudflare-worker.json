@@ -1,0 +1,192 @@
+{
+  "name": "AdVocate Test Suite - Cloudflare Worker",
+  "version": "1.0.0",
+  "description": "Unit tests for Cloudflare Worker API endpoints and core functionality",
+  "tests": [
+    {
+      "name": "Health Check - API Availability",
+      "description": "Test /health endpoint returns correct status and timing",
+      "type": "integration",
+      "steps": [
+        {
+          "action": "call-health-endpoint",
+          "description": "Make GET request to /health",
+          "expected": "Status 200 with response time < 100ms"
+        },
+        {
+          "action": "verify-response-format",
+          "description": "Check health response structure",
+          "expected": "Contains status, timestamp, and environment fields"
+        }
+      ]
+    },
+    {
+      "name": "GHL Webhook - Lead Ingestion",
+      "description": "Test GHL webhook processing for lead data ingestion",
+      "type": "integration",
+      "steps": [
+        {
+          "action": "webhook-signature-validation",
+          "description": "Test webhook signature verification using GHL secret",
+          "expected": "Valid signatures accepted, invalid rejected"
+        },
+        {
+          "action": "process-ghl-lead-data",
+          "description": "Handle various GHL lead data formats",
+          "expected": "Lead data parsed and stored correctly"
+        },
+        {
+          "action": "invalid-webhook-rejection",
+          "description": "Test malformed webhook payloads",
+          "expected": "400 Bad Request with error message"
+        }
+      ]
+    },
+    {
+      "name": "Lead Management - CRUD Operations",
+      "description": "Test lead creation, retrieval, updates, and deletion",
+      "type": "integration",
+      "steps": [
+        {
+          "action": "create-lead-via-api",
+          "description": "POST /api/v1/leads with valid lead data",
+          "expected": "Lead created with unique ID and timestamp"
+        },
+        {
+          "action": "retrieve-lead-list",
+          "description": "GET /api/v1/leads with pagination",
+          "expected": "Paginated list with filtering capabilities"
+        },
+        {
+          "action": "update-lead-status",
+          "description": "Update existing lead status and metadata",
+          "expected": "Lead updated and audit trail created"
+        },
+        {
+          "action": "delete-lead",
+          "description": "Soft delete lead with audit trail",
+          "expected": "Lead marked as deleted with timestamp"
+        }
+      ]
+    },
+    {
+      "name": "Authentication - JWT Token Management",
+      "description": "Test JWT token generation, validation, and refresh",
+      "type": "security",
+      "steps": [
+        {
+          "action": "generate-valid-token",
+          "description": "Create JWT token for valid site credentials",
+          "expected": "Token generated with correct expiration and claims"
+        },
+        {
+          "action": "reject-invalid-credentials",
+          "description": "Attempt token generation with invalid site ID/key",
+          "expected": "401 Unauthorized with proper error message"
+        },
+        {
+          "action": "token-expiry-handling",
+          "description": "Test behavior when token is expired",
+          "expected": "401 Unauthorized with refresh token suggestion"
+        }
+      ]
+    },
+    {
+      "name": "Waitlist - Landing Page Signups",
+      "description": "Test waitlist form submissions and API integration",
+      "type": "integration",
+      "steps": [
+        {
+          "action": "submit-waitlist-form",
+          "description": "POST to /api/v1/waitlist with valid data",
+          "expected": "Waitlist entry created and confirmation sent"
+        },
+        {
+          "action": "validate-email-domain",
+          "description": "Test email domain validation and duplicate prevention",
+          "expected": "Invalid domains rejected with proper messaging"
+        },
+        {
+          "action": "notify-stakeholders",
+          "description": "Test notification system for new waitlist signups",
+          "expected": "Email notifications sent to stakeholders"
+        }
+      ]
+    },
+    {
+      "name": "Error Handling - API Resilience",
+      "description": "Test error responses and rate limiting",
+      "type": "resilience",
+      "steps": [
+        {
+          "action": "rate-limit-exceeded",
+          "description": "Exceed rate limits and verify 429 response",
+          "expected": "Rate limit headers present and retry-after header set"
+        },
+        {
+          "action": "malformed-payload-handling",
+          "description": "Send invalid JSON to API endpoints",
+          "expected": "400 Bad Request with validation errors"
+        },
+        {
+          "action": "server-error-recovery",
+          "description": "Test behavior when downstream services fail",
+          "expected": "503 Service Unavailable with graceful degradation"
+        }
+      ]
+    },
+    {
+      "name": "Performance - Load Testing",
+      "description": "Test API performance under various load conditions",
+      "type": "performance",
+      "steps": [
+        {
+          "action": "concurrent-request-handling",
+          "description": "Send 100 simultaneous requests",
+          "expected": "All requests handled without timeouts or errors"
+        },
+        {
+          "action": "memory-usage-validation",
+          "description": "Monitor memory consumption during high load",
+          "expected": "Memory usage stays within Cloudflare limits"
+        },
+        {
+          "action": "response-time-consistency",
+          "description": "Verify response times remain consistent under load",
+          "expected": "95th percentile < 200ms under normal load"
+        }
+      ]
+    }
+  ],
+  "setup": {
+    "worker_environment": {
+      "wrangler_version": "latest",
+      "test_variables": {
+        "TEST_SITE_ID": "test_site_001",
+        "TEST_JWT_SECRET": "test_jwt_secret_key",
+        "TEST_GHL_WEBHOOK_SECRET": "test_ghl_webhook_secret"
+      }
+    },
+    "external_dependencies": {
+      "mock_ghl_api": true,
+      "test_database": "local_d1",
+      "ci_integration": "github_actions"
+    }
+  },
+  "fixtures": {
+    "ghl_webhook_payloads": {
+      "valid_lead": "ghl-webhook/fixtures/valid-lead.json",
+      "invalid_signature": "ghl-webhook/fixtures/invalid-signature.json",
+      "malformed_data": "ghl-webhook/fixtures/malformed-payload.json"
+    },
+    "test_leads": [
+      {
+        "id": "lead_001",
+        "email": "john@example.com",
+        "gclid": "EAIaIQv3i3m8e7vOZ-1572532743",
+        "value_cents": 15000,
+        "vertical": "dental"
+      }
+    ]
+  }
+}

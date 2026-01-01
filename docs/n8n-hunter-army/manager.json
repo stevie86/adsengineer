@@ -1,0 +1,254 @@
+{
+  "name": "Hunter Army Manager",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "campaign",
+        "options": {
+          "responseMode": "onReceived",
+          "responseData": "allEntries"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "id": "manager-webhook",
+      "name": "Campaign Start"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate unique task IDs and dispatch to slaves\nconst campaignId = $input.first().json.campaign_id || 'camp_' + Date.now();\nconst targets = $input.first().json.targets || [];\n\n// Generate tasks for each target\nconst tasks = targets.map((target, index) => ({\n  campaignId,\n  taskId: 'task_' + Date.now() + '_' + index,\n  target,\n  webhook: 'https://your-manager.example.com/status',\n  assigned: false,\n  status: 'pending'\n}));\n\nreturn [{ json: { campaignId, tasks, totalTargets: targets.length } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [200, 0],
+      "id": "generate-tasks",
+      "name": "Generate Tasks"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-tasks",
+              "leftValue": "={{ $json.tasks.length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [400, 0],
+      "id": "has-tasks",
+      "name": "Has Tasks?"
+    },
+    {
+      "parameters": {
+        "url": "https://your-slave-1.example.com/assignment",
+        "method": "POST",
+        "jsonParameters": true,
+        "body": {
+          "type": "assignment",
+          "campaign_id": "={{ $json.campaignId }}",
+          "task_id": "={{ $json.taskId }}",
+          "target": "={{ $json.target }}",
+          "webhook": "https://your-manager.example.com/status"
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [600, 0],
+      "id": "dispatch-slave-1",
+      "name": "Dispatch Slave 1"
+    },
+    {
+      "parameters": {
+        "url": "https://your-slave-2.example.com/assignment",
+        "method": "POST",
+        "jsonParameters": true,
+        "body": {
+          "type": "assignment",
+          "campaign_id": "={{ $json.campaignId }}",
+          "task_id": "={{ $json.taskId }}",
+          "target": "={{ $json.target }}",
+          "webhook": "https://your-manager.example.com/status"
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [600, 100],
+      "id": "dispatch-slave-2",
+      "name": "Dispatch Slave 2"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "status",
+        "options": {
+          "responseMode": "onReceived",
+          "responseData": "allEntries"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300],
+      "id": "status-webhook",
+      "name": "Slave Status Updates"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "all-complete",
+              "leftValue": "={{ $json.completed_tasks.length }}",
+              "rightValue": "={{ $json.total_tasks }}",
+              "operator": {
+                "type": "number",
+                "operation": "eq"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [800, 300],
+      "id": "all-tasks-complete",
+      "name": "All Complete?"
+    },
+    {
+      "parameters": {
+        "values": {
+          "assignments": [
+            {
+              "id": "final-results",
+              "name": "results",
+              "value": "={{ $json.all_agencies }}",
+              "type": "array"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1000, 200],
+      "id": "prepare-results",
+      "name": "Prepare Results"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Campaign Start": {
+      "main": [
+        [
+          {
+            "node": "Generate Tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Tasks": {
+      "main": [
+        [
+          {
+            "node": "Has Tasks?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Tasks?": {
+      "main": [
+        [
+          {
+            "node": "Dispatch Slave 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Dispatch Slave 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slave Status Updates": {
+      "main": [
+        [
+          {
+            "node": "All Complete?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dispatch Slave 1": {
+      "main": [
+        [
+          {
+            "node": "Prepare Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dispatch Slave 2": {
+      "main": [
+        [
+          {
+            "node": "Prepare Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "All Complete?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "00000000-0000-0000-0000-000000000001",
+  "meta": {
+    "instanceId": "hunter-army-manager"
+  },
+  "id": "HunterArmyManager",
+  "tags": ["manager", "coordinator", "hunter-army"]
+}

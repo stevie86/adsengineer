@@ -1,0 +1,195 @@
+export function createDb(d1: D1Database) {
+  return {
+    async insertLead(data: Record<string, any>): Promise<{ id: string }> {
+      const id = crypto.randomUUID();
+      await d1.prepare(`
+        INSERT INTO leads (id, org_id, site_id, gclid, fbclid, external_id, email, phone, landing_page,
+          utm_source, utm_medium, utm_campaign, utm_content, utm_term,
+          lead_score, base_value_cents, adjusted_value_cents, value_multiplier, status, vertical, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).bind(
+        id,
+        data.org_id,
+        data.site_id,
+        data.gclid || null,
+        data.fbclid || null,
+        data.external_id || null,
+        data.email,
+        data.phone || null,
+        data.landing_page || null,
+        data.utm?.source || null,
+        data.utm?.medium || null,
+        data.utm?.campaign || null,
+        data.utm?.content || null,
+        data.utm?.term || null,
+        data.lead_score || 0,
+        data.base_value_cents || 0,
+        data.adjusted_value_cents || 0,
+        data.value_multiplier || 1.0,
+        data.status || 'new',
+        data.vertical || null,
+        data.created_at,
+        data.updated_at || null
+      ).run();
+
+      return { id };
+    },
+
+    // Agency management methods
+    async getAgencyById(id: string): Promise<any | null> {
+      const result = await d1.prepare('SELECT * FROM agencies WHERE id = ?').bind(id).first();
+      return result || null;
+    },
+
+    async getAgencyByCustomerId(customerId: string): Promise<any | null> {
+      const result = await d1.prepare('SELECT * FROM agencies WHERE customer_id = ?').bind(customerId).first();
+      return result || null;
+    },
+
+    async insertAgency(data: Record<string, any>): Promise<{ id: string }> {
+      const id = crypto.randomUUID();
+      await d1.prepare(`
+        INSERT INTO agencies (id, name, customer_id, google_ads_config, conversion_action_id, status, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `).bind(
+        id,
+        data.name,
+        data.customer_id,
+        data.google_ads_config, // Should be encrypted JSON
+        data.conversion_action_id || null,
+        data.status || 'active',
+        data.created_at,
+        data.updated_at || null
+      ).run();
+
+      return { id };
+    },
+
+    async updateAgency(id: string, data: Record<string, any>): Promise<boolean> {
+      const fields: string[] = [];
+      const values: any[] = [];
+
+      for (const [key, value] of Object.entries(data)) {
+        if (key !== 'id') {
+          fields.push(`${key} = ?`);
+          values.push(value);
+        }
+      }
+
+      if (fields.length === 0) return false;
+
+      values.push(id);
+      const result = await d1.prepare(`UPDATE agencies SET ${fields.join(', ')} WHERE id = ?`).bind(...values).run();
+      return result.meta.changes > 0;
+    },
+
+    // Audit log methods
+    async createAuditLog(data: Record<string, any>): Promise<{ id: string }> {
+      const id = crypto.randomUUID();
+      await d1.prepare(`
+        INSERT INTO audit_logs (id, agency_id, action, result, error, details, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `).bind(
+        id,
+        data.agency_id,
+        data.action,
+        data.result,
+        data.error || null,
+        data.details || null,
+        data.created_at
+      ).run();
+
+      return { id };
+    },
+
+    async getAuditLogs(agencyId: string, options: { limit?: number; offset?: number; action?: string } = {}): Promise<any[]> {
+      const { limit = 50, offset = 0, action } = options;
+      let query = 'SELECT * FROM audit_logs WHERE agency_id = ?';
+      const params: any[] = [agencyId];
+
+      if (action) {
+        query += ' AND action = ?';
+        params.push(action);
+      }
+
+      query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+      params.push(limit, offset);
+
+      const result = await d1.prepare(query).bind(...params).all();
+      return result.results || [];
+    },
+
+    async insertTrigger(data: Record<string, any>): Promise<{ id: string }> {
+      const id = crypto.randomUUID();
+      await d1.prepare(`
+        INSERT INTO optimization_triggers (id, org_id, trigger_type, lead_count, created_at)
+        VALUES (?, ?, ?, ?, ?)
+      `).bind(id, data.org_id, data.trigger_type, data.lead_count || 0, data.created_at).run();
+      return { id };
+    },
+
+    async getLeadsByOrg(orgId: string, options: { status?: string; vertical?: string; limit?: number; offset?: number } = {}): Promise<any[]> {
+      const { status, vertical, limit = 50, offset = 0 } = options;
+      let query = 'SELECT * FROM leads WHERE org_id = ?';
+      const params: any[] = [orgId];
+
+      if (status) {
+        query += ' AND status = ?';
+        params.push(status);
+      }
+      if (vertical) {
+        query += ' AND vertical = ?';
+        params.push(vertical);
+      }
+
+      query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+      params.push(limit, offset);
+
+      const result = await d1.prepare(query).bind(...params).all();
+      return result.results || [];
+    },
+
+    async getLeadById(id: string, orgId: string): Promise<any | null> {
+      const result = await d1.prepare('SELECT * FROM leads WHERE id = ? AND org_id = ?').bind(id, orgId).first();
+      return result || null;
+    },
+
+    async updateLead(id: string, orgId: string, data: Record<string, any>): Promise<boolean> {
+      const fields: string[] = [];
+      const values: any[] = [];
+
+      for (const [key, value] of Object.entries(data)) {
+        if (key !== 'id' && key !== 'org_id') {
+          fields.push(`${key} = ?`);
+          values.push(value);
+        }
+      }
+
+      if (fields.length === 0) return false;
+
+      values.push(id, orgId);
+      const result = await d1.prepare(`UPDATE leads SET ${fields.join(', ')} WHERE id = ? AND org_id = ?`).bind(...values).run();
+      return result.meta.changes > 0;
+    },
+
+    async countLeadsByOrg(orgId: string, options: { status?: string; vertical?: string } = {}): Promise<number> {
+      const { status, vertical } = options;
+      let query = 'SELECT COUNT(*) as count FROM leads WHERE org_id = ?';
+      const params: any[] = [orgId];
+
+      if (status) {
+        query += ' AND status = ?';
+        params.push(status);
+      }
+      if (vertical) {
+        query += ' AND vertical = ?';
+        params.push(vertical);
+      }
+
+      const result = await d1.prepare(query).bind(...params).first<{ count: number }>();
+      return result?.count || 0;
+    }
+  };
+}
+
+export type Database = ReturnType<typeof createDb>;

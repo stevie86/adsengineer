@@ -1,0 +1,203 @@
+{
+  "name": "Agency Hunter Master Coordinator",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        -180
+      ],
+      "id": "trigger-001-chat",
+      "name": "Chat Trigger",
+      "webhookId": "agency-hunter-chat"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "# Overview\nYou are the AdVocate Data Engine Agency Hunter Coordinator, an intelligent lead generation system designed to identify marketing agencies using GoHighLevel (GHL) with broken tracking implementations.\n\n## Mission\nAutomate the discovery and qualification of agencies that are losing 20%+ of conversion data due to client-side tracking issues, then prepare personalized outreach.\n\n## Available Specialized Agents\n\n### discoveryScout\nUse for:\n- Finding marketing agencies in target cities\n- Google Maps API searches\n- Initial agency list compilation\n- Geographic filtering\n- Agency category validation (marketing, digital, advertising)\n\n### techStackAuditor\nUse for:\n- Visiting agency websites\n- Analyzing HTML source code\n- Detecting GHL footprint (msgsndr.com, ghl-form)\n- Checking tracking implementation\n- Identifying client-side vs server-side tracking\n- Flagging broken tracking setups\n\n### outreachCopywriter\nUse for:\n- Finding decision-maker emails (CEO/Founder)\n- Drafting personalized cold emails\n- Including specific audit findings\n- Creating compelling value propositions\n- Formatting final outreach messages\n\n## Routing Logic\n\n### Standard Pipeline Flow:\n1. **Discovery Phase**: Use discoveryScout to find agencies in target location\n2. **Qualification Phase**: Use techStackAuditor to check each agency's tech stack\n3. **Outreach Phase**: For qualified leads, use outreachCopywriter to draft email\n\n### Decision Rules:\n- Only audit agencies that appear to be in marketing/advertising\n- Only proceed to outreach if BOTH conditions are met:\n  - GHL detected (msgsndr.com OR ghl-form found)\n  - Broken tracking detected (google-analytics.com/collect OR fbevents.js without server-side proxy)\n- Skip agencies that don't meet qualification criteria\n\n## Business Context\n\n### The Problem We Solve\nMarketing agencies using GoHighLevel typically implement standard client-side tracking (Google Analytics, Facebook Pixel). This approach loses 20-30% of conversions due to:\n- iOS/Safari ITP blocking\n- Ad blockers\n- Cookie consent restrictions\n\n### The Solution: AdVocate Data Engine\n- Server-side tracking implementation\n- Recovers lost conversion data\n- Improves ROAS by 15-25%\n- Seamless GHL integration\n\n### Target Profile\n- Uses GoHighLevel CRM\n- Runs paid ads for clients\n- Currently using client-side tracking\n- 5-50 employees\n- Located in Tier 1/2 US cities\n\n### Pricing\n- Setup: $2,497 one-time\n- Monthly: $497/mo per client domain\n- Break-even: Typically 2-3 recovered conversions\n\nCurrent Date/Time: {{ $now }}\n\n## Output Format\nWhen completing a full pipeline run, structure output as:\n- Total agencies found: X\n- Qualified leads (GHL + Broken Tracking): Y\n- Emails drafted: Y\n- Next steps: [Review drafts / Send batch / Schedule follow-up]"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1200,
+        -180
+      ],
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Agency Hunter Coordinator"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        40
+      ],
+      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || $execution.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        40
+      ],
+      "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "name": "Conversation Memory"
+    },
+    {
+      "parameters": {
+        "name": "discoveryScout",
+        "description": "Finds marketing agencies in target cities using Google Maps and search APIs. Returns list of agency names, addresses, websites, and phone numbers.",
+        "workflowId": {
+          "__rl": true,
+          "value": "DISCOVERY_SCOUT_WORKFLOW_ID",
+          "mode": "list",
+          "cachedResultName": "🔍 Discovery Scout Agent"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        940,
+        40
+      ],
+      "id": "d4e5f6a7-b8c9-0123-def1-234567890123",
+      "name": "Discovery Scout Agent"
+    },
+    {
+      "parameters": {
+        "name": "techStackAuditor",
+        "description": "Audits agency websites to detect GoHighLevel usage and tracking implementation. Checks HTML source for msgsndr.com, ghl-form, google-analytics.com/collect, and fbevents.js patterns. Returns qualification status and technical findings.",
+        "workflowId": {
+          "__rl": true,
+          "value": "TECH_STACK_AUDITOR_WORKFLOW_ID",
+          "mode": "list",
+          "cachedResultName": "🔬 Tech Stack Auditor Agent"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        40
+      ],
+      "id": "e5f6a7b8-c9d0-1234-ef12-345678901234",
+      "name": "Tech Stack Auditor Agent"
+    },
+    {
+      "parameters": {
+        "name": "outreachCopywriter",
+        "description": "Finds CEO/Founder email addresses using Hunter.io and Apollo.io APIs, then drafts personalized cold emails including specific audit findings and value proposition for the AdVocate Data Engine.",
+        "workflowId": {
+          "__rl": true,
+          "value": "OUTREACH_COPYWRITER_WORKFLOW_ID",
+          "mode": "list",
+          "cachedResultName": "✍️ Outreach Copywriter Agent"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        1260,
+        40
+      ],
+      "id": "f6a7b8c9-d0e1-2345-f123-456789012345",
+      "name": "Outreach Copywriter Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Agency Hunter Coordinator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agency Hunter Coordinator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conversation Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agency Hunter Coordinator",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discovery Scout Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agency Hunter Coordinator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tech Stack Auditor Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agency Hunter Coordinator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outreach Copywriter Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agency Hunter Coordinator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "00000000-0000-0000-0000-000000000001",
+  "meta": {
+    "instanceId": "agency-hunter-master-coordinator-instance"
+  },
+  "id": "AgencyHunterMain",
+  "tags": ["lead-generation", "b2b", "automation"]
+}
