@@ -13,7 +13,13 @@
     "lint": "eslint src tests --ext .ts,.tsx",
     "lint:fix": "eslint src tests --ext .ts,.tsx --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,json}\" \"tests/**/*.{ts,tsx,json}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,json}\" \"tests/**/*.{ts,tsx,json}\"",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "format:check": "biome format --check .",
+    "check": "biome check . && biome format --check .",
+    "lint:legacy": "eslint src tests --ext .ts,.tsx",
+    "format:legacy": "prettier --check \"src/**/*.{ts,tsx,json}\" \"tests/**/*.{ts,tsx,json}\"",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "test:integration": "vitest --run --config vitest.integration.config.ts",
@@ -42,6 +48,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.3.10",
     "@cloudflare/workers-types": "^4.20260101.0",
     "@eslint/js": "^9.39.2",
     "@faker-js/faker": "^8.4.1",
