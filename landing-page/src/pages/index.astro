@@ -3,16 +3,56 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+// import HowItWorks from '../components/HowItWorks.astro';
+// import Audience from '../components/Audience.astro';
+// import Pricing from '../components/Pricing.astro';
+// import Trust from '../components/Trust.astro';
 ---
 
 <Layout>
   <Header />
-  <main class="min-h-screen bg-gray-100">
+  <main class="min-h-screen">
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900 text-white py-20">
+      <div class="container mx-auto px-6 text-center">
+        <h1 class="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          Stop Losing Google Ads Attribution
+        </h1>
+        <p class="text-xl mb-8 text-gray-300 max-w-3xl mx-auto">
+          Bridge the gap between Google Ads and GoHighLevel with server-side attribution.
+          Turn clicks into customers with intelligent conversion tracking.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="#demo" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+            Book a Demo
+          </a>
+          <a href="#how-it-works" class="border-2 border-white hover:bg-white hover:text-gray-900 px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300">
+            Learn More
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <!-- <HowItWorks /> -->
+
+    <!-- Who It's For -->
+    <!-- <Audience /> -->
+
+    <!-- Pricing -->
+    <!-- <Pricing /> -->
+
+    <!-- Trust Indicators -->
+    <!-- <Trust /> -->
+
+    <!-- CTA Section -->
     <section class="bg-gray-900 text-white py-20">
-      <div class="container mx-auto text-center">
-        <h1 class="text-4xl font-bold mb-4">Stop Losing Google Ads Attribution</h1>
-        <p class="text-xl mb-8">Bridge the gap between Google Ads and GoHighLevel with server-side attribution.</p>
-        <a href="#demo" class="bg-blue-600 px-6 py-3 rounded text-lg hover:bg-blue-700">Book a Demo</a>
+      <div class="container mx-auto px-6 text-center">
+        <h2 class="text-3xl font-bold mb-6">Ready to Fix Your Attribution?</h2>
+        <p class="text-xl mb-8 text-gray-300">Join the agencies transforming their Google Ads performance.</p>
+        <a href="#demo" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl inline-block">
+          Start Your Demo
+        </a>
       </div>
     </section>
   </main>

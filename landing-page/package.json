@@ -10,7 +10,7 @@
     "astro": "npx astro"
   },
   "dependencies": {
-    "astro": "^4.0.0",
-    "@astrojs/tailwind": "^5.0.0"
+    "@astrojs/tailwind": "^6.0.2",
+    "astro": "^5.16.6"
   }
 }
