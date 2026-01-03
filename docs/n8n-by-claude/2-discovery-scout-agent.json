@@ -22,7 +22,11 @@
     {
       "parameters": {
         "model": "gpt-4o",
-        "options": {}
+         "options": {
+           "retryOnFail": true,
+           "maxTries": 3,
+           "waitBetweenTries": 2000
+         }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -34,33 +38,37 @@
       "name": "OpenAI Chat Model"
     },
     {
-      "parameters": {
-        "toolDescription": "Search for businesses using Google Maps API",
-        "method": "GET",
-        "url": "https://maps.googleapis.com/maps/api/place/textsearch/json",
-        "sendQuery": true,
-        "parametersQuery": {
-          "values": [
-            {
-              "name": "query",
-              "value": "={{ $fromAI('searchQuery', 'marketing agency') }}"
-            },
-            {
-              "name": "location",
-              "value": "={{ $fromAI('cityCoordinates', '30.2672,-97.7431') }}"
-            },
-            {
-              "name": "radius",
-              "value": "={{ $fromAI('radiusMeters', '25000') }}"
-            },
-            {
-              "name": "key",
-              "value": "YOUR_GOOGLE_MAPS_API_KEY"
-            }
-          ]
-        },
-        "options": {}
-      },
+       "parameters": {
+         "toolDescription": "Search for businesses using Google Maps API (with caching)",
+         "method": "GET",
+         "url": "https://maps.googleapis.com/maps/api/place/textsearch/json",
+         "sendQuery": true,
+         "parametersQuery": {
+           "values": [
+             {
+               "name": "query",
+               "value": "={{ $fromAI('searchQuery', 'marketing agency') }}"
+             },
+             {
+               "name": "location",
+               "value": "={{ $fromAI('cityCoordinates', '30.2672,-97.7431') }}"
+             },
+             {
+               "name": "radius",
+               "value": "={{ $fromAI('radiusMeters', '25000') }}"
+             },
+             {
+               "name": "key",
+               "value": "{{ $env.GOOGLE_MAPS_API_KEY }}"
+             }
+           ]
+         },
+         "options": {
+           "retryOnFail": true,
+           "maxTries": 3,
+           "waitBetweenTries": 2000
+         }
+       },
       "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
       "typeVersion": 1.1,
       "position": [
@@ -90,13 +98,17 @@
               "name": "num",
               "value": "={{ $fromAI('resultCount', '20') }}"
             },
-            {
-              "name": "api_key",
-              "value": "YOUR_SERPAPI_KEY"
-            }
+             {
+               "name": "api_key",
+               "value": "{{ $env.SERPAPI_KEY }}"
+             }
           ]
         },
-        "options": {}
+         "options": {
+           "retryOnFail": true,
+           "maxTries": 3,
+           "waitBetweenTries": 2000
+         }
       },
       "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
       "typeVersion": 1.1,
@@ -115,17 +127,17 @@
         "sendQuery": true,
         "parametersQuery": {
           "values": [
-            {
-              "name": "KEY",
-              "value": "YOUR_BUILTWITH_API_KEY"
-            },
-            {
-              "name": "LOOKUP",
-              "value": "={{ $fromAI('websiteUrl', 'example.com') }}"
-            }
+             {
+               "name": "KEY",
+               "value": "{{ $env.BUILTWITH_API_KEY }}"
+             }
           ]
         },
-        "options": {}
+         "options": {
+           "retryOnFail": true,
+           "maxTries": 3,
+           "waitBetweenTries": 2000
+         }
       },
       "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
       "typeVersion": 1.1,
@@ -136,19 +148,49 @@
       "id": "55555555-6666-7777-8888-999999999999",
       "name": "BuiltWith Quick Check"
     },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "response-id",
-              "name": "response",
-              "value": "={{ $json.output }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
+     {
+       "parameters": {
+         "key": "={{ 'google_maps_' + $fromAI('searchQuery', '') + '_' + $fromAI('cityCoordinates', '') }}",
+         "ttl": 3600,
+         "data": "={{ $json }}"
+       },
+       "type": "n8n-nodes-base.cache",
+       "typeVersion": 1,
+       "position": [
+         200,
+         -240
+       ],
+       "id": "cache-google-maps",
+       "name": "Cache Google Maps Result"
+     },
+     {
+       "parameters": {
+         "assignments": {
+           "assignments": [
+             {
+               "id": "response-id",
+               "name": "response",
+               "value": "={{ $json.output }}",
+               "type": "string"
+             }
+           ]
+         },
+         "options": {}
+       },
+       "type": "n8n-nodes-base.set",
+       "typeVersion": 3.4,
+       "position": [
+         400,
+         -240
+       ],
+       "id": "66666666-7777-8888-9999-aaaaaaaaaaaa",
+       "name": "Response"
+     },
+         "options": {
+           "retryOnFail": true,
+           "maxTries": 3,
+           "waitBetweenTries": 2000
+         }
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -171,7 +213,11 @@
             }
           ]
         },
-        "options": {}
+         "options": {
+           "retryOnFail": true,
+           "maxTries": 3,
+           "waitBetweenTries": 2000
+         }
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -220,17 +266,37 @@
         ]
       ]
     },
-    "Google Maps Search": {
-      "ai_tool": [
-        [
-          {
-            "node": "Discovery Scout Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
+     "Google Maps Search": {
+       "ai_tool": [
+         [
+           {
+             "node": "Discovery Scout Agent",
+             "type": "ai_tool",
+             "index": 0
+           }
+         ]
+       ],
+       "main": [
+         [
+           {
+             "node": "Cache Google Maps Result",
+             "type": "main",
+             "index": 0
+           }
+         ]
+       ]
+     },
+     "Cache Google Maps Result": {
+       "main": [
+         [
+           {
+             "node": "Response",
+             "type": "main",
+             "index": 0
+           }
+         ]
+       ]
+     },
     "SerpAPI Alternative Search": {
       "ai_tool": [
         [

@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS agencies (
   name TEXT NOT NULL,
   customer_id TEXT NOT NULL UNIQUE, -- Google Ads customer ID
   google_ads_config TEXT NOT NULL, -- Encrypted JSON with client_id, client_secret, refresh_token, developer_token
+  meta_config TEXT, -- Encrypted JSON with access_token, pixel_id for Meta Conversions API
   conversion_action_id TEXT, -- Google Ads conversion action ID
   status TEXT DEFAULT 'active',
   created_at TEXT NOT NULL,

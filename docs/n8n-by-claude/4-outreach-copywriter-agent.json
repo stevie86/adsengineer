@@ -22,7 +22,11 @@
     {
       "parameters": {
         "model": "gpt-4o",
-        "options": {}
+         "options": {
+           "retryOnFail": true,
+           "maxTries": 3,
+           "waitBetweenTries": 2000
+         }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -53,13 +57,17 @@
               "name": "seniority",
               "value": "executive"
             },
-            {
-              "name": "api_key",
-              "value": "YOUR_HUNTER_IO_API_KEY"
-            }
+             {
+               "name": "api_key",
+               "value": "{{ $env.HUNTER_IO_API_KEY }}"
+             }
           ]
         },
-        "options": {}
+         "options": {
+           "retryOnFail": true,
+           "maxTries": 3,
+           "waitBetweenTries": 2000
+         }
       },
       "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
       "typeVersion": 1.1,
@@ -78,20 +86,20 @@
         "sendHeaders": true,
         "parametersHeaders": {
           "values": [
-            {
-              "name": "X-Api-Key",
-              "value": "YOUR_APOLLO_IO_API_KEY"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
+             {
+               "name": "X-Api-Key",
+               "value": "{{ $env.APOLLO_IO_API_KEY }}"
+             }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\n  \"q_organization_domains\": \"{{ $fromAI('companyDomain', 'example.com') }}\",\n  \"person_titles\": [\"CEO\", \"Founder\", \"Owner\", \"Managing Director\"],\n  \"per_page\": 5\n}",
-        "options": {}
+         "options": {
+           "retryOnFail": true,
+           "maxTries": 3,
+           "waitBetweenTries": 2000
+         }
       },
       "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
       "typeVersion": 1.1,
@@ -110,17 +118,17 @@
         "sendQuery": true,
         "parametersQuery": {
           "values": [
-            {
-              "name": "api_key",
-              "value": "YOUR_ABSTRACT_API_KEY"
-            },
-            {
-              "name": "email",
-              "value": "={{ $fromAI('emailToVerify', 'test@example.com') }}"
-            }
+             {
+               "name": "api_key",
+               "value": "{{ $env.ABSTRACT_API_KEY }}"
+             }
           ]
         },
-        "options": {}
+         "options": {
+           "retryOnFail": true,
+           "maxTries": 3,
+           "waitBetweenTries": 2000
+         }
       },
       "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
       "typeVersion": 1.1,
@@ -143,7 +151,11 @@
             }
           ]
         },
-        "options": {}
+         "options": {
+           "retryOnFail": true,
+           "maxTries": 3,
+           "waitBetweenTries": 2000
+         }
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -166,7 +178,11 @@
             }
           ]
         },
-        "options": {}
+         "options": {
+           "retryOnFail": true,
+           "maxTries": 3,
+           "waitBetweenTries": 2000
+         }
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,

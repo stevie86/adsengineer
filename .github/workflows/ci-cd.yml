@@ -1,0 +1,221 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # Backend Testing and Quality Checks
+  backend-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./serverless
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'pnpm'
+        cache-dependency-path: serverless/pnpm-lock.yaml
+
+    - name: Install pnpm
+      run: npm install -g pnpm
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+
+    - name: Type checking
+      run: pnpm types:check
+
+    - name: Linting
+      run: pnpm lint
+
+    - name: Formatting check
+      run: pnpm format:check
+
+    - name: Run tests
+      run: pnpm test:coverage
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./serverless/coverage/lcov.info
+        flags: backend
+        name: Backend Coverage
+
+  # Frontend Testing and Quality Checks
+  frontend-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Linting
+      run: npm run lint
+
+    - name: Formatting check
+      run: npm run format:check
+
+    - name: Type checking
+      run: npx tsc --noEmit
+
+    - name: Run tests
+      run: npm test -- --run --coverage
+
+    - name: Build
+      run: npm run build
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./frontend/coverage/lcov.info
+        flags: frontend
+        name: Frontend Coverage
+
+  # Security Scanning
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  # Deploy to Staging (on main branch push)
+  deploy-staging:
+    needs: [backend-test, frontend-test, security-scan]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install Wrangler
+      run: npm install -g wrangler
+
+    - name: Deploy Backend to Staging
+      run: cd serverless && wrangler deploy --env staging
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+    - name: Deploy Frontend to Vercel (Staging)
+      run: cd frontend && npx vercel --prod=false
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+  # Deploy to Production (manual trigger)
+  deploy-production:
+    needs: [backend-test, frontend-test, security-scan]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install Wrangler
+      run: npm install -g wrangler
+
+    - name: Deploy Backend to Production
+      run: cd serverless && wrangler deploy --env production
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+    - name: Deploy Frontend to Vercel (Production)
+      run: cd frontend && npx vercel --prod
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+  # Performance Testing
+  performance-test:
+    needs: [deploy-staging]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Lighthouse CI
+      uses: treosh/lighthouse-ci-action@v10
+      with:
+        urls: |
+          https://adsengineer-staging.vercel.app
+        configPath: .lighthouserc.json
+        uploadArtifacts: true
+        temporaryPublicStorage: true
+
+  # E2E Testing
+  e2e-test:
+    needs: [deploy-staging]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install Playwright
+      run: cd frontend && npm install -D @playwright/test && npx playwright install
+
+    - name: Run E2E tests
+      run: cd frontend && npx playwright test
+      env:
+        BASE_URL: https://adsengineer-staging.vercel.app
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report
+        path: frontend/test-results/

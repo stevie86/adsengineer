@@ -26,6 +26,7 @@ export const openApiSpec = {
   tags: [
     { name: 'Health', description: 'Health check endpoints' },
     { name: 'GHL', description: 'GoHighLevel webhook integration' },
+    { name: 'Shopify', description: 'Shopify webhook integration' },
     { name: 'Waitlist', description: 'Landing page waitlist signups' },
     { name: 'Leads', description: 'Lead management (authenticated)' },
     { name: 'Admin', description: 'Admin operations (admin token required)' }
@@ -143,6 +144,309 @@ export const openApiSpec = {
           },
           '500': {
             description: 'Processing error'
+          }
+        }
+      }
+    },
+    '/api/v1/shopify/webhook': {
+      get: {
+        tags: ['Shopify'],
+        summary: 'Shopify webhook info',
+        description: 'Returns Shopify webhook usage information and supported topics',
+        responses: {
+          '200': {
+            description: 'Webhook info',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: { type: 'string' },
+                    supported_topics: { type: 'array', items: { type: 'string' } },
+                    usage: { type: 'string' }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      post: {
+        tags: ['Shopify'],
+        summary: 'Receive Shopify webhook',
+        description: 'Receives customer and order data from Shopify stores. Processes leads for conversion tracking.',
+        parameters: [
+          {
+            name: 'X-Shopify-Topic',
+            in: 'header',
+            required: true,
+            schema: { type: 'string' },
+            description: 'Shopify webhook topic (customers/create, orders/create, etc.)'
+          },
+          {
+            name: 'X-Shopify-Shop-Domain',
+            in: 'header',
+            required: true,
+            schema: { type: 'string' },
+            description: 'Shopify store domain'
+          }
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                oneOf: [
+                  {
+                    title: 'Customer Webhook',
+                    type: 'object',
+                    properties: {
+                      id: { type: 'integer', description: 'Customer ID' },
+                      email: { type: 'string', format: 'email' },
+                      first_name: { type: 'string' },
+                      last_name: { type: 'string' },
+                      phone: { type: 'string' },
+                      created_at: { type: 'string', format: 'date-time' },
+                      tags: { type: 'array', items: { type: 'string' }, description: 'May contain UTM parameters' }
+                    }
+                  },
+                  {
+                    title: 'Order Webhook',
+                    type: 'object',
+                    properties: {
+                      id: { type: 'integer', description: 'Order ID' },
+                      email: { type: 'string', format: 'email' },
+                      total_price: { type: 'string', description: 'Order total' },
+                      currency: { type: 'string' },
+                      created_at: { type: 'string', format: 'date-time' },
+                      landing_site: { type: 'string', description: 'Referral URL' },
+                      tags: { type: 'array', items: { type: 'string' }, description: 'May contain UTM parameters' },
+                      customer: {
+                        type: 'object',
+                        properties: {
+                          email: { type: 'string', format: 'email' },
+                          first_name: { type: 'string' },
+                          phone: { type: 'string' }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              example: {
+                id: 123456789,
+                email: 'customer@mycannaby.de',
+                first_name: 'John',
+                last_name: 'Doe',
+                phone: '+49123456789',
+                created_at: '2024-01-15T10:30:00Z',
+                tags: ['gclid:CjwKCAtest123', 'utm_source:google', 'utm_campaign:summer_sale']
+              }
+            }
+          }
+        },
+        responses: {
+          '200': {
+            description: 'Lead processed successfully',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: { type: 'string', example: 'success' },
+                    lead_id: { type: 'string', example: 'abc-123-def' },
+                    topic: { type: 'string', example: 'customers/create' },
+                    shop_domain: { type: 'string', example: 'mycannaby.de' }
+                  }
+                }
+              }
+            }
+          },
+          '400': {
+            description: 'Invalid webhook data'
+          },
+          '404': {
+            description: 'Agency not found for shop domain'
+          },
+          '500': {
+            description: 'Processing error'
+          }
+        }
+      }
+    },
+    '/api/v1/gdpr/data-request/{email}': {
+      get: {
+        tags: ['GDPR'],
+        summary: 'GDPR Data Access Request',
+        description: 'Right to Access - View all personal data stored about you (GDPR Article 15)',
+        parameters: [
+          {
+            name: 'email',
+            in: 'path',
+            required: true,
+            schema: { type: 'string', format: 'email' },
+            description: 'Email address to request data for'
+          }
+        ],
+        responses: {
+          '200': {
+            description: 'Data access provided',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: { type: 'string' },
+                    data: {
+                      type: 'object',
+                      properties: {
+                        leads: { type: 'array' },
+                        conversion_logs: { type: 'array' },
+                        data_portability: { type: 'object' }
+                      }
+                    },
+                    gdpr_rights: { type: 'object' }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    '/api/v1/gdpr/data-export/{email}': {
+      get: {
+        tags: ['GDPR'],
+        summary: 'GDPR Data Export',
+        description: 'Right to Data Portability - Download all your personal data (GDPR Article 20)',
+        parameters: [
+          {
+            name: 'email',
+            in: 'path',
+            required: true,
+            schema: { type: 'string', format: 'email' },
+            description: 'Email address to export data for'
+          }
+        ],
+        responses: {
+          '200': {
+            description: 'Data export file',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    export_timestamp: { type: 'string' },
+                    data_controller: { type: 'string' },
+                    leads: { type: 'array' },
+                    consent_history: { type: 'array' }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    '/api/v1/gdpr/data-rectify/{email}': {
+      put: {
+        tags: ['GDPR'],
+        summary: 'GDPR Data Rectification',
+        description: 'Right to Rectification - Correct inaccurate personal data (GDPR Article 16)',
+        parameters: [
+          {
+            name: 'email',
+            in: 'path',
+            required: true,
+            schema: { type: 'string', format: 'email' },
+            description: 'Email address to rectify data for'
+          }
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  vertical: { type: 'string' },
+                  status: { type: 'string' }
+                }
+              }
+            }
+          }
+        },
+        responses: {
+          '200': {
+            description: 'Data rectification completed'
+          }
+        }
+      }
+    },
+    '/api/v1/gdpr/data-erase/{email}': {
+      delete: {
+        tags: ['GDPR'],
+        summary: 'GDPR Right to Erasure',
+        description: 'Right to be Forgotten - Delete all personal data (GDPR Article 17)',
+        parameters: [
+          {
+            name: 'email',
+            in: 'path',
+            required: true,
+            schema: { type: 'string', format: 'email' },
+            description: 'Email address to erase data for'
+          }
+        ],
+        responses: {
+          '200': {
+            description: 'Data erasure completed'
+          }
+        }
+      }
+    },
+    '/api/v1/gdpr/consent-withdraw/{email}': {
+      post: {
+        tags: ['GDPR'],
+        summary: 'GDPR Consent Withdrawal',
+        description: 'Withdraw consent for data processing (GDPR Article 7)',
+        parameters: [
+          {
+            name: 'email',
+            in: 'path',
+            required: true,
+            schema: { type: 'string', format: 'email' },
+            description: 'Email address to withdraw consent for'
+          }
+        ],
+        responses: {
+          '200': {
+            description: 'Consent withdrawn successfully'
+          }
+        }
+      }
+    },
+    '/api/v1/gdpr/privacy-policy': {
+      get: {
+        tags: ['GDPR'],
+        summary: 'Privacy Policy',
+        description: 'Complete privacy policy and data processing information (GDPR Article 13/14)',
+        responses: {
+          '200': {
+            description: 'Privacy policy information',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    data_controller: { type: 'object' },
+                    legal_basis: { type: 'string' },
+                    data_purposes: { type: 'array' },
+                    retention_periods: { type: 'object' },
+                    data_subject_rights: { type: 'object' }
+                  }
+                }
+              }
+            }
           }
         }
       }

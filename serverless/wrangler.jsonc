@@ -3,6 +3,7 @@
   "main": "src/index.ts",
   "compatibility_date": "2024-08-20",
   "compatibility_flags": ["nodejs_compat"],
+
   "d1_databases": [
     {
       "binding": "DB",
@@ -10,25 +11,49 @@
       "database_id": "d262a6f7-a378-45d9-9a74-5f4264304bc6"
     }
   ],
+
+  // Temporarily disabled - KV namespace not created yet
+  // "kv_namespaces": [
+  //   {
+  //     "binding": "RATE_LIMIT_KV",
+  //     "id": "rate-limit-kv",
+  //     "preview_id": "rate-limit-kv-preview"
+    // }
+  // ],
   "env": {
-    "production": {
-      "name": "advocate-cloud",
-      "vars": { "ENVIRONMENT": "production" },
-      "d1_databases": [
-        {
-          "binding": "DB",
-          "database_name": "advocate-db",
-          "database_id": "d262a6f7-a378-45d9-9a74-5f4264304bc6"
-        }
-      ]
-    },
     "staging": {
-      "name": "advocate-cloud-staging",
-      "vars": { "ENVIRONMENT": "staging" }
-    },
-    "development": {
-      "name": "advocate-cloud-dev",
-      "vars": { "ENVIRONMENT": "development" }
-    }
-  }
-}
+       "name": "advocate-cloud-staging",
+       "vars": { "ENVIRONMENT": "staging" }
+     },
+     "development": {
+       "name": "advocate-cloud-dev",
+       "vars": { "ENVIRONMENT": "development" }
+     },
+      "production": {
+        "name": "advocate-cloud",
+        "vars": {
+          "ENVIRONMENT": "production",
+          "VITE_API_BASE_URL": "https://advocate-cloud.adsengineer.workers.dev",
+          "STRIPE_STARTER_PRICE_ID": "price_starter_placeholder",
+          "STRIPE_PROFESSIONAL_PRICE_ID": "price_professional_placeholder",
+          "STRIPE_ENTERPRISE_PRICE_ID": "price_enterprise_placeholder",
+          "STRIPE_WEBHOOK_SECRET": "whsec_webhook_placeholder"
+        },
+"d1_databases": [
+          {
+            "binding": "DB",
+            "database_name": "advocate-db",
+            "database_id": "d262a6f7-a378-45d9-9a74-5f4264304bc6"
+          }
+        ],
+
+        // "kv_namespaces": [
+        //   {
+        //     "binding": "RATE_LIMIT_KV",
+        //     "id": "rate-limit-kv"
+        //   }
+        // ]
+
+      }
+   }
+ }

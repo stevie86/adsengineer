@@ -10,7 +10,11 @@ node_modules/
 # Environment
 .env
 .env.*
+.stripe.env
 !.env.example
+
+# Archived files (can be restored if needed)
+archives/
 
 # IDE
 .idea/

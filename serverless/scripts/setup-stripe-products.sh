@@ -1,0 +1,110 @@
+#!/bin/bash
+
+# Stripe Product Setup Guide
+# Manual commands to create products and prices in Stripe
+
+set -e
+
+echo "🛍️  AdsEngineer Stripe Product Setup Guide"
+echo "=========================================="
+echo ""
+echo "This script provides the commands to create Stripe products and prices."
+echo "Run these commands manually in your terminal."
+echo ""
+
+echo "📋 Step 1: Create Products"
+echo "------------------------"
+echo ""
+
+echo "# Create Starter Product (€99/month)"
+echo "stripe products create \\"
+echo "  --name='AdsEngineer Starter' \\"
+echo "  --description='Basic conversion tracking for small agencies'"
+echo ""
+
+echo "# Create Professional Product (€299/month)"
+echo "stripe products create \\"
+echo "  --name='AdsEngineer Professional' \\"
+echo "  --description='Advanced conversion tracking for growing agencies'"
+echo ""
+
+echo "# Create Enterprise Product (€999/month)"
+echo "stripe products create \\"
+echo "  --name='AdsEngineer Enterprise' \\"
+echo "  --description='Unlimited conversion tracking for large agencies'"
+echo ""
+
+echo "📋 Step 2: Create Prices"
+echo "-----------------------"
+echo ""
+echo "After creating products, note their IDs and create prices:"
+echo ""
+
+echo "# Create Starter Price (€99/month)"
+echo "stripe prices create \\"
+echo "  --product='prod_xxx_starter' \\"
+echo "  --unit-amount=9900 \\"
+echo "  --currency=eur \\"
+echo "  --interval=month"
+echo ""
+
+echo "# Create Professional Price (€299/month)"
+echo "stripe prices create \\"
+echo "  --product='prod_xxx_professional' \\"
+echo "  --unit-amount=29900 \\"
+echo "  --currency=eur \\"
+echo "  --interval=month"
+echo ""
+
+echo "# Create Enterprise Price (€999/month)"
+echo "stripe prices create \\"
+echo "  --product='prod_xxx_enterprise' \\"
+echo "  --unit-amount=99900 \\"
+echo "  --currency=eur \\"
+echo "  --interval=month"
+echo ""
+
+echo "📋 Step 3: Generate Webhook Secret"
+echo "----------------------------------"
+echo ""
+WEBHOOK_SECRET=$(openssl rand -hex 32 2>/dev/null || echo "webhook_secret_$(date +%s)")
+echo "Webhook Secret: $WEBHOOK_SECRET"
+echo ""
+
+echo "📋 Step 4: Update Configuration"
+echo "------------------------------"
+echo ""
+echo "Update your wrangler.jsonc with the price IDs:"
+echo ""
+echo "\"vars\": {"
+echo "  \"STRIPE_STARTER_PRICE_ID\": \"price_xxx_starter\","
+echo "  \"STRIPE_PROFESSIONAL_PRICE_ID\": \"price_xxx_professional\","
+echo "  \"STRIPE_ENTERPRISE_PRICE_ID\": \"price_xxx_enterprise\","
+echo "  \"STRIPE_WEBHOOK_SECRET\": \"$WEBHOOK_SECRET\""
+echo "}"
+echo ""
+
+echo "📋 Step 5: Deploy and Test"
+echo "-------------------------"
+echo ""
+echo "# Deploy to Cloudflare"
+echo "wrangler deploy"
+echo ""
+echo "# Test pricing endpoint"
+echo "curl https://advocate-cloud.adsengineer.workers.dev/api/v1/billing/pricing"
+echo ""
+
+echo "🎯 Quick Setup Commands:"
+echo "========================"
+echo ""
+echo "# 1. Create all products and prices in one go"
+echo "stripe products create --name='AdsEngineer Starter' --description='Basic conversion tracking for small agencies'"
+echo "stripe products create --name='AdsEngineer Professional' --description='Advanced conversion tracking for growing agencies'"
+echo "stripe products create --name='AdsEngineer Enterprise' --description='Unlimited conversion tracking for large agencies'"
+echo ""
+echo "# 2. Then create prices for each product"
+echo "# (Replace prod_xxx with actual product IDs from step 1)"
+echo ""
+
+echo "✅ Ready to set up Stripe products!"
+echo "Run the commands above in your terminal."
