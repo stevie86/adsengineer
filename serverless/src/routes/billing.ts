@@ -139,7 +139,7 @@ billing.get('/pricing', (c) => {
 // Create Stripe customer
 billing.post('/customers', async (c) => {
     const db = c.get('db');
-    const { email, name, agency_id } = await c.req.json();
+    const { email, name, agency_id, stripe_config } = await c.req.json();
 
     try {
       // Check if customer already exists
@@ -169,6 +169,18 @@ billing.post('/customers', async (c) => {
       await db.prepare(
         'UPDATE customers SET stripe_customer_id = ?, updated_at = datetime(\'now\') WHERE email = ?'
       ).bind(customer.id, email).run();
+
+      // Store encrypted Stripe credentials if provided
+      if (stripe_config) {
+        const credentialSuccess = await db.updateAgencyCredentials(agency_id, {
+          stripe: stripe_config
+        });
+
+        if (!credentialSuccess) {
+          console.warn('Failed to store Stripe credentials for agency:', agency_id);
+          // Don't fail the request, just log the warning
+        }
+      }
 
       return c.json({
         success: true,

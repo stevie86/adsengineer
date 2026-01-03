@@ -188,6 +188,127 @@ export function createDb(d1: D1Database) {
 
       const result = await d1.prepare(query).bind(...params).first<{ count: number }>();
       return result?.count || 0;
+    },
+
+    // Encrypted credential management
+    async updateAgencyCredentials(agencyId: string, credentials: {
+      googleAds?: { apiKey: string; clientId: string; clientSecret: string; developerToken: string };
+      meta?: { accessToken: string; appId: string; appSecret: string };
+      stripe?: { secretKey: string; publishableKey: string };
+    }): Promise<boolean> {
+      try {
+        // Import encryption service dynamically to avoid circular dependencies
+        const { encryptCredential } = await import('../services/encryption');
+
+        const encryptedCredentials: Record<string, string> = {};
+
+        // Encrypt each credential type
+        for (const [platform, creds] of Object.entries(credentials)) {
+          if (creds) {
+            encryptedCredentials[platform] = JSON.stringify(await encryptCredential(JSON.stringify(creds), `agency-${agencyId}-${platform}`));
+          }
+        }
+
+        // Update the agency record with encrypted credentials
+        await d1.prepare(`
+          UPDATE agencies
+          SET google_ads_config = ?, meta_config = ?, stripe_config = ?, updated_at = ?
+          WHERE id = ?
+        `).bind(
+          encryptedCredentials.googleAds || null,
+          encryptedCredentials.meta || null,
+          encryptedCredentials.stripe || null,
+          new Date().toISOString(),
+          agencyId
+        ).run();
+
+        return true;
+      } catch (error) {
+        console.error('Failed to update agency credentials:', error);
+        return false;
+      }
+    },
+
+    async getAgencyCredentials(agencyId: string): Promise<{
+      googleAds?: any;
+      meta?: any;
+      stripe?: any;
+    } | null> {
+      try {
+        const result = await d1.prepare(`
+          SELECT google_ads_config, meta_config, stripe_config
+          FROM agencies WHERE id = ?
+        `).bind(agencyId).first();
+
+        if (!result) return null;
+
+        // Import decryption service dynamically
+        const { decryptCredential } = await import('../services/encryption');
+
+        const credentials: Record<string, any> = {};
+
+        // Decrypt each credential type
+        if (result.google_ads_config) {
+          try {
+            const decrypted = await decryptCredential(JSON.parse(result.google_ads_config), `agency-${agencyId}-googleAds`);
+            credentials.googleAds = JSON.parse(decrypted);
+          } catch (error) {
+            console.error('Failed to decrypt Google Ads credentials:', error);
+          }
+        }
+
+        if (result.meta_config) {
+          try {
+            const decrypted = await decryptCredential(JSON.parse(result.meta_config), `agency-${agencyId}-meta`);
+            credentials.meta = JSON.parse(decrypted);
+          } catch (error) {
+            console.error('Failed to decrypt Meta credentials:', error);
+          }
+        }
+
+        if (result.stripe_config) {
+          try {
+            const decrypted = await decryptCredential(JSON.parse(result.stripe_config), `agency-${agencyId}-stripe`);
+            credentials.stripe = JSON.parse(decrypted);
+          } catch (error) {
+            console.error('Failed to decrypt Stripe credentials:', error);
+          }
+        }
+
+        return credentials;
+      } catch (error) {
+        console.error('Failed to retrieve agency credentials:', error);
+        return null;
+      }
+    },
+
+    async validateCredentialFormat(platform: string, credentials: any): Promise<{ valid: boolean; errors: string[] }> {
+      const errors: string[] = [];
+
+      switch (platform) {
+        case 'googleAds':
+          if (!credentials.apiKey?.startsWith('AIza')) errors.push('Invalid Google Ads API key format');
+          if (!credentials.clientId) errors.push('Client ID required');
+          if (!credentials.clientSecret) errors.push('Client secret required');
+          if (!credentials.developerToken) errors.push('Developer token required');
+          break;
+
+        case 'meta':
+          if (!credentials.accessToken) errors.push('Access token required');
+          if (!credentials.appId) errors.push('App ID required');
+          if (!credentials.appSecret) errors.push('App secret required');
+          break;
+
+        case 'stripe':
+          if (!credentials.secretKey?.startsWith('sk_')) errors.push('Invalid Stripe secret key format');
+          if (!credentials.publishableKey?.startsWith('pk_')) errors.push('Invalid Stripe publishable key format');
+          break;
+
+        default:
+          errors.push(`Unknown platform: ${platform}`);
+      }
+
+      return { valid: errors.length === 0, errors };
     }
   };
 }
