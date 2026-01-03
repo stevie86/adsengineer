@@ -7,7 +7,7 @@ async function hashData(data: string): Promise<string> {
   const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
   const hashArray = new Uint8Array(hashBuffer);
   return Array.from(hashArray)
-    .map(b => b.toString(16).padStart(2, '0'))
+    .map((b) => b.toString(16).padStart(2, '0'))
     .join('');
 }
 
@@ -47,33 +47,42 @@ export class MetaConversionsAPI {
   }> {
     const url = `https://graph.facebook.com/${this.apiVersion}/${this.pixelId}/events`;
 
+    const data = await Promise.all(
+      conversions.map(async (conversion) => {
+        // Prepare user data with hashing
+        const userData: any = {};
+
+        if (conversion.user_data?.email) {
+          userData.em = [await hashData(conversion.user_data.email)];
+        }
+
+        if (conversion.user_data?.phone) {
+          userData.ph = [await hashData(conversion.user_data.phone)];
+        }
+
+        if (conversion.user_data?.external_id) {
+          userData.external_id = conversion.user_data.external_id;
+        }
+
+        return {
+          event_name: conversion.event_name,
+          event_time: conversion.event_time,
+          custom_data: {
+            value: conversion.value,
+            currency: conversion.currency || 'EUR',
+            ...conversion.custom_data,
+          },
+          user_data: userData,
+          ...(conversion.fbclid && {
+            fbclid: conversion.fbclid,
+          }),
+        };
+      })
+    );
+
     const payload = {
       access_token: this.accessToken,
-      data: conversions.map(conversion => ({
-        event_name: conversion.event_name,
-        event_time: conversion.event_time,
-        custom_data: {
-          value: conversion.value,
-          currency: conversion.currency || 'EUR',
-          ...conversion.custom_data,
-        },
-        user_data: {
-          // Meta requires SHA256 hashed user data for privacy
-          // Hash emails and phones for compliance
-          ...(conversion.user_data?.email && {
-            em: [await hashData(conversion.user_data.email)]
-          }),
-          ...(conversion.user_data?.phone && {
-            ph: [await hashData(conversion.user_data.phone)]
-          }),
-          ...(conversion.user_data?.external_id && {
-            external_id: conversion.user_data.external_id
-          }),
-        },
-        ...conversion.fbclid && {
-          fbclid: conversion.fbclid,
-        },
-      })),
+      data,
     };
 
     try {
@@ -85,13 +94,15 @@ export class MetaConversionsAPI {
         body: JSON.stringify(payload),
       });
 
-      const result = await response.json();
+      const result = (await response.json()) as any;
 
       if (!response.ok) {
         console.error('Meta Conversions API error:', result);
         return {
           success: false,
-          errors: result.error ? [result.error] : [{ code: response.status, message: result.message || 'Unknown error' }],
+          errors: result.error
+            ? [result.error]
+            : [{ code: response.status, message: result.message || 'Unknown error' }],
         };
       }
 
@@ -123,10 +134,7 @@ export class MetaConversionsAPI {
 }
 
 // Queue handler for Meta conversions
-export async function processMetaConversionBatch(
-  env: AppEnv['Bindings'],
-  job: any
-): Promise<any> {
+export async function processMetaConversionBatch(env: AppEnv['Bindings'], job: any): Promise<any> {
   const { conversions, agency_id, retry_count } = job;
 
   try {
@@ -183,7 +191,6 @@ export async function processMetaConversionBatch(
       retry_count,
       errors: result.errors || [],
     };
-
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
@@ -210,13 +217,25 @@ export async function processMetaConversionBatch(
 }
 
 async function getAgencyMetaCredentials(env: AppEnv['Bindings'], agencyId: string) {
-  const result = await env.DB.prepare(
-    'SELECT meta_config FROM agencies WHERE id = ?'
-  ).bind(agencyId).first();
+  try {
+    const result = await env.DB.prepare('SELECT meta_config FROM agencies WHERE id = ?')
+      .bind(agencyId)
+      .first();
 
-  if (!result?.meta_config) return null;
+    if (!result?.meta_config) return null;
 
-  return JSON.parse(result.meta_config as string);
+    // Import decryption service dynamically
+    const { decryptCredential } = await import('./encryption');
+
+    const decrypted: string = await decryptCredential(
+      JSON.parse(result.meta_config as string),
+      `agency-${agencyId}-meta`
+    );
+    return JSON.parse(decrypted);
+  } catch (error) {
+    console.error('Failed to retrieve Meta credentials:', error);
+    return null;
+  }
 }
 
 async function logMetaConversionResult(env: AppEnv['Bindings'], result: any): Promise<void> {
@@ -225,15 +244,17 @@ async function logMetaConversionResult(env: AppEnv['Bindings'], result: any): Pr
       job_id, agency_id, batch_size, success_count, failure_count,
       retry_count, errors, processing_time, created_at
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).bind(
-    result.job_id,
-    result.agency_id,
-    result.batch_size,
-    result.success_count,
-    result.failure_count,
-    result.retry_count,
-    JSON.stringify(result.errors),
-    result.processing_time,
-    new Date().toISOString()
-  ).run();
+  `)
+    .bind(
+      result.job_id,
+      result.agency_id,
+      result.batch_size,
+      result.success_count,
+      result.failure_count,
+      result.retry_count,
+      JSON.stringify(result.errors),
+      result.processing_time,
+      new Date().toISOString()
+    )
+    .run();
 }

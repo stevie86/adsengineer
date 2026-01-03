@@ -123,18 +123,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+    - name: Setup Doppler CLI
+      uses: dopplerhq/cli-action@v4
 
-    - name: Install Wrangler
-      run: npm install -g wrangler
-
-    - name: Deploy Backend to Staging
-      run: cd serverless && wrangler deploy --env staging
+    - name: Deploy Backend to Staging via Doppler
+      run: |
+        cd serverless
+        doppler run --config=staging -- pnpm deploy
       env:
-        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
     - name: Deploy Frontend to Vercel (Staging)
       run: cd frontend && npx vercel --prod=false
@@ -151,18 +148,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+    - name: Setup Doppler CLI
+      uses: dopplerhq/cli-action@v4
 
-    - name: Install Wrangler
-      run: npm install -g wrangler
-
-    - name: Deploy Backend to Production
-      run: cd serverless && wrangler deploy --env production
+    - name: Deploy Backend to Production via Doppler
+      run: |
+        cd serverless
+        doppler run --config=production -- pnpm deploy
       env:
-        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
     - name: Deploy Frontend to Vercel (Production)
       run: cd frontend && npx vercel --prod

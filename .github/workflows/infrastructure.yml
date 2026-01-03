@@ -1,0 +1,125 @@
+name: Infrastructure Provisioning with OpenTofu
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'infrastructure/**'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'infrastructure/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+
+env:
+  OPENTOFU_VERSION: '1.6.0'
+
+jobs:
+  tofu-plan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Doppler CLI
+        uses: dopplerhq/cli-action@v4
+
+      - name: Install OpenTofu
+        run: |
+          wget https://github.com/opentofu/opentofu/releases/download/v${{ env.OPENTOFU_VERSION }}/tofu_${{ env.OPENTOFU_VERSION }}_linux_amd64.zip
+          unzip tofu_${{ env.OPENTOFU_VERSION }}_linux_amd64.zip
+          sudo mv tofu /usr/local/bin/
+          tofu --version
+
+      - name: Initialize OpenTofu
+        run: tofu init
+        working-directory: infrastructure
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+
+      - name: OpenTofu Format Check
+        run: tofu fmt -check
+        working-directory: infrastructure
+        continue-on-error: false
+
+      - name: OpenTofu Validate
+        run: tofu validate
+        working-directory: infrastructure
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+
+      - name: OpenTofu Plan
+        run: |
+          doppler run -- tofu plan -out=tfplan -var="environment=${{ github.event.inputs.environment || 'development' }}"
+        working-directory: infrastructure
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+
+      - name: Upload Plan Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: infrastructure/tfplan
+          retention-days: 7
+
+  tofu-apply:
+    needs: tofu-plan
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: ${{ github.event.inputs.environment || 'development' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Doppler CLI
+        uses: dopplerhq/cli-action@v4
+
+      - name: Install OpenTofu
+        run: |
+          wget https://github.com/opentofu/opentofu/releases/download/v${{ env.OPENTOFU_VERSION }}/tofu_${{ env.OPENTOFU_VERSION }}_linux_amd64.zip
+          unzip tofu_${{ env.OPENTOFU_VERSION }}_linux_amd64.zip
+          sudo mv tofu /usr/local/bin/
+          tofu --version
+
+      - name: Initialize OpenTofu
+        run: tofu init
+        working-directory: infrastructure
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+
+      - name: Download Plan Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: infrastructure/
+
+      - name: OpenTofu Apply
+        run: doppler run -- tofu apply tfplan
+        working-directory: infrastructure
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+
+      - name: Extract Outputs
+        run: doppler run -- tofu output -json > outputs.json
+        working-directory: infrastructure
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+
+      - name: Upload Outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: infrastructure-outputs
+          path: infrastructure/outputs.json
+          retention-days: 30

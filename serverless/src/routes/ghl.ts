@@ -30,16 +30,16 @@ ghlRoutes.post('/webhook', async (c) => {
   try {
     const payload: GHLWebhookPayload = await c.req.json();
     const db = c.get('db');
-    
+
     if (!payload.email && !payload.contact_id) {
       return c.json({ error: 'email or contact_id required' }, 400);
     }
 
     const gclid = payload.gclid || extractGclidFromUtm(payload);
     const fbclid = payload.fbclid || null;
-    
+
     const leadValue = calculateLeadValue(payload);
-    
+
     const result = await db.insertLead({
       org_id: payload.location_id || 'default',
       site_id: payload.location_id || 'ghl',
@@ -59,7 +59,7 @@ ghlRoutes.post('/webhook', async (c) => {
       value_multiplier: leadValue.multiplier,
       status: 'new',
       vertical: detectVertical(payload),
-      created_at: payload.timestamp || new Date().toISOString()
+      created_at: payload.timestamp || new Date().toISOString(),
     });
 
     const response: any = {
@@ -67,7 +67,7 @@ ghlRoutes.post('/webhook', async (c) => {
       lead_id: result.id,
       gclid_captured: !!gclid,
       fbclid_captured: !!fbclid,
-      lead_value_cents: leadValue.adjusted_cents
+      lead_value_cents: leadValue.adjusted_cents,
     };
 
     if (gclid) {
@@ -79,13 +79,15 @@ ghlRoutes.post('/webhook', async (c) => {
     }
 
     return c.json(response);
-
   } catch (error) {
     console.error('GHL webhook error:', error);
-    return c.json({ 
-      error: 'Webhook processing failed',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    }, 500);
+    return c.json(
+      {
+        error: 'Webhook processing failed',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      500
+    );
   }
 });
 
@@ -95,7 +97,7 @@ ghlRoutes.get('/webhook', (c) => {
     message: 'GHL webhook endpoint is ready',
     usage: 'POST JSON payload from GoHighLevel workflow',
     required_fields: ['email OR contact_id'],
-    optional_fields: ['gclid', 'fbclid', 'utm_*', 'phone', 'custom_fields']
+    optional_fields: ['gclid', 'fbclid', 'utm_*', 'phone', 'custom_fields'],
   });
 });
 
@@ -105,11 +107,11 @@ function extractGclidFromUtm(payload: GHLWebhookPayload): string | null {
   return null;
 }
 
-function calculateLeadValue(payload: GHLWebhookPayload): { 
-  score: number; 
-  base_cents: number; 
-  adjusted_cents: number; 
-  multiplier: number 
+function calculateLeadValue(payload: GHLWebhookPayload): {
+  score: number;
+  base_cents: number;
+  adjusted_cents: number;
+  multiplier: number;
 } {
   let score = 50;
   let multiplier = 1.0;
@@ -118,12 +120,12 @@ function calculateLeadValue(payload: GHLWebhookPayload): {
     score += 10;
     multiplier += 0.2;
   }
-  
+
   if (payload.tags?.includes('qualified') || payload.tags?.includes('hot')) {
     score += 20;
     multiplier += 0.5;
   }
-  
+
   if (payload.custom_fields?.budget && parseInt(payload.custom_fields.budget) > 10000) {
     score += 15;
     multiplier += 0.3;
@@ -143,12 +145,12 @@ function calculateLeadValue(payload: GHLWebhookPayload): {
 function detectVertical(payload: GHLWebhookPayload): string | null {
   const tags = payload.tags?.join(' ').toLowerCase() || '';
   const source = payload.source?.toLowerCase() || '';
-  
+
   if (tags.includes('real estate') || source.includes('realtor')) return 'real_estate';
   if (tags.includes('dental') || source.includes('dental')) return 'dental';
   if (tags.includes('legal') || source.includes('law')) return 'legal';
   if (tags.includes('hvac') || source.includes('hvac')) return 'hvac';
   if (tags.includes('roofing') || source.includes('roof')) return 'roofing';
-  
+
   return null;
 }

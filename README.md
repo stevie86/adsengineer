@@ -31,16 +31,47 @@ serverless/              # Cloudflare Worker
 ├── migrations/          # D1 schema
 └── wrangler.jsonc       # Cloudflare config
 
+infrastructure/          # OpenTofu IaC
+├── main.tf             # Cloudflare resources
+├── variables.tf        # Input variables
+├── outputs.tf          # Output values
+└── providers.tf        # Provider config
+
 docs/                    # Strategy docs
 ```
 
 ## Development
 
+### Prerequisites
+
+1. Install [OpenTofu](https://opentofu.org/docs/intro/install/)
+2. Install [Doppler CLI](https://cli.doppler.com/install.sh)
+3. Run `./setup-doppler.sh` to configure secrets
+
+### Setup
+
 ```bash
-cd serverless
+# 1. Setup Doppler
+./setup-doppler.sh
+
+# 2. Provision infrastructure
+cd infrastructure
+tofu init
+tofu apply -var="environment=development"
+
+# 3. Install dependencies
+cd ../serverless
 pnpm install
-pnpm dev         # Local dev
-pnpm deploy      # Deploy to Cloudflare
+```
+
+### Running
+
+```bash
+# Local development with secrets
+doppler run -- pnpm dev
+
+# Deploy to Cloudflare
+doppler run -- pnpm deploy
 ```
 
 ## Tech Stack
@@ -49,3 +80,10 @@ pnpm deploy      # Deploy to Cloudflare
 - **Framework:** Hono
 - **Database:** Cloudflare D1
 - **Language:** TypeScript
+- **Infrastructure:** OpenTofu
+- **Secrets:** Doppler
+
+## Documentation
+
+- [OpenTofu & Doppler Guide](./docs/opentofu-doppler-guide.md) - IaC and secrets management
+- [Serverless README](./serverless/README.md) - Worker API documentation

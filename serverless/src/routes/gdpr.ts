@@ -12,18 +12,19 @@ gdprRoutes.get('/data-request/:email', async (c) => {
     const db = c.get('db');
 
     // Find all data associated with this email
-    const leads = await db.prepare(
-      'SELECT * FROM leads WHERE email = ?'
-    ).bind(email).all();
+    const leads = await db.prepare('SELECT * FROM leads WHERE email = ?').bind(email).all();
 
-    const conversionLogs = await db.prepare(`
+    const conversionLogs = await db
+      .prepare(`
       SELECT cl.* FROM conversion_logs cl
       JOIN leads l ON cl.agency_id = l.org_id
       WHERE l.email = ?
-    `).bind(email).all();
+    `)
+      .bind(email)
+      .all();
 
     // Remove sensitive fields for privacy
-    const sanitizedLeads = leads.results?.map(lead => ({
+    const sanitizedLeads = leads.results?.map((lead) => ({
       id: lead.id,
       email: lead.email,
       created_at: lead.created_at,
@@ -39,15 +40,15 @@ gdprRoutes.get('/data-request/:email', async (c) => {
         conversion_logs: conversionLogs.results,
         data_portability: {
           export_url: `/api/v1/gdpr/data-export/${email}`,
-          last_updated: new Date().toISOString()
-        }
+          last_updated: new Date().toISOString(),
+        },
       },
       gdpr_rights: {
         access: 'fulfilled',
         rectification: `/api/v1/gdpr/data-rectify/${email}`,
         erasure: `/api/v1/gdpr/data-erase/${email}`,
-        restrict_processing: `/api/v1/gdpr/restrict-processing/${email}`
-      }
+        restrict_processing: `/api/v1/gdpr/restrict-processing/${email}`,
+      },
     });
   } catch (error) {
     console.error('GDPR data access error:', error);
@@ -68,34 +69,46 @@ gdprRoutes.get('/data-export/:email', async (c) => {
       legal_basis: 'Consent (Article 6(1)(a) GDPR)',
       purposes: [
         'Conversion tracking for advertising optimization',
-        'Analytics and performance reporting'
+        'Analytics and performance reporting',
       ],
       retention_period: '3 years after last activity',
 
       leads: await db.prepare('SELECT * FROM leads WHERE email = ?').bind(email).all(),
-      technologies: await db.prepare(`
+      technologies: await db
+        .prepare(`
         SELECT t.* FROM technologies t
         JOIN lead_technologies lt ON t.id = lt.technology_id
         JOIN leads l ON lt.lead_id = l.id
         WHERE l.email = ?
-      `).bind(email).all(),
+      `)
+        .bind(email)
+        .all(),
 
-      conversion_logs: await db.prepare(`
+      conversion_logs: await db
+        .prepare(`
         SELECT cl.* FROM conversion_logs cl
         JOIN leads l ON cl.agency_id = l.org_id
         WHERE l.email = ?
-      `).bind(email).all(),
+      `)
+        .bind(email)
+        .all(),
 
-      consent_history: await db.prepare(`
+      consent_history: await db
+        .prepare(`
         SELECT consent_status, consent_timestamp, consent_method
         FROM leads WHERE email = ?
         ORDER BY consent_timestamp DESC
-      `).bind(email).all()
+      `)
+        .bind(email)
+        .all(),
     };
 
     // Set headers for file download
     c.header('Content-Type', 'application/json');
-    c.header('Content-Disposition', `attachment; filename="adsengineer-data-export-${email}-${Date.now()}.json"`);
+    c.header(
+      'Content-Disposition',
+      `attachment; filename="adsengineer-data-export-${email}-${Date.now()}.json"`
+    );
 
     return c.json(userData);
   } catch (error) {
@@ -122,12 +135,15 @@ gdprRoutes.put('/data-rectify/:email', async (c) => {
     }
 
     if (Object.keys(updateFields).length > 0) {
-      const setClause = Object.keys(updateFields).map(field => `${field} = ?`).join(', ');
+      const setClause = Object.keys(updateFields)
+        .map((field) => `${field} = ?`)
+        .join(', ');
       const values = Object.values(updateFields);
 
-      await db.prepare(
-        `UPDATE leads SET ${setClause}, updated_at = ? WHERE email = ?`
-      ).bind(...values, new Date().toISOString(), email).run();
+      await db
+        .prepare(`UPDATE leads SET ${setClause}, updated_at = ? WHERE email = ?`)
+        .bind(...values, new Date().toISOString(), email)
+        .run();
     }
 
     // Log rectification request
@@ -136,7 +152,7 @@ gdprRoutes.put('/data-rectify/:email', async (c) => {
     return c.json({
       status: 'success',
       message: 'Data rectification completed',
-      rectified_fields: Object.keys(updateFields)
+      rectified_fields: Object.keys(updateFields),
     });
   } catch (error) {
     console.error('GDPR rectification error:', error);
@@ -163,11 +179,14 @@ gdprRoutes.delete('/data-erase/:email', async (c) => {
       }
 
       // Delete conversion logs (anonymize rather than delete for audit purposes)
-      await db.prepare(`
+      await db
+        .prepare(`
         UPDATE conversion_logs
         SET success_count = 0, failure_count = 0, errors = 'Anonymized per GDPR Article 17'
         WHERE agency_id IN (SELECT org_id FROM leads WHERE email = ?)
-      `).bind(email).run();
+      `)
+        .bind(email)
+        .run();
     }
 
     // Log erasure request (required by GDPR)
@@ -177,7 +196,7 @@ gdprRoutes.delete('/data-erase/:email', async (c) => {
       status: 'success',
       message: 'Data erasure completed per GDPR Article 17',
       deleted_records: leads.results?.length || 0,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
     console.error('GDPR erasure error:', error);
@@ -194,9 +213,10 @@ gdprRoutes.post('/restrict-processing/:email', async (c) => {
 
     const status = restrict ? 'restricted' : 'active';
 
-    await db.prepare(
-      'UPDATE leads SET status = ?, updated_at = ? WHERE email = ?'
-    ).bind(status, new Date().toISOString(), email).run();
+    await db
+      .prepare('UPDATE leads SET status = ?, updated_at = ? WHERE email = ?')
+      .bind(status, new Date().toISOString(), email)
+      .run();
 
     // If restricting, stop future processing
     if (restrict) {
@@ -205,8 +225,10 @@ gdprRoutes.post('/restrict-processing/:email', async (c) => {
 
     return c.json({
       status: 'success',
-      message: restrict ? 'Processing restricted per GDPR Article 18' : 'Processing restriction lifted',
-      processing_status: status
+      message: restrict
+        ? 'Processing restricted per GDPR Article 18'
+        : 'Processing restriction lifted',
+      processing_status: status,
     });
   } catch (error) {
     console.error('GDPR restrict processing error:', error);
@@ -221,9 +243,12 @@ gdprRoutes.post('/consent-withdraw/:email', async (c) => {
     const db = c.get('db');
 
     // Update consent status
-    await db.prepare(
-      'UPDATE leads SET consent_status = ?, consent_timestamp = ?, updated_at = ? WHERE email = ?'
-    ).bind('withdrawn', new Date().toISOString(), new Date().toISOString(), email).run();
+    await db
+      .prepare(
+        'UPDATE leads SET consent_status = ?, consent_timestamp = ?, updated_at = ? WHERE email = ?'
+      )
+      .bind('withdrawn', new Date().toISOString(), new Date().toISOString(), email)
+      .run();
 
     // Stop future processing for this email
     console.log(`GDPR Consent Withdrawn: ${email} - All processing stopped`);
@@ -232,7 +257,7 @@ gdprRoutes.post('/consent-withdraw/:email', async (c) => {
       status: 'success',
       message: 'Consent withdrawn per GDPR Article 7. Consent withdrawal logged.',
       withdrawal_timestamp: new Date().toISOString(),
-      future_processing: 'stopped'
+      future_processing: 'stopped',
     });
   } catch (error) {
     console.error('GDPR consent withdrawal error:', error);
@@ -250,29 +275,29 @@ gdprRoutes.get('/privacy-policy', (c) => {
       name: 'AdsEngineer GmbH',
       address: 'Germany',
       contact: 'privacy@adsengineer.cloud',
-      dpo: 'dpo@adsengineer.cloud'
+      dpo: 'dpo@adsengineer.cloud',
     },
     legal_basis: 'Consent (Article 6(1)(a) GDPR)',
     data_purposes: [
       'Conversion tracking for advertising optimization',
       'Analytics and performance reporting',
-      'GDPR compliance and audit logging'
+      'GDPR compliance and audit logging',
     ],
     data_categories: [
       'Contact information (email, anonymized identifiers)',
       'Tracking parameters (GCLID, FBCLID for attribution)',
       'Consent status and timestamps',
-      'Technology detection data'
+      'Technology detection data',
     ],
     data_recipients: [
       'Google Ads (for conversion uploads)',
       'Meta/Facebook (for conversion uploads)',
-      'Internal analytics systems'
+      'Internal analytics systems',
     ],
     retention_periods: {
       lead_data: '3 years after last activity',
       conversion_logs: '7 years for audit purposes',
-      consent_records: '5 years after consent withdrawal'
+      consent_records: '5 years after consent withdrawal',
     },
     data_subject_rights: {
       access: '/api/v1/gdpr/data-request/:email',
@@ -280,11 +305,11 @@ gdprRoutes.get('/privacy-policy', (c) => {
       erasure: '/api/v1/gdpr/data-erase/:email',
       restrict_processing: '/api/v1/gdpr/restrict-processing/:email',
       data_portability: '/api/v1/gdpr/data-export/:email',
-      consent_withdrawal: '/api/v1/gdpr/consent-withdraw/:email'
+      consent_withdrawal: '/api/v1/gdpr/consent-withdraw/:email',
     },
     international_transfers: 'No data transferred outside EU/EEA',
     automated_decision_making: 'None - all processing requires explicit consent',
-    complaint_rights: 'You have the right to lodge a complaint with supervisory authorities'
+    complaint_rights: 'You have the right to lodge a complaint with supervisory authorities',
   });
 });
 
@@ -304,10 +329,10 @@ gdprRoutes.get('/data-processing-record', async (c) => {
         categories_of_data_subjects: ['Website visitors', 'Marketing leads'],
         recipients: ['Google Ads', 'Meta Conversions API'],
         retention_period: '3 years',
-        security_measures: ['Encryption at rest', 'Access controls', 'Audit logging']
-      }
+        security_measures: ['Encryption at rest', 'Access controls', 'Audit logging'],
+      },
     ],
     dpo_contact: 'dpo@adsengineer.cloud',
-    last_audit: '2024-01-15'
+    last_audit: '2024-01-15',
   });
 });

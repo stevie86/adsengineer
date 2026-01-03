@@ -10,8 +10,8 @@ export interface EncryptionConfig {
 
 export interface EncryptedData {
   encrypted: string; // Base64 encoded
-  iv: string;        // Base64 encoded initialization vector
-  tag?: string;      // Base64 encoded authentication tag (for GCM)
+  iv: string; // Base64 encoded initialization vector
+  tag?: string; // Base64 encoded authentication tag (for GCM)
   algorithm: string;
   timestamp: string; // ISO timestamp of encryption
 }
@@ -36,7 +36,7 @@ export class EncryptionService {
     algorithm: 'AES-GCM',
     keyLength: 256,
     ivLength: 16,
-    tagLength: 128
+    tagLength: 128,
   };
 
   private constructor() {}
@@ -59,7 +59,7 @@ export class EncryptionService {
 
     try {
       // Import the master key from base64-encoded secret
-      const keyData = Uint8Array.from(atob(masterKeySecret), c => c.charCodeAt(0));
+      const keyData = Uint8Array.from(atob(masterKeySecret), (c) => c.charCodeAt(0));
       this.masterKey = await crypto.subtle.importKey(
         'raw',
         keyData,
@@ -95,7 +95,7 @@ export class EncryptionService {
         {
           name: 'AES-GCM',
           iv: iv,
-          tagLength: this.config.tagLength
+          tagLength: this.config.tagLength,
         },
         this.masterKey,
         data
@@ -111,7 +111,7 @@ export class EncryptionService {
         iv: btoa(String.fromCharCode(...iv)),
         tag: btoa(String.fromCharCode(...tag)),
         algorithm: this.config.algorithm,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       console.log(`🔐 Encrypted data with context: ${context || 'unknown'}`);
@@ -132,9 +132,11 @@ export class EncryptionService {
 
     try {
       // Decode base64 data
-      const encrypted = Uint8Array.from(atob(encryptedData.encrypted), c => c.charCodeAt(0));
-      const iv = Uint8Array.from(atob(encryptedData.iv), c => c.charCodeAt(0));
-      const tag = encryptedData.tag ? Uint8Array.from(atob(encryptedData.tag), c => c.charCodeAt(0)) : null;
+      const encrypted = Uint8Array.from(atob(encryptedData.encrypted), (c) => c.charCodeAt(0));
+      const iv = Uint8Array.from(atob(encryptedData.iv), (c) => c.charCodeAt(0));
+      const tag = encryptedData.tag
+        ? Uint8Array.from(atob(encryptedData.tag), (c) => c.charCodeAt(0))
+        : null;
 
       // Reconstruct the encrypted data with auth tag
       const fullEncrypted = new Uint8Array(encrypted.length + (tag?.length || 0));
@@ -148,7 +150,7 @@ export class EncryptionService {
         {
           name: 'AES-GCM',
           iv: iv,
-          tagLength: this.config.tagLength
+          tagLength: this.config.tagLength,
         },
         this.masterKey,
         fullEncrypted
@@ -181,7 +183,7 @@ export class EncryptionService {
         key: key,
         created: new Date(),
         active: true,
-        version: this.keyCache.size + 1
+        version: this.keyCache.size + 1,
       };
 
       this.keyCache.set(encryptionKey.id, encryptionKey);
@@ -243,7 +245,7 @@ export class EncryptionService {
       initialized: this.masterKey !== null,
       algorithm: this.config.algorithm,
       keyLength: this.config.keyLength,
-      cachedKeys: this.keyCache.size
+      cachedKeys: this.keyCache.size,
     };
   }
 }
@@ -251,11 +253,17 @@ export class EncryptionService {
 // Convenience functions
 export const encryptionService = EncryptionService.getInstance();
 
-export const encryptCredential = async (credential: string, context?: string): Promise<EncryptedData> => {
+export const encryptCredential = async (
+  credential: string,
+  context?: string
+): Promise<EncryptedData> => {
   return await encryptionService.encrypt(credential, context);
 };
 
-export const decryptCredential = async (encryptedData: EncryptedData, context?: string): Promise<string> => {
+export const decryptCredential = async (
+  encryptedData: EncryptedData,
+  context?: string
+): Promise<string> => {
   return await encryptionService.decrypt(encryptedData, context);
 };
 

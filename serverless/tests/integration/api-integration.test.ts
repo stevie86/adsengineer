@@ -14,12 +14,12 @@ describe('API Integration Tests - Full Coverage', () => {
         status: 'healthy',
         version: '1.0.0',
         timestamp: '2024-01-01T12:00:00Z',
-        environment: 'test'
+        environment: 'test',
       };
 
       (global.fetch as any).mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
+        json: () => Promise.resolve(mockResponse),
       });
 
       const response = await fetch('/health');
@@ -43,7 +43,7 @@ describe('API Integration Tests - Full Coverage', () => {
 
       const responses = await Promise.all(promises);
       expect(responses).toHaveLength(10);
-      responses.forEach(response => {
+      responses.forEach((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
       });
@@ -54,11 +54,11 @@ describe('API Integration Tests - Full Coverage', () => {
 
       (global.fetch as any).mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ success: true, data: [] })
+        json: () => Promise.resolve({ success: true, data: [] }),
       });
 
       await fetch('/api/v1/leads', {
-        headers: { 'Authorization': 'Bearer valid-token' }
+        headers: { Authorization: 'Bearer valid-token' },
       });
 
       const endTime = Date.now();

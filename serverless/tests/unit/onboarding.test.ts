@@ -17,7 +17,7 @@ describe('Agency Onboarding API', () => {
         contactName: 'John Doe',
         contactEmail: 'john@test.com',
         primaryPlatforms: ['google-ads'],
-        ghlExperience: 'intermediate'
+        ghlExperience: 'intermediate',
       };
 
       expect(validAgency.name).toBeDefined();
@@ -35,7 +35,7 @@ describe('Agency Onboarding API', () => {
       // Test hashing
       const hashed = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(apiKey));
       const hashHex = Array.from(new Uint8Array(hashed))
-        .map(b => b.toString(16).padStart(2, '0'))
+        .map((b) => b.toString(16).padStart(2, '0'))
         .join('');
 
       expect(hashHex.length).toBe(64); // SHA-256 hex length
@@ -47,11 +47,11 @@ describe('Agency Onboarding API', () => {
       const validEmails = ['test@example.com', 'user.name+tag@domain.co.uk'];
       const invalidEmails = ['invalid', 'missing@', '@domain.com'];
 
-      validEmails.forEach(email => {
+      validEmails.forEach((email) => {
         expect(email).toMatch(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
       });
 
-      invalidEmails.forEach(email => {
+      invalidEmails.forEach((email) => {
         expect(email).not.toMatch(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
       });
     });
@@ -60,12 +60,16 @@ describe('Agency Onboarding API', () => {
       const validPlatforms = ['google-ads', 'facebook-ads', 'tiktok-ads'];
       const invalidPlatforms = ['invalid-platform', ''];
 
-      validPlatforms.forEach(platform => {
-        expect(['google-ads', 'facebook-ads', 'tiktok-ads', 'linkedin-ads', 'other']).toContain(platform);
+      validPlatforms.forEach((platform) => {
+        expect(['google-ads', 'facebook-ads', 'tiktok-ads', 'linkedin-ads', 'other']).toContain(
+          platform
+        );
       });
 
-      invalidPlatforms.forEach(platform => {
-        expect(['google-ads', 'facebook-ads', 'tiktok-ads', 'linkedin-ads', 'other']).not.toContain(platform);
+      invalidPlatforms.forEach((platform) => {
+        expect(['google-ads', 'facebook-ads', 'tiktok-ads', 'linkedin-ads', 'other']).not.toContain(
+          platform
+        );
       });
     });
   });
@@ -74,13 +78,19 @@ describe('Agency Onboarding API', () => {
 describe('Database Operations', () => {
   test('agency schema includes all required fields', () => {
     const requiredFields = [
-      'id', 'name', 'contact_name', 'contact_email',
-      'primary_platforms', 'ghl_experience', 'status',
-      'api_key_hash', 'created_at'
+      'id',
+      'name',
+      'contact_name',
+      'contact_email',
+      'primary_platforms',
+      'ghl_experience',
+      'status',
+      'api_key_hash',
+      'created_at',
     ];
 
     // This would be tested against actual schema in integration tests
-    requiredFields.forEach(field => {
+    requiredFields.forEach((field) => {
       expect(field).toBeDefined();
     });
   });
@@ -91,11 +101,11 @@ describe('Database Operations', () => {
       'idx_agencies_status',
       'idx_leads_agency',
       'idx_leads_status',
-      'idx_leads_source'
+      'idx_leads_source',
     ];
 
     // Verify indexes are created
-    expectedIndexes.forEach(index => {
+    expectedIndexes.forEach((index) => {
       expect(index).toMatch(/^idx_/);
     });
   });
@@ -108,13 +118,17 @@ describe('Security', () => {
     const hash2 = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(apiKey));
 
     expect(hash1).toEqual(hash2); // Same input produces same hash
-    expect(new Uint8Array(hash1)).not.toEqual(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode('different-key'))));
+    expect(new Uint8Array(hash1)).not.toEqual(
+      new Uint8Array(
+        await crypto.subtle.digest('SHA-256', new TextEncoder().encode('different-key'))
+      )
+    );
   });
 
   test('email verification tokens are time-sensitive', () => {
     // Test token expiration logic
     const now = Date.now();
-    const future = now + (24 * 60 * 60 * 1000); // 24 hours
+    const future = now + 24 * 60 * 60 * 1000; // 24 hours
 
     expect(future).toBeGreaterThan(now);
     // In real implementation, tokens should expire
@@ -124,13 +138,9 @@ describe('Security', () => {
 describe('Integration Flows', () => {
   test('complete onboarding flow', () => {
     // Test the entire flow from registration to activation
-    const steps = [
-      'register',
-      'verify-email',
-      'setup-complete'
-    ];
+    const steps = ['register', 'verify-email', 'setup-complete'];
 
-    steps.forEach(step => {
+    steps.forEach((step) => {
       expect(step).toBeDefined();
     });
   });
@@ -141,7 +151,7 @@ describe('Integration Flows', () => {
     const leadData = {
       agency_id: agencyId,
       agency_name: 'Test Agency',
-      lead_source: 'hunter-army'
+      lead_source: 'hunter-army',
     };
 
     expect(leadData.agency_id).toBe(agencyId);

@@ -13,7 +13,12 @@ export interface LogEntry {
 }
 
 export interface SecurityEvent extends LogEntry {
-  eventType: 'webhook_signature_failure' | 'payload_validation_error' | 'rate_limit_exceeded' | 'authentication_failure' | 'credential_access_denied';
+  eventType:
+    | 'webhook_signature_failure'
+    | 'payload_validation_error'
+    | 'rate_limit_exceeded'
+    | 'authentication_failure'
+    | 'credential_access_denied';
   severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   source: 'webhook' | 'api' | 'admin' | 'auth';
   details: {
@@ -54,7 +59,7 @@ export class Logger {
       ip: this.extractIp(c),
       userAgent: c?.req.header('User-Agent'),
       shopDomain: c?.req.header('X-Shopify-Shop-Domain'),
-      webhookTopic: c?.req.header('X-Shopify-Topic')
+      webhookTopic: c?.req.header('X-Shopify-Topic'),
     };
 
     this.writeLog(entry);
@@ -66,7 +71,7 @@ export class Logger {
   security(event: Omit<SecurityEvent, 'timestamp'>): void {
     const securityEvent: SecurityEvent = {
       ...event,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     // Always log security events to console with SECURITY prefix
@@ -74,7 +79,7 @@ export class Logger {
       ...securityEvent.details,
       requestId: securityEvent.requestId,
       ip: securityEvent.details.ipAddress,
-      shopDomain: securityEvent.details.shopDomain
+      shopDomain: securityEvent.details.shopDomain,
     });
 
     // In production, this would also send to security monitoring system
@@ -93,14 +98,14 @@ export class Logger {
       source: 'webhook',
       context: {
         validationError: error,
-        headers: this.redactSensitiveHeaders(this.headersToRecord(c.req.raw.headers))
+        headers: this.redactSensitiveHeaders(this.headersToRecord(c.req.raw.headers)),
       },
       details: {
         error,
         shopDomain,
         ipAddress: this.extractIp(c),
-        requestId: this.extractRequestId(c)
-      }
+        requestId: this.extractRequestId(c),
+      },
     });
   }
 
@@ -117,14 +122,14 @@ export class Logger {
       context: {
         topic,
         validationError: error,
-        payloadSize: c.req.header('Content-Length')
+        payloadSize: c.req.header('Content-Length'),
       },
       details: {
         error,
         shopDomain,
         ipAddress: this.extractIp(c),
-        requestId: this.extractRequestId(c)
-      }
+        requestId: this.extractRequestId(c),
+      },
     });
   }
 
@@ -142,13 +147,13 @@ export class Logger {
         limit,
         windowMs,
         keyType: key.split(':')[0], // webhook:ip or webhook:shop
-        retryAfter: Math.ceil(windowMs / 1000)
+        retryAfter: Math.ceil(windowMs / 1000),
       },
       details: {
         ipAddress: this.extractIp(c),
         shopDomain: c.req.header('X-Shopify-Shop-Domain'),
-        requestId: this.extractRequestId(c)
-      }
+        requestId: this.extractRequestId(c),
+      },
     });
   }
 
@@ -156,11 +161,16 @@ export class Logger {
    * Log successful security validations
    */
   logSecuritySuccess(c: Context, operation: string, shopDomain?: string): void {
-    this.log('INFO', `Security validation passed: ${operation}`, {
-      operation,
-      shopDomain,
-      ip: this.extractIp(c)
-    }, c);
+    this.log(
+      'INFO',
+      `Security validation passed: ${operation}`,
+      {
+        operation,
+        shopDomain,
+        ip: this.extractIp(c),
+      },
+      c
+    );
   }
 
   /**
@@ -175,13 +185,13 @@ export class Logger {
       source: 'auth',
       context: {
         reason,
-        attemptedUser: this.redactUsername(attemptedUser)
+        attemptedUser: this.redactUsername(attemptedUser),
       },
       details: {
         error: reason,
         ipAddress: this.extractIp(c),
-        requestId: this.extractRequestId(c)
-      }
+        requestId: this.extractRequestId(c),
+      },
     });
   }
 
@@ -189,19 +199,23 @@ export class Logger {
    * Extract request ID from headers or generate one
    */
   private extractRequestId(c?: Context): string {
-    return c?.req.header('X-Request-ID') ||
-           c?.req.header('CF-RAY') ||
-           `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return (
+      c?.req.header('X-Request-ID') ||
+      c?.req.header('CF-RAY') ||
+      `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    );
   }
 
   /**
    * Extract IP address from Cloudflare headers
    */
   private extractIp(c?: Context): string {
-    return c?.req.header('CF-Connecting-IP') ||
-           c?.req.header('X-Forwarded-For')?.split(',')[0] ||
-           c?.req.header('X-Real-IP') ||
-           'unknown';
+    return (
+      c?.req.header('CF-Connecting-IP') ||
+      c?.req.header('X-Forwarded-For')?.split(',')[0] ||
+      c?.req.header('X-Real-IP') ||
+      'unknown'
+    );
   }
 
   /**
@@ -218,14 +232,16 @@ export class Logger {
   /**
    * Redact sensitive headers before logging
    */
-  private redactSensitiveHeaders(headers: Record<string, string | undefined>): Record<string, string> {
+  private redactSensitiveHeaders(
+    headers: Record<string, string | undefined>
+  ): Record<string, string> {
     const redacted: Record<string, string> = {};
     const sensitiveHeaders = [
       'authorization',
       'x-shopify-hmac-sha256',
       'x-shopify-access-token',
       'stripe-signature',
-      'cookie'
+      'cookie',
     ];
 
     for (const [key, value] of Object.entries(headers)) {
@@ -264,9 +280,14 @@ export class Logger {
     const entryLevelIndex = levels.indexOf(entry.level);
 
     if (entryLevelIndex >= currentLevelIndex) {
-      const logMethod = entry.level === 'ERROR' ? 'error' :
-                       entry.level === 'WARN' ? 'warn' :
-                       entry.level === 'INFO' ? 'info' : 'debug';
+      const logMethod =
+        entry.level === 'ERROR'
+          ? 'error'
+          : entry.level === 'WARN'
+            ? 'warn'
+            : entry.level === 'INFO'
+              ? 'info'
+              : 'debug';
 
       console[logMethod](`[${entry.level}] ${entry.message}`, {
         timestamp: entry.timestamp,
@@ -274,7 +295,7 @@ export class Logger {
         ip: entry.ip,
         shopDomain: entry.shopDomain,
         webhookTopic: entry.webhookTopic,
-        ...entry.context
+        ...entry.context,
       });
     }
   }

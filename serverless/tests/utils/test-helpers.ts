@@ -10,7 +10,14 @@ export class TestDataGenerator {
       contactEmail: faker.internet.email(),
       companyWebsite: faker.internet.url(),
       phone: faker.phone.number(),
-      monthlyAdSpend: faker.helpers.arrayElement(['under-1k', '1k-5k', '5k-10k', '10k-25k', '25k-50k', 'over-50k']),
+      monthlyAdSpend: faker.helpers.arrayElement([
+        'under-1k',
+        '1k-5k',
+        '5k-10k',
+        '10k-25k',
+        '25k-50k',
+        'over-50k',
+      ]),
       primaryPlatforms: faker.helpers.arrayElements(
         ['google-ads', 'facebook-ads', 'tiktok-ads', 'linkedin-ads', 'other'],
         faker.number.int({ min: 1, max: 3 })
@@ -20,8 +27,14 @@ export class TestDataGenerator {
         ['Tracking setup', 'Attribution issues', 'Cross-platform reporting', 'Lead quality'],
         faker.number.int({ min: 0, max: 3 })
       ),
-      referralSource: faker.helpers.arrayElement(['google', 'linkedin', 'referral', 'conference', null]),
-      ...overrides
+      referralSource: faker.helpers.arrayElement([
+        'google',
+        'linkedin',
+        'referral',
+        'conference',
+        null,
+      ]),
+      ...overrides,
     };
   }
 
@@ -37,7 +50,7 @@ export class TestDataGenerator {
       tracking_broken: faker.datatype.boolean(),
       lead_value_cents: faker.number.int({ min: 0, max: 100000 }),
       notes: faker.lorem.sentence(),
-      ...overrides
+      ...overrides,
     };
   }
 
@@ -59,7 +72,7 @@ afterAll(async () => {
 
 // Helper functions for tests
 export const testHelpers = {
-  wait: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
+  wait: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
 
   retry: async (fn, maxAttempts = 3, delay = 1000) => {
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -79,7 +92,7 @@ export const testHelpers = {
     if (expectedStatus >= 200 && expectedStatus < 300) {
       expect(response.data.success).toBe(true);
     }
-  }
+  },
 };
 
 describe('Test Infrastructure', () => {
@@ -106,11 +119,15 @@ describe('Test Infrastructure', () => {
 
     let attempts = 0;
     try {
-      await testHelpers.retry(() => {
-        attempts++;
-        if (attempts < 3) throw new Error('fail');
-        return 'success';
-      }, 3, 10);
+      await testHelpers.retry(
+        () => {
+          attempts++;
+          if (attempts < 3) throw new Error('fail');
+          return 'success';
+        },
+        3,
+        10
+      );
     } catch (error) {
       // Should not reach here
     }

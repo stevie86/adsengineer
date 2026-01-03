@@ -8,7 +8,7 @@ describe('End-to-End Agency Onboarding', () => {
       contactName: 'Jane Smith',
       contactEmail: 'jane@testagency.com',
       primaryPlatforms: ['google-ads'],
-      ghlExperience: 'beginner'
+      ghlExperience: 'beginner',
     };
 
     // 2. Verify registration response
@@ -24,10 +24,10 @@ describe('End-to-End Agency Onboarding', () => {
     const expectedSteps = [
       'Verify your email address',
       'Complete your agency profile',
-      'Set up your first lead tracking'
+      'Set up your first lead tracking',
     ];
 
-    expectedSteps.forEach(step => {
+    expectedSteps.forEach((step) => {
       expect(typeof step).toBe('string');
     });
   });
@@ -48,17 +48,17 @@ describe('End-to-End Agency Onboarding', () => {
     // 1. Agency registers
     const agency = {
       id: 'agency-123',
-      name: 'Test Agency'
+      name: 'Test Agency',
     };
 
     // 2. Hunter Army finds leads
     const leads = [
       { name: 'Lead 1', website: 'lead1.com' },
-      { name: 'Lead 2', website: 'lead2.com' }
+      { name: 'Lead 2', website: 'lead2.com' },
     ];
 
     // 3. Leads are attributed to agency
-    leads.forEach(lead => {
+    leads.forEach((lead) => {
       expect(lead.website).toBeDefined();
     });
 
@@ -73,7 +73,7 @@ describe('Cross-System Integration', () => {
     const workflowTrigger = {
       workflow: 'hunter-army',
       action: 'new-lead',
-      data: { agency: 'test', lead: 'data' }
+      data: { agency: 'test', lead: 'data' },
     };
 
     expect(workflowTrigger.workflow).toBe('hunter-army');
@@ -84,7 +84,7 @@ describe('Cross-System Integration', () => {
     const apiResponse = {
       success: true,
       action: 'send-notification',
-      data: { type: 'new-lead' }
+      data: { type: 'new-lead' },
     };
 
     expect(apiResponse.success).toBe(true);
@@ -96,7 +96,7 @@ describe('Error Handling & Recovery', () => {
     // Test offline/network error handling
     const errorScenarios = ['timeout', 'connection-refused', 'dns-failure'];
 
-    errorScenarios.forEach(scenario => {
+    errorScenarios.forEach((scenario) => {
       expect(typeof scenario).toBe('string');
     });
   });
@@ -111,7 +111,7 @@ describe('Error Handling & Recovery', () => {
     // Test transactional integrity
     const transaction = {
       operations: ['create-agency', 'generate-key', 'send-email'],
-      rollbackOnFailure: true
+      rollbackOnFailure: true,
     };
 
     expect(transaction.rollbackOnFailure).toBe(true);
@@ -128,10 +128,10 @@ describe('Security & Compliance', () => {
     const rateLimits = {
       registration: '10/hour',
       apiCalls: '1000/hour',
-      emailVerification: '5/hour'
+      emailVerification: '5/hour',
     };
 
-    Object.values(rateLimits).forEach(limit => {
+    Object.values(rateLimits).forEach((limit) => {
       expect(typeof limit).toBe('string');
     });
   });
@@ -140,10 +140,10 @@ describe('Security & Compliance', () => {
     const maliciousInputs = [
       '<script>alert("xss")</script>',
       'DROP TABLE users;',
-      '../../../../etc/passwd'
+      '../../../../etc/passwd',
     ];
 
-    maliciousInputs.forEach(input => {
+    maliciousInputs.forEach((input) => {
       // In real tests, verify sanitization
       expect(typeof input).toBe('string');
     });

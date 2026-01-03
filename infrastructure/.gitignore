@@ -1,0 +1,17 @@
+# Local backend configuration
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+.terraform/
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
+.terraform.tfstate.backup
+.terraform.tfstate.backup.info
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Doppler
+doppler.yaml

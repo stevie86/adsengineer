@@ -1,5 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { Logger, logger, logWebhookSuccess, logWebhookFailure, logPayloadError } from '../../src/services/logging';
+import {
+  Logger,
+  logger,
+  logWebhookSuccess,
+  logWebhookFailure,
+  logPayloadError,
+} from '../../src/services/logging';
 
 // Mock console methods
 const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
@@ -33,20 +39,24 @@ describe('Logging Service', () => {
             headers: new Headers({
               'CF-Connecting-IP': '192.168.1.1',
               'X-Request-ID': 'req_123',
-              'X-Shopify-Shop-Domain': 'test-shop.myshopify.com'
-            })
-          }
-        }
+              'X-Shopify-Shop-Domain': 'test-shop.myshopify.com',
+            }),
+          },
+        },
       };
 
-      logger.logWebhookSignatureFailure(mockContext as any, 'test-shop.myshopify.com', 'Invalid signature');
+      logger.logWebhookSignatureFailure(
+        mockContext as any,
+        'test-shop.myshopify.com',
+        'Invalid signature'
+      );
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
         '[SECURITY-HIGH] webhook_signature_failure: Webhook signature validation failed for shop: test-shop.myshopify.com',
         expect.objectContaining({
           error: 'Invalid signature',
           shopDomain: 'test-shop.myshopify.com',
-          ipAddress: '192.168.1.1'
+          ipAddress: '192.168.1.1',
         })
       );
     });
@@ -57,21 +67,26 @@ describe('Logging Service', () => {
           header: vi.fn((name: string) => {
             const headers: Record<string, string> = {
               'CF-Connecting-IP': '192.168.1.2',
-              'X-Shopify-Shop-Domain': 'test-shop.myshopify.com'
+              'X-Shopify-Shop-Domain': 'test-shop.myshopify.com',
             };
             return headers[name];
-          })
-        }
+          }),
+        },
       };
 
-      logger.logWebhookPayloadError(mockContext as any, 'test-shop.myshopify.com', 'customers/create', 'Missing required field: id');
+      logger.logWebhookPayloadError(
+        mockContext as any,
+        'test-shop.myshopify.com',
+        'customers/create',
+        'Missing required field: id'
+      );
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
         '[SECURITY-MEDIUM] payload_validation_error: Webhook payload validation failed: Missing required field: id',
         expect.objectContaining({
           error: 'Missing required field: id',
           shopDomain: 'test-shop.myshopify.com',
-          ipAddress: '192.168.1.2'
+          ipAddress: '192.168.1.2',
         })
       );
     });
@@ -81,9 +96,9 @@ describe('Logging Service', () => {
         req: {
           header: vi.fn((name: string) => '192.168.1.3'),
           raw: {
-            headers: new Headers()
-          }
-        }
+            headers: new Headers(),
+          },
+        },
       };
 
       logger.logRateLimitExceeded(mockContext as any, 'webhook:ip:192.168.1.3', 100, 3600000);
@@ -91,7 +106,7 @@ describe('Logging Service', () => {
       expect(consoleWarnSpy).toHaveBeenCalledWith(
         '[SECURITY-MEDIUM] rate_limit_exceeded: Rate limit exceeded for key: webhook:ip:192.168.1.3',
         expect.objectContaining({
-          ipAddress: '192.168.1.3'
+          ipAddress: '192.168.1.3',
         })
       );
     });
@@ -101,10 +116,10 @@ describe('Logging Service', () => {
     it('should redact sensitive headers', () => {
       const logger = Logger.getInstance();
       const headers = {
-        'Authorization': 'Bearer secret-token',
+        Authorization: 'Bearer secret-token',
         'X-Shopify-Hmac-Sha256': 'secret-hmac',
         'Content-Type': 'application/json',
-        'User-Agent': 'Shopify/1.0'
+        'User-Agent': 'Shopify/1.0',
       };
 
       // Access private method for testing
@@ -141,8 +156,8 @@ describe('Logging Service', () => {
       const mockContext = {
         req: {
           header: vi.fn(() => undefined),
-          raw: { headers: new Headers() }
-        }
+          raw: { headers: new Headers() },
+        },
       };
       logger.log('DEBUG', 'Debug message', {}, mockContext as any);
       expect(consoleInfoSpy).not.toHaveBeenCalled();
@@ -152,8 +167,8 @@ describe('Logging Service', () => {
       const mockContext = {
         req: {
           header: vi.fn(() => undefined),
-          raw: { headers: new Headers() }
-        }
+          raw: { headers: new Headers() },
+        },
       };
       logger.log('WARN', 'Warning message', {}, mockContext as any);
       expect(consoleWarnSpy).toHaveBeenCalled();
@@ -167,17 +182,17 @@ describe('Logging Service', () => {
           header: vi.fn((name: string) => {
             const headers: Record<string, string> = {
               'X-Shopify-Shop-Domain': 'test-shop.myshopify.com',
-              'CF-Connecting-IP': '192.168.1.1'
+              'CF-Connecting-IP': '192.168.1.1',
             };
             return headers[name];
           }),
           raw: {
             headers: new Headers({
               'X-Shopify-Shop-Domain': 'test-shop.myshopify.com',
-              'CF-Connecting-IP': '192.168.1.1'
-            })
-          }
-        }
+              'CF-Connecting-IP': '192.168.1.1',
+            }),
+          },
+        },
       };
 
       // Test success logging
@@ -195,7 +210,12 @@ describe('Logging Service', () => {
       );
 
       // Test payload error logging
-      logPayloadError(mockContext as any, 'test-shop.myshopify.com', 'orders/create', 'Invalid data');
+      logPayloadError(
+        mockContext as any,
+        'test-shop.myshopify.com',
+        'orders/create',
+        'Invalid data'
+      );
       expect(consoleWarnSpy).toHaveBeenCalledWith(
         expect.stringContaining('payload_validation_error'),
         expect.any(Object)

@@ -10,18 +10,18 @@ export const openApiSpec = {
     description: 'Conversion tracking API for GoHighLevel agencies',
     contact: {
       name: 'AdsEngineer Support',
-      url: 'https://adsengineer.com'
-    }
+      url: 'https://adsengineer.com',
+    },
   },
   servers: [
     {
       url: 'https://advocate-cloud.adsengineer.workers.dev',
-      description: 'Production'
+      description: 'Production',
     },
     {
       url: 'http://localhost:8787',
-      description: 'Local development'
-    }
+      description: 'Local development',
+    },
   ],
   tags: [
     { name: 'Health', description: 'Health check endpoints' },
@@ -29,7 +29,7 @@ export const openApiSpec = {
     { name: 'Shopify', description: 'Shopify webhook integration' },
     { name: 'Waitlist', description: 'Landing page waitlist signups' },
     { name: 'Leads', description: 'Lead management (authenticated)' },
-    { name: 'Admin', description: 'Admin operations (admin token required)' }
+    { name: 'Admin', description: 'Admin operations (admin token required)' },
   ],
   paths: {
     '/health': {
@@ -48,14 +48,14 @@ export const openApiSpec = {
                     status: { type: 'string', example: 'healthy' },
                     version: { type: 'string', example: '1.0.0' },
                     timestamp: { type: 'string', format: 'date-time' },
-                    environment: { type: 'string', example: 'production' }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    environment: { type: 'string', example: 'production' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
     '/api/v1/ghl/webhook': {
       get: {
@@ -74,18 +74,19 @@ export const openApiSpec = {
                     message: { type: 'string' },
                     usage: { type: 'string' },
                     required_fields: { type: 'array', items: { type: 'string' } },
-                    optional_fields: { type: 'array', items: { type: 'string' } }
-                  }
-                }
-              }
-            }
-          }
-        }
+                    optional_fields: { type: 'array', items: { type: 'string' } },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       post: {
         tags: ['GHL'],
         summary: 'Receive GHL webhook',
-        description: 'Receives lead data from GoHighLevel workflows. Captures GCLID/FBCLID for offline conversion tracking.',
+        description:
+          'Receives lead data from GoHighLevel workflows. Captures GCLID/FBCLID for offline conversion tracking.',
         requestBody: {
           required: true,
           content: {
@@ -105,8 +106,8 @@ export const openApiSpec = {
                   utm_medium: { type: 'string' },
                   utm_campaign: { type: 'string' },
                   tags: { type: 'array', items: { type: 'string' } },
-                  custom_fields: { type: 'object' }
-                }
+                  custom_fields: { type: 'object' },
+                },
               },
               example: {
                 email: 'lead@example.com',
@@ -114,10 +115,10 @@ export const openApiSpec = {
                 gclid: 'CjwKCAtest123',
                 utm_source: 'google',
                 utm_medium: 'cpc',
-                tags: ['qualified', 'high-value']
-              }
-            }
-          }
+                tags: ['qualified', 'high-value'],
+              },
+            },
+          },
         },
         responses: {
           '200': {
@@ -133,20 +134,20 @@ export const openApiSpec = {
                     fbclid_captured: { type: 'boolean' },
                     lead_value_cents: { type: 'integer' },
                     conversion_ready: { type: 'boolean' },
-                    message: { type: 'string' }
-                  }
-                }
-              }
-            }
+                    message: { type: 'string' },
+                  },
+                },
+              },
+            },
           },
           '400': {
-            description: 'Missing required fields'
+            description: 'Missing required fields',
           },
           '500': {
-            description: 'Processing error'
-          }
-        }
-      }
+            description: 'Processing error',
+          },
+        },
+      },
     },
     '/api/v1/shopify/webhook': {
       get: {
@@ -163,33 +164,34 @@ export const openApiSpec = {
                   properties: {
                     status: { type: 'string' },
                     supported_topics: { type: 'array', items: { type: 'string' } },
-                    usage: { type: 'string' }
-                  }
-                }
-              }
-            }
-          }
-        }
+                    usage: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       post: {
         tags: ['Shopify'],
         summary: 'Receive Shopify webhook',
-        description: 'Receives customer and order data from Shopify stores. Processes leads for conversion tracking.',
+        description:
+          'Receives customer and order data from Shopify stores. Processes leads for conversion tracking.',
         parameters: [
           {
             name: 'X-Shopify-Topic',
             in: 'header',
             required: true,
             schema: { type: 'string' },
-            description: 'Shopify webhook topic (customers/create, orders/create, etc.)'
+            description: 'Shopify webhook topic (customers/create, orders/create, etc.)',
           },
           {
             name: 'X-Shopify-Shop-Domain',
             in: 'header',
             required: true,
             schema: { type: 'string' },
-            description: 'Shopify store domain'
-          }
+            description: 'Shopify store domain',
+          },
         ],
         requestBody: {
           required: true,
@@ -207,8 +209,12 @@ export const openApiSpec = {
                       last_name: { type: 'string' },
                       phone: { type: 'string' },
                       created_at: { type: 'string', format: 'date-time' },
-                      tags: { type: 'array', items: { type: 'string' }, description: 'May contain UTM parameters' }
-                    }
+                      tags: {
+                        type: 'array',
+                        items: { type: 'string' },
+                        description: 'May contain UTM parameters',
+                      },
+                    },
                   },
                   {
                     title: 'Order Webhook',
@@ -220,18 +226,22 @@ export const openApiSpec = {
                       currency: { type: 'string' },
                       created_at: { type: 'string', format: 'date-time' },
                       landing_site: { type: 'string', description: 'Referral URL' },
-                      tags: { type: 'array', items: { type: 'string' }, description: 'May contain UTM parameters' },
+                      tags: {
+                        type: 'array',
+                        items: { type: 'string' },
+                        description: 'May contain UTM parameters',
+                      },
                       customer: {
                         type: 'object',
                         properties: {
                           email: { type: 'string', format: 'email' },
                           first_name: { type: 'string' },
-                          phone: { type: 'string' }
-                        }
-                      }
-                    }
-                  }
-                ]
+                          phone: { type: 'string' },
+                        },
+                      },
+                    },
+                  },
+                ],
               },
               example: {
                 id: 123456789,
@@ -240,10 +250,10 @@ export const openApiSpec = {
                 last_name: 'Doe',
                 phone: '+49123456789',
                 created_at: '2024-01-15T10:30:00Z',
-                tags: ['gclid:CjwKCAtest123', 'utm_source:google', 'utm_campaign:summer_sale']
-              }
-            }
-          }
+                tags: ['gclid:CjwKCAtest123', 'utm_source:google', 'utm_campaign:summer_sale'],
+              },
+            },
+          },
         },
         responses: {
           '200': {
@@ -256,23 +266,23 @@ export const openApiSpec = {
                     status: { type: 'string', example: 'success' },
                     lead_id: { type: 'string', example: 'abc-123-def' },
                     topic: { type: 'string', example: 'customers/create' },
-                    shop_domain: { type: 'string', example: 'mycannaby.de' }
-                  }
-                }
-              }
-            }
+                    shop_domain: { type: 'string', example: 'mycannaby.de' },
+                  },
+                },
+              },
+            },
           },
           '400': {
-            description: 'Invalid webhook data'
+            description: 'Invalid webhook data',
           },
           '404': {
-            description: 'Agency not found for shop domain'
+            description: 'Agency not found for shop domain',
           },
           '500': {
-            description: 'Processing error'
-          }
-        }
-      }
+            description: 'Processing error',
+          },
+        },
+      },
     },
     '/api/v1/gdpr/data-request/{email}': {
       get: {
@@ -285,8 +295,8 @@ export const openApiSpec = {
             in: 'path',
             required: true,
             schema: { type: 'string', format: 'email' },
-            description: 'Email address to request data for'
-          }
+            description: 'Email address to request data for',
+          },
         ],
         responses: {
           '200': {
@@ -302,31 +312,32 @@ export const openApiSpec = {
                       properties: {
                         leads: { type: 'array' },
                         conversion_logs: { type: 'array' },
-                        data_portability: { type: 'object' }
-                      }
+                        data_portability: { type: 'object' },
+                      },
                     },
-                    gdpr_rights: { type: 'object' }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    gdpr_rights: { type: 'object' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
     '/api/v1/gdpr/data-export/{email}': {
       get: {
         tags: ['GDPR'],
         summary: 'GDPR Data Export',
-        description: 'Right to Data Portability - Download all your personal data (GDPR Article 20)',
+        description:
+          'Right to Data Portability - Download all your personal data (GDPR Article 20)',
         parameters: [
           {
             name: 'email',
             in: 'path',
             required: true,
             schema: { type: 'string', format: 'email' },
-            description: 'Email address to export data for'
-          }
+            description: 'Email address to export data for',
+          },
         ],
         responses: {
           '200': {
@@ -339,14 +350,14 @@ export const openApiSpec = {
                     export_timestamp: { type: 'string' },
                     data_controller: { type: 'string' },
                     leads: { type: 'array' },
-                    consent_history: { type: 'array' }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    consent_history: { type: 'array' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
     '/api/v1/gdpr/data-rectify/{email}': {
       put: {
@@ -359,8 +370,8 @@ export const openApiSpec = {
             in: 'path',
             required: true,
             schema: { type: 'string', format: 'email' },
-            description: 'Email address to rectify data for'
-          }
+            description: 'Email address to rectify data for',
+          },
         ],
         requestBody: {
           required: true,
@@ -370,18 +381,18 @@ export const openApiSpec = {
                 type: 'object',
                 properties: {
                   vertical: { type: 'string' },
-                  status: { type: 'string' }
-                }
-              }
-            }
-          }
+                  status: { type: 'string' },
+                },
+              },
+            },
+          },
         },
         responses: {
           '200': {
-            description: 'Data rectification completed'
-          }
-        }
-      }
+            description: 'Data rectification completed',
+          },
+        },
+      },
     },
     '/api/v1/gdpr/data-erase/{email}': {
       delete: {
@@ -394,15 +405,15 @@ export const openApiSpec = {
             in: 'path',
             required: true,
             schema: { type: 'string', format: 'email' },
-            description: 'Email address to erase data for'
-          }
+            description: 'Email address to erase data for',
+          },
         ],
         responses: {
           '200': {
-            description: 'Data erasure completed'
-          }
-        }
-      }
+            description: 'Data erasure completed',
+          },
+        },
+      },
     },
     '/api/v1/gdpr/consent-withdraw/{email}': {
       post: {
@@ -415,15 +426,15 @@ export const openApiSpec = {
             in: 'path',
             required: true,
             schema: { type: 'string', format: 'email' },
-            description: 'Email address to withdraw consent for'
-          }
+            description: 'Email address to withdraw consent for',
+          },
         ],
         responses: {
           '200': {
-            description: 'Consent withdrawn successfully'
-          }
-        }
-      }
+            description: 'Consent withdrawn successfully',
+          },
+        },
+      },
     },
     '/api/v1/gdpr/privacy-policy': {
       get: {
@@ -442,14 +453,14 @@ export const openApiSpec = {
                     legal_basis: { type: 'string' },
                     data_purposes: { type: 'array' },
                     retention_periods: { type: 'object' },
-                    data_subject_rights: { type: 'object' }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    data_subject_rights: { type: 'object' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
     '/api/v1/waitlist': {
       post: {
@@ -469,16 +480,16 @@ export const openApiSpec = {
                   website: { type: 'string', format: 'uri' },
                   monthly_ad_spend: { type: 'string' },
                   pain_point: { type: 'string' },
-                  referral_source: { type: 'string' }
-                }
+                  referral_source: { type: 'string' },
+                },
               },
               example: {
                 email: 'agency@example.com',
                 agency_name: 'Growth Marketing Co',
-                monthly_ad_spend: '$10k-50k'
-              }
-            }
-          }
+                monthly_ad_spend: '$10k-50k',
+              },
+            },
+          },
         },
         responses: {
           '200': {
@@ -491,17 +502,17 @@ export const openApiSpec = {
                     success: { type: 'boolean' },
                     message: { type: 'string' },
                     id: { type: 'string' },
-                    already_registered: { type: 'boolean' }
-                  }
-                }
-              }
-            }
+                    already_registered: { type: 'boolean' },
+                  },
+                },
+              },
+            },
           },
           '400': {
-            description: 'Invalid email'
-          }
-        }
-      }
+            description: 'Invalid email',
+          },
+        },
+      },
     },
     '/api/v1/waitlist/count': {
       get: {
@@ -517,20 +528,21 @@ export const openApiSpec = {
                   type: 'object',
                   properties: {
                     waitlist_count: { type: 'integer' },
-                    message: { type: 'string' }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    message: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
     '/api/v1/admin/backup': {
       get: {
         tags: ['Admin'],
         summary: 'Export encrypted backup',
-        description: 'Exports all database tables as AES-256-GCM encrypted JSON. Use for automated backups to GDrive.',
+        description:
+          'Exports all database tables as AES-256-GCM encrypted JSON. Use for automated backups to GDrive.',
         security: [{ bearerAuth: [] }],
         responses: {
           '200': {
@@ -547,20 +559,20 @@ export const openApiSpec = {
                       properties: {
                         leads: { type: 'integer' },
                         waitlist: { type: 'integer' },
-                        optimization_triggers: { type: 'integer' }
-                      }
+                        optimization_triggers: { type: 'integer' },
+                      },
                     },
                     data: { type: 'string', description: 'Base64 encoded ciphertext' },
-                    iv: { type: 'string', description: 'Base64 encoded IV' }
-                  }
-                }
-              }
-            }
+                    iv: { type: 'string', description: 'Base64 encoded IV' },
+                  },
+                },
+              },
+            },
           },
           '401': { description: 'Missing authorization' },
-          '403': { description: 'Invalid admin token' }
-        }
-      }
+          '403': { description: 'Invalid admin token' },
+        },
+      },
     },
     '/api/v1/admin/backup/decrypt': {
       post: {
@@ -577,18 +589,18 @@ export const openApiSpec = {
                 required: ['data', 'iv'],
                 properties: {
                   data: { type: 'string', description: 'Base64 encoded ciphertext' },
-                  iv: { type: 'string', description: 'Base64 encoded IV' }
-                }
-              }
-            }
-          }
+                  iv: { type: 'string', description: 'Base64 encoded IV' },
+                },
+              },
+            },
+          },
         },
         responses: {
           '200': { description: 'Decrypted backup data' },
           '400': { description: 'Missing data or iv' },
-          '401': { description: 'Missing authorization' }
-        }
-      }
+          '401': { description: 'Missing authorization' },
+        },
+      },
     },
     '/api/v1/admin/stats': {
       get: {
@@ -608,8 +620,8 @@ export const openApiSpec = {
                       type: 'object',
                       properties: {
                         leads: { type: 'integer' },
-                        waitlist: { type: 'integer' }
-                      }
+                        waitlist: { type: 'integer' },
+                      },
                     },
                     leads_last_7_days: {
                       type: 'array',
@@ -617,33 +629,33 @@ export const openApiSpec = {
                         type: 'object',
                         properties: {
                           date: { type: 'string' },
-                          count: { type: 'integer' }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                          count: { type: 'integer' },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   components: {
     securitySchemes: {
       bearerAuth: {
         type: 'http',
         scheme: 'bearer',
-        description: 'Admin endpoints require ADMIN_SECRET as bearer token'
-      }
-    }
-  }
+        description: 'Admin endpoints require ADMIN_SECRET as bearer token',
+      },
+    },
+  },
 };
 
 export function setupDocs(app: Hono<AppEnv>) {
   app.get('/docs', swaggerUI({ url: '/openapi.json' }));
-  
+
   app.get('/openapi.json', (c) => {
     return c.json(openApiSpec);
   });

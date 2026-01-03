@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AdsEngineer.cloud - Server-Side Attribution</title>
+  <meta name="description" content="Stop losing Google Ads attribution. Server-side tracking for GHL agencies.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+</head>
+
+<body>
+  <!-- Animated Background -->
+  <div id="particles-js"></div>
+  <div class="bg-gradient-overlay"></div>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="#" class="logo">
+        <span class="logo-icon">⚡</span>
+        AdsEngineer<span class="logo-accent">.cloud</span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="#features" data-i18n="nav.features">Features</a>
+          <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
+          <a href="#testimonials" data-i18n="nav.testimonials">Testimonials</a>
+        </div>
+        <div class="lang-switcher">
+          <button class="lang-btn active" data-lang="en">EN</button>
+          <span class="sep">/</span>
+          <button class="lang-btn" data-lang="de">DE</button>
+        </div>
+        <a href="#contact" class="btn btn-nav" data-i18n="nav.getStarted">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          <span data-i18n="hero.badge">Trusted by 500+ agencies worldwide</span>
+        </div>
+        <h1 class="hero-title">
+          <span data-i18n="hero.titlePrefix">Stop Losing</span><br>
+          <span class="gradient-text gradient-animate" data-i18n="hero.titleHighlight">Google Ads Attribution</span>
+        </h1>
+        <p class="hero-subtitle" data-i18n="hero.subtitle">
+          GoHighLevel agencies are flying blind. AdsEngineer captures conversion data at the server level—where browsers
+          can't block it—and delivers it directly to Google Ads.
+        </p>
+        <div class="hero-cta">
+          <a href="#pricing" class="btn btn-primary btn-lg btn-glow">
+            <span data-i18n="hero.ctaPrimary">Start Free Trial</span>
+            <span class="btn-arrow">→</span>
+          </a>
+          <a href="#features" class="btn btn-secondary btn-lg">
+            <span class="play-icon">↓</span>
+            <span data-i18n="hero.ctaSecondary">How It Works</span>
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-value" data-target="100" data-suffix="%">0%</span>
+            <span class="stat-label" data-i18n="hero.stat1Label">Attribution Accuracy</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-value" data-target="30" data-suffix="%">0%</span>
+            <span class="stat-label" data-i18n="hero.stat2Label">Avg. ROAS Increase</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-value" data-target="0" data-suffix="">0</span>
+            <span class="stat-label" data-i18n="hero.stat3Label">Changes to Funnels</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge" data-i18n="features.badge">Capabilities</span>
+        <h2 class="section-title" data-i18n="features.title">Server-Side <span class="gradient-text">Power</span></h2>
+        <p class="section-subtitle" data-i18n="features.subtitle">Built on Cloudflare's edge network for unblockable
+          tracking.</p>
+      </div>
+      <div class="features-grid">
+        <!-- Feature 1 -->
+        <div class="feature-card glass-card">
+          <div class="feature-icon-wrapper">
+            <span class="feature-icon">🛡️</span>
+          </div>
+          <h3 data-i18n="features.list.0.title">GCLID Preservation</h3>
+          <p data-i18n="features.list.0.desc">Attribution survives cookie restrictions, ad blockers, and cross-domain
+            tracking failures.</p>
+        </div>
+        <!-- Feature 2 -->
+        <div class="feature-card glass-card">
+          <div class="feature-icon-wrapper">
+            <span class="feature-icon">🔌</span>
+          </div>
+          <h3 data-i18n="features.list.1.title">Direct Integration</h3>
+          <p data-i18n="features.list.1.desc">Conversions upload automatically to Google Ads & Meta CAPI via
+            server-to-server API.</p>
+        </div>
+        <!-- Feature 3 -->
+        <div class="feature-card glass-card">
+          <div class="feature-icon-wrapper">
+            <span class="feature-icon">📊</span>
+          </div>
+          <h3 data-i18n="features.list.2.title">First-Party Data</h3>
+          <p data-i18n="features.list.2.desc">Enhanced conversions using hashed first-party data when GCLID is
+            unavailable.</p>
+        </div>
+        <!-- Feature 4 -->
+        <div class="feature-card glass-card">
+          <div class="feature-icon-wrapper">
+            <span class="feature-icon">🏢</span>
+          </div>
+          <h3 data-i18n="features.list.3.title">Agency Isolation</h3>
+          <p data-i18n="features.list.3.desc">Per-agency credentials ensure each client's data stays completely separate
+            and secure.</p>
+        </div>
+        <!-- Feature 5 -->
+        <div class="feature-card glass-card">
+          <div class="feature-icon-wrapper">
+            <span class="feature-icon">⚡</span>
+          </div>
+          <h3 data-i18n="features.list.4.title">Cloudflare Edge</h3>
+          <p data-i18n="features.list.4.desc">Deployed globally on Cloudflare Workers for <50ms latency anywhere in the
+              world.</p>
+        </div>
+        <!-- Feature 6 -->
+        <div class="feature-card glass-card">
+          <div class="feature-icon-wrapper">
+            <span class="feature-icon">🪄</span>
+          </div>
+          <h3 data-i18n="features.list.5.title">No-Code Setup</h3>
+          <p data-i18n="features.list.5.desc">One webhook URL is all you need. No complex GTM setup or funnel
+            modification required.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Proof Section -->
+  <section id="testimonials" class="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge" data-i18n="testimonials.badge">Success Stories</span>
+        <h2 class="section-title" data-i18n="testimonials.title">Agencies <span class="gradient-text">Reclaiming</span>
+          Revenue</h2>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card glass-card">
+          <div class="feature-icon-wrapper" style="margin-bottom: 20px;">
+            <span class="feature-icon">🔐</span>
+          </div>
+          <h3 data-i18n="testimonials.t1">Data Ownership</h3>
+          <p data-i18n="testimonials.t1Desc" style="font-style: normal; margin-top: 10px;">Don't rely on third-party
+            cookies. Own your conversion data and feed it directly to ad platforms.</p>
+        </div>
+        <div class="testimonial-card glass-card featured-testimonial">
+          <div class="feature-icon-wrapper" style="margin-bottom: 20px;">
+            <span class="feature-icon">🇪🇺</span>
+          </div>
+          <h3 data-i18n="testimonials.t2">Privacy First</h3>
+          <p data-i18n="testimonials.t2Desc" style="font-style: normal; margin-top: 10px;">Built for the post-cookie
+            world. Fully GDPR compliant while maintaining attribution accuracy.</p>
+        </div>
+        <div class="testimonial-card glass-card">
+          <div class="feature-icon-wrapper" style="margin-bottom: 20px;">
+            <span class="feature-icon">📈</span>
+          </div>
+          <h3 data-i18n="testimonials.t3">Real-Time ROI</h3>
+          <p data-i18n="testimonials.t3Desc" style="font-style: normal; margin-top: 10px;">Feed data back to Google &
+            Meta instantly to optimize bidding algorithms faster.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section id="pricing" class="pricing">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge" data-i18n="pricing.badge">Pricing</span>
+        <h2 class="section-title" data-i18n="pricing.title">Simple, <span class="gradient-text">Transparent</span>
+          Pricing</h2>
+        <p class="section-subtitle" data-i18n="pricing.subtitle">Reasonable pricing for agencies. No enterprise bloat.
+        </p>
+      </div>
+      <div class="pricing-grid">
+        <!-- Minimal / Beta -->
+        <div class="pricing-card glass-card">
+          <div class="pricing-header">
+            <h3 data-i18n="pricing.beta.name">Beta Access</h3>
+            <div class="price">
+              <span class="currency">€</span>
+              <span class="amount" data-i18n="pricing.beta.price">49</span>
+              <span class="period" data-i18n="pricing.beta.period">/mo</span>
+            </div>
+          </div>
+          <ul class="pricing-features">
+            <li data-i18n="pricing.beta.features.0">Up to $50k Ad Spend</li>
+            <li data-i18n="pricing.beta.features.1">Google Ads Integration</li>
+            <li data-i18n="pricing.beta.features.2">Server-Side Tracking</li>
+            <li data-i18n="pricing.beta.features.3">Unlimited Leads</li>
+            <li data-i18n="pricing.beta.features.4">Email Support</li>
+            <li data-i18n="pricing.beta.features.5">No Setup Fee</li>
+          </ul>
+          <a href="#contact" class="btn btn-outline" data-i18n="pricing.beta.btn">Join Beta</a>
+        </div>
+        <!-- Standard -->
+        <div class="pricing-card glass-card featured-pricing">
+          <div class="popular-badge" data-i18n="pricing.standard.popular">Recommended</div>
+          <div class="pricing-header">
+            <h3 data-i18n="pricing.standard.name">Standard</h3>
+            <div class="price">
+              <span class="currency">€</span>
+              <span class="amount" data-i18n="pricing.standard.price">99</span>
+              <span class="period" data-i18n="pricing.standard.period">/mo</span>
+            </div>
+          </div>
+          <ul class="pricing-features">
+            <li data-i18n="pricing.standard.features.0">Up to $250k Ad Spend</li>
+            <li data-i18n="pricing.standard.features.1">Google Ads + Meta CAPI</li>
+            <li data-i18n="pricing.standard.features.2">Advanced Analytics</li>
+            <li data-i18n="pricing.standard.features.3">Priority Support</li>
+            <li data-i18n="pricing.standard.features.4">White-label Reports</li>
+            <li data-i18n="pricing.standard.features.5">€199 Setup Fee</li>
+          </ul>
+          <a href="#contact" class="btn btn-primary btn-glow" data-i18n="pricing.standard.btn">Get Started</a>
+        </div>
+        <!-- Enterprise -->
+        <div class="pricing-card glass-card">
+          <div class="pricing-header">
+            <h3 data-i18n="pricing.enterprise.name">Premium</h3>
+            <div class="price">
+              <span class="currency">€</span>
+              <span class="amount" data-i18n="pricing.enterprise.price">149</span>
+              <span class="period" data-i18n="pricing.enterprise.period">/mo</span>
+            </div>
+          </div>
+          <ul class="pricing-features">
+            <li data-i18n="pricing.enterprise.features.0">Unlimited Ad Spend</li>
+            <li data-i18n="pricing.enterprise.features.1">Custom Integrations</li>
+            <li data-i18n="pricing.enterprise.features.2">Dedicated Account Manager</li>
+            <li data-i18n="pricing.enterprise.features.3">SLA Guarantee</li>
+            <li data-i18n="pricing.enterprise.features.4">API Access</li>
+            <li data-i18n="pricing.enterprise.features.4">Custom Setup</li>
+          </ul>
+          <a href="#contact" class="btn btn-outline" data-i18n="pricing.enterprise.btn">Contact Sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section id="contact" class="cta">
+    <div class="container">
+      <div class="cta-content glass-card">
+        <h2 data-i18n="cta.title">Ready to fix your attribution?</h2>
+        <p data-i18n="cta.subtitle">Join the agencies who see the full picture. 14-day free trial.</p>
+        <form class="cta-form" id="signup-form">
+          <input type="email" data-i18n="cta.placeholder" placeholder="Enter your work email" required>
+          <button type="submit" class="btn btn-primary btn-glow" data-i18n="cta.btn">Start Tracking</button>
+        </form>
+        <span class="cta-note" data-i18n="cta.note">No credit card required • Cancel anytime</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">
+            <span class="logo-icon">⚡</span>
+            AdsEngineer<span class="logo-accent">.cloud</span>
+          </a>
+          <p data-i18n="footer.desc">Server-side attribution for GHL agencies.</p>
+        </div>
+        <div class="footer-bottom">
+          <p data-i18n="footer.copyright">&copy; 2026 AdsEngineer.cloud. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

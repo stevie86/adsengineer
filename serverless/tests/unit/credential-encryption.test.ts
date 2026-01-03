@@ -8,7 +8,7 @@ const mockD1 = {
   bind: vi.fn().mockReturnThis(),
   run: vi.fn().mockResolvedValue(undefined),
   first: vi.fn().mockResolvedValue(null),
-  all: vi.fn().mockResolvedValue({ results: [] })
+  all: vi.fn().mockResolvedValue({ results: [] }),
 };
 
 // Mock the Web Crypto API
@@ -17,11 +17,11 @@ Object.defineProperty(global, 'crypto', {
     subtle: {
       importKey: vi.fn().mockResolvedValue({}),
       encrypt: vi.fn().mockResolvedValue(new ArrayBuffer(32)),
-      decrypt: vi.fn().mockResolvedValue(new TextEncoder().encode('decrypted data').buffer)
+      decrypt: vi.fn().mockResolvedValue(new TextEncoder().encode('decrypted data').buffer),
     },
-    getRandomValues: vi.fn().mockReturnValue(new Uint8Array(16))
+    getRandomValues: vi.fn().mockReturnValue(new Uint8Array(16)),
   },
-  writable: true
+  writable: true,
 });
 
 describe('Encrypted Credential Storage', () => {
@@ -30,7 +30,9 @@ describe('Encrypted Credential Storage', () => {
 
   beforeAll(async () => {
     encryptionService = EncryptionService.getInstance();
-    await encryptionService.initialize('test_master_key_12345678901234567890123456789012');
+    // Use a valid base64-encoded 32-byte key for testing
+    const testKey = btoa('test_master_key_12345678901234567890'); // 32 bytes when decoded
+    await encryptionService.initialize(testKey);
   });
 
   beforeEach(() => {
@@ -46,8 +48,8 @@ describe('Encrypted Credential Storage', () => {
           apiKey: 'AIzaSyDummyApiKey123456789',
           clientId: 'dummy-client-id.apps.googleusercontent.com',
           clientSecret: 'dummy-client-secret',
-          developerToken: 'dummy-developer-token'
-        }
+          developerToken: 'dummy-developer-token',
+        },
       };
 
       const success = await db.updateAgencyCredentials(agencyId, credentials);
@@ -64,8 +66,8 @@ describe('Encrypted Credential Storage', () => {
         meta: {
           accessToken: 'dummy-meta-access-token',
           appId: 'dummy-app-id',
-          appSecret: 'dummy-app-secret'
-        }
+          appSecret: 'dummy-app-secret',
+        },
       };
 
       const success = await db.updateAgencyCredentials(agencyId, credentials);
@@ -78,8 +80,8 @@ describe('Encrypted Credential Storage', () => {
       const credentials = {
         stripe: {
           secretKey: 'sk_test_dummy_secret_key',
-          publishableKey: 'pk_test_dummy_publishable_key'
-        }
+          publishableKey: 'pk_test_dummy_publishable_key',
+        },
       };
 
       const success = await db.updateAgencyCredentials(agencyId, credentials);
@@ -97,8 +99,8 @@ describe('Encrypted Credential Storage', () => {
           apiKey: 'test-key',
           clientId: 'test-client',
           clientSecret: 'test-secret',
-          developerToken: 'test-token'
-        }
+          developerToken: 'test-token',
+        },
       };
 
       const success = await db.updateAgencyCredentials(agencyId, credentials);
@@ -118,8 +120,8 @@ describe('Encrypted Credential Storage', () => {
           iv: 'mock-iv',
           tag: 'mock-tag',
           algorithm: 'AES-GCM',
-          timestamp: new Date().toISOString()
-        })
+          timestamp: new Date().toISOString(),
+        }),
       });
 
       const credentials = await db.getAgencyCredentials(agencyId);
@@ -137,8 +139,8 @@ describe('Encrypted Credential Storage', () => {
           encrypted: 'corrupted-data',
           iv: 'corrupted-iv',
           algorithm: 'AES-GCM',
-          timestamp: new Date().toISOString()
-        })
+          timestamp: new Date().toISOString(),
+        }),
       });
 
       // Mock decryption failure
@@ -165,7 +167,7 @@ describe('Encrypted Credential Storage', () => {
         apiKey: 'AIzaSyValidApiKey123456789',
         clientId: 'valid-client-id.apps.googleusercontent.com',
         clientSecret: 'valid-client-secret',
-        developerToken: 'valid-developer-token'
+        developerToken: 'valid-developer-token',
       };
 
       const result = await db.validateCredentialFormat('googleAds', validCreds);
@@ -179,7 +181,7 @@ describe('Encrypted Credential Storage', () => {
         apiKey: 'invalid-api-key',
         clientId: 'valid-client-id.apps.googleusercontent.com',
         clientSecret: 'valid-client-secret',
-        developerToken: 'valid-developer-token'
+        developerToken: 'valid-developer-token',
       };
 
       const result = await db.validateCredentialFormat('googleAds', invalidCreds);
@@ -191,7 +193,7 @@ describe('Encrypted Credential Storage', () => {
     it('should validate Stripe credentials format', async () => {
       const validCreds = {
         secretKey: 'sk_test_valid_secret_key',
-        publishableKey: 'pk_test_valid_publishable_key'
+        publishableKey: 'pk_test_valid_publishable_key',
       };
 
       const result = await db.validateCredentialFormat('stripe', validCreds);
@@ -203,7 +205,7 @@ describe('Encrypted Credential Storage', () => {
     it('should reject invalid Stripe key formats', async () => {
       const invalidCreds = {
         secretKey: 'invalid-secret-key',
-        publishableKey: 'invalid-publishable-key'
+        publishableKey: 'invalid-publishable-key',
       };
 
       const result = await db.validateCredentialFormat('stripe', invalidCreds);
@@ -229,8 +231,8 @@ describe('Encrypted Credential Storage', () => {
           apiKey: 'AIzaSyLifecycleTest123456789',
           clientId: 'lifecycle-test-client.apps.googleusercontent.com',
           clientSecret: 'lifecycle-test-secret',
-          developerToken: 'lifecycle-test-token'
-        }
+          developerToken: 'lifecycle-test-token',
+        },
       };
 
       // Store credentials
@@ -238,9 +240,12 @@ describe('Encrypted Credential Storage', () => {
       expect(storeSuccess).toBe(true);
 
       // Mock retrieval
-      const mockEncrypted = await encryptionService.encrypt(JSON.stringify(originalCreds.googleAds), `agency-${agencyId}-googleAds`);
+      const mockEncrypted = await encryptionService.encrypt(
+        JSON.stringify(originalCreds.googleAds),
+        `agency-${agencyId}-googleAds`
+      );
       mockD1.first.mockResolvedValue({
-        google_ads_config: JSON.stringify(mockEncrypted)
+        google_ads_config: JSON.stringify(mockEncrypted),
       });
 
       // Retrieve and verify

@@ -2,10 +2,10 @@ import type { Context, Next } from 'hono';
 import { logger } from '../services/logging';
 
 interface RateLimitConfig {
-  windowMs: number;        // Time window in milliseconds
-  maxRequests: number;    // Max requests per window
-  keyGenerator: (c: Context) => string;  // Function to generate unique key
-  message?: string;       // Custom error message
+  windowMs: number; // Time window in milliseconds
+  maxRequests: number; // Max requests per window
+  keyGenerator: (c: Context) => string; // Function to generate unique key
+  message?: string; // Custom error message
 }
 
 interface RateLimitResult {
@@ -24,7 +24,7 @@ export const rateLimitMiddleware = (config: RateLimitConfig) => {
     const key = config.keyGenerator(c);
     const now = Date.now();
     const windowStart = now - config.windowMs;
-    
+
     try {
       // Get existing rate limit data from KV
       const kv = c.env.RATE_LIMIT_KV;
@@ -35,7 +35,7 @@ export const rateLimitMiddleware = (config: RateLimitConfig) => {
 
       const rateLimitKey = `rate_limit:${key}`;
       const existingData = await kv.get(rateLimitKey);
-      
+
       let requests: number[] = [];
       if (existingData) {
         try {
@@ -46,8 +46,8 @@ export const rateLimitMiddleware = (config: RateLimitConfig) => {
       }
 
       // Filter out old requests outside the time window
-      requests = requests.filter(timestamp => timestamp > windowStart);
-      
+      requests = requests.filter((timestamp) => timestamp > windowStart);
+
       // Check if limit exceeded
       const result: RateLimitResult = {
         allowed: requests.length < config.maxRequests,
@@ -65,10 +65,10 @@ export const rateLimitMiddleware = (config: RateLimitConfig) => {
       // Add current request timestamp if allowed
       if (result.allowed) {
         requests.push(now);
-        
+
         // Store updated data in KV with TTL
         await kv.put(rateLimitKey, JSON.stringify(requests), {
-          expirationTtl: Math.ceil(config.windowMs / 1000) + 60 // Extra 60s buffer
+          expirationTtl: Math.ceil(config.windowMs / 1000) + 60, // Extra 60s buffer
         });
       }
 
@@ -82,11 +82,14 @@ export const rateLimitMiddleware = (config: RateLimitConfig) => {
         logger.logRateLimitExceeded(c, key, result.limit, config.windowMs);
 
         // Return secure error response with rate limit headers
-        const response = c.json({
-          error: 'rate_limit_exceeded',
-          message: config.message || 'Too many requests, please try again later.',
-          retry_after: result.retryAfter
-        }, 429);
+        const response = c.json(
+          {
+            error: 'rate_limit_exceeded',
+            message: config.message || 'Too many requests, please try again later.',
+            retry_after: result.retryAfter,
+          },
+          429
+        );
 
         // Add rate limit specific headers
         response.headers.set('Retry-After', (result.retryAfter || 60).toString());
@@ -103,9 +106,13 @@ export const rateLimitMiddleware = (config: RateLimitConfig) => {
       }
 
       return next();
-
     } catch (error) {
-      logger.log('ERROR', 'Rate limiting middleware error', { error: error instanceof Error ? error.message : 'Unknown error' }, c);
+      logger.log(
+        'ERROR',
+        'Rate limiting middleware error',
+        { error: error instanceof Error ? error.message : 'Unknown error' },
+        c
+      );
       // Fail open - allow request if rate limiting fails
       return next();
     }
@@ -117,15 +124,16 @@ export const rateLimitMiddleware = (config: RateLimitConfig) => {
  */
 export const webhookIpRateLimit = (c: Context, next: Next) => {
   return rateLimitMiddleware({
-    windowMs: parseInt(c.env.WEBHOOK_IP_WINDOW_MS || '3600000'),  // Default: 1 hour
-    maxRequests: parseInt(c.env.WEBHOOK_IP_MAX_REQUESTS || '100'),  // Default: 100 requests
+    windowMs: parseInt(c.env.WEBHOOK_IP_WINDOW_MS || '3600000'), // Default: 1 hour
+    maxRequests: parseInt(c.env.WEBHOOK_IP_MAX_REQUESTS || '100'), // Default: 100 requests
     keyGenerator: (ctx: Context) => {
-      const ip = ctx.req.header('CF-Connecting-IP') || 
-                 ctx.req.header('X-Forwarded-For')?.split(',')[0] || 
-                 'unknown';
+      const ip =
+        ctx.req.header('CF-Connecting-IP') ||
+        ctx.req.header('X-Forwarded-For')?.split(',')[0] ||
+        'unknown';
       return `webhook:ip:${ip}`;
     },
-    message: 'Webhook rate limit exceeded for this IP address'
+    message: 'Webhook rate limit exceeded for this IP address',
   })(c, next);
 };
 
@@ -134,13 +142,13 @@ export const webhookIpRateLimit = (c: Context, next: Next) => {
  */
 export const webhookShopRateLimit = (c: Context, next: Next) => {
   return rateLimitMiddleware({
-    windowMs: parseInt(c.env.WEBHOOK_SHOP_WINDOW_MS || '3600000'),  // Default: 1 hour
-    maxRequests: parseInt(c.env.WEBHOOK_SHOP_MAX_REQUESTS || '1000'),  // Default: 1000 requests
+    windowMs: parseInt(c.env.WEBHOOK_SHOP_WINDOW_MS || '3600000'), // Default: 1 hour
+    maxRequests: parseInt(c.env.WEBHOOK_SHOP_MAX_REQUESTS || '1000'), // Default: 1000 requests
     keyGenerator: (ctx: Context) => {
       const shopDomain = ctx.req.header('X-Shopify-Shop-Domain') || 'unknown';
       return `webhook:shop:${shopDomain}`;
     },
-    message: 'Webhook rate limit exceeded for this shop'
+    message: 'Webhook rate limit exceeded for this shop',
   })(c, next);
 };
 
@@ -169,15 +177,16 @@ export const webhookRateLimit = async (c: Context, next: Next) => {
  */
 export const createRateLimit = (config: Partial<RateLimitConfig>) => {
   const defaultConfig: RateLimitConfig = {
-    windowMs: 60 * 60 * 1000,  // 1 hour
+    windowMs: 60 * 60 * 1000, // 1 hour
     maxRequests: 100,
     keyGenerator: (c: Context) => {
-      const ip = c.req.header('CF-Connecting-IP') || 
-                 c.req.header('X-Forwarded-For')?.split(',')[0] || 
-                 'unknown';
+      const ip =
+        c.req.header('CF-Connecting-IP') ||
+        c.req.header('X-Forwarded-For')?.split(',')[0] ||
+        'unknown';
       return `generic:${ip}`;
     },
-    message: 'Rate limit exceeded'
+    message: 'Rate limit exceeded',
   };
 
   return rateLimitMiddleware({ ...defaultConfig, ...config });
@@ -187,25 +196,26 @@ export const createRateLimit = (config: Partial<RateLimitConfig>) => {
  * Rate limiting for API endpoints (stricter limits)
  */
 export const apiRateLimit = createRateLimit({
-  windowMs: 60 * 1000,       // 1 minute
-  maxRequests: 60,           // 60 requests per minute
+  windowMs: 60 * 1000, // 1 minute
+  maxRequests: 60, // 60 requests per minute
   keyGenerator: (c: Context) => {
     const auth = c.get('auth');
-    const identifier = auth?.user_id || 
-                       c.req.header('CF-Connecting-IP') || 
-                       c.req.header('X-Forwarded-For')?.split(',')[0] || 
-                       'anonymous';
+    const identifier =
+      auth?.user_id ||
+      c.req.header('CF-Connecting-IP') ||
+      c.req.header('X-Forwarded-For')?.split(',')[0] ||
+      'anonymous';
     return `api:${identifier}`;
   },
-  message: 'API rate limit exceeded'
+  message: 'API rate limit exceeded',
 });
 
 /**
  * Rate limiting for admin endpoints (very strict)
  */
 export const adminRateLimit = createRateLimit({
-  windowMs: 60 * 1000,       // 1 minute
-  maxRequests: 30,           // 30 requests per minute
+  windowMs: 60 * 1000, // 1 minute
+  maxRequests: 30, // 30 requests per minute
   keyGenerator: (c: Context) => {
     const auth = c.get('auth');
     if (!auth?.user_id) {
@@ -214,5 +224,5 @@ export const adminRateLimit = createRateLimit({
     }
     return `admin:user:${auth.user_id}`;
   },
-  message: 'Admin API rate limit exceeded'
+  message: 'Admin API rate limit exceeded',
 });

@@ -19,11 +19,14 @@ import type { AppEnv } from './types';
 
 const app = new Hono<AppEnv>();
 
-app.use('*', cors({
-  origin: ['https://app.advocate.com', 'http://localhost:3000', 'http://localhost:8090'],
-  allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
-}));
+app.use(
+  '*',
+  cors({
+    origin: ['https://app.advocate.com', 'http://localhost:3000', 'http://localhost:8090'],
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  })
+);
 
 app.use('*', logger());
 
@@ -40,7 +43,7 @@ app.get('/health', (c) => {
     status: 'healthy',
     version: '1.0.0',
     timestamp: new Date().toISOString(),
-    environment: c.env.ENVIRONMENT || 'development'
+    environment: c.env.ENVIRONMENT || 'development',
   });
 });
 
@@ -277,11 +280,14 @@ api.route('/analytics', analyticsRoutes);
 app.route('/api/v1', api);
 
 app.notFound((c) => {
-  return c.json({
-    error: 'Endpoint not found',
-    message: 'The requested API endpoint does not exist',
-    available: { health: '/health', api: '/api/v1' }
-  }, 404);
+  return c.json(
+    {
+      error: 'Endpoint not found',
+      message: 'The requested API endpoint does not exist',
+      available: { health: '/health', api: '/api/v1' },
+    },
+    404
+  );
 });
 
 app.onError((err, c) => {

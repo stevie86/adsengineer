@@ -18,8 +18,8 @@ class MockD1Database {
       bind: (...params) => ({
         first: async () => null,
         all: async () => ({ results: [] }),
-        run: async () => ({ meta: { changes: 1 } })
-      })
+        run: async () => ({ meta: { changes: 1 } }),
+      }),
     };
   }
 }
@@ -44,7 +44,7 @@ describe('Agency Onboarding', () => {
         contactName: 'John Doe',
         contactEmail: 'john@testagency.com',
         primaryPlatforms: ['google-ads', 'facebook-ads'],
-        ghlExperience: 'intermediate'
+        ghlExperience: 'intermediate',
       };
 
       // Test API call

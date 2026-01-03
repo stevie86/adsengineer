@@ -21,7 +21,7 @@ describe('Agency Onboarding Integration', () => {
         contactName: 'John Doe',
         contactEmail: `john${createId()}@test.com`,
         primaryPlatforms: ['google-ads', 'facebook-ads'],
-        ghlExperience: 'intermediate' as const
+        ghlExperience: 'intermediate' as const,
       };
 
       // This would make actual HTTP request in integration test
@@ -42,10 +42,10 @@ describe('Agency Onboarding Integration', () => {
       const invalidData = [
         { name: '' }, // Empty name
         { contactEmail: 'invalid-email' }, // Invalid email
-        { primaryPlatforms: [] } // No platforms
+        { primaryPlatforms: [] }, // No platforms
       ];
 
-      invalidData.forEach(data => {
+      invalidData.forEach((data) => {
         expect(Object.keys(data).length).toBeGreaterThan(0);
       });
     });
@@ -69,7 +69,7 @@ describe('Agency Onboarding Integration', () => {
         emailVerified: true,
         profileComplete: true,
         apiConfigured: false,
-        firstLeadTracked: false
+        firstLeadTracked: false,
       };
 
       const completedSteps = Object.values(progress).filter(Boolean).length;
@@ -108,7 +108,7 @@ describe('Lead Attribution', () => {
     const lead = {
       agency_id: agencyId,
       agency_name: 'Test Agency',
-      lead_source: 'hunter-army'
+      lead_source: 'hunter-army',
     };
 
     expect(lead.agency_id).toBe(agencyId);
@@ -116,7 +116,7 @@ describe('Lead Attribution', () => {
 
   test('should track lead sources accurately', async () => {
     const sources = ['hunter-army', 'manual', 'referral', 'webinar'];
-    sources.forEach(source => {
+    sources.forEach((source) => {
       expect(typeof source).toBe('string');
     });
   });

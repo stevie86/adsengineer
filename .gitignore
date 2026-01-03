@@ -13,6 +13,24 @@ node_modules/
 .stripe.env
 !.env.example
 
+# Doppler
+doppler/
+
+# OpenTofu
+infrastructure/*.tfstate
+infrastructure/*.tfstate.*
+infrastructure/crash.log
+infrastructure/crash.*.log
+infrastructure/.terraform/
+infrastructure/.terraform.lock.hcl
+infrastructure/terraform.tfstate.lock.info
+infrastructure/terraform.tfstate.backup
+infrastructure/terraform.tfstate.backup.info
+infrastructure/override.tf
+infrastructure/override.tf.json
+infrastructure/*_override.tf
+infrastructure/*_override.tf.json
+
 # Archived files (can be restored if needed)
 archives/
 

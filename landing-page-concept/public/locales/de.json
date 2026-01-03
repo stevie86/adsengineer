@@ -1,0 +1,126 @@
+{
+    "nav": {
+        "features": "Funktionen",
+        "pricing": "Preise",
+        "testimonials": "Warum Wir",
+        "login": "Anmelden",
+        "getStarted": "Loslegen"
+    },
+    "hero": {
+        "badge": "Maximieren Sie Ihre Effizienz",
+        "titlePrefix": "Verschwenden Sie kein",
+        "titleHighlight": "Werbebudget",
+        "subtitle": "Agenturen, E-Commerce und KMUs verlieren täglich Attributionsdaten. AdsEngineer behebt dies mit serverseitigem Tracking – so sehen Google & Meta jede Konversion.",
+        "ctaPrimary": "Kostenlos Testen",
+        "ctaSecondary": "Wie es funktionert",
+        "stat1Value": "100%",
+        "stat1Label": "Attributionsgenauigkeit",
+        "stat2Value": "30%",
+        "stat2Label": "Durchschn. ROAS-Steigerung",
+        "stat3Value": "0",
+        "stat3Label": "Änderungen am Setup"
+    },
+    "features": {
+        "badge": "Funktionen",
+        "title": "Server-Side <span class=\"gradient-text\">Power</span>",
+        "subtitle": "Entwickelt für Shopify, WordPress und Custom Stacks.",
+        "list": [
+            {
+                "title": "Daten-Bewahrung",
+                "desc": "Attribution überlebt Cookie-Einschränkungen, Ad-Blocker und Tracking-Fehler."
+            },
+            {
+                "title": "Universelle Integration",
+                "desc": "Funktioniert mit Shopify, WooCommerce, GoHighLevel und jedem individuellen Webhook."
+            },
+            {
+                "title": "First-Party Data",
+                "desc": "Erweiterte Konversionen mit gehashten First-Party-Daten für maximale Match-Raten."
+            },
+            {
+                "title": "Volle Privatsphäre",
+                "desc": "Vollständige GDPR-Konformität durch serverseitige Verarbeitung, die die Nutzerzustimmung respektiert."
+            },
+            {
+                "title": "Global Edge",
+                "desc": "Global auf Cloudflare Workers bereitgestellt für <50ms Latenz überall auf der Welt."
+            },
+            {
+                "title": "Null Wartung",
+                "desc": "Einmal einrichten. Keine komplexen GTM-Container oder ständige Updates erforderlich."
+            }
+        ]
+    },
+    "testimonials": {
+        "badge": "Unser Impact",
+        "title": "Warum <span class=\"gradient-text\">Smarte Advertiser</span> wechseln",
+        "t1": "Datenhoheit",
+        "t1Desc": "Verlassen Sie sich nicht auf Drittanbieter-Cookies. Besitzen Sie Ihre Konversionsdaten.",
+        "t2": "Privacy First",
+        "t2Desc": "Gebaut für die Post-Cookie-Welt. Vollständig GDPR-konform bei gleichzeitiger Genauigkeit.",
+        "t3": "Echtzeit-ROI",
+        "t3Desc": "Senden Sie Daten sofort an Google & Meta zurück, um Bidding-Algorithmen schneller zu optimieren."
+    },
+    "pricing": {
+        "badge": "Preise",
+        "title": "Faire, <span class=\"gradient-text\">Transparente</span> Preise",
+        "subtitle": "Skalieren Sie Ihre Effizienz, ohne das Budget zu sprengen.",
+        "beta": {
+            "name": "Beta Zugang",
+            "price": "49",
+            "period": "/Monat",
+            "features": [
+                "Bis zu $50k Ad Spend",
+                "Google Ads Integration",
+                "Server-Side Tracking",
+                "Unbegrenzte Events",
+                "E-Mail Support",
+                "Keine Einrichtungsgebühr"
+            ],
+            "btn": "Beta Beitreten"
+        },
+        "standard": {
+            "name": "Standard",
+            "price": "99",
+            "period": "/Monat",
+            "popular": "Empfohlen",
+            "features": [
+                "Bis zu $250k Ad Spend",
+                "Google Ads + Meta CAPI",
+                "Erweiterte Analytics",
+                "Prioritäts-Support",
+                "White-Label Berichte",
+                "€199 Einrichtungsgebühr"
+            ],
+            "btn": "Loslegen"
+        },
+        "enterprise": {
+            "name": "Premium",
+            "price": "149",
+            "period": "/Monat",
+            "features": [
+                "Unbegrenzter Ad Spend",
+                "Benutzerdefinierte Integrationen",
+                "Dedizierter Account Manager",
+                "SLA Garantie",
+                "API Zugang",
+                "Individuelles Setup"
+            ],
+            "btn": "Vertrieb kontaktieren"
+        }
+    },
+    "cta": {
+        "title": "Bereit, Ihre Attribution zu korrigieren?",
+        "subtitle": "Schließen Sie sich den smarten Advertisern an. 14 Tage kostenlos testen.",
+        "placeholder": "Ihre geschäftliche E-Mail",
+        "btn": "Tracking Starten",
+        "note": "Keine Kreditkarte erforderlich • Jederzeit kündbar"
+    },
+    "footer": {
+        "desc": "Server-Side Attribution für effizienzorientierte Advertiser.",
+        "product": "Produkt",
+        "company": "Unternehmen",
+        "legal": "Rechtliches",
+        "copyright": "© 2026 AdsEngineer.cloud. Alle Rechte vorbehalten."
+    }
+}

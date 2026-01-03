@@ -1,0 +1,13 @@
+{
+  "name": "adsengineer-landing",
+  "version": "1.0.0",
+  "description": "Modern landing page for adsengineer.cloud",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

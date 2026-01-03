@@ -4,7 +4,7 @@
  * Version: 1.0.0
  */
 
-(function() {
+(function () {
   'use strict';
 
   // Configuration
@@ -12,7 +12,7 @@
     siteId: getSiteId(),
     apiBase: 'https://advocate-cloud.adsengineer.workers.dev',
     cookiePrefix: '_advocate_',
-    cookieExpiry: 90 // days
+    cookieExpiry: 90, // days
   };
 
   // Utility functions
@@ -22,19 +22,19 @@
   }
 
   function getCookie(name) {
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + name + "=");
-    if (parts.length === 2) return parts.pop().split(";").shift();
+    var value = '; ' + document.cookie;
+    var parts = value.split('; ' + name + '=');
+    if (parts.length === 2) return parts.pop().split(';').shift();
   }
 
   function setCookie(name, value, days) {
-    var expires = "";
+    var expires = '';
     if (days) {
       var date = new Date();
-      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-      expires = "; expires=" + date.toUTCString();
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+      expires = '; expires=' + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
+    document.cookie = name + '=' + (value || '') + expires + '; path=/; SameSite=Lax';
   }
 
   function getSiteId() {
@@ -42,7 +42,10 @@
     var scripts = document.getElementsByTagName('script');
     for (var i = 0; i < scripts.length; i++) {
       var script = scripts[i];
-      if (script.src && script.src.indexOf('advocate-cloud.adsengineer.workers.dev/snippet.js') !== -1) {
+      if (
+        script.src &&
+        script.src.indexOf('advocate-cloud.adsengineer.workers.dev/snippet.js') !== -1
+      ) {
         return script.getAttribute('data-site-id') || 'default';
       }
     }
@@ -56,7 +59,7 @@
       timestamp: new Date().toISOString(),
       url: window.location.href,
       referrer: document.referrer,
-      user_agent: navigator.userAgent
+      user_agent: navigator.userAgent,
     };
 
     // Google Ads
@@ -86,7 +89,7 @@
       medium: getParam('utm_medium'),
       campaign: getParam('utm_campaign'),
       term: getParam('utm_term'),
-      content: getParam('utm_content')
+      content: getParam('utm_content'),
     };
 
     // Store UTM if present
@@ -98,7 +101,7 @@
       data.utm_content = utm.content;
 
       // Store in cookies for cross-session attribution
-      Object.keys(utm).forEach(function(key) {
+      Object.keys(utm).forEach(function (key) {
         if (utm[key]) {
           setCookie(config.cookiePrefix + 'utm_' + key, utm[key], config.cookieExpiry);
         } else {
@@ -118,7 +121,7 @@
   function sendTrackingData(data) {
     // Use sendBeacon for reliable delivery
     if (navigator.sendBeacon) {
-      var blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+      var blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
       navigator.sendBeacon(config.apiBase + '/api/v1/track', blob);
     } else {
       // Fallback to fetch
@@ -128,8 +131,8 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-        keepalive: true
-      }).catch(function(error) {
+        keepalive: true,
+      }).catch(function (error) {
         console.warn('AdsEngineer tracking failed:', error);
       });
     }
@@ -144,7 +147,7 @@
       sendTrackingData(data);
 
       // Track form submissions (leads)
-      document.addEventListener('submit', function(event) {
+      document.addEventListener('submit', function (event) {
         var form = event.target;
         var email = form.querySelector('input[type="email"]');
 
@@ -152,7 +155,7 @@
           var leadData = Object.assign({}, data, {
             email: email.value,
             form_action: 'submit',
-            form_id: form.id || form.className || 'unknown'
+            form_id: form.id || form.className || 'unknown',
           });
 
           sendTrackingData(leadData);
@@ -160,25 +163,25 @@
       });
 
       // Track button clicks (potential leads)
-      document.addEventListener('click', function(event) {
+      document.addEventListener('click', function (event) {
         var target = event.target;
 
         // Track CTA button clicks
-        if (target.matches('button, a, input[type="submit"]') ||
-            target.closest('button, a, input[type="submit"]')) {
-
+        if (
+          target.matches('button, a, input[type="submit"]') ||
+          target.closest('button, a, input[type="submit"]')
+        ) {
           var buttonData = Object.assign({}, data, {
             action: 'click',
             element: target.tagName.toLowerCase(),
             text: target.textContent ? target.textContent.trim().substring(0, 50) : '',
             class: target.className || '',
-            id: target.id || ''
+            id: target.id || '',
           });
 
           sendTrackingData(buttonData);
         }
       });
-
     } catch (error) {
       console.warn('AdsEngineer initialization failed:', error);
     }
@@ -190,5 +193,4 @@
   } else {
     init();
   }
-
 })();

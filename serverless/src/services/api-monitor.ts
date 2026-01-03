@@ -36,7 +36,7 @@ export class ApiMonitor {
       version: '',
       lastChecked: new Date().toISOString(),
       issues: [],
-      recommendations: []
+      recommendations: [],
     };
 
     try {
@@ -46,12 +46,14 @@ export class ApiMonitor {
       if (versionCheck.deprecated) {
         status.status = 'deprecated';
         status.issues.push(`Google Ads API v${versionCheck.version} is deprecated`);
-        
+
         if (versionCheck.deprecationDate) {
           const daysUntilDeprecation = Math.floor(
             (new Date(versionCheck.deprecationDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
           );
-          status.recommendations.push(`Migrate before ${versionCheck.deprecationDate} (${daysUntilDeprecation} days)`);
+          status.recommendations.push(
+            `Migrate before ${versionCheck.deprecationDate} (${daysUntilDeprecation} days)`
+          );
         }
       }
 
@@ -68,7 +70,6 @@ export class ApiMonitor {
         status.issues.push(`High quota usage: ${quotaCheck.usage}%`);
         status.recommendations.push('Consider rate limiting or quota increase');
       }
-
     } catch (error) {
       status.status = 'offline';
       status.issues.push(`Connection failed: ${error.message}`);
@@ -76,7 +77,7 @@ export class ApiMonitor {
     }
 
     this.statusCache.set('google-ads', status);
-    
+
     if (status.status !== 'healthy') {
       await this.sendNotification(status);
     }
@@ -91,7 +92,7 @@ export class ApiMonitor {
       version: 'v1',
       lastChecked: new Date().toISOString(),
       issues: [],
-      recommendations: []
+      recommendations: [],
     };
 
     try {
@@ -114,7 +115,9 @@ export class ApiMonitor {
   private async checkGoogleAdsVersion(): Promise<ApiVersion> {
     try {
       // Fetch current version info from Google
-      const response = await fetch('https://developers.google.com/google-ads/api/docs/release-notes');
+      const response = await fetch(
+        'https://developers.google.com/google-ads/api/docs/release-notes'
+      );
       const html = await response.text();
 
       // Extract current version from HTML (basic parsing)
@@ -124,11 +127,11 @@ export class ApiMonitor {
       // Check deprecation status for versions that sunset in 2026
       const now = new Date();
       const deprecationSchedule = {
-        'v19': new Date('2026-02-01'), // February 2026
-        'v20': new Date('2026-06-01'), // June 2026
-        'v21': new Date('2026-08-01'), // August 2026
-        'v22': new Date('2026-10-01'), // October 2026
-        'v23': new Date('2027-02-01'), // February 2027
+        v19: new Date('2026-02-01'), // February 2026
+        v20: new Date('2026-06-01'), // June 2026
+        v21: new Date('2026-08-01'), // August 2026
+        v22: new Date('2026-10-01'), // October 2026
+        v23: new Date('2027-02-01'), // February 2027
       };
 
       let isDeprecated = false;
@@ -139,7 +142,9 @@ export class ApiMonitor {
         if (html.includes(version) && html.includes('deprecated')) {
           isDeprecated = true;
           deprecationDate = sunsetDate.toISOString().split('T')[0];
-          daysUntilDeprecation = Math.floor((sunsetDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+          daysUntilDeprecation = Math.floor(
+            (sunsetDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+          );
           break;
         }
       }
@@ -152,7 +157,7 @@ export class ApiMonitor {
         version: 'v21.0',
         deprecated: isDeprecated || shouldWarn,
         deprecationDate,
-        current: !isDeprecated && daysUntilDeprecation > 90
+        current: !isDeprecated && daysUntilDeprecation > 90,
       };
     } catch (error) {
       console.error('Failed to check Google Ads version:', error);
@@ -160,7 +165,7 @@ export class ApiMonitor {
         name: 'Google Ads API',
         version: 'v17.0',
         deprecated: false,
-        current: true
+        current: true,
       };
     }
   }
@@ -179,7 +184,7 @@ export class ApiMonitor {
       const headers = await this.googleAds.getQuotaInfo();
       return {
         usage: parseInt(headers['x-quota-used'] || '0'),
-        limit: parseInt(headers['x-quota-limit'] || '1000')
+        limit: parseInt(headers['x-quota-limit'] || '1000'),
       };
     } catch {
       return { usage: 0, limit: 1000 };
@@ -193,10 +198,10 @@ export class ApiMonitor {
         email: 'test@example.com',
         phone: '+1234567890',
         customField: {
-          gclid: 'EAIaIQv3i3m8e7vOZ-1572532743'
-        }
+          gclid: 'EAIaIQv3i3m8e7vOZ-1572532743',
+        },
       },
-      locationId: 'loc_456'
+      locationId: 'loc_456',
     };
 
     try {
@@ -220,10 +225,10 @@ Version: ${status.version}
 Checked: ${status.lastChecked}
 
 Issues:
-${status.issues.map(issue => `• ${issue}`).join('\n')}
+${status.issues.map((issue) => `• ${issue}`).join('\n')}
 
 Recommendations:
-${status.recommendations.map(rec => `• ${rec}`).join('\n')}
+${status.recommendations.map((rec) => `• ${rec}`).join('\n')}
 `;
 
     for (const webhook of this.notificationHooks) {
@@ -231,7 +236,7 @@ ${status.recommendations.map(rec => `• ${rec}`).join('\n')}
         await fetch(webhook, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: message })
+          body: JSON.stringify({ text: message }),
         });
       } catch (error) {
         console.error('Failed to send notification:', error);
@@ -240,10 +245,7 @@ ${status.recommendations.map(rec => `• ${rec}`).join('\n')}
   }
 
   async getAllApiStatus(): Promise<ApiHealthStatus[]> {
-    const statuses = await Promise.all([
-      this.checkGoogleAdsHealth(),
-      this.checkGhlWebhookHealth()
-    ]);
+    const statuses = await Promise.all([this.checkGoogleAdsHealth(), this.checkGhlWebhookHealth()]);
 
     return statuses;
   }

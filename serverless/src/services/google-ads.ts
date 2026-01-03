@@ -66,7 +66,7 @@ async function getAccessToken(credentials: GoogleAdsCredentials): Promise<string
     );
   }
 
-  const data = await response.json() as { access_token: string };
+  const data = (await response.json()) as { access_token: string };
   return data.access_token;
 }
 
@@ -105,7 +105,7 @@ export async function uploadConversion(
       {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
           'developer-token': credentials.developerToken,
           'login-customer-id': credentials.loginCustomerId || credentials.customerId,
           'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ export async function uploadConversion(
       }>;
     }
 
-    const responseData = await response.json() as GoogleAdsResponse;
+    const responseData = (await response.json()) as GoogleAdsResponse;
 
     if (!response.ok) {
       const errorObj = responseData.error;
@@ -203,7 +203,6 @@ export async function uploadConversion(
       conversionAction: result?.conversion_action,
       uploadDateTime: result?.upload_date_time,
     };
-
   } catch (error) {
     if (error instanceof GoogleAdsError) {
       throw error;

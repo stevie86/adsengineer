@@ -3,7 +3,7 @@ import { createId } from '@paralleldrive/cuid2';
 
 // Mock implementations
 vi.mock('@paralleldrive/cuid2', () => ({
-  createId: vi.fn(() => 'mock-id-123')
+  createId: vi.fn(() => 'mock-id-123'),
 }));
 
 describe('Agency Onboarding - Enhanced Coverage', () => {
@@ -12,12 +12,12 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
       const validNames = ['ABC Marketing', 'Tech Solutions Inc', 'Digital Agency'];
       const invalidNames = ['', 'A', 'A'.repeat(256)]; // Empty, too short, too long
 
-      validNames.forEach(name => {
+      validNames.forEach((name) => {
         expect(name.length).toBeGreaterThanOrEqual(2);
         expect(name.length).toBeLessThanOrEqual(100);
       });
 
-      invalidNames.forEach(name => {
+      invalidNames.forEach((name) => {
         expect(name.length < 2 || name.length > 100).toBe(true);
       });
     });
@@ -26,7 +26,7 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
       const validEmails = [
         'user@example.com',
         'user.name+tag@domain.co.uk',
-        'test@subdomain.domain.org'
+        'test@subdomain.domain.org',
       ];
 
       const invalidEmails = [
@@ -36,16 +36,16 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
         'user@domain',
         'user domain.com',
         'user@domain.',
-        ''
+        '',
       ];
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-      validEmails.forEach(email => {
+      validEmails.forEach((email) => {
         expect(email).toMatch(emailRegex);
       });
 
-      invalidEmails.forEach(email => {
+      invalidEmails.forEach((email) => {
         expect(email).not.toMatch(emailRegex);
       });
     });
@@ -54,13 +54,19 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
       const validPlatforms = ['google-ads', 'facebook-ads', 'tiktok-ads', 'linkedin-ads', 'other'];
       const invalidPlatforms = ['invalid-platform', 'twitter-ads', 'snapchat-ads'];
 
-      const allowedPlatforms = ['google-ads', 'facebook-ads', 'tiktok-ads', 'linkedin-ads', 'other'];
+      const allowedPlatforms = [
+        'google-ads',
+        'facebook-ads',
+        'tiktok-ads',
+        'linkedin-ads',
+        'other',
+      ];
 
-      validPlatforms.forEach(platform => {
+      validPlatforms.forEach((platform) => {
         expect(allowedPlatforms).toContain(platform);
       });
 
-      invalidPlatforms.forEach(platform => {
+      invalidPlatforms.forEach((platform) => {
         expect(allowedPlatforms).not.toContain(platform);
       });
     });
@@ -69,11 +75,11 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
       const validLevels = ['none', 'basic', 'intermediate', 'advanced'];
       const invalidLevels = ['expert', 'beginner', 'novice', ''];
 
-      validLevels.forEach(level => {
+      validLevels.forEach((level) => {
         expect(['none', 'basic', 'intermediate', 'advanced']).toContain(level);
       });
 
-      invalidLevels.forEach(level => {
+      invalidLevels.forEach((level) => {
         expect(['none', 'basic', 'intermediate', 'advanced']).not.toContain(level);
       });
     });
@@ -83,24 +89,18 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
         'https://example.com',
         'http://example.com',
         'https://subdomain.example.com/path',
-        'https://example.co.uk'
+        'https://example.co.uk',
       ];
 
-      const invalidUrls = [
-        'not-a-url',
-        'example.com',
-        'ftp://example.com',
-        'https://',
-        ''
-      ];
+      const invalidUrls = ['not-a-url', 'example.com', 'ftp://example.com', 'https://', ''];
 
       const urlRegex = /^https?:\/\/.+/;
 
-      validUrls.forEach(url => {
+      validUrls.forEach((url) => {
         expect(url).toMatch(urlRegex);
       });
 
-      invalidUrls.forEach(url => {
+      invalidUrls.forEach((url) => {
         expect(url).not.toMatch(urlRegex);
       });
     });
@@ -113,7 +113,7 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
         { input: '0', expected: 0 },
         { input: '999.99', expected: 99999 },
         { input: '', expected: undefined },
-        { input: 'invalid', expected: NaN }
+        { input: 'invalid', expected: NaN },
       ];
 
       testCases.forEach(({ input, expected }) => {
@@ -132,33 +132,33 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
       const validPainPoints = [
         ['Lead quality', 'Attribution issues'],
         ['Tracking setup', 'Data accuracy'],
-        ['Conversion tracking', 'Cross-platform reporting']
+        ['Conversion tracking', 'Cross-platform reporting'],
       ];
 
       const invalidPainPoints = [
         [''],
         ['A'.repeat(501)], // Too long
         null,
-        undefined
+        undefined,
       ];
 
-      validPainPoints.forEach(points => {
+      validPainPoints.forEach((points) => {
         expect(Array.isArray(points)).toBe(true);
         expect(points.length).toBeGreaterThan(0);
-        points.forEach(point => {
+        points.forEach((point) => {
           expect(typeof point).toBe('string');
           expect(point.length).toBeGreaterThan(0);
           expect(point.length).toBeLessThanOrEqual(500);
         });
       });
 
-      invalidPainPoints.forEach(points => {
+      invalidPainPoints.forEach((points) => {
         if (points === null || points === undefined) {
           expect(points == null).toBe(true);
         } else if (points.includes('')) {
-          expect(points.some(p => p === '')).toBe(true);
+          expect(points.some((p) => p === '')).toBe(true);
         } else {
-          expect(points.some(p => p.length > 500)).toBe(true);
+          expect(points.some((p) => p.length > 500)).toBe(true);
         }
       });
     });
@@ -167,12 +167,14 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
       const validRanges = ['under-1k', '1k-5k', '5k-10k', '10k-25k', '25k-50k', 'over-50k'];
       const invalidRanges = ['invalid', '0-1000', ''];
 
-      validRanges.forEach(range => {
+      validRanges.forEach((range) => {
         expect(['under-1k', '1k-5k', '5k-10k', '10k-25k', '25k-50k', 'over-50k']).toContain(range);
       });
 
-      invalidRanges.forEach(range => {
-        expect(['under-1k', '1k-5k', '5k-10k', '10k-25k', '25k-50k', 'over-50k']).not.toContain(range);
+      invalidRanges.forEach((range) => {
+        expect(['under-1k', '1k-5k', '5k-10k', '10k-25k', '25k-50k', 'over-50k']).not.toContain(
+          range
+        );
       });
     });
   });
@@ -211,9 +213,15 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
       const hash2Array = new Uint8Array(hash2);
       const hash3Array = new Uint8Array(hash3);
 
-      const hash1Str = Array.from(hash1Array).map(b => b.toString(16).padStart(2, '0')).join('');
-      const hash2Str = Array.from(hash2Array).map(b => b.toString(16).padStart(2, '0')).join('');
-      const hash3Str = Array.from(hash3Array).map(b => b.toString(16).padStart(2, '0')).join('');
+      const hash1Str = Array.from(hash1Array)
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('');
+      const hash2Str = Array.from(hash2Array)
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('');
+      const hash3Str = Array.from(hash3Array)
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('');
 
       expect(hash1Str).toBe(hash2Str); // Same input = same hash
       expect(hash1Str).not.toBe(hash3Str); // Different input = different hash
@@ -229,7 +237,7 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
         primaryPlatforms: ['google-ads', 'facebook-ads'],
         ghlExperience: 'intermediate',
         monthlyAdSpend: '1k-5k',
-        painPoints: ['Lead quality', 'Attribution']
+        painPoints: ['Lead quality', 'Attribution'],
       };
 
       const apiData = {
@@ -239,7 +247,7 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
         primary_platforms: formData.primaryPlatforms,
         ghl_experience: formData.ghlExperience,
         monthly_ad_spend: formData.monthlyAdSpend,
-        pain_points: formData.painPoints
+        pain_points: formData.painPoints,
       };
 
       expect(apiData.agency_name).toBe(formData.name);
@@ -254,7 +262,7 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
         contactName: 'John Doe',
         contactEmail: 'john@test.com',
         primaryPlatforms: ['google-ads'],
-        ghlExperience: 'basic'
+        ghlExperience: 'basic',
       };
 
       const apiData = {
@@ -265,7 +273,7 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
         ghl_experience: minimalData.ghlExperience,
         monthly_ad_spend: undefined,
         pain_points: undefined,
-        referral_source: undefined
+        referral_source: undefined,
       };
 
       expect(apiData.monthly_ad_spend).toBeUndefined();
@@ -275,13 +283,13 @@ describe('Agency Onboarding - Enhanced Coverage', () => {
 
     test('converts boolean strings correctly', () => {
       const stringBooleans = {
-        'true': true,
-        'false': false,
-        'True': true,
-        'False': false,
-        'TRUE': true,
-        'FALSE': false,
-        'invalid': 'invalid'
+        true: true,
+        false: false,
+        True: true,
+        False: false,
+        TRUE: true,
+        FALSE: false,
+        invalid: 'invalid',
       };
 
       Object.entries(stringBooleans).forEach(([input, expected]) => {

@@ -16,6 +16,7 @@ AdVocate gives small businesses and agencies **agency-level intelligence at Word
 | **[Feature Roadmap](04-feature-roadmap.md)** | Everyone | 5-phase plan from foundation to market domination |
 | **[Go-to-Market Strategy](05-go-to-market.md)** | Sales/Marketing | Positioning, pricing, channels, launch playbook |
 | **[Sales Playbook](06-sales-playbook.md)** | Sales Teams | Every pitch, close, objection handling script |
+| **[mycannaby Strategy](mycannaby-consolidated-strategy.md)** | Sales/Launch | Complete partnership strategy for ideal beta customer |
 | **[Edge Report](edge-report.md)** | Sales/Investors | One-page competitive analysis + ROI calculations |
 
 ---

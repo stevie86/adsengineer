@@ -13,7 +13,8 @@ analyticsRoutes.get('/analytics/technologies', async (c) => {
     }
 
     // Technology usage by category with support status
-    const techByCategory = await db.prepare(`
+    const techByCategory = await db
+      .prepare(`
       SELECT
         t.category,
         t.name,
@@ -31,10 +32,13 @@ analyticsRoutes.get('/analytics/technologies', async (c) => {
       WHERE l.agency_id = ?
       GROUP BY t.category, t.name, t.description
       ORDER BY lead_count DESC
-    `).bind(auth.org_id).all();
+    `)
+      .bind(auth.org_id)
+      .all();
 
     // Technology detection methods
-    const detectionMethods = await db.prepare(`
+    const detectionMethods = await db
+      .prepare(`
       SELECT
         detected_via,
         COUNT(*) as detection_count
@@ -42,10 +46,13 @@ analyticsRoutes.get('/analytics/technologies', async (c) => {
       JOIN leads l ON lt.lead_id = l.id
       WHERE l.agency_id = ?
       GROUP BY detected_via
-    `).bind(auth.org_id).all();
+    `)
+      .bind(auth.org_id)
+      .all();
 
     // Technology combinations (leads with multiple technologies)
-    const multiTechLeads = await db.prepare(`
+    const multiTechLeads = await db
+      .prepare(`
       SELECT
         l.id,
         COUNT(lt.technology_id) as tech_count,
@@ -58,22 +65,27 @@ analyticsRoutes.get('/analytics/technologies', async (c) => {
       HAVING tech_count > 1
       ORDER BY tech_count DESC
       LIMIT 20
-    `).bind(auth.org_id).all();
+    `)
+      .bind(auth.org_id)
+      .all();
 
     return c.json({
       success: true,
       analytics: {
         technology_usage: techByCategory.results || techByCategory,
         detection_methods: detectionMethods.results || detectionMethods,
-        multi_technology_leads: multiTechLeads.results || multiTechLeads
-      }
+        multi_technology_leads: multiTechLeads.results || multiTechLeads,
+      },
     });
   } catch (error) {
     console.error('Technology analytics error:', error);
-    return c.json({
-      error: 'Analytics retrieval failed',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    }, 500);
+    return c.json(
+      {
+        error: 'Analytics retrieval failed',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      500
+    );
   }
 });
 
@@ -97,16 +109,20 @@ analyticsRoutes.post('/detect-technologies', async (c) => {
         name: 'Shopify',
         category: 'ecommerce',
         confidence: 0.9,
-        detected_via: 'analysis'
+        detected_via: 'analysis',
       });
     }
 
-    if (html_content?.includes('gohighlevel.com') || headers?.['x-ghl-'] || url?.includes('gohighlevel')) {
+    if (
+      html_content?.includes('gohighlevel.com') ||
+      headers?.['x-ghl-'] ||
+      url?.includes('gohighlevel')
+    ) {
       detected.push({
         name: 'GoHighLevel',
         category: 'crm',
         confidence: 0.8,
-        detected_via: 'analysis'
+        detected_via: 'analysis',
       });
     }
 
@@ -115,7 +131,7 @@ analyticsRoutes.post('/detect-technologies', async (c) => {
         name: 'Google Tag Manager',
         category: 'analytics',
         confidence: 0.95,
-        detected_via: 'analysis'
+        detected_via: 'analysis',
       });
     }
 
@@ -124,21 +140,24 @@ analyticsRoutes.post('/detect-technologies', async (c) => {
         name: 'Google Ads',
         category: 'ads',
         confidence: 0.9,
-        detected_via: 'analysis'
+        detected_via: 'analysis',
       });
     }
 
     return c.json({
       success: true,
       detected_technologies: detected,
-      detection_method: 'analysis'
+      detection_method: 'analysis',
     });
   } catch (error) {
     console.error('Technology detection error:', error);
-    return c.json({
-      error: 'Technology detection failed',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    }, 500);
+    return c.json(
+      {
+        error: 'Technology detection failed',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      500
+    );
   }
 });
 

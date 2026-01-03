@@ -8,11 +8,7 @@ import { sha256 } from '@noble/hashes/sha256';
  * @param secret Webhook secret key
  * @returns boolean indicating if signature is valid
  */
-export function validateHmacSignature(
-  payload: string,
-  signature: string,
-  secret: string
-): boolean {
+export function validateHmacSignature(payload: string, signature: string, secret: string): boolean {
   try {
     // Generate expected signature
     const expectedSignature = hmac(sha256, secret, payload);

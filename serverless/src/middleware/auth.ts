@@ -40,10 +40,10 @@ export const authMiddleware = (options: { requireAuth?: boolean } = { requireAut
     }
 
     const token = authHeader.substring(7);
-    
+
     try {
       const payload = decodeJWT(token);
-      
+
       if (!payload) {
         return c.json({ error: 'Invalid token format' }, 401);
       }
@@ -57,11 +57,10 @@ export const authMiddleware = (options: { requireAuth?: boolean } = { requireAut
         user_id: payload.sub,
         org_id: payload.org_id || payload.tenant_id || payload.sub,
         tenant_id: payload.tenant_id || payload.sub,
-        role: (payload.role || 'member') as AuthContext['role']
+        role: (payload.role || 'member') as AuthContext['role'],
       } satisfies AuthContext);
 
       return next();
-      
     } catch (error) {
       console.error('JWT verification failed:', error);
       return c.json({ error: 'Token verification failed' }, 401);
@@ -77,10 +76,10 @@ export const optionalAuthMiddleware = () => {
     }
 
     const token = authHeader.substring(7);
-    
+
     try {
       const payload = decodeJWT(token);
-      
+
       if (!payload || (payload.exp && payload.exp < Math.floor(Date.now() / 1000))) {
         return next();
       }
@@ -89,11 +88,10 @@ export const optionalAuthMiddleware = () => {
         user_id: payload.sub,
         org_id: payload.org_id || payload.tenant_id || payload.sub,
         tenant_id: payload.tenant_id || payload.sub,
-        role: (payload.role || 'member') as AuthContext['role']
+        role: (payload.role || 'member') as AuthContext['role'],
       } satisfies AuthContext);
 
       return next();
-      
     } catch {
       return next();
     }

@@ -6,10 +6,10 @@ const createMockContext = () => ({
     const response = {
       json: () => data,
       status,
-      headers: new Map()
+      headers: new Map(),
     };
     return response;
-  })
+  }),
 });
 
 // Local implementations for testing (copied from shopify.ts)
@@ -22,20 +22,20 @@ function createSecureErrorResponse(errorType: string, statusCode: number) {
       ['X-XSS-Protection', '1; mode=block'],
       ['Strict-Transport-Security', 'max-age=31536000; includeSubDomains'],
       ['Referrer-Policy', 'strict-origin-when-cross-origin'],
-      ...(statusCode === 429 ? [['Retry-After', '60']] : [])
-    ])
+      ...(statusCode === 429 ? [['Retry-After', '60']] : []),
+    ]),
   };
   return response;
 }
 
 function getErrorMessage(errorType: string): string {
   const messages: Record<string, string> = {
-    'invalid_signature': 'Webhook signature validation failed',
-    'invalid_payload': 'Webhook payload validation failed',
-    'rate_limit_exceeded': 'Request rate limit exceeded',
-    'missing_shop_domain': 'Required shop domain header missing',
-    'configuration_error': 'Service configuration error',
-    'processing_failed': 'Webhook processing failed'
+    invalid_signature: 'Webhook signature validation failed',
+    invalid_payload: 'Webhook payload validation failed',
+    rate_limit_exceeded: 'Request rate limit exceeded',
+    missing_shop_domain: 'Required shop domain header missing',
+    configuration_error: 'Service configuration error',
+    processing_failed: 'Webhook processing failed',
   };
   return messages[errorType] || 'An error occurred processing the webhook';
 }
@@ -56,7 +56,9 @@ describe('Secure Error Response Handling', () => {
       expect(response.headers.get('X-Content-Type-Options')).toBe('nosniff');
       expect(response.headers.get('X-Frame-Options')).toBe('DENY');
       expect(response.headers.get('X-XSS-Protection')).toBe('1; mode=block');
-      expect(response.headers.get('Strict-Transport-Security')).toBe('max-age=31536000; includeSubDomains');
+      expect(response.headers.get('Strict-Transport-Security')).toBe(
+        'max-age=31536000; includeSubDomains'
+      );
       expect(response.headers.get('Referrer-Policy')).toBe('strict-origin-when-cross-origin');
     });
 
@@ -74,7 +76,7 @@ describe('Secure Error Response Handling', () => {
         expect.objectContaining({
           error: 'invalid_signature',
           message: 'Webhook signature validation failed',
-          timestamp: expect.any(String)
+          timestamp: expect.any(String),
         }),
         401
       );
@@ -102,7 +104,7 @@ describe('Secure Error Response Handling', () => {
       { type: 'invalid_signature', status: 401 },
       { type: 'invalid_payload', status: 400 },
       { type: 'rate_limit_exceeded', status: 429 },
-      { type: 'configuration_error', status: 500 }
+      { type: 'configuration_error', status: 500 },
     ];
 
     errorTypes.forEach(({ type, status }) => {
@@ -113,7 +115,9 @@ describe('Secure Error Response Handling', () => {
         expect(response.headers.get('X-Content-Type-Options')).toBe('nosniff');
         expect(response.headers.get('X-Frame-Options')).toBe('DENY');
         expect(response.headers.get('X-XSS-Protection')).toBe('1; mode=block');
-        expect(response.headers.get('Strict-Transport-Security')).toBe('max-age=31536000; includeSubDomains');
+        expect(response.headers.get('Strict-Transport-Security')).toBe(
+          'max-age=31536000; includeSubDomains'
+        );
         expect(response.headers.get('Referrer-Policy')).toBe('strict-origin-when-cross-origin');
 
         // Rate limit specific header
@@ -130,10 +134,10 @@ describe('Secure Error Response Handling', () => {
       const messages = [
         getErrorMessage('invalid_signature'),
         getErrorMessage('invalid_payload'),
-        getErrorMessage('rate_limit_exceeded')
+        getErrorMessage('rate_limit_exceeded'),
       ];
 
-      messages.forEach(message => {
+      messages.forEach((message) => {
         expect(message).not.toMatch(/regex/i);
         expect(message).not.toMatch(/validation/i);
         expect(message).not.toMatch(/secret/i);
@@ -147,7 +151,7 @@ describe('Secure Error Response Handling', () => {
 
       expect(mockContext.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          timestamp: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)
+          timestamp: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/),
         }),
         401
       );

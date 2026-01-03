@@ -1,11 +1,11 @@
 import type { AppEnv } from '../types';
-import { 
-  uploadConversion, 
+import {
+  uploadConversion,
   formatConversionTime,
   GoogleAdsCredentials,
   ConversionData,
   UploadResult,
-  GoogleAdsError 
+  GoogleAdsError,
 } from '../services/google-ads';
 
 export interface AgencyGoogleAdsConfig {
@@ -43,9 +43,11 @@ export class OfflineConversionWorker {
     this.db = db;
   }
 
-  async uploadOfflineConversion(conversionData: ConversionUploadData): Promise<ConversionUploadResult> {
+  async uploadOfflineConversion(
+    conversionData: ConversionUploadData
+  ): Promise<ConversionUploadResult> {
     const agencyId = conversionData.agency_id;
-    
+
     const agencyResult = await this.db
       .prepare('SELECT * FROM agencies WHERE id = ?')
       .bind(agencyId)
@@ -89,7 +91,7 @@ export class OfflineConversionWorker {
           first_party_id: conversionData.first_party_id,
           timestamp: new Date().toISOString(),
           errors: result.errors,
-        }
+        },
       });
 
       return {
@@ -99,13 +101,13 @@ export class OfflineConversionWorker {
         gclid_preserved: !!conversionData.gclid,
         error_message: result.errors?.join(', '),
       };
-
     } catch (error) {
-      const errorMessage = error instanceof GoogleAdsError 
-        ? error.message 
-        : error instanceof Error 
-          ? error.message 
-          : 'Unknown error';
+      const errorMessage =
+        error instanceof GoogleAdsError
+          ? error.message
+          : error instanceof Error
+            ? error.message
+            : 'Unknown error';
 
       await this.createAuditLog({
         agency_id: agencyId,
@@ -115,8 +117,8 @@ export class OfflineConversionWorker {
         details: {
           gclid: conversionData.gclid,
           value: conversionData.conversion_value,
-          retry_recommended: true
-        }
+          retry_recommended: true,
+        },
       });
 
       throw error;

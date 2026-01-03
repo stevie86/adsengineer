@@ -1,35 +1,23 @@
 # DOCUMENTATION COMPONENT
 
-Strategy and architecture documentation for AdsEngineer.
+Strategy and architecture documentation.
 
 ## STRUCTURE
 ```
 docs/
-├── *-overview.md           # High-level architecture
-├── *-specification.md      # Technical specifications
-├── *-roadmap.md           # Feature planning
-├── *-strategy.md          # Business strategy
-├── *-playbook.md          # Sales/process guides
-├── n8n-by-claude/         # Automation workflows
-├── n8n-hunter-army/       # Lead generation systems
-└── PRODUCT-ONEPAGER.md    # Executive summary
+├── *-overview.md           # Architecture
+├── *-specification.md      # Specs
+├── *-roadmap.md           # Planning
+├── *-strategy.md          # Business
+├── n8n-*/                 # Automation workflows
+└── PRODUCT-ONEPAGER.md    # Summary
 ```
 
-## WHERE TO LOOK
-| Task | Location | Notes |
-|------|----------|-------|
-| Architecture | *-overview.md | System design docs |
-| Features | *-specification.md | Technical requirements |
-| Strategy | *-strategy.md | Business decisions |
-| Roadmap | *-roadmap.md | Future planning |
-
 ## CONVENTIONS
-- Markdown format
-- Date-prefixed filenames
-- Executive summaries first
-- Technical details in appendices
+- **Naming:** Date-prefixed filenames
+- **Format:** Markdown
+- **Style:** Executive summary first
 
 ## ANTI-PATTERNS
-- No code in documentation
-- No outdated information
-- No duplicate content across files
+- Code dumps in docs
+- Duplicate content across files

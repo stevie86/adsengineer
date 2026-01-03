@@ -81,8 +81,12 @@ shopifyRoutes.post('/webhook', webhookRateLimit, async (c) => {
     headers.forEach((value, key) => {
       headersRecord[key] = value;
     });
-    
-    const validation = validateShopifyWebhook(headersRecord, rawBody, webhookAgency.config.shopify_webhook_secret);
+
+    const validation = validateShopifyWebhook(
+      headersRecord,
+      rawBody,
+      webhookAgency.config.shopify_webhook_secret
+    );
     if (!validation.valid) {
       logWebhookFailure(c, shopDomain, validation.error || 'Unknown validation error');
       return createSecureErrorResponse(c, 'invalid_signature', 401);
@@ -96,7 +100,12 @@ shopifyRoutes.post('/webhook', webhookRateLimit, async (c) => {
     // Validate payload integrity
     const payloadValidation = validateWebhookPayload(payload, topic);
     if (!payloadValidation.valid) {
-      logPayloadError(c, shopDomain, topic || 'unknown', payloadValidation.error || 'Unknown payload validation error');
+      logPayloadError(
+        c,
+        shopDomain,
+        topic || 'unknown',
+        payloadValidation.error || 'Unknown payload validation error'
+      );
       return createSecureErrorResponse(c, 'invalid_payload', 400);
     }
 
@@ -123,50 +132,57 @@ shopifyRoutes.post('/webhook', webhookRateLimit, async (c) => {
         } else {
           console.log(`Unhandled Shopify webhook topic: ${topic}`);
           return c.json({ status: 'ignored', topic }, 200);
-  }
-}
+        }
+    }
 
-/**
- * Create a secure error response with appropriate headers
- */
-function createSecureErrorResponse(c: Context, errorType: string, statusCode: number): Response {
-  const response = c.json({
-    error: errorType,
-    message: getErrorMessage(errorType),
-    timestamp: new Date().toISOString()
-  }, statusCode);
+    /**
+     * Create a secure error response with appropriate headers
+     */
+    function createSecureErrorResponse(
+      c: Context,
+      errorType: string,
+      statusCode: number
+    ): Response {
+      const response = c.json(
+        {
+          error: errorType,
+          message: getErrorMessage(errorType),
+          timestamp: new Date().toISOString(),
+        },
+        statusCode
+      );
 
-  // Add security headers
-  response.headers.set('X-Content-Type-Options', 'nosniff');
-  response.headers.set('X-Frame-Options', 'DENY');
-  response.headers.set('X-XSS-Protection', '1; mode=block');
-  response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
-  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+      // Add security headers
+      response.headers.set('X-Content-Type-Options', 'nosniff');
+      response.headers.set('X-Frame-Options', 'DENY');
+      response.headers.set('X-XSS-Protection', '1; mode=block');
+      response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+      response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
-  // Add rate limit headers if applicable
-  if (statusCode === 429) {
-    response.headers.set('Retry-After', '60'); // Default retry after 60 seconds
-  }
+      // Add rate limit headers if applicable
+      if (statusCode === 429) {
+        response.headers.set('Retry-After', '60'); // Default retry after 60 seconds
+      }
 
-  return response;
-}
+      return response;
+    }
 
-/**
- * Get generic error message that doesn't leak validation logic
- */
-function getErrorMessage(errorType: string): string {
-  const messages: Record<string, string> = {
-    'invalid_signature': 'Webhook signature validation failed',
-    'invalid_payload': 'Webhook payload validation failed',
-    'rate_limit_exceeded': 'Request rate limit exceeded',
-    'missing_shop_domain': 'Required shop domain header missing',
-    'configuration_error': 'Service configuration error',
-    'agency_not_found': 'Agency configuration not found',
-    'processing_failed': 'Webhook processing failed'
-  };
+    /**
+     * Get generic error message that doesn't leak validation logic
+     */
+    function getErrorMessage(errorType: string): string {
+      const messages: Record<string, string> = {
+        invalid_signature: 'Webhook signature validation failed',
+        invalid_payload: 'Webhook payload validation failed',
+        rate_limit_exceeded: 'Request rate limit exceeded',
+        missing_shop_domain: 'Required shop domain header missing',
+        configuration_error: 'Service configuration error',
+        agency_not_found: 'Agency configuration not found',
+        processing_failed: 'Webhook processing failed',
+      };
 
-  return messages[errorType] || 'An error occurred processing the webhook';
-}
+      return messages[errorType] || 'An error occurred processing the webhook';
+    }
 
     if (!leadData) {
       return c.json({ status: 'no_lead_data' }, 200);
@@ -177,7 +193,7 @@ function getErrorMessage(errorType: string): string {
       console.warn('Missing X-Shopify-Shop-Domain header');
       return c.json({ error: 'missing_shop_domain' }, 400);
     }
-    
+
     const agency = await findAgencyByShopifyDomain(db, shopDomain);
     if (!agency) {
       console.warn(`No agency found for Shopify domain: ${shopDomain}`);
@@ -198,30 +214,35 @@ function getErrorMessage(errorType: string): string {
       utm_campaign: leadData.utm_campaign || null,
       base_value_cents: leadData.value_cents || 0,
       status: leadData.status || 'new',
-      vertical: 'ecommerce'
+      vertical: 'ecommerce',
     });
 
     // Store technology association
-    await storeLeadTechnologies(db, storedLead.id, [{
-      name: 'Shopify',
-      category: 'ecommerce',
-      confidence: 1.0,
-      detected_via: 'webhook'
-    }]);
+    await storeLeadTechnologies(db, storedLead.id, [
+      {
+        name: 'Shopify',
+        category: 'ecommerce',
+        confidence: 1.0,
+        detected_via: 'webhook',
+      },
+    ]);
 
     // Queue Google Ads conversion if agency has credentials
-    const agencyConfig = await db.prepare(
-      'SELECT google_ads_config FROM agencies WHERE id = ?'
-    ).bind(agency.id).first();
+    const agencyConfig = await db
+      .prepare('SELECT google_ads_config FROM agencies WHERE id = ?')
+      .bind(agency.id)
+      .first();
 
     if (agencyConfig?.google_ads_config) {
-      const conversions: ConversionData[] = [{
-        gclid: leadData.gclid || undefined,
-        conversion_action_id: '',
-        conversion_value: (leadData.value_cents || 0) / 100,
-        currency_code: 'EUR',
-        conversion_time: leadData.created_at || new Date().toISOString(),
-      }];
+      const conversions: ConversionData[] = [
+        {
+          gclid: leadData.gclid || undefined,
+          conversion_action_id: '',
+          conversion_value: (leadData.value_cents || 0) / 100,
+          currency_code: 'EUR',
+          conversion_time: leadData.created_at || new Date().toISOString(),
+        },
+      ];
 
       await queueConversions(c.env, agency.id, conversions);
     }
@@ -230,7 +251,7 @@ function getErrorMessage(errorType: string): string {
       status: 'success',
       lead_id: storedLead.id,
       topic,
-      shop_domain: shopDomain
+      shop_domain: shopDomain,
     });
 
     // Add security headers to success responses
@@ -239,7 +260,6 @@ function getErrorMessage(errorType: string): string {
     response.headers.set('X-XSS-Protection', '1; mode=block');
 
     return response;
-
   } catch (error) {
     console.error('Shopify webhook error:', error);
     return createSecureErrorResponse(c, 'processing_failed', 500);
@@ -249,18 +269,16 @@ function getErrorMessage(errorType: string): string {
 shopifyRoutes.get('/webhook', (c) => {
   return c.json({
     status: 'Shopify webhook endpoint is ready',
-    supported_topics: [
-      'customers/create',
-      'customers/update',
-      'orders/create',
-      'orders/paid'
-    ],
-    usage: 'Configure webhooks in Shopify admin to POST JSON payloads here'
+    supported_topics: ['customers/create', 'customers/update', 'orders/create', 'orders/paid'],
+    usage: 'Configure webhooks in Shopify admin to POST JSON payloads here',
   });
 });
 
 // Payload validation function
-function validateWebhookPayload(payload: any, topic: string | undefined): { valid: boolean; error?: string } {
+function validateWebhookPayload(
+  payload: any,
+  topic: string | undefined
+): { valid: boolean; error?: string } {
   if (!payload || typeof payload !== 'object') {
     return { valid: false, error: 'Payload must be a valid object' };
   }
@@ -316,7 +334,11 @@ function validateOrderPayload(order: any): { valid: boolean; error?: string } {
     return { valid: false, error: 'Missing or invalid order email' };
   }
 
-  if (!order.total_price || typeof order.total_price !== 'string' || isNaN(parseFloat(order.total_price))) {
+  if (
+    !order.total_price ||
+    typeof order.total_price !== 'string' ||
+    isNaN(parseFloat(order.total_price))
+  ) {
     return { valid: false, error: 'Missing or invalid order total_price' };
   }
 
@@ -366,7 +388,7 @@ function processShopifyCustomer(customer: ShopifyCustomerWebhook, topic: string)
     utm_campaign: utmParams.utm_campaign,
     value_cents: 0, // Customer creation has no monetary value
     status: topic.includes('create') ? 'new' : 'qualified',
-    created_at: customer.created_at
+    created_at: customer.created_at,
   };
 }
 
@@ -385,7 +407,7 @@ function processShopifyOrder(order: ShopifyOrderWebhook, topic: string) {
     utm_campaign: utmParams.utm_campaign,
     value_cents: Math.round(parseFloat(order.total_price) * 100), // Convert to cents
     status: 'won', // Orders are conversions
-    created_at: order.created_at
+    created_at: order.created_at,
   };
 }
 
@@ -415,9 +437,7 @@ async function findAgencyByShopifyDomain(db: any, shopDomain?: string) {
   if (!shopDomain) return null;
 
   // Look for agency with matching Shopify domain in their config
-  const agencies = await db.prepare(
-    'SELECT id, config FROM agencies'
-  ).all();
+  const agencies = await db.prepare('SELECT id, config FROM agencies').all();
 
   for (const agency of agencies.results || agencies) {
     try {
@@ -437,20 +457,25 @@ async function findAgencyByShopifyDomain(db: any, shopDomain?: string) {
 async function storeLeadTechnologies(db: any, leadId: string, technologies: any[]) {
   // Implementation from leads.ts
   for (const tech of technologies) {
-    let techResult = await db.prepare(
-      'SELECT id FROM technologies WHERE name = ? AND category = ?'
-    ).bind(tech.name, tech.category).first();
+    let techResult = await db
+      .prepare('SELECT id FROM technologies WHERE name = ? AND category = ?')
+      .bind(tech.name, tech.category)
+      .first();
 
     if (!techResult) {
-      const insertResult = await db.prepare(
-        'INSERT INTO technologies (name, category) VALUES (?, ?)'
-      ).bind(tech.name, tech.category).run();
+      const insertResult = await db
+        .prepare('INSERT INTO technologies (name, category) VALUES (?, ?)')
+        .bind(tech.name, tech.category)
+        .run();
 
       techResult = { id: insertResult.lastInsertRowid };
     }
 
-    await db.prepare(
-      'INSERT OR IGNORE INTO lead_technologies (lead_id, technology_id, confidence_score) VALUES (?, ?, ?)'
-    ).bind(leadId, techResult.id, tech.confidence).run();
+    await db
+      .prepare(
+        'INSERT OR IGNORE INTO lead_technologies (lead_id, technology_id, confidence_score) VALUES (?, ?, ?)'
+      )
+      .bind(leadId, techResult.id, tech.confidence)
+      .run();
   }
 }

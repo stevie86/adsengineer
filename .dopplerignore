@@ -1,0 +1,5 @@
+# Doppler CLI
+doppler/
+
+# Doppler environment files
+.env.doppler

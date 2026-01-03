@@ -1,0 +1,10 @@
+project: adsengineer
+config: dev
+
+setup:
+  - project: adsengineer
+    config: dev
+    path: .
+
+flags:
+  disable-tty: true

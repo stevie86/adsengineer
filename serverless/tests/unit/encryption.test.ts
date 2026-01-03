@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
-import { EncryptionService, encryptCredential, decryptCredential, initializeEncryption } from '../../src/services/encryption';
+import {
+  EncryptionService,
+  encryptCredential,
+  decryptCredential,
+  initializeEncryption,
+} from '../../src/services/encryption';
 
 // Mock the Web Crypto API
 const mockCrypto = {
@@ -7,15 +12,15 @@ const mockCrypto = {
     importKey: vi.fn(),
     generateKey: vi.fn(),
     encrypt: vi.fn(),
-    decrypt: vi.fn()
+    decrypt: vi.fn(),
   },
-  getRandomValues: vi.fn()
+  getRandomValues: vi.fn(),
 };
 
 // Replace global crypto with mock
 Object.defineProperty(global, 'crypto', {
   value: mockCrypto,
-  writable: true
+  writable: true,
 });
 
 // Create a mock CryptoKey
@@ -23,7 +28,7 @@ const mockCryptoKey = {
   type: 'secret',
   extractable: false,
   algorithm: { name: 'AES-GCM', length: 256 },
-  usages: ['encrypt', 'decrypt']
+  usages: ['encrypt', 'decrypt'],
 };
 
 describe('Encryption Service', () => {
@@ -64,7 +69,9 @@ describe('Encryption Service', () => {
 
     it('should reject invalid master key', async () => {
       mockCrypto.subtle.importKey.mockRejectedValue(new Error('Invalid key'));
-      await expect(encryptionService.initialize('invalidKey')).rejects.toThrow('Encryption service initialization failed');
+      await expect(encryptionService.initialize('invalidKey')).rejects.toThrow(
+        'Encryption service initialization failed'
+      );
     });
 
     it('should not reinitialize if already initialized', async () => {
@@ -92,8 +99,12 @@ describe('Encryption Service', () => {
 
     it('should generate different IVs for each encryption', async () => {
       mockCrypto.getRandomValues
-        .mockReturnValueOnce(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]))
-        .mockReturnValueOnce(new Uint8Array([16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]));
+        .mockReturnValueOnce(
+          new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
+        )
+        .mockReturnValueOnce(
+          new Uint8Array([16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1])
+        );
 
       const result1 = await encryptionService.encrypt('data1');
       const result2 = await encryptionService.encrypt('data2');
@@ -103,7 +114,9 @@ describe('Encryption Service', () => {
 
     it('should fail if not initialized', async () => {
       const freshService = new EncryptionService();
-      await expect(freshService.encrypt('test')).rejects.toThrow('Encryption service not initialized');
+      await expect(freshService.encrypt('test')).rejects.toThrow(
+        'Encryption service not initialized'
+      );
     });
   });
 
@@ -118,7 +131,7 @@ describe('Encryption Service', () => {
         iv: btoa('iv'),
         tag: btoa('tag'),
         algorithm: 'AES-GCM',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       const result = await encryptionService.decrypt(encryptedData);
@@ -129,7 +142,7 @@ describe('Encryption Service', () => {
       const invalidData = {
         encrypted: 'invalid',
         algorithm: 'AES-GCM',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
         // Missing iv
       };
 
@@ -143,10 +156,12 @@ describe('Encryption Service', () => {
         iv: 'test',
         tag: 'test',
         algorithm: 'AES-GCM',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
-      await expect(freshService.decrypt(encryptedData)).rejects.toThrow('Encryption service not initialized');
+      await expect(freshService.decrypt(encryptedData)).rejects.toThrow(
+        'Encryption service not initialized'
+      );
     });
   });
 
@@ -157,7 +172,7 @@ describe('Encryption Service', () => {
         iv: btoa('iv'),
         tag: btoa('tag'),
         algorithm: 'AES-GCM',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       expect(encryptionService.validateEncryptedData(validData)).toBe(true);
@@ -168,7 +183,7 @@ describe('Encryption Service', () => {
         encrypted: btoa('data'),
         iv: btoa('iv'),
         algorithm: 'AES-CBC', // Wrong algorithm
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       expect(encryptionService.validateEncryptedData(invalidData)).toBe(false);
@@ -179,7 +194,7 @@ describe('Encryption Service', () => {
         encrypted: btoa('data'),
         // Missing iv
         algorithm: 'AES-GCM',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       expect(encryptionService.validateEncryptedData(invalidData)).toBe(false);
@@ -190,7 +205,7 @@ describe('Encryption Service', () => {
         encrypted: 'invalid-base64!',
         iv: btoa('iv'),
         algorithm: 'AES-GCM',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       expect(encryptionService.validateEncryptedData(invalidData)).toBe(false);
@@ -238,7 +253,7 @@ describe('Encryption Service', () => {
         iv: btoa('iv'),
         tag: btoa('tag'),
         algorithm: 'AES-GCM',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       const result = await decryptCredential(encryptedData);

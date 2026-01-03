@@ -59,7 +59,7 @@ export async function queueConversions(
       success: true,
       job_id: '',
       queued_count: 0,
-      message: 'No conversions to queue'
+      message: 'No conversions to queue',
     };
   }
 
@@ -81,14 +81,14 @@ export async function queueConversions(
 
     await env.GOOGLE_ADS_QUEUE.send(job);
     totalQueued += batch.length;
-    await new Promise(resolve => setTimeout(resolve, 10));
+    await new Promise((resolve) => setTimeout(resolve, 10));
   }
 
   return {
     success: true,
     job_id: jobId,
     queued_count: totalQueued,
-    message: `Queued ${totalQueued} conversions in ${batches.length} batches`
+    message: `Queued ${totalQueued} conversions in ${batches.length} batches`,
   };
 }
 export async function processConversionBatch(
@@ -130,7 +130,6 @@ export async function processConversionBatch(
       retry_count,
       errors: result.errors,
     };
-
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
@@ -153,7 +152,7 @@ export async function processConversionBatch(
         next_retry_at: new Date(Date.now() + retryDelay).toISOString(),
       };
 
-      await new Promise(resolve => setTimeout(resolve, retryDelay));
+      await new Promise((resolve) => setTimeout(resolve, retryDelay));
       await env.GOOGLE_ADS_QUEUE.send(retryJob);
 
       return {
@@ -186,9 +185,9 @@ function chunkArray<T>(array: T[], chunkSize: number): T[][] {
 }
 
 async function getAgencyCredentials(env: AppEnv['Bindings'], agencyId: string) {
-  const result = await env.DB.prepare(
-    'SELECT google_ads_config FROM agencies WHERE id = ?'
-  ).bind(agencyId).first();
+  const result = await env.DB.prepare('SELECT google_ads_config FROM agencies WHERE id = ?')
+    .bind(agencyId)
+    .first();
 
   if (!result?.google_ads_config) return null;
 
@@ -196,8 +195,12 @@ async function getAgencyCredentials(env: AppEnv['Bindings'], agencyId: string) {
 }
 
 async function validateCredentials(env: AppEnv['Bindings'], credentials: any): Promise<boolean> {
-  return !!(credentials.client_id && credentials.client_secret &&
-           credentials.refresh_token && credentials.customer_id);
+  return !!(
+    credentials.client_id &&
+    credentials.client_secret &&
+    credentials.refresh_token &&
+    credentials.customer_id
+  );
 }
 
 async function checkRateLimit(env: AppEnv['Bindings'], agencyId: string): Promise<void> {
@@ -206,7 +209,9 @@ async function checkRateLimit(env: AppEnv['Bindings'], agencyId: string): Promis
 
   const recentRequests = await env.DB.prepare(
     'SELECT COUNT(*) as count FROM conversion_logs WHERE agency_id = ? AND created_at > ?'
-  ).bind(agencyId, new Date(windowStart).toISOString()).first();
+  )
+    .bind(agencyId, new Date(windowStart).toISOString())
+    .first();
 
   if ((recentRequests?.count || 0) > 50) {
     throw new Error('Rate limit exceeded for agency');
@@ -230,7 +235,7 @@ function shouldRetry(error: any): boolean {
   ];
 
   const errorMessage = error?.message || error?.toString() || '';
-  return retryableErrors.some(code => errorMessage.includes(code));
+  return retryableErrors.some((code) => errorMessage.includes(code));
 }
 
 function calculateRetryDelay(retryCount: number): number {
@@ -244,23 +249,22 @@ async function logConversionResult(env: AppEnv['Bindings'], result: any): Promis
       job_id, agency_id, batch_size, success_count, failure_count,
       retry_count, errors, processing_time, created_at
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).bind(
-    result.job_id,
-    result.agency_id,
-    result.batch_size,
-    result.success_count,
-    result.failure_count,
-    result.retry_count,
-    JSON.stringify(result.errors),
-    result.processing_time,
-    new Date().toISOString()
-  ).run();
+  `)
+    .bind(
+      result.job_id,
+      result.agency_id,
+      result.batch_size,
+      result.success_count,
+      result.failure_count,
+      result.retry_count,
+      JSON.stringify(result.errors),
+      result.processing_time,
+      new Date().toISOString()
+    )
+    .run();
 }
 
-export async function handleQueueMessage(
-  env: AppEnv['Bindings'],
-  message: any
-): Promise<void> {
+export async function handleQueueMessage(env: AppEnv['Bindings'], message: any): Promise<void> {
   const job = message.body as GoogleAdsConversionJob;
 
   try {

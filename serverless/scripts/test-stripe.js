@@ -37,7 +37,7 @@ console.log(`🔑 Key prefix: ${stripeKey.substring(0, 12)}...`);
 try {
   const Stripe = require('stripe');
   const stripe = new Stripe(stripeKey, {
-    apiVersion: '2024-12-18.acacia'
+    apiVersion: '2024-12-18.acacia',
   });
 
   console.log('✅ Stripe package loaded successfully');
@@ -45,7 +45,6 @@ try {
 
   // Note: We won't make actual API calls in this test script
   // as it requires network access and proper environment setup
-
 } catch (error) {
   console.log('⚠️  Stripe package not available for testing, but configuration is correct');
 }

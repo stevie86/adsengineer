@@ -1,0 +1,126 @@
+{
+    "nav": {
+        "features": "Features",
+        "pricing": "Pricing",
+        "testimonials": "Why Us",
+        "login": "Login",
+        "getStarted": "Get Started"
+    },
+    "hero": {
+        "badge": "Maximize Your Efficiency",
+        "titlePrefix": "Stop Wasting",
+        "titleHighlight": "Ad Spend",
+        "subtitle": "Agencies, eCommerce, and SMBs are losing attribution data daily. AdsEngineer fixes this with server-side tracking—ensuring Google & Meta see every conversion.",
+        "ctaPrimary": "Start Free Trial",
+        "ctaSecondary": "How It Works",
+        "stat1Value": "100%",
+        "stat1Label": "Attribution Accuracy",
+        "stat2Value": "30%",
+        "stat2Label": "Avg. ROAS Increase",
+        "stat3Value": "0",
+        "stat3Label": "Changes to Setup"
+    },
+    "features": {
+        "badge": "Capabilities",
+        "title": "Server-Side <span class=\"gradient-text\">Power</span>",
+        "subtitle": "Built for Shopify, WordPress, and Custom Stacks.",
+        "list": [
+            {
+                "title": "Data Preservation",
+                "desc": "Attribution survives cookie restrictions, ad blockers, and tracking failures."
+            },
+            {
+                "title": "Universal Integration",
+                "desc": "Works with Shopify, WooCommerce, GoHighLevel, and any custom webhook."
+            },
+            {
+                "title": "First-Party Data",
+                "desc": "Enhanced conversions using hashed first-party data for maximum match rates."
+            },
+            {
+                "title": "Total Privacy",
+                "desc": "Full GDPR compliance with server-side processing that respects user consent."
+            },
+            {
+                "title": "Global Edge",
+                "desc": "Deployed on Cloudflare Workers for <50ms latency anywhere in the world."
+            },
+            {
+                "title": "Zero Maintenance",
+                "desc": "Set it up once. No complex GTM containers or constant updates required."
+            }
+        ]
+    },
+    "testimonials": {
+        "badge": "Our Impact",
+        "title": "Why <span class=\"gradient-text\">Smart Advertisers</span> Switch",
+        "t1": "Data Ownership",
+        "t1Desc": "Don't rely on third-party cookies. Own your conversion data and feed it directly to ad platforms.",
+        "t2": "Privacy First",
+        "t2Desc": "Built for the post-cookie world. Fully GDPR compliant while maintaining attribution accuracy.",
+        "t3": "Real-Time ROI",
+        "t3Desc": "Feed data back to Google & Meta instantly to optimize bidding algorithms faster."
+    },
+    "pricing": {
+        "badge": "Pricing",
+        "title": "Fair, <span class=\"gradient-text\">Transparent</span> Pricing",
+        "subtitle": "Scale your efficiency without breaking the bank.",
+        "beta": {
+            "name": "Beta Access",
+            "price": "49",
+            "period": "/mo",
+            "features": [
+                "Up to $50k Ad Spend",
+                "Google Ads Integration",
+                "Server-Side Tracking",
+                "Unlimited Events",
+                "Email Support",
+                "No Setup Fee"
+            ],
+            "btn": "Join Beta"
+        },
+        "standard": {
+            "name": "Standard",
+            "price": "99",
+            "period": "/mo",
+            "popular": "Recommended",
+            "features": [
+                "Up to $250k Ad Spend",
+                "Google Ads + Meta CAPI",
+                "Advanced Analytics",
+                "Priority Support",
+                "White-label Reports",
+                "€199 Setup Fee"
+            ],
+            "btn": "Get Started"
+        },
+        "enterprise": {
+            "name": "Premium",
+            "price": "149",
+            "period": "/mo",
+            "features": [
+                "Unlimited Ad Spend",
+                "Custom Integrations",
+                "Dedicated Account Manager",
+                "SLA Guarantee",
+                "API Access",
+                "Custom Setup"
+            ],
+            "btn": "Contact Sales"
+        }
+    },
+    "cta": {
+        "title": "Ready to fix your attribution?",
+        "subtitle": "Join the smart advertisers who see the full picture. 14-day free trial.",
+        "placeholder": "Enter your work email",
+        "btn": "Start Tracking",
+        "note": "No credit card required • Cancel anytime"
+    },
+    "footer": {
+        "desc": "Server-side attribution for efficiency-focused advertisers.",
+        "product": "Product",
+        "company": "Company",
+        "legal": "Legal",
+        "copyright": "© 2026 AdsEngineer.cloud. All rights reserved."
+    }
+}
