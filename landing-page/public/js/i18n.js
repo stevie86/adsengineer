@@ -58,7 +58,7 @@ class I18n {
         if (window.Cal) {
             const buttonText = lang === 'de' ? 'Termin buchen' : 'Book a Call';
             window.Cal("floatingButton", {
-              calLink: "your-cal-username/30min",
+              calLink: "stefan-pirker-nmurov/30min",
               buttonText: buttonText,
               buttonColor: "#9333ea",
               buttonTextColor: "#ffffff",
