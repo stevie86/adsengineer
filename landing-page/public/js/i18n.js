@@ -58,11 +58,11 @@ class I18n {
         if (window.Cal) {
             const buttonText = lang === 'de' ? 'Termin buchen' : 'Book a Call';
             window.Cal("floatingButton", {
-                calLink: "adsengineer/30min",
-                buttonText: buttonText,
-                buttonColor: "#9333ea",
-                buttonTextColor: "#ffffff",
-                buttonPosition: "bottom-left"
+              calLink: "your-cal-username/30min",
+              buttonText: buttonText,
+              buttonColor: "#9333ea",
+              buttonTextColor: "#ffffff",
+              buttonPosition: "bottom-left"
             });
         }
     }
