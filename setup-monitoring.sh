@@ -24,7 +24,7 @@ cat > "$MONITOR_DIR/health-check.sh" << 'EOF'
 #!/bin/bash
 # Basic health check script
 
-API_URL="https://advocate-cloud.adsengineer.workers.dev"
+API_URL="https://adsengineer-cloud.adsengineer.workers.dev"
 
 echo "🔍 Health Check - $(date)"
 
@@ -54,7 +54,7 @@ cat > "$MONITOR_DIR/error-monitor.sh" << 'EOF'
 # Error monitoring script
 
 LOG_FILE="monitoring/errors.log"
-API_URL="https://advocate-cloud.adsengineer.workers.dev"
+API_URL="https://adsengineer-cloud.adsengineer.workers.dev"
 
 echo "$(date): Starting error monitoring" >> "$LOG_FILE"
 
@@ -77,7 +77,7 @@ cat > "$MONITOR_DIR/performance-monitor.sh" << 'EOF'
 # Performance monitoring script
 
 METRICS_FILE="monitoring/performance.log"
-API_URL="https://advocate-cloud.adsengineer.workers.dev"
+API_URL="https://adsengineer-cloud.adsengineer.workers.dev"
 
 echo "$(date): Performance Check" >> "$METRICS_FILE"
 

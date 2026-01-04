@@ -41,7 +41,7 @@ fi
 # Test database connection
 echo -e "\n${YELLOW}Testing Database Connection...${NC}"
 # This would require actual database access, for now just check if we can reach the API
-DB_TEST=$(curl -s -o /dev/null -w "%{http_code}" "https://advocate-cloud.adsengineer.workers.dev/api/v1/leads" 2>/dev/null)
+DB_TEST=$(curl -s -o /dev/null -w "%{http_code}" "https://adsengineer-cloud.adsengineer.workers.dev/api/v1/leads" 2>/dev/null)
 if [ "$DB_TEST" = "401" ]; then
     echo -e "${GREEN}✅ Database connection working (auth required)${NC}"
 else
@@ -51,7 +51,7 @@ fi
 # Test JWT authentication
 echo -e "\n${YELLOW}Testing JWT Authentication...${NC}"
 # This would require a valid JWT token to test fully
-JWT_TEST=$(curl -s -o /dev/null -w "%{http_code}" "https://advocate-cloud.adsengineer.workers.dev/api/v1/leads" 2>/dev/null)
+JWT_TEST=$(curl -s -o /dev/null -w "%{http_code}" "https://adsengineer-cloud.adsengineer.workers.dev/api/v1/leads" 2>/dev/null)
 if [ "$JWT_TEST" = "401" ]; then
     echo -e "${GREEN}✅ JWT authentication active${NC}"
 else

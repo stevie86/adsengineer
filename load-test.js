@@ -9,7 +9,7 @@ import { createHmac } from 'crypto';
 
 // Configuration
 const CONFIG = {
-  baseUrl: 'https://advocate-cloud.adsengineer.workers.dev',
+  baseUrl: 'https://adsengineer-cloud.adsengineer.workers.dev',
   localUrl: 'http://localhost:8090',
   useLocal: process.env.USE_LOCAL === 'true',
   concurrency: parseInt(process.env.CONCURRENCY || '10'),

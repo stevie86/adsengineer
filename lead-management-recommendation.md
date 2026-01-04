@@ -38,7 +38,7 @@ In your n8n Outreach Copywriter workflow, add an HTTP Request node after email g
 
 ```
 Method: POST
-URL: https://advocate-cloud.adsengineer.workers.dev/api/v1/leads
+URL: https://adsengineer-cloud.adsengineer.workers.dev/api/v1/leads
 Headers:
   - Authorization: Bearer YOUR_API_KEY
   - Content-Type: application/json

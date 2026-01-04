@@ -10,16 +10,16 @@ pnpm dev
 
 ## Production API
 
-**Live URL:** https://advocate-cloud.adsengineer.workers.dev
+**Live URL:** https://adsengineer-cloud.adsengineer.workers.dev
 
 ### Health Check
 ```bash
-curl https://advocate-cloud.adsengineer.workers.dev/health
+curl https://adsengineer-cloud.adsengineer.workers.dev/health
 ```
 
 ### API Documentation
-- Swagger UI: https://advocate-cloud.adsengineer.workers.dev/docs
-- OpenAPI JSON: https://advocate-cloud.adsengineer.workers.dev/openapi.json
+- Swagger UI: https://adsengineer-cloud.adsengineer.workers.dev/docs
+- OpenAPI JSON: https://adsengineer-cloud.adsengineer.workers.dev/openapi.json
 
 ## API Endpoints
 
@@ -68,7 +68,7 @@ pnpm deploy        # Deploy to production
 ## Database Migrations
 
 ```bash
-wrangler d1 migrations apply advocate-db --remote
+wrangler d1 migrations apply adsengineer-db --remote
 ```
 
 ## GHL Integration

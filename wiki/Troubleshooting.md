@@ -6,13 +6,13 @@ Common issues and solutions for AdsEngineer.
 
 ### Health Check
 ```bash
-curl -f https://advocate-cloud.adsengineer.workers.dev/health
+curl -f https://adsengineer-cloud.adsengineer.workers.dev/health
 ```
 
 ### System Status
 ```bash
 curl -H "Authorization: Bearer <token>" \
-     https://advocate-cloud.adsengineer.workers.dev/api/v1/status
+     https://adsengineer-cloud.adsengineer.workers.dev/api/v1/status
 ```
 
 ## Development Issues
@@ -196,7 +196,7 @@ echo <token> | cut -d'.' -f2 | base64 -d | jq .exp
 **Issue:** "Rate limit exceeded"
 ```bash
 # Check rate limit headers
-curl -I "https://advocate-cloud.adsengineer.workers.dev/api/v1/leads" \
+curl -I "https://adsengineer-cloud.adsengineer.workers.dev/api/v1/leads" \
      -H "Authorization: Bearer <token>"
 
 # Wait for reset (from X-RateLimit-Reset header)
@@ -268,7 +268,7 @@ wrangler d1 migrations rollback advocate-db --remote
 ```bash
 # Measure response time
 curl -w "@curl-format.txt" \
-     "https://advocate-cloud.adsengineer.workers.dev/health"
+     "https://adsengineer-cloud.adsengineer.workers.dev/health"
 
 # Check with curl-format.txt content:
 #     time_namelookup:  %{time_namelookup}\n
@@ -303,11 +303,11 @@ wrangler tail | grep "Memory"
 **Issue:** "SSL certificate error"
 ```bash
 # Check certificate
-openssl s_client -connect advocate-cloud.adsengineer.workers.dev:443 \
-    -servername advocate-cloud.adsengineer.workers.dev
+openssl s_client -connect adsengineer-cloud.adsengineer.workers.dev:443 \
+    -servername adsengineer-cloud.adsengineer.workers.dev
 
 # Check Cloudflare SSL status
-curl -I "https://advocate-cloud.adsengineer.workers.dev"
+curl -I "https://adsengineer-cloud.adsengineer.workers.dev"
 ```
 
 ### CORS Issues
@@ -316,7 +316,7 @@ curl -I "https://advocate-cloud.adsengineer.workers.dev"
 ```bash
 # Check CORS headers
 curl -H "Origin: https://example.com" \
-     -I "https://advocate-cloud.adsengineer.workers.dev/health"
+     -I "https://adsengineer-cloud.adsengineer.workers.dev/health"
 
 # Verify Access-Control-Allow-Origin header
 # Should match your domain or be "*"

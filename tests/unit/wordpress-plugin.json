@@ -202,7 +202,7 @@ tests/
       }
     },
     "cloud_api": {
-      "base_url": "https://advocate-cloud.adsengineer.workers.dev",
+      "base_url": "https://adsengineer-cloud.adsengineer.workers.dev",
       "test_site_id": "test_site_001",
       "test_jwt_secret": "test_jwt_secret_key_123456"
     }

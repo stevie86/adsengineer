@@ -36,10 +36,10 @@ doppler run --config=production -- pnpm deploy
 
 ```bash
 # Verify deployment
-curl -f https://advocate-cloud.adsengineer.workers.dev/health
+curl -f https://adsengineer-cloud.adsengineer.workers.dev/health
 
 # Check API docs
-curl https://advocate-cloud.adsengineer.workers.dev/openapi.json | jq '.info.version'
+curl https://adsengineer-cloud.adsengineer.workers.dev/openapi.json | jq '.info.version'
 ```
 
 ## Automated Deployment
@@ -158,7 +158,7 @@ tofu apply -var="environment=production" -lock=true
 ```bash
 # Automated health check
 #!/bin/bash
-HEALTH_URL="https://advocate-cloud.adsengineer.workers.dev/health"
+HEALTH_URL="https://adsengineer-cloud.adsengineer.workers.dev/health"
 RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" $HEALTH_URL)
 
 if [ $RESPONSE -eq 200 ]; then
@@ -180,7 +180,7 @@ doppler run -- pnpm test:performance
 
 # Check response times
 curl -w "@curl-format.txt" \
-     https://advocate-cloud.adsengineer.workers.dev/health
+     https://adsengineer-cloud.adsengineer.workers.dev/health
 ```
 
 ## Security
@@ -213,7 +213,7 @@ doppler run --config=production -- pnpm deploy
 ```bash
 # Daily backup script
 #!/bin/bash
-BACKUP_URL="https://advocate-cloud.adsengineer.workers.dev/api/v1/admin/backup"
+BACKUP_URL="https://adsengineer-cloud.adsengineer.workers.dev/api/v1/admin/backup"
 ADMIN_TOKEN=$(doppler secrets get ADMIN_TOKEN -c production)
 
 curl -H "Authorization: Bearer $ADMIN_TOKEN" \
@@ -228,7 +228,7 @@ aws s3 cp "backup-$(date +%Y%m%d).json" \
 
 ```bash
 # Restore from backup
-curl -X POST "https://advocate-cloud.adsengineer.workers.dev/api/v1/admin/restore" \
+curl -X POST "https://adsengineer-cloud.adsengineer.workers.dev/api/v1/admin/restore" \
      -H "Authorization: Bearer $ADMIN_TOKEN" \
      -H "Content-Type: application/json" \
      -d '{"backup_file": "backup-20260103.json"}'
@@ -265,10 +265,10 @@ wrangler d1 migrations rollback advocate-db --remote
 **"Rate limiting issues"**
 ```bash
 # Check current limits
-curl -I https://advocate-cloud.adsengineer.workers.dev/api/v1/health
+curl -I https://adsengineer-cloud.adsengineer.workers.dev/api/v1/health
 
 # Monitor rate limit headers
-watch -n 60 'curl -I https://advocate-cloud.adsengineer.workers.dev/api/v1/status'
+watch -n 60 'curl -I https://adsengineer-cloud.adsengineer.workers.dev/api/v1/status'
 ```
 
 ## Performance Optimization

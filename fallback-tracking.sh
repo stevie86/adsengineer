@@ -14,7 +14,7 @@ NC='\033[0m'
 # Configuration
 FALLBACK_DIR="fallback-tracking"
 CUSTOMER_ID="${1:-demo-customer}"
-API_BASE="https://advocate-cloud.adsengineer.workers.dev"
+API_BASE="https://adsengineer-cloud.adsengineer.workers.dev"
 
 # Create fallback directory
 if [ ! -d "$FALLBACK_DIR" ]; then

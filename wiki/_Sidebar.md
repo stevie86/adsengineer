@@ -24,22 +24,22 @@ Quick access to all AdsEngineer documentation.
 ### Authentication
 ```bash
 # Get API token
-curl -X POST "https://advocate-cloud.adsengineer.workers.dev/api/v1/auth/token" \
+curl -X POST "https://adsengineer-cloud.adsengineer.workers.dev/api/v1/auth/token" \
      -d '{"user_id": "your_email"}'
 
 # Use token
 curl -H "Authorization: Bearer <token>" \
-     "https://advocate-cloud.adsengineer.workers.dev/api/v1/leads"
+     "https://adsengineer-cloud.adsengineer.workers.dev/api/v1/leads"
 ```
 
 ### Webhook Setup
 ```bash
 # GHL Webhook
-POST https://advocate-cloud.adsengineer.workers.dev/api/v1/ghl/webhook
+POST https://adsengineer-cloud.adsengineer.workers.dev/api/v1/ghl/webhook
 Headers: X-GHL-Signature (HMAC verification)
 
 # Shopify Webhook  
-POST https://advocate-cloud.adsengineer.workers.dev/api/v1/shopify/webhook
+POST https://adsengineer-cloud.adsengineer.workers.dev/api/v1/shopify/webhook
 Headers: X-Shopify-Topic, X-Shopify-Shop-Domain
 ```
 
@@ -68,9 +68,9 @@ doppler run --config=production -- pnpm deploy
 
 | Resource | Link |
 |----------|------|
-| Live API | https://advocate-cloud.adsengineer.workers.dev |
-| API Docs | https://advocate-cloud.adsengineer.workers.dev/docs |
-| Health Check | https://advocate-cloud.adsengineer.workers.dev/health |
+| Live API | https://adsengineer-cloud.adsengineer.workers.dev |
+| API Docs | https://adsengineer-cloud.adsengineer.workers.dev/docs |
+| Health Check | https://adsengineer-cloud.adsengineer.workers.dev/health |
 | GitHub Repo | https://github.com/adsengineer/ads-engineer |
 | Issues | https://github.com/adsengineer/ads-engineer/issues |
 

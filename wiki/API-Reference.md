@@ -4,7 +4,7 @@ Complete REST API documentation for AdsEngineer.
 
 ## Base URL
 ```
-Production: https://advocate-cloud.adsengineer.workers.dev
+Production: https://adsengineer-cloud.adsengineer.workers.dev
 Development: http://localhost:8787
 ```
 
@@ -14,7 +14,7 @@ Most endpoints require JWT authentication:
 
 ```bash
 curl -H "Authorization: Bearer <your_token>" \
-     https://advocate-cloud.adsengineer.workers.dev/api/v1/leads
+     https://adsengineer-cloud.adsengineer.workers.dev/api/v1/leads
 ```
 
 ## Endpoints
@@ -213,11 +213,11 @@ Use the health endpoint to test your setup:
 
 ```bash
 # Test health
-curl -f https://advocate-cloud.adsengineer.workers.dev/health
+curl -f https://adsengineer-cloud.adsengineer.workers.dev/health
 
 # Test with authentication
 curl -H "Authorization: Bearer <token>" \
-     https://advocate-cloud.adsengineer.workers.dev/api/v1/status
+     https://adsengineer-cloud.adsengineer.workers.dev/api/v1/status
 ```
 
 ## SDK Examples

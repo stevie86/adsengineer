@@ -5,7 +5,7 @@
 set -e
 
 N8N_BASE_URL="https://primary-production-dd31.up.railway.app"
-WEBHOOK_TEST_URL="https://advocate-cloud.adsengineer.workers.dev/api/v1/ghl/webhook"
+WEBHOOK_TEST_URL="https://adsengineer-cloud.adsengineer.workers.dev/api/v1/ghl/webhook"
 
 echo "🚀 Hunter Army Workflow Activation"
 echo "=================================="

@@ -28,9 +28,9 @@ if [ "$SKIP_MIGRATIONS" != "true" ]; then
   echo "[3/5] Running database migrations..."
   
   if [ "$ENV" = "production" ]; then
-    wrangler d1 migrations apply advocate-db --remote
+    wrangler d1 migrations apply adsengineer-db --remote
   else
-    wrangler d1 migrations apply advocate-db --remote --env $ENV
+    wrangler d1 migrations apply adsengineer-db --remote --env $ENV
   fi
   echo "Migrations complete."
 else
@@ -52,9 +52,9 @@ echo "[5/5] Verifying deployment..."
 sleep 3
 
 if [ "$ENV" = "production" ]; then
-  HEALTH_URL="https://advocate-cloud.adsengineer.workers.dev/health"
+  HEALTH_URL="https://adsengineer-cloud.adsengineer.workers.dev/health"
 else
-  HEALTH_URL="https://advocate-cloud-${ENV}.adsengineer.workers.dev/health"
+  HEALTH_URL="https://adsengineer-cloud-${ENV}.adsengineer.workers.dev/health"
 fi
 
 HEALTH_RESPONSE=$(curl -s -w "\n%{http_code}" "$HEALTH_URL")

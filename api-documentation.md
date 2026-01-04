@@ -4,7 +4,7 @@
 
 AdsEngineer provides a REST API for lead management, conversion tracking, and GHL agency analytics. Built on Cloudflare Workers with D1 database for serverless scalability.
 
-**Base URL:** `https://advocate-cloud.adsengineer.workers.dev`
+**Base URL:** `https://adsengineer-cloud.adsengineer.workers.dev`
 
 ## Authentication
 
@@ -23,14 +23,14 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 
 #### Example Login
 ```bash
-curl -X POST "https://advocate-cloud.adsengineer.workers.dev/api/v1/auth/login" \
+curl -X POST "https://adsengineer-cloud.adsengineer.workers.dev/api/v1/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email":"user@example.com","password":"password"}'
 ```
 
 #### Example Authenticated Request
 ```bash
-curl -X GET "https://advocate-cloud.adsengineer.workers.dev/api/v1/leads" \
+curl -X GET "https://adsengineer-cloud.adsengineer.workers.dev/api/v1/leads" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
@@ -119,7 +119,7 @@ Retrieves leads with optional filtering.
 
 **Example:**
 ```bash
-curl -X GET "https://advocate-cloud.adsengineer.workers.dev/api/v1/leads?status=new&lead_source=hunter-army&limit=10" \
+curl -X GET "https://adsengineer-cloud.adsengineer.workers.dev/api/v1/leads?status=new&lead_source=hunter-army&limit=10" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
@@ -282,7 +282,7 @@ All errors return JSON with consistent format:
 const axios = require('axios');
 
 const client = axios.create({
-  baseURL: 'https://advocate-cloud.adsengineer.workers.dev',
+  baseURL: 'https://adsengineer-cloud.adsengineer.workers.dev',
   headers: {
     'Authorization': 'Bearer YOUR_API_KEY',
     'Content-Type': 'application/json'
@@ -316,7 +316,7 @@ lead_data = {
 }
 
 response = requests.post(
-    'https://advocate-cloud.adsengineer.workers.dev/api/v1/leads',
+    'https://adsengineer-cloud.adsengineer.workers.dev/api/v1/leads',
     json=lead_data,
     headers=headers
 )

@@ -13,7 +13,7 @@ NC='\033[0m' # No Color
 # Test data
 TEST_EMAIL="test@example.com"
 TEST_SITE_ID="test-site-123"
-API_BASE="https://advocate-cloud.adsengineer.workers.dev"
+API_BASE="https://adsengineer-cloud.adsengineer.workers.dev"
 
 echo -e "${YELLOW}Step 1: Testing API Health${NC}"
 HEALTH_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "${API_BASE}/api/health" 2>/dev/null)

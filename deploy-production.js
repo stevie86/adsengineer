@@ -112,7 +112,7 @@ class ProductionDeploy {
     postDeployChecks() {
         this.log('Running post-deployment checks...');
 
-        const healthUrl = 'https://advocate-cloud.adsengineer.workers.dev/health';
+        const healthUrl = 'https://adsengineer-cloud.adsengineer.workers.dev/health';
 
         try {
             const response = execSync(`curl -s ${healthUrl}`, { encoding: 'utf8' });
@@ -140,9 +140,9 @@ class ProductionDeploy {
                 environment: 'production',
                 status: 'completed',
                 urls: {
-                    api: 'https://advocate-cloud.adsengineer.workers.dev',
-                    health: 'https://advocate-cloud.adsengineer.workers.dev/health',
-                    docs: 'https://advocate-cloud.adsengineer.workers.dev/docs'
+                    api: 'https://adsengineer-cloud.adsengineer.workers.dev',
+                    health: 'https://adsengineer-cloud.adsengineer.workers.dev/health',
+                    docs: 'https://adsengineer-cloud.adsengineer.workers.dev/docs'
                 },
                 secrets: {
                     required: [
@@ -167,7 +167,7 @@ class ProductionDeploy {
                 '5. Send beta invites to agencies'
             ],
             monitoring: {
-                healthCheck: 'https://advocate-cloud.adsengineer.workers.dev/health',
+                healthCheck: 'https://adsengineer-cloud.adsengineer.workers.dev/health',
                 logs: 'wrangler tail --env production',
                 analytics: 'Check Cloudflare dashboard'
             }
@@ -196,7 +196,7 @@ class ProductionDeploy {
             console.log('\n🎉 Production Deployment Complete!');
             console.log('===================================');
             console.log('Your AdsEngineer API is live at:');
-            console.log('https://advocate-cloud.adsengineer.workers.dev');
+            console.log('https://adsengineer-cloud.adsengineer.workers.dev');
             console.log('\nCheck DEPLOYMENT-SUMMARY.json for details.');
 
         } catch (error) {

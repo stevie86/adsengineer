@@ -183,7 +183,7 @@ wrangler deploy
 3. Click **"Add endpoint"**
 4. Set the endpoint URL to:
    ```
-   https://advocate-cloud.adsengineer.workers.dev/api/v1/billing/webhooks/stripe
+   https://adsengineer-cloud.adsengineer.workers.dev/api/v1/billing/webhooks/stripe
    ```
 5. Select these events:
    - `customer.subscription.created`
@@ -198,7 +198,7 @@ wrangler deploy
 ### Test Pricing Endpoint
 
 ```bash
-curl -s https://advocate-cloud.adsengineer.workers.dev/api/v1/billing/pricing | jq .
+curl -s https://adsengineer-cloud.adsengineer.workers.dev/api/v1/billing/pricing | jq .
 ```
 
 Expected response:
@@ -222,7 +222,7 @@ Expected response:
 ### Test Customer Creation (Requires JWT Token)
 
 ```bash
-curl -X POST https://advocate-cloud.adsengineer.workers.dev/api/v1/billing/customers \
+curl -X POST https://adsengineer-cloud.adsengineer.workers.dev/api/v1/billing/customers \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","name":"Test User","agency_id":"test_agency"}'

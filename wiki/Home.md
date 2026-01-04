@@ -16,7 +16,7 @@ cd serverless
 doppler run -- pnpm dev
 ```
 
-**Live API:** https://advocate-cloud.adsengineer.workers.dev
+**Live API:** https://adsengineer-cloud.adsengineer.workers.dev
 
 ## What This Does
 

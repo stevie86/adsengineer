@@ -13,10 +13,10 @@ GHL's native tracking works for simple funnels. We handle the complex cases:
 
 ## Live API
 
-**Production:** https://advocate-cloud.adsengineer.workers.dev
+**Production:** https://adsengineer-cloud.adsengineer.workers.dev
 
 ```bash
-curl https://advocate-cloud.adsengineer.workers.dev/health
+curl https://adsengineer-cloud.adsengineer.workers.dev/health
 ```
 
 ## Project Structure

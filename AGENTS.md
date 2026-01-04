@@ -43,18 +43,47 @@ AdsEngineer: Enterprise conversion tracking SaaS (Google/Meta/TikTok/Shopify). C
 - **Linting:** `BiomeJS` (replaces ESLint/Prettier).
 - **Type Safety:** Strict TypeScript. No `any`.
 
+## DEVELOPMENT TOOLS
+
+### Code Search & Navigation
+- **ripgrep (rg):** Ultra-fast text search across codebase
+  - Install: `brew install ripgrep` (already available at `/home/linuxbrew/.linuxbrew/bin/rg`)
+  - Usage: `rg "search_term"` (much faster than `grep`)
+  - Features: Regex support, smart case sensitivity, file type filtering
+
 ## COMMANDS
 ```bash
 # Dev
 ./setup-doppler.sh
 doppler run -- pnpm dev
 
+# Landing Page Development
+cd landing-page && pnpm dev --host  # Expose to network for testing
+
 # Deploy
 cd serverless && pnpm deploy
 cd infrastructure && tofu apply
+cd landing-page && pnpm build && wrangler pages deploy dist/
 ```
+
+## WORKTREE MANAGEMENT
+```bash
+# List all worktrees
+git worktree list
+
+# Remove completed worktrees (after merging feature branches)
+git worktree remove .worktrees/<feature-name>
+# Use --force if there are untracked build artifacts
+git worktree remove --force .worktrees/<feature-name>
+
+# Clean up all unused worktrees
+git worktree prune
+```
+
+**Note:** Worktrees are created by spec-kitty for feature development and should be cleaned up after merging to main.
 
 ## ANTI-PATTERNS
 - Committing secrets (Use Doppler)
 - Direct `node_modules` modification
 - bypassing Biome rules
+- Leaving worktrees unmerged/unremoved

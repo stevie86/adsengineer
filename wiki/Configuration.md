@@ -209,7 +209,7 @@ doppler run -- wrangler whoami
 **"Rate limit exceeded"**
 ```bash
 # Check rate limit headers
-curl -I https://advocate-cloud.adsengineer.workers.dev/api/v1/leads
+curl -I https://adsengineer-cloud.adsengineer.workers.dev/api/v1/leads
 
 # Implement exponential backoff in client
 ```

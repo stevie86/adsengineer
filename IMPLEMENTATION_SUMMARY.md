@@ -16,8 +16,8 @@
 - `.gitignore` - State file protection
 
 **Resources Managed:**
-- Cloudflare D1 Database (advocate-db)
-- Cloudflare Worker (advocate-cloud)
+- Cloudflare D1 Database (adsengineer-db)
+- Cloudflare Worker (adsengineer-cloud)
 - KV Namespace for rate limiting
 - Worker Routes (development/staging)
 

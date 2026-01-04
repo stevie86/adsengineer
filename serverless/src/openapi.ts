@@ -15,7 +15,7 @@ export const openApiSpec = {
   },
   servers: [
     {
-      url: 'https://advocate-cloud.adsengineer.workers.dev',
+      url: 'https://adsengineer-cloud.adsengineer.workers.dev',
       description: 'Production',
     },
     {

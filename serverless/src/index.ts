@@ -22,7 +22,7 @@ const app = new Hono<AppEnv>();
 app.use(
   '*',
   cors({
-    origin: ['https://app.advocate.com', 'http://localhost:3000', 'http://localhost:8090'],
+    origin: ['https://app.adsengineer.com', 'http://localhost:3000', 'http://localhost:8090'],
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   })
@@ -65,8 +65,8 @@ app.get('/snippet.js', async (c) => {
   // Configuration
   var config = {
     siteId: getSiteId(),
-    apiBase: 'https://advocate-cloud.adsengineer.workers.dev',
-    cookiePrefix: '_advocate_',
+    apiBase: 'https://adsengineer-cloud.adsengineer.workers.dev',
+    cookiePrefix: '_adsengineer_',
     cookieExpiry: 90 // days
   };
 
@@ -97,7 +97,7 @@ app.get('/snippet.js', async (c) => {
     var scripts = document.getElementsByTagName('script');
     for (var i = 0; i < scripts.length; i++) {
       var script = scripts[i];
-      if (script.src && script.src.indexOf('advocate-cloud.adsengineer.workers.dev/snippet.js') !== -1) {
+      if (script.src && script.src.indexOf('adsengineer-cloud.adsengineer.workers.dev/snippet.js') !== -1) {
         return script.getAttribute('data-site-id') || 'default';
       }
     }

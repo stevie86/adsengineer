@@ -10,8 +10,8 @@
   // Configuration
   var config = {
     siteId: getSiteId(),
-    apiBase: 'https://advocate-cloud.adsengineer.workers.dev',
-    cookiePrefix: '_advocate_',
+    apiBase: 'https://adsengineer-cloud.adsengineer.workers.dev',
+    cookiePrefix: '_adsengineer_',
     cookieExpiry: 90, // days
   };
 
@@ -44,7 +44,7 @@
       var script = scripts[i];
       if (
         script.src &&
-        script.src.indexOf('advocate-cloud.adsengineer.workers.dev/snippet.js') !== -1
+        script.src.indexOf('adsengineer-cloud.adsengineer.workers.dev/snippet.js') !== -1
       ) {
         return script.getAttribute('data-site-id') || 'default';
       }
