@@ -1,6 +1,6 @@
 ---
 work_package_id: WP02
-lane: planned
+lane: for_review
 subtasks:
   - T006
   - T007
