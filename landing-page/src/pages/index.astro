@@ -3,18 +3,544 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import Audience from '../components/Audience.astro';
+import Pricing from '../components/Pricing.astro';
+import Trust from '../components/Trust.astro';
 ---
 
 <Layout>
   <Header />
-  <main class="min-h-screen bg-gray-100">
-    <section class="bg-gray-900 text-white py-20">
-      <div class="container mx-auto text-center">
-        <h1 class="text-4xl font-bold mb-4">Stop Losing Google Ads Attribution</h1>
-        <p class="text-xl mb-8">Bridge the gap between Google Ads and GoHighLevel with server-side attribution.</p>
-        <a href="#demo" class="bg-blue-600 px-6 py-3 rounded text-lg hover:bg-blue-700">Book a Demo</a>
+  <main>
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-20 md:py-32">
+      <div class="container mx-auto px-6 text-center max-w-4xl">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          When Tracking Breaks, Performance Dies
+        </h1>
+        <p class="text-xl md:text-2xl mb-8 text-gray-300">
+          AdsEngineer connects your forms, Shopify and GoHighLevel to Google & Meta, sending real customer value back as offline conversions—so your ads optimize for revenue, not just clicks.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="#demo" class="bg-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors">
+            Book a Demo
+          </a>
+          <a href="#how-it-works" class="border border-gray-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-800 transition-colors">
+            See How It Works
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="py-16 bg-white">
+      <div class="container mx-auto px-6 max-w-4xl">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">The Problem: Google Optimizes for Clicks, Not Revenue</h2>
+        <div class="space-y-6 text-lg text-gray-700">
+          <p class="flex items-start gap-3">
+            <span class="text-red-500 text-2xl">✗</span>
+            <span>90% of ad tracking data is lost due to cookie restrictions and privacy changes</span>
+          </p>
+          <p class="flex items-start gap-3">
+            <span class="text-red-500 text-2xl">✗</span>
+            <span>Google Ads sees your cheap lead forms as "conversions" and optimizes for them</span>
+          </p>
+          <p class="flex items-start gap-3">
+            <span class="text-red-500 text-2xl">✗</span>
+            <span>You can't tell Google which leads turned into actual customers with revenue</span>
+          </p>
+        </div>
+        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <p class="text-blue-900 font-medium">
+            Industry data shows advertisers who implement offline conversion tracking and value-based bidding often achieve 20-50% better efficiency. AdVocate makes that setup achievable for small teams.
+          </p>
+        </div>
+
+        <!-- ROI Calculator -->
+        <div class="mt-12 bg-white rounded-lg shadow-lg p-8 border-2 border-blue-500">
+          <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">How Much Are You Losing Monthly?</h3>
+
+          <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">Monthly Ad Spend (€)</label>
+              <input
+                id="spend"
+                type="number"
+                value="5000"
+                min="1000"
+                max="100000"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">Current ROAS (Return on Ad Spend)</label>
+              <input
+                id="roas"
+                type="number"
+                step="0.1"
+                value="3"
+                min="1"
+                max="10"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700">
+                Est. Attribution Loss: <span id="loss-val" class="font-bold text-blue-600">25%</span>
+              </label>
+              <input
+                id="loss"
+                type="range"
+                min="10"
+                max="40"
+                value="25"
+                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              />
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8">
+            <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+              <h4 class="text-lg font-semibold text-red-900 mb-3">Without AdsEngineer:</h4>
+              <div class="space-y-2">
+                <p class="text-red-800">Current Revenue: <span id="current-rev" class="font-bold text-xl">€15,000</span></p>
+                <p class="text-red-800">Lost Attribution: <span id="lost-rev" class="font-bold text-xl">€3,750</span></p>
+              </div>
+            </div>
+
+            <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+              <h4 class="text-lg font-semibold text-green-900 mb-3">With Full Attribution:</h4>
+              <div class="space-y-2">
+                <p class="text-green-800">New Revenue: <span id="new-rev" class="font-bold text-xl text-green-600">€18,750</span></p>
+                <p class="text-green-800">Monthly Gain: <span id="gain" class="font-bold text-xl text-green-600">+€3,750</span></p>
+                <p class="text-green-800 text-sm">
+                  <strong>Our €99/mo fee pays for itself in <span id="breakeven" class="font-bold">1 week</span></strong>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 text-center">
+            <p class="text-gray-600 mb-4">Ready to stop losing money to broken attribution?</p>
+            <a href="#demo" class="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors">
+              Start Your Free Trial (14 Days)
+            </a>
+            <p class="text-xs text-gray-500 mt-4 max-w-2xl mx-auto">
+              *Calculations are estimates based on industry benchmarks. Actual results may vary depending on your business, market conditions, and implementation. Past performance does not guarantee future results.
+            </p>
+          </div>
+        </div>
+
+        <script>
+          function calcROI() {
+            const spend = parseInt(document.getElementById('spend').value) || 0;
+            const roas = parseFloat(document.getElementById('roas').value) || 1;
+            const lossPercent = parseInt(document.getElementById('loss').value) || 0;
+
+            const currentRev = spend * roas;
+            const lostRev = currentRev * (lossPercent / 100);
+            const newRev = currentRev + lostRev;
+
+            // Update display
+            document.getElementById('current-rev').textContent = `€${currentRev.toLocaleString()}`;
+            document.getElementById('lost-rev').textContent = `€${lostRev.toLocaleString()}`;
+            document.getElementById('new-rev').textContent = `€${newRev.toLocaleString()}`;
+            document.getElementById('gain').textContent = `+€${lostRev.toLocaleString()}`;
+
+            // Calculate break-even (assuming €99/mo fee)
+            const monthlyFee = 99;
+            const breakEvenDays = Math.round((30 * monthlyFee) / lostRev);
+            const breakEvenText = breakEvenDays < 30 ?
+              `${breakEvenDays} days` :
+              breakEvenDays < 60 ?
+              `${Math.round(breakEvenDays / 30)} weeks` :
+              `${Math.round(breakEvenDays / 30)} months`;
+
+            document.getElementById('breakeven').textContent = breakEvenText;
+
+            // Update loss percentage display
+            document.getElementById('loss-val').textContent = `${lossPercent}%`;
+          }
+
+          // Initial calculation
+          calcROI();
+
+          // Add event listeners
+          document.querySelectorAll('#spend, #roas, #loss').forEach(input => {
+            input.addEventListener('input', calcROI);
+          });
+        </script>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <HowItWorks />
+
+    <!-- Who It's For -->
+    <Audience />
+
+    <!-- What We Are / Are Not -->
+    <section class="py-20 bg-gray-50">
+      <div class="container mx-auto px-6 max-w-4xl">
+        <h2 class="text-3xl font-bold text-gray-900 mb-12 text-center">What AdVocate Is (and Isn't)</h2>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- What We Are -->
+          <div class="bg-white rounded-lg shadow-lg p-8">
+            <h3 class="text-2xl font-bold text-green-600 mb-6 flex items-center gap-2">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              What We Are
+            </h3>
+            <ul class="space-y-4 text-gray-700">
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span>WordPress plugin + SaaS that automates tracking and offline conversion upload</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Value-based optimization by default (lead scoring + revenue upload)</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Rule-based budget and bid adjustments (coming Q2 2025)</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Agency-mode features (multi-site dashboards, white-label)</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- What We Are Not -->
+          <div class="bg-white rounded-lg shadow-lg p-8">
+            <h3 class="text-2xl font-bold text-red-600 mb-6 flex items-center gap-2">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              What We Are Not
+            </h3>
+            <ul class="space-y-4 text-gray-700">
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m0 0l-3-3m3 3l3-3"></path>
+                </svg>
+                <span>A full-service agency (we don't manage your campaigns)</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m0 0l-3-3m3 3l3-3"></path>
+                </svg>
+                <span>A magic black box that guarantees results regardless of offer/vertical</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m0 0l-3-3m3 3l3-3"></path>
+                </svg>
+                <span>A replacement for Google Ads (we make Google Ads work better)</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m0 0l-3-3m3 3l3-3"></path>
+                </svg>
+                <span>A general-purpose AI ad tool (we focus on WordPress + local lead-gen)</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Integration Section -->
+    <section class="py-20 bg-white">
+      <div class="container mx-auto px-6 max-w-4xl">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Seamless Integrations</h2>
+          <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+            We listen to your GoHighLevel webhooks, Shopify orders, or custom forms—then push those events with value straight into Google Ads & Meta as server-side conversions.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- GoHighLevel -->
+          <div class="text-center">
+            <div class="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7m9-10l-7 7H4V6h9z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">GoHighLevel</h3>
+            <p class="text-gray-600">
+              Webhook integration captures leads, deal stages, and closed-won revenue automatically.
+            </p>
+          </div>
+
+          <!-- Shopify -->
+          <div class="text-center">
+            <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">Shopify</h3>
+            <p class="text-gray-600">
+              Order values and purchase events sync back to Google Ads for true ROI tracking.
+            </p>
+          </div>
+
+          <!-- Custom Forms -->
+          <div class="text-center">
+            <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">WordPress Forms</h3>
+            <p class="text-gray-600">
+              GCLID capture works with Contact Form 7, Gravity Forms, and any custom setup.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Roadmap -->
+    <section class="py-20 bg-white">
+      <div class="container mx-auto px-6 max-w-4xl">
+        <h2 class="text-3xl font-bold text-gray-900 mb-12 text-center">Product Roadmap</h2>
+        <div class="space-y-6">
+          <div class="flex gap-6">
+            <div class="flex-shrink-0">
+              <div class="w-32 text-right">
+                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">NOW</span>
+              </div>
+            </div>
+            <div class="border-l-4 border-green-500 pl-6 pb-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-2">Phase 1: Tracking + Conversion Sync</h3>
+              <p class="text-gray-700">GCLID/FBCLID capture, offline conversion upload, lead value tracking</p>
+            </div>
+          </div>
+          <div class="flex gap-6">
+            <div class="flex-shrink-0">
+              <div class="w-32 text-right">
+                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">Q2 2025</span>
+              </div>
+            </div>
+            <div class="border-l-4 border-blue-500 pl-6 pb-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-2">Phase 2: Rule Engine</h3>
+              <p class="text-gray-700">24/7 automated budget/bid adjustments based on CPA/ROAS thresholds</p>
+            </div>
+          </div>
+          <div class="flex gap-6">
+            <div class="flex-shrink-0">
+              <div class="w-32 text-right">
+                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold">Q3 2025</span>
+              </div>
+            </div>
+            <div class="border-l-4 border-purple-500 pl-6 pb-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-2">Phase 3: AI Planner</h3>
+              <p class="text-gray-700">AI-powered campaign recommendations and insights</p>
+            </div>
+          </div>
+          <div class="flex gap-6">
+            <div class="flex-shrink-0">
+              <div class="w-32 text-right">
+                <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-semibold">Q4 2025</span>
+              </div>
+            </div>
+            <div class="border-l-4 border-orange-500 pl-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-2">Phase 4: Agency Mode</h3>
+              <p class="text-gray-700">Multi-site dashboards, white-label plugin, agency billing</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Attribution Gap Section -->
+    <section id="attribution-gap" class="py-20 bg-gray-50">
+      <div class="container mx-auto px-6 max-w-4xl">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">The Shopify + GHL Attribution Gap</h2>
+
+        <div class="space-y-8">
+          <div class="bg-white rounded-lg shadow-lg p-8">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Shopify Attribution Problems</h3>
+            <div class="space-y-4 text-gray-700">
+              <p class="flex items-start gap-3">
+                <span class="text-red-500 text-xl">✗</span>
+                <span>iOS 14.5+ blocks third-party cookies, losing 20-30% of attribution data</span>
+              </p>
+              <p class="flex items-start gap-3">
+                <span class="text-red-500 text-xl">✗</span>
+                <span>Server-side tracking is complex to set up with GTM containers</span>
+              </p>
+              <p class="flex items-start gap-3">
+                <span class="text-red-500 text-xl">✗</span>
+                <span>Offline conversions require manual CSV uploads or complex API calls</span>
+              </p>
+              <p class="flex items-start gap-3">
+                <span class="text-red-500 text-xl">✗</span>
+                <span>Revenue values from orders don't automatically flow back to Google Ads</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-lg p-8">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">GHL Attribution Challenges</h3>
+            <div class="space-y-4 text-gray-700">
+              <p class="flex items-start gap-3">
+                <span class="text-red-500 text-xl">✗</span>
+                <span>Lead forms work great, but attribution data stops at the CRM</span>
+              </p>
+              <p class="flex items-start gap-3">
+                <span class="text-red-500 text-xl">✗</span>
+                <span>Google Ads sees "form submissions" but not actual customer value</span>
+              </p>
+              <p class="flex items-start gap-3">
+                <span class="text-red-500 text-xl">✗</span>
+                <span>Deal stages and pipeline values stay trapped in the CRM</span>
+              </p>
+              <p class="flex items-start gap-3">
+                <span class="text-red-500 text-xl">✗</span>
+                <span>Agencies lose 20-30% of ad spend attribution across all campaigns</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h3 class="text-xl font-bold text-blue-900 mb-3">The Hidden Cost</h3>
+          <p class="text-blue-800">
+            For a Shopify agency spending €10,000/mo on Google Ads, losing 20-30% attribution means €2,000-3,000 of ad spend is wasted every month. That's €24,000-36,000 annually of unoptimized, untracked ad dollars.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How AdsEngineer Fixes It -->
+    <section id="how-it-fixes" class="py-20 bg-white">
+      <div class="container mx-auto px-6 max-w-4xl">
+        <h2 class="text-3xl font-bold text-gray-900 mb-12 text-center">How AdsEngineer Fixes It</h2>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">Server-Side by Default</h3>
+            <p class="text-gray-600">
+              All tracking happens server-side, bypassing cookie restrictions and ad blockers for 100% attribution reliability.
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">Revenue-Aware Bidding</h3>
+            <p class="text-gray-600">
+              Send actual customer values back to Google Ads, enabling value-based bidding that optimizes for revenue, not just clicks.
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">Agency White-Label</h3>
+            <p class="text-gray-600">
+              Deploy under your agency brand with custom dashboards, billing, and client management—all powered by our infrastructure.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section with Schema -->
+    <section class="py-20 bg-gray-50">
+      <div class="container mx-auto px-6 max-w-4xl">
+        <h2 class="text-3xl font-bold text-gray-900 mb-12 text-center">Frequently Asked Questions</h2>
+
+        <div class="space-y-6">
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">Server-side tracking vs Stape?</h3>
+            <p class="text-gray-600">
+              Stape provides infrastructure for server-side tracking. AdsEngineer includes that infrastructure PLUS automatic GHL/Shopify revenue sync, offline conversions, and value-based bidding—all in one platform. We're the complete attribution solution, not just the plumbing.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">Does it work with Shopify PMax campaigns?</h3>
+            <p class="text-gray-600">
+              Yes! AdsEngineer sends server-side events with full offline conversion data to Google Ads, including Performance Max campaigns. Your PMax campaigns get the same revenue attribution as Search and Shopping campaigns.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">How do I set up GHL webhooks?</h3>
+            <p class="text-gray-600">
+              In GoHighLevel, go to Settings → Integrations → Webhooks. Add our endpoint URL, select events like "Contact Created" and "Opportunity Won", and include custom fields with GCLID data. We handle the rest automatically.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">Is there a setup fee?</h3>
+            <p class="text-gray-600">
+              No setup fees! All plans include full setup assistance and 14-day free trial. We want you to see results before you pay anything.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">Can I white-label for my agency clients?</h3>
+            <p class="text-gray-600">
+              Yes! Our Agency plan includes white-label dashboards, custom branding, client sub-accounts, and agency billing. Your clients see your brand, you manage everything through our platform.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing">
+      <Pricing />
+    </section>
+
+    <!-- Trust -->
+    <Trust />
+
+    <!-- CTA Section -->
+    <section id="demo" class="py-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+      <div class="container mx-auto px-6 text-center max-w-3xl">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">When Tracking Breaks, Performance Dies</h2>
+        <p class="text-xl mb-8 text-blue-100">
+          AdsEngineer connects your forms, Shopify and GoHighLevel to Google & Meta, sending real customer value back as offline conversions—so your ads optimize for revenue, not just clicks.
+        </p>
+        <a href="https://cal.com/your-cal-username/30min" target="_blank" rel="noopener noreferrer" class="inline-block bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors">
+          Schedule Your Demo
+        </a>
+        <p class="text-sm text-blue-200 mt-6">
+          Because your conversions deserve to be counted—and connected back to campaigns that actually made you money.
+        </p>
       </div>
     </section>
   </main>
+
   <Footer />
 </Layout>

@@ -1,0 +1,226 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout>
+  <Header />
+
+  <main class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
+    <!-- Page Hero -->
+    <section class="py-20 px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          How to Set Up AdsEngineer
+        </h1>
+        <p class="text-xl text-gray-400 mb-8">
+          Connect GoHighLevel, Shopify, or WordPress forms to Google & Meta in minutes—no servers, no code.
+        </p>
+      </div>
+    </section>
+
+    <!-- Setup Steps -->
+    <section class="py-16 px-4">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold text-white mb-12 text-center">Setup in 3 Steps</h2>
+
+        <div class="space-y-12">
+          <!-- Step 1 -->
+          <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700">
+            <div class="flex items-start gap-6">
+              <div class="flex-shrink-0">
+                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-2xl font-bold text-white">
+                  1
+                </div>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-2xl font-bold text-white mb-4">Install WordPress Plugin</h3>
+                <p class="text-gray-300 mb-6">
+                  Download and activate the AdsEngineer plugin from the WordPress repository. Compatible with Contact Form 7, Gravity Forms, and any custom setup.
+                </p>
+                <div class="space-y-3">
+                  <div class="flex items-center gap-3 text-gray-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>~5 minutes to install</span>
+                  </div>
+                  <div class="flex items-center gap-3 text-gray-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>No coding required</span>
+                  </div>
+                  <div class="flex items-center gap-3 text-gray-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>GCLID capture enabled by default</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700">
+            <div class="flex items-start gap-6">
+              <div class="flex-shrink-0">
+                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-2xl font-bold text-white">
+                  2
+                </div>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-2xl font-bold text-white mb-4">Connect Your Data Source</h3>
+                <p class="text-gray-300 mb-6">
+                  Choose your integration and provide webhook URLs or API keys. We handle the rest automatically.
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-4">
+                  <!-- GoHighLevel -->
+                  <div class="bg-gray-900 rounded-lg p-6">
+                    <h4 class="text-lg font-semibold text-white mb-3">GoHighLevel</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                      <li>• Add webhook URL in Workflows</li>
+                      <li>• Trigger on: Lead Created, Deal Won</li>
+                      <li>• Include: Pipeline, Deal Value</li>
+                    </ul>
+                  </div>
+
+                  <!-- Shopify -->
+                  <div class="bg-gray-900 rounded-lg p-6">
+                    <h4 class="text-lg font-semibold text-white mb-3">Shopify</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                      <li>• Add webhook in Settings → Webhooks</li>
+                      <li>• Trigger on: Order Created, Order Paid</li>
+                      <li>• Include: Order Total, Customer LTV</li>
+                    </ul>
+                  </div>
+
+                  <!-- Custom Forms -->
+                  <div class="bg-gray-900 rounded-lg p-6">
+                    <h4 class="text-lg font-semibold text-white mb-3">Custom Forms</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                      <li>• Point form to AdsEngineer endpoint</li>
+                      <li>• Any HTTP POST supported</li>
+                      <li>• GCLID passed automatically</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700">
+            <div class="flex items-start gap-6">
+              <div class="flex-shrink-0">
+                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-2xl font-bold text-white">
+                  3
+                </div>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-2xl font-bold text-white mb-4">Configure Google & Meta</h3>
+                <p class="text-gray-300 mb-6">
+                  Add AdsEngineer's conversion tracking to your ad platforms. Revenue and lead quality start flowing back immediately.
+                </p>
+                <div class="grid md:grid-cols-2 gap-6">
+                  <div class="bg-gray-900 rounded-lg p-6">
+                    <h4 class="text-lg font-semibold text-white mb-3">Google Ads</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                      <li>• Enable Enhanced Conversions</li>
+                      <li>• Import GCLID with each conversion</li>
+                      <li>• Add revenue value to bid signals</li>
+                      <li>• Use value-based bidding strategies</li>
+                    </ul>
+                  </div>
+                  <div class="bg-gray-900 rounded-lg p-6">
+                    <h4 class="text-lg font-semibold text-white mb-3">Meta CAPI</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                      <li>• Set up Conversions API</li>
+                      <li>• Add server-side event source</li>
+                      <li>• Send purchase value data</li>
+                      <li>• Configure deduplication</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Breakdown -->
+    <section class="py-16 px-4 bg-gray-900 bg-opacity-50">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold text-white mb-12 text-center">What Happens Next</h2>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="bg-gray-800 rounded-lg p-8 border border-gray-700">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white">Automatic Sync</h3>
+            </div>
+            <p class="text-gray-300">
+              Every time a lead is created, deal won, or order placed, AdsEngineer automatically sends that data to Google Ads and Meta. No manual uploads, no spreadsheets.
+            </p>
+          </div>
+
+          <div class="bg-gray-800 rounded-lg p-8 border border-gray-700">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6m14 0v2a2 2 0 01-2 2H3m-3 5a2 2 0 012-2v-3a2 2 0 00-2-2z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white">Value-Based Bidding</h3>
+            </div>
+            <p class="text-gray-300">
+              Google's and Meta's algorithms learn which clicks become high-value customers. Your ads automatically shift budget toward better-performing campaigns and audiences.
+            </p>
+          </div>
+
+          <div class="bg-gray-800 rounded-lg p-8 border border-gray-700">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white">Dashboard & Analytics</h3>
+            </div>
+            <p class="text-gray-300">
+              Track conversion rates, revenue per campaign, and lead quality scores in one dashboard. See exactly which campaigns and keywords are driving real customers.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-20 px-4">
+      <div class="max-w-3xl mx-auto text-center">
+        <h2 class="text-3xl font-bold text-white mb-6">Ready to Get Started?</h2>
+        <p class="text-xl text-gray-400 mb-8">
+          Set up takes 10 minutes. Start connecting your revenue to your ads today.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="#demo" class="bg-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors text-white">
+            Book a Demo
+          </a>
+          <a href="/" class="border border-gray-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-800 transition-colors text-white">
+            Back to Home
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
