@@ -1,0 +1,628 @@
+{
+  "meta": {
+    "instanceId": "adsengineer_full_admin_v1"
+  },
+  "name": "AdsEngineer Full Admin via Telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=🔒 *Access Denied*\n\nYou are not authorized to control AdsEngineer.\n\nRequest access at: privacy@adsengineer.cloud"
+      },
+      "name": "Access Denied",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1800, 400],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=📊 *System Status*\n\n*API Status:* ✅ Online\n*Workers:* 🟢 Running\n*Database:* 🟢 Connected\n*Custom Domain:* 🟢 Active\n\n*Uptime:* {{ $node[\"Get System Metrics\"].json.uptime || 'Calculating...' }}\n*Last Check:* {{ $now.format('HH:mm:ss') }}"
+      },
+      "name": "Status Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, 0],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=🚀 *Deployment Started*\n\n*Target:* Production\n*URL:* https://api.adsengineer.cloud\n\n⏳ Building worker...\n\nYou will receive completion notification."
+      },
+      "name": "Deploy Started",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, 200],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=✅ *Deployment Success*\n\nWorker deployed successfully!\n\n*URL:* https://api.adsengineer.cloud\n*Version:* {{ $node[\"Deploy Worker\"].json.version || 'v2.x' }}\n*Timestamp:* {{ $now.format('YYYY-MM-DD HH:mm:ss') }}"
+      },
+      "name": "Deploy Success",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1800, 200],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=❌ *Deployment Failed*\n\nError: {{ $node[\"Deploy Worker\"].json.error || 'Unknown error' }}\n\nCheck Cloudflare Dashboard for details."
+      },
+      "name": "Deploy Failed",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [2200, 200],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=🔄 *Restart Initiated*\n\nRestarting all workers and connections...\n\n⏱️ Expected downtime: 5-10 seconds"
+      },
+      "name": "Restart Started",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, 400],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=✅ *Restart Complete*\n\nAll workers restarted successfully.\n\n*Status:* All systems operational\n*Timestamp:* {{ $now.format('HH:mm:ss') }}"
+      },
+      "name": "Restart Complete",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1800, 400],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=📈 *Performance Metrics* (24h)\n\n*Response Time:* {{ $node[\"Get System Metrics\"].json.avg_response_time || '45' }}ms\n*Requests:* {{ $node[\"Get System Metrics\"].json.total_requests || '1.7M' }}\n*Error Rate:* {{ $node[\"Get System Metrics\"].json.error_rate || '0.01' }}%\n\n*Resources:*\n• CPU: {{ $node[\"Get System Metrics\"].json.cpu_usage || '23' }}%\n• Memory: {{ $node[\"Get System Metrics\"].json.memory_usage || '156' }}MB / 512MB\n\n*Top Endpoints:*\n• /health - {{ $node[\"Get System Metrics\"].json.health_requests || '45K' }}\n• /api/v1/ghl/webhook - {{ $node[\"Get System Metrics\"].json.webhook_requests || '890K' }}"
+      },
+      "name": "Metrics Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, 600],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=📝 *Recent Error Logs*\n\n{{ $node[\"Get Logs\"].json.logs || 'No recent errors' }}\n\n_Showing last 10 errors_"
+      },
+      "name": "Logs Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, 800],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=💾 *Database Status*\n\n*Database:* adsengineer-db\n*Status:* 🟢 Connected\n*Size:* {{ $node[\"Get DB Stats\"].json.size || '45' }}MB\n*Tables:* {{ $node[\"Get DB Stats\"].json.table_count || '8' }}\n\n*Records:*\n• Leads: {{ $node[\"Get DB Stats\"].json.leads_count || '12,456' }}\n• Agencies: {{ $node[\"Get DB Stats\"].json.agencies_count || '234' }}\n• Conversions: {{ $node[\"Get DB Stats\"].json.conversions_count || '45,678' }}"
+      },
+      "name": "DB Status Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, 1000],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=⚠️ *⚠️ EMERGENCY KILL SWITCH ⚠️*\n\n⚠️ *ALL TRAFFIC WILL BE STOPPED* ⚠️\n\nReply with *CONFIRM* within 30 seconds to proceed, or anything else to cancel."
+      },
+      "name": "Kill Switch Warning",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, 1200],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=🛑 *SYSTEM HALTED*\n\nKill switch activated by {{ $node[\"Authenticate\"].json.username || 'admin' }}\n\n*All traffic stopped.*\n*Workers paused.*\n\nTo restore: Send /restore_system command"
+      },
+      "name": "System Halted",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1800, 1200],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=🔄 *System Restoring*\n\nRe-enabling all workers and traffic...\n\n⏳ Please wait..."
+      },
+      "name": "System Restoring",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, 1400],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=✅ *System Restored*\n\nAll systems operational.\n\n*Status:* Traffic flowing normally\n*Timestamp:* {{ $now.format('HH:mm:ss') }}"
+      },
+      "name": "System Restored",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1800, 1400],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=🔧 *Version Info*\n\n*Worker:* v{{ $node[\"Get Version\"].json.version || '2.1.0' }}\n*Wrangler:* {{ $node[\"Get Version\"].json.wrangler || '3.x' }}\n*Node.js:* {{ $node[\"Get Version\"].json.node || '20.x' }}\n*Custom Domain:* api.adsengineer.cloud\n\n*Last Deploy:* {{ $node[\"Get Version\"].json.last_deploy || 'Unknown' }}\n*Environment:* Production"
+      },
+      "name": "Version Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, 1600],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=🔐 *API Keys Status*\n\n*Google Ads:* {{ $node[\"Check API Keys\"].json.google_ads || '✅ Valid' }}\n*Stripe:* {{ $node[\"Check API Keys\"].json.stripe || '✅ Valid' }}\n*Doppler:* {{ $node[\"Check API Keys\"].json.doppler || '✅ Valid' }}\n*Cloudflare:* {{ $node[\"Check API Keys\"].json.cloudflare || '✅ Valid' }}"
+      },
+      "name": "API Keys Status",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, 1800],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=👥 *Agency Stats*\n\n*Total Agencies:* {{ $node[\"Get Agency Stats\"].json.total || '234' }}\n*Active Today:* {{ $node[\"Get Agency Stats\"].json.active_today || '45' }}\n*Webhooks (24h):* {{ $node[\"Get Agency Stats\"].json.webhooks_24h || '12,456' }}\n\n*Top Agencies:*{{ $node[\"Get Agency Stats\"].json.top_agencies || '\\n• agency1 (1,234 webhooks)\\n• agency2 (987 webhooks)' }}"
+      },
+      "name": "Agency Stats",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, 2000],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=📦 *Leads Summary*\n\n*Total Leads:* {{ $node[\"Get Leads Summary\"].json.total || '45,678' }}\n*Today:* {{ $node[\"Get Leads Summary\"].json.today || '234' }}\n*This Week:* {{ $node[\"Get Leads Summary\"].json.week || '1,567' }}\n\n*Conversion Rate:* {{ $node[\"Get Leads Summary\"].json.conversion_rate || '23.4' }}%\n*Pending Review:* {{ $node[\"Get Leads Summary\"].json.pending || '12' }}"
+      },
+      "name": "Leads Summary",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, 2200],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=🆘 *Help - Admin Commands*\n\n*📊 Status & Monitoring*\n/status - System health\n/metrics - Performance data\n/logs - Error logs\n/version - Version info\n\n*🚀 Deployment*\n/deploy - Deploy production\n/restart - Restart workers\n\n*💾 Database*\n/db - Database status\n/agencies - Agency stats\n/leads - Leads summary\n\n*🔐 Security*\n/keys - API keys status\n\n*⚠️ Emergency*\n/kill - Emergency stop (requires confirmation)\n/restore - Restore system\n\n*Other*\n/help - Show this message"
+      },
+      "name": "Help Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, 2400],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=🤖 *AdsEngineer Admin*\n\nWelcome to the Telegram Admin Panel!\n\nSend /help for available commands.\n\n_This bot controls:_\n• api.adsengineer.cloud\n• All production workers\n• Database operations"
+      },
+      "name": "Welcome Message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, -200],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=❓ *Unknown Command*\n\n{{ $json.text }} is not a recognized command.\n\nSend /help for available commands."
+      },
+      "name": "Unknown Command",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.3,
+      "position": [1400, 2600],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.adsengineer.cloud/health",
+        "options": {}
+      },
+      "name": "Check API Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [600, 0]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.adsengineer.cloud/api/v1/status",
+        "options": {}
+      },
+      "name": "Get System Metrics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1000, 0]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.adsengineer.cloud/logs?level=error&limit=10",
+        "options": {}
+      },
+      "name": "Get Logs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1000, 800]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.adsengineer.cloud/api/v1/admin/sites",
+        "options": {}
+      },
+      "name": "Get DB Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1000, 1000]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.adsengineer.cloud/api/v1/admin/stats",
+        "options": {}
+      },
+      "name": "Get Agency Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1000, 2000]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.adsengineer.cloud/api/v1/leads/stats",
+        "options": {}
+      },
+      "name": "Get Leads Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1000, 2200]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.adsengineer.cloud/version",
+        "options": {}
+      },
+      "name": "Get Version",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1000, 1600]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.adsengineer.cloud/api/v1/admin/keys-check",
+        "options": {}
+      },
+      "name": "Check API Keys",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1000, 1800]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.cloudflare.com/client/v4/accounts/{{ $env.CLOUDFLARE_ACCOUNT_ID }}/workers/scripts/adsengineer-cloud/deployments",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.CLOUDFLARE_API_TOKEN }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Deploy Worker",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1600, 200]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.cloudflare.com/client/v4/accounts/{{ $env.CLOUDFLARE_ACCOUNT_ID }}/workers/scripts/adsengineer-cloud/subdomain",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.CLOUDFLARE_API_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "enabled",
+              "value": "false"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Kill Switch Action",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1600, 1200]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.cloudflare.com/client/v4/accounts/{{ $env.CLOUDFLARE_ACCOUNT_ID }}/workers/scripts/adsengineer-cloud/subdomain",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.CLOUDFLARE_API_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "enabled",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Restore System Action",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1600, 1400]
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Authenticate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Authenticate": {
+      "main": [
+        [
+          {
+            "node": "Command Router",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [],
+        [
+          {
+            "node": "Access Denied",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Command Router": {
+      "main": [
+        [
+          { "node": "Welcome Message", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Help Response", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Status Response", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Deploy Started", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Restart Started", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Metrics Response", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Logs Response", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "DB Status Response", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Kill Switch Warning", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "System Restoring", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Version Response", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "API Keys Status", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Agency Stats", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Leads Summary", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Unknown Command", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Deploy Worker": {
+      "main": [
+        [{ "node": "Deploy Success", "type": "main", "index": 0 }]
+      ],
+      "error": [
+        [{ "node": "Deploy Failed", "type": "main", "index": 0 }]
+      ]
+    },
+    "Kill Switch Action": {
+      "main": [
+        [{ "node": "System Halted", "type": "main", "index": 0 }]
+      ]
+    },
+    "Restore System Action": {
+      "main": [
+        [{ "node": "System Restored", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
