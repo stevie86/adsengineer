@@ -3,6 +3,7 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
 // import HowItWorks from '../components/HowItWorks.astro';
 // import Audience from '../components/Audience.astro';
 // import Pricing from '../components/Pricing.astro';
@@ -13,48 +14,118 @@ import Footer from '../components/Footer.astro';
   <Header />
   <main class="min-h-screen">
     <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900 text-white py-20">
-      <div class="container mx-auto px-6 text-center">
-        <h1 class="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-          Stop Losing Google Ads Attribution
+    <section class="py-20 relative overflow-hidden">
+      <div class="container mx-auto px-6 text-center relative z-10">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm mb-8 shadow-[0_0_15px_rgba(188,19,254,0.2)]">
+          <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_8px_#00F0FF]"></span>
+          <span data-i18n="hero.badge">Launching Q1 2026 - Building in Public</span>
+        </div>
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight text-white">
+          <span data-i18n="hero.titlePrefix">When Cookies Vanish,</span><br />
+          <span class="gradient-text gradient-animate" data-i18n="hero.titleHighlight">Your Data Survives</span>
         </h1>
-        <p class="text-xl mb-8 text-gray-300 max-w-3xl mx-auto">
-          Bridge the gap between Google Ads and GoHighLevel with server-side attribution.
-          Turn clicks into customers with intelligent conversion tracking.
+        <p class="text-xl mb-12 text-gray-300 max-w-4xl mx-auto leading-relaxed" data-i18n="hero.subtitle">
+          The Cookie Apocalypse is coming in Q1 2026. Chrome and Safari are blocking 90% of tracking. 
+          <span class="text-white font-semibold">AdsEngineer</span> preserves your attribution data across 
+          <span class="text-white font-semibold">any platform</span>—from GoHighLevel to Shopify and beyond.
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="#demo" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-            Book a Demo
-          </a>
-          <a href="#how-it-works" class="border-2 border-white hover:bg-white hover:text-gray-900 px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300">
-            Learn More
+        <div class="flex flex-col sm:flex-row gap-6 justify-center">
+          <button data-cal-link="adsengineer/30min" data-cal-config='{"layout":"month_view"}' class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] transform hover:-translate-y-1">
+            <span data-i18n="hero.ctaPrimary">Book a Call →</span>
+          </button>
+          <a href="https://advocate-cloud.adsengineer.workers.dev/api/v1/ghl/webhook" class="bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300">
+            <span data-i18n="hero.ctaSecondary">View Webhook API</span>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- How It Works -->
-    <!-- <HowItWorks /> -->
+    <!-- Features Section -->
+    <section id="how-it-works" class="py-20">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm" data-i18n="features.badge">Capabilities</span>
+          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="features.title">Server-Side <span class="gradient-text">Power</span></h2>
+          <p class="text-gray-400 mt-4 max-w-2xl mx-auto italic" data-i18n="features.subtitle">"Built on Cloudflare's edge network for unblockable tracking."</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="glass-card p-8 group hover:border-purple-500/50 transition-all">
+            <div class="text-4xl mb-6">🛡️</div>
+            <h3 class="text-xl font-bold mb-4 text-white" data-i18n="features.list.0.title">GCLID Preservation</h3>
+            <p class="text-gray-300 group-hover:text-white transition-colors" data-i18n="features.list.0.desc">Attribution survives cookie restrictions, ad blockers, and cross-domain tracking failures. Your ROI reports stay accurate.</p>
+          </div>
+          <div class="glass-card p-8 group hover:border-purple-500/50 transition-all">
+            <div class="text-4xl mb-6">🔌</div>
+            <h3 class="text-xl font-bold mb-4 text-white" data-i18n="features.list.1.title">Universal Integration</h3>
+            <p class="text-gray-300 group-hover:text-white transition-colors" data-i18n="features.list.1.desc">Whether you use GHL webhooks, Shopify, or a custom CMS, we receive lead data the moment it's submitted and bridge it back to your ad platforms.</p>
+          </div>
+          <div class="glass-card p-8 group hover:border-purple-500/50 transition-all">
+            <div class="text-4xl mb-6">⚡</div>
+            <h3 class="text-xl font-bold mb-4 text-white" data-i18n="features.list.2.title">Cloudflare Edge</h3>
+            <p class="text-gray-300 group-hover:text-white transition-colors" data-i18n="features.list.2.desc">Deployed globally on Cloudflare Workers for &lt;50ms latency. Fast, reliable, and unblockable by browsers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <!-- Who It's For -->
-    <!-- <Audience /> -->
-
-    <!-- Pricing -->
-    <!-- <Pricing /> -->
-
-    <!-- Trust Indicators -->
-    <!-- <Trust /> -->
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 bg-black/20">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm" data-i18n="pricing.badge">Pricing Reality Check</span>
+          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="pricing.title">Pricing for <span class="gradient-text">SMB Agencies</span></h2>
+          <p class="text-gray-400 mt-4" data-i18n="pricing.subtitle">Realistic SaaS pricing. Not €2,000 - that's for Fortune 500s.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+          <div class="glass-card p-8 border-white/5">
+            <h3 class="text-xl font-bold mb-4 text-white opacity-90" data-i18n="pricing.beta.name">Beta Access</h3>
+            <div class="text-4xl font-bold mb-6 text-white font-outfit">€<span data-i18n="pricing.beta.price">49</span><span class="text-lg text-gray-400" data-i18n="pricing.beta.period">/mo</span></div>
+            <ul class="space-y-4 text-gray-200 mb-8 font-medium">
+              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.beta.features.0">Up to $50k Ad Spend</span></li>
+              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.beta.features.1">Google Ads Integration</span></li>
+              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.beta.features.2">Server-Side Tracking</span></li>
+              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.beta.features.3">€0 Setup Fee (Beta exclusive)</span></li>
+            </ul>
+            <button data-cal-link="adsengineer/30min" data-cal-config='{"layout":"month_view"}' class="block w-full text-center py-3 rounded-lg border border-white/20 hover:border-cyan-400 text-white transition-colors font-semibold" data-i18n="pricing.beta.btn">Join Beta</button>
+          </div>
+          <div class="glass-card p-8 border-purple-500 shadow-[0_0_30px_rgba(188,19,254,0.3)] md:scale-110 relative z-10 bg-white/5">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-white" data-i18n="pricing.standard.popular">Recommended</div>
+            <h3 class="text-xl font-bold mb-4 text-white" data-i18n="pricing.standard.name">Standard</h3>
+            <div class="text-4xl font-bold mb-6 text-white font-outfit">€<span data-i18n="pricing.standard.price">99</span><span class="text-lg text-gray-400" data-i18n="pricing.standard.period">/mo</span></div>
+            <ul class="space-y-4 text-gray-100 mb-8 font-semibold">
+              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.standard.features.0">Up to $250k Ad Spend</span></li>
+              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.standard.features.1">Google Ads + Meta CAPI</span></li>
+              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.standard.features.2">Priority Support</span></li>
+              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.standard.features.3">€199 One-time Setup</span></li>
+            </ul>
+            <button data-cal-link="adsengineer/30min" data-cal-config='{"layout":"month_view"}' class="block w-full text-center py-3 rounded-lg bg-gradient-to-r from-purple-600 to-cyan-500 font-bold text-white transition-all hover:shadow-[0_0_25px_rgba(188,19,254,0.5)]" data-i18n="pricing.standard.btn">Get Started</button>
+          </div>
+          <div class="glass-card p-8 border-white/5">
+            <h3 class="text-xl font-bold mb-4 text-white opacity-90" data-i18n="pricing.enterprise.name">Premium</h3>
+            <div class="text-4xl font-bold mb-6 text-white font-outfit">€<span data-i18n="pricing.enterprise.price">149</span><span class="text-lg text-gray-400" data-i18n="pricing.enterprise.period">/mo</span></div>
+            <ul class="space-y-4 text-gray-200 mb-8 font-medium">
+              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.enterprise.features.0">Unlimited Ad Spend</span></li>
+              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.enterprise.features.1">Custom Integrations</span></li>
+              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.enterprise.features.2">Dedicated Manager</span></li>
+            </ul>
+            <button data-cal-link="adsengineer/30min" data-cal-config='{"layout":"month_view"}' class="block w-full text-center py-3 rounded-lg border border-white/20 hover:border-cyan-400 text-white transition-colors font-semibold" data-i18n="pricing.enterprise.btn">Contact Sales</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- CTA Section -->
-    <section class="bg-gray-900 text-white py-20">
-      <div class="container mx-auto px-6 text-center">
-        <h2 class="text-3xl font-bold mb-6">Ready to Fix Your Attribution?</h2>
-        <p class="text-xl mb-8 text-gray-300">Join the agencies transforming their Google Ads performance.</p>
-        <a href="#demo" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl inline-block">
-          Start Your Demo
-        </a>
+    <section class="bg-gray-900/50 text-white py-20 relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-900/20 pointer-events-none"></div>
+      <div class="container mx-auto px-6 text-center relative z-10">
+        <h2 class="text-4xl font-bold mb-6 text-white" data-i18n="cta.title">Ready to Fix Your Attribution?</h2>
+        <p class="text-xl mb-12 text-gray-300 max-w-2xl mx-auto" data-i18n="cta.subtitle">Join the agencies transforming their performance. Because your conversions deserve to be counted.</p>
+        <button data-cal-link="adsengineer/30min" data-cal-config='{"layout":"month_view"}' class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-12 py-5 rounded-xl text-xl font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] inline-block transform hover:-translate-y-1">
+          <span data-i18n="cta.btn">Book a Free Call</span>
+        </button>
       </div>
     </section>
   </main>
   <Footer />
+  <WhatsAppButton />
 </Layout>

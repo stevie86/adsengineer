@@ -1,0 +1,83 @@
+{
+    "nav": {
+        "features": "Features",
+        "pricing": "Pricing",
+        "getStarted": "Book Call"
+    },
+    "hero": {
+        "badge": "Launching Q1 2026 - Building in Public",
+        "titlePrefix": "When Cookies Vanish,",
+        "titleHighlight": "Your Data Survives",
+        "subtitle": "While Chrome shifts to user-choice, Safari and Firefox have already blocked most tracking. The real 'apocalypse' is the loss of 90% of your attribution data. <span class=\"text-white font-semibold\">AdsEngineer</span> preserves your data at the server level, ensuring your tracking stays bulletproof across <span class=\"text-white font-semibold\">any platform</span>.",
+        "ctaPrimary": "Book a Call →",
+        "ctaSecondary": "View Webhook API"
+    },
+    "features": {
+        "badge": "Capabilities",
+        "title": "Server-Side <span class=\"gradient-text\">Power</span>",
+        "subtitle": "\"Built on Cloudflare's edge network for unblockable tracking.\"",
+        "list": [
+            {
+                "title": "GCLID Preservation",
+                "desc": "Attribution survives cookie restrictions, ad blockers, and cross-domain tracking failures. Your ROI reports stay accurate."
+            },
+            {
+                "title": "Universal Integration",
+                "desc": "Whether you use GHL webhooks, Shopify, or a custom CMS, we receive lead data the moment it's submitted and bridge it back to your ad platforms."
+            },
+            {
+                "title": "Cloudflare Edge",
+                "desc": "Deployed globally on Cloudflare Workers for <50ms latency. Fast, reliable, and unblockable by browsers."
+            }
+        ]
+    },
+    "pricing": {
+        "badge": "Pricing Reality Check",
+        "title": "Pricing for <span class=\"gradient-text\">SMB Agencies</span>",
+        "subtitle": "Realistic SaaS pricing. Not €2,000 - that's for Fortune 500s.",
+        "beta": {
+            "name": "Beta Access",
+            "price": "49",
+            "period": "/mo",
+            "features": [
+                "Up to $50k Ad Spend",
+                "Google Ads Integration",
+                "Server-Side Tracking",
+                "€0 Setup Fee (Beta exclusive)"
+            ],
+            "btn": "Join Beta"
+        },
+        "standard": {
+            "name": "Standard",
+            "price": "99",
+            "period": "/mo",
+            "popular": "Recommended",
+            "features": [
+                "Up to $250k Ad Spend",
+                "Google Ads + Meta CAPI",
+                "Priority Support",
+                "€199 One-time Setup"
+            ],
+            "btn": "Get Started"
+        },
+        "enterprise": {
+            "name": "Premium",
+            "price": "149",
+            "period": "/mo",
+            "features": [
+                "Unlimited Ad Spend",
+                "Custom Integrations",
+                "Dedicated Manager"
+            ],
+            "btn": "Contact Sales"
+        }
+    },
+    "cta": {
+        "title": "Ready to Fix Your Attribution?",
+        "subtitle": "Join the agencies transforming their performance. Because your conversions deserve to be counted.",
+        "btn": "Book a Free Call"
+    },
+    "footer": {
+        "copyright": "© 2026 AdsEngineer.cloud. All rights reserved."
+    }
+}
