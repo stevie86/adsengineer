@@ -1,0 +1,146 @@
+---
+// Component Imports
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+---
+
+<Layout>
+  <Header />
+  <main class="min-h-screen bg-[#0B0B15] text-white">
+    <!-- Stats/Counter Section -->
+    <section class="py-20 bg-gradient-to-r from-purple-900/20 to-cyan-900/20">
+      <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-4 gap-8 text-center">
+          <!-- Happy Clients Counter -->
+          <div class="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
+            <div class="text-4xl font-bold text-cyan-400 mb-2" id="clients-count">0</div>
+            <p class="text-gray-300">Happy Clients</p>
+            <p class="text-sm text-gray-400 mt-2">Growing every day</p>
+          </div>
+
+          <!-- Attribution Accuracy -->
+          <div class="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
+            <div class="text-4xl font-bold text-green-400 mb-2">95%</div>
+            <p class="text-gray-300">Attribution Accuracy</p>
+            <p class="text-sm text-gray-400 mt-2">Server-side precision</p>
+          </div>
+
+          <!-- Data Processed -->
+          <div class="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
+            <div class="text-4xl font-bold text-purple-400 mb-2" id="conversions-count">0</div>
+            <p class="text-gray-300">Conversions Tracked</p>
+            <p class="text-sm text-gray-400 mt-2">And counting...</p>
+          </div>
+
+          <!-- Uptime -->
+          <div class="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
+            <div class="text-4xl font-bold text-yellow-400 mb-2">99.9%</div>
+            <p class="text-gray-300">Uptime</p>
+            <p class="text-sm text-gray-400 mt-2">Cloudflare powered</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Content -->
+    <section class="py-20">
+      <div class="container mx-auto px-6 max-w-4xl">
+        <div class="text-center mb-12">
+          <h1 class="text-4xl font-bold mb-6">About AdsEngineer</h1>
+          <p class="text-xl text-gray-300">
+            Building the future of attribution tracking in the cookie apocalypse era.
+          </p>
+        </div>
+
+        <div class="prose prose-lg prose-invert mx-auto">
+          <h2>The Founder</h2>
+          <p>
+            I am a passionate software engineer and entrepreneur specializing in solving complex problems in digital advertising. With years of experience developing SaaS solutions and deep understanding of digital marketing challenges, I founded AdsEngineer – a revolutionary platform that transforms how businesses measure and optimize their advertising performance.
+          </p>
+
+          <h2>Our Mission</h2>
+          <p>
+            In a world where traditional tracking methods are increasingly failing – Chrome introduces user control, Safari and Firefox block cookies, and privacy laws become stricter – our mission is clear: <strong>Give businesses the ability to measure their ad ROI precisely, independent of browser restrictions.</strong>
+          </p>
+
+          <h2>What We Build</h2>
+          <p>
+            <strong>AdsEngineer</strong> is an enterprise-grade SaaS platform that seamlessly integrates Google Ads with GoHighLevel and other marketing automation tools. Unlike traditional pixel-based solutions, we work server-side – our technology is invisible to browsers and unaffected by ad blockers.
+          </p>
+
+          <h3>Key Features:</h3>
+          <ul>
+            <li><strong>Server-Side GCLID Capture:</strong> Securely capture and store Google Click IDs on your server</li>
+            <li><strong>Automated Offline Conversions:</strong> Send conversion data back to Google Ads for precise attribution</li>
+            <li><strong>GoHighLevel Integration:</strong> Seamless connection with your CRM and marketing automation platform</li>
+            <li><strong>Real-Time Dashboards:</strong> Track your advertising performance with unparalleled accuracy</li>
+            <li><strong>Enterprise Security:</strong> AES-256 encryption, SOC 2 compliance, GDPR-compliant</li>
+          </ul>
+
+          <h2>Who We Serve</h2>
+          <ul>
+            <li><strong>Marketing Agencies:</strong> Scale client performance without manual reporting</li>
+            <li><strong>Local Businesses:</strong> Dental practices, law firms, service businesses – anyone using Google Ads</li>
+            <li><strong>E-Commerce Companies:</strong> Shopify and WooCommerce stores with complex conversion funnels</li>
+            <li><strong>Enterprise Customers:</strong> Large organizations with high privacy and compliance requirements</li>
+          </ul>
+
+          <h2>Our Philosophy</h2>
+          <p>
+            We believe technology should not only solve problems, but transform industries. Every AdsEngineer feature is derived from real customer problems. We listen, we learn, we iterate – always with the goal of improving user experience and delivering real business results.
+          </p>
+
+          <h2>Contact Us</h2>
+          <p>
+            Ready to revolutionize your attribution tracking? Let's talk.
+          </p>
+          <div class="text-center mt-8">
+            <a href="https://cal.com/your-cal-username/30min" class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-8 py-4 rounded-lg text-lg font-semibold text-white transition-all duration-300 shadow-lg hover:shadow-xl">
+              Book a Demo
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+
+  <script>
+    // Animated Counters
+    function animateCounter(elementId, target, duration = 2000) {
+      const element = document.getElementById(elementId);
+      if (!element) return;
+
+      const start = 0;
+      const startTime = performance.now();
+
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Easing function for smooth animation
+        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(start + (target - start) * easeOutCubic);
+
+        element.textContent = current.toLocaleString();
+
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        }
+      }
+
+      requestAnimationFrame(update);
+    }
+
+    // Start counters when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      // Trigger counters with a delay
+      setTimeout(() => {
+        animateCounter('clients-count', 0); // Currently 0, will update as we get clients
+        animateCounter('conversions-count', 0); // Currently 0, will update with real data
+      }, 500);
+    });
+  </script>
+</Layout>
