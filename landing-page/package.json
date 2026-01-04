@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "npx astro dev",
     "start": "npx astro dev",
-    "build": "npx astro build",
+    "build": "echo \"export const DEPLOY_ID = '$(git rev-parse --short HEAD)'\" > src/deploy-id.js && npx astro build",
     "preview": "npx astro preview",
     "astro": "npx astro"
   },
