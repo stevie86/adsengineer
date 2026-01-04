@@ -5,12 +5,12 @@
         "getStarted": "Termin buchen"
     },
     "hero": {
-        "badge": "Launch im 1. Quartal 2026 - Wir bauen öffentlich",
+        "badge": "Start Q1 2026 - Wir entwickeln transparent",
         "titlePrefix": "Wenn Cookies verschwinden,",
-        "titleHighlight": "Ihre Daten überleben",
-        "subtitle": "Während Chrome auf Nutzerentscheidung setzt, haben Safari und Firefox Tracking bereits weitgehend blockiert. Die wahre 'Apokalypse' ist der Verlust von 90% Ihrer Attributionsdaten. <span class=\"text-white font-semibold\">AdsEngineer</span> bewahrt diese auf Server-Ebene und macht Ihr Tracking auf <span class=\"text-white font-semibold\">jeder Plattform</span> kugelsicher.",
-        "ctaPrimary": "Termin buchen →",
-        "ctaSecondary": "Webhook API ansehen"
+        "titleHighlight": "überleben Ihre Daten",
+        "subtitle": "Chrome führt Nutzerkontrolle ein, Safari und Firefox blockieren bereits das meiste Tracking. Das echte Problem: 90% Ihrer Attributionsdaten gehen verloren. <span class=\"text-white font-semibold\">AdsEngineer</span> sichert diese Daten server-seitig und macht Ihr Tracking auf <span class=\"text-white font-semibold\">jeder Plattform</span> unzerstörbar.",
+        "ctaPrimary": "Termin vereinbaren →",
+        "ctaSecondary": "Webhook-API ansehen"
     },
     "features": {
         "badge": "Fähigkeiten",
@@ -18,32 +18,32 @@
         "subtitle": "\"Gebaut auf dem Edge-Netzwerk von Cloudflare für blockierungsfreies Tracking.\"",
         "list": [
             {
-                "title": "GCLID-Bewahrung",
-                "desc": "Attribution überlebt Cookie-Beschränkungen, Ad-Blocker und Tracking-Fehler. Ihre ROI-Berichte bleiben genau."
+                "title": "GCLID-Sicherung",
+                "desc": "Attribution übersteht Cookie-Beschränkungen, Ad-Blocker und Tracking-Fehler. Ihre ROI-Berichte bleiben präzise."
             },
             {
                 "title": "Universelle Integration",
-                "desc": "Egal ob Sie GHL Webhooks, Shopify oder ein eigenes CMS nutzen – wir empfangen Lead-Daten sofort und leiten sie an Ihre Werbeplattformen weiter."
+                "desc": "Egal ob GoHighLevel Webhooks, Shopify oder eigenes CMS – wir empfangen Lead-Daten sofort und übertragen sie an Ihre Werbeplattformen."
             },
             {
-                "title": "Cloudflare Edge",
-                "desc": "Weltweit auf Cloudflare Workers bereitgestellt für <50ms Latenz. Schnell, zuverlässig und unblockbar für Browser."
+                "title": "Cloudflare Edge-Netzwerk",
+                "desc": "Global auf Cloudflare Workers deployed für <50ms Latenz. Schnell, zuverlässig und unblockierbar für Browser."
             }
         ]
     },
     "pricing": {
-        "badge": "Preis-Check",
+        "badge": "Preis-Realitätscheck",
         "title": "Preise für <span class=\"gradient-text\">SMB-Agenturen</span>",
-        "subtitle": "Realistische SaaS-Preise. Nicht 2.000 € – das ist für Fortune 500.",
+        "subtitle": "Realistische SaaS-Preise. Nicht 2.000 € – das ist was Fortune-500-Unternehmen zahlen.",
         "beta": {
             "name": "Beta-Zugang",
             "price": "49",
             "period": "/Monat",
             "features": [
-                "Bis zu $50k Ad Spend",
+                "Bis zu 50.000 $ Ad-Ausgaben",
                 "Google Ads Integration",
-                "Server-Side Tracking",
-                "0 € Setup-Gebühr (Exklusiv für Beta)"
+                "Server-seitiges Tracking",
+                "0 € Setup-Gebühr (Beta-exklusiv)"
             ],
             "btn": "Beta beitreten"
         },
@@ -53,28 +53,28 @@
             "period": "/Monat",
             "popular": "Empfohlen",
             "features": [
-                "Bis zu $250k Ad Spend",
-                "Google Ads + Meta CAPI",
-                "Priority Support",
-                "199 € Einmal-Setup"
+                "Bis zu 250.000 $ Ad-Ausgaben",
+                "Google Ads + Meta Conversions API",
+                "Priority-Support",
+                "199 € Einmaliges Setup"
             ],
-            "btn": "Loslegen"
+            "btn": "Jetzt starten"
         },
         "enterprise": {
             "name": "Premium",
             "price": "149",
             "period": "/Monat",
             "features": [
-                "Unbegrenzter Ad Spend",
-                "Individuelle Integrationen",
-                "Dedizierter Manager"
+                "Unbegrenzte Ad-Ausgaben",
+                "Maßgeschneiderte Integrationen",
+                "Dedizierter Account Manager"
             ],
             "btn": "Vertrieb kontaktieren"
         }
     },
     "cta": {
-        "title": "Bereit, Ihre Attribution zu fixen?",
-        "subtitle": "Schließen Sie sich den Agenturen an, die ihre Performance transformieren. Weil Ihre Conversions es verdienen, gezählt zu werden.",
+        "title": "Bereit, Ihre Attribution zu reparieren?",
+        "subtitle": "Schließen Sie sich Agenturen an, die ihre Performance revolutionieren. Denn Ihre Conversions verdienen es, gezählt zu werden.",
         "btn": "Kostenlosen Termin buchen"
     },
     "footer": {
