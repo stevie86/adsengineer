@@ -1,0 +1,67 @@
+name: Deploy Landing Page to Cloudflare Pages
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'landing-page/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: landing-page/pnpm-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd landing-page
+          pnpm install
+
+      - name: Build
+        run: |
+          cd landing-page
+          pnpm build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: adsengineer-landing
+          directory: landing-page/dist
+          # Optional: gitHubToken for automatic branch detection
+          # gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          # Optional: wrangler config path
+          # wranglerConfig: wrangler.toml
+          # Optional: deployed site url
+          # deploymentChain: 1
+
+      - name: Verify deployment
+        run: |
+          sleep 5
+          curl -I https://adsengineer.pages.dev || echo "Deployment may still be propagating"
+          curl -I https://adsengineer.cloud || echo "Custom domain may need DNS update"
+
+      - name: Notify on failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          text: '🚨 Landing page deployment failed!'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

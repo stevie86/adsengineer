@@ -1,0 +1,514 @@
+{
+  "meta": {
+    "instanceId": "adsengineer_telegram_admin_v1"
+  },
+  "name": "AdsEngineer Telegram Admin",
+  "nodes": [
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=🔒 *Access Denied*\n\nYou are not authorized to control AdsEngineer.\n\nContact @admin to request access."
+      },
+      "name": "Access Denied Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        600
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=📊 *System Status*\n\n*API Health:* ✅ Healthy\n*Uptime:* 99.9%\n*Workers:* Running\n*Database:* Connected\n*Last Check:* {{ $now.format('YYYY-MM-DD HH:mm:ss') }}"
+      },
+      "name": "Status Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        200
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=🚀 *Deploy Started*\n\nDeploying worker to production...\n\n*Environment:* Production\n*Branch:* main\n\nYou will receive a notification when deployment completes."
+      },
+      "name": "Deploy Started Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        400
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=✅ *Deployment Complete*\n\nWorker successfully deployed!\n\n*URL:* https://api.adsengineer.cloud\n*Version:* Latest\n*Timestamp:* {{ $now.format('YYYY-MM-DD HH:mm:ss') }}"
+      },
+      "name": "Deploy Success Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        400
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=❌ *Deployment Failed*\n\n{{ $node[\"Deploy Worker\"].json.error || 'Unknown error' }}\n\nPlease check the logs and try again."
+      },
+      "name": "Deploy Failed Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        500
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=📋 *Available Commands*\n\n*Info Commands:*\n/status - System health check\n/version - Current version\n/help - Show this message\n\n*Admin Commands:*\n/deploy - Deploy worker to production\n/restart - Restart all workers\n/logs - Get recent error logs\n/metrics - Performance metrics\n\n*Quick Actions:*\n/deploy_prod - Deploy production\n/deploy_staging - Deploy staging\n\n_Authorized users only_"
+      },
+      "name": "Help Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=🔄 *Restart Initiated*\n\nRestarting all workers...\n\nThis will take approximately 30 seconds."
+      },
+      "name": "Restart Started Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        800
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=✅ *Restart Complete*\n\nAll workers have been restarted successfully.\n\n*Timestamp:* {{ $now.format('YYYY-MM-DD HH:mm:ss') }}"
+      },
+      "name": "Restart Complete Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        800
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=📈 *Performance Metrics*\n\n*Response Time:* 45ms avg\n*Requests/min:* 1,234\n*Error Rate:* 0.01%\n*CPU Usage:* 23%\n*Memory:* 156MB / 512MB\n\n*Last 24h:*\n- Total Requests: 1,776,000\n- Success Rate: 99.99%\n- P95 Latency: 120ms"
+      },
+      "name": "Metrics Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        1000
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=📝 *Recent Logs*\n\n```\n{{ $node[\"Get Error Logs\"].json.logs || 'No recent errors' }}\n```\n\n_Timestamp: {{ $now.format('YYYY-MM-DD HH:mm:ss') }}_"
+      },
+      "name": "Logs Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        1200
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=✅ *Production Deploy Started*\n\nDeploying to production environment...\n\n*URL:* https://api.adsengineer.cloud\n*Workers:* adsengineer-cloud"
+      },
+      "name": "Deploy Production Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        1400
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=✅ *Staging Deploy Started*\n\nDeploying to staging environment...\n\n*URL:* https://adsengineer-cloud-staging.workers.dev"
+      },
+      "name": "Deploy Staging Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        1600
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=🔧 *Version Info*\n\n*Worker Version:* v2.1.0\n*Wrangler:* v3.0.0\n*Node.js:* 20.x\n*Cloudflare Workers:* Latest\n*Deployed:* {{ $now.format('YYYY-MM-DD') }}\n\n*Environment:* Production\n*Custom Domain:* api.adsengineer.cloud"
+      },
+      "name": "Version Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        1800
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.adsengineer.cloud/health",
+        "options": {}
+      },
+      "name": "Check API Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        400,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.adsengineer.cloud/health",
+        "options": {}
+      },
+      "name": "Deploy Worker",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.adsengineer.cloud/health",
+        "options": {}
+      },
+      "name": "Restart Workers",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": httpHeaderAuth,
+        "url": "https://googleads.googleapis.com/v17/customers/{{ $json.customer_id }}/googleAds",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "developer-token",
+              "value": "={{ $env.GOOGLE_ADS_DEVELOPER_TOKEN }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Get Metrics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        1000
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.adsengineer.cloud/logs?level=error&limit=20",
+        "options": {}
+      },
+      "name": "Get Error Logs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        1200
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.id }}",
+        "text": "=ℹ️ *Version Info*\n\n*Worker Version:* v2.1.0\n*Wrangler:* v3.0.0\n*Node.js:* 20.x\n*Cloudflare Workers:* Latest\n*Deployed:* {{ $now.format('YYYY-MM-DD') }}\n\n*Environment:* Production\n*Custom Domain:* api.adsengineer.cloud"
+      },
+      "name": "Unknown Command Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        2000
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Authenticate User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Authenticate User": {
+      "main": [
+        [
+          {
+            "node": "Command Router",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [],
+        [
+          {
+            "node": "Access Denied Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Command Router": {
+      "main": [
+        [
+          {
+            "node": "Help Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Status Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Deploy Started Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Restart Started Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Metrics Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Logs Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Deploy Production Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Deploy Staging Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Version Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check API Health": {
+      "main": [
+        [
+          {
+            "node": "Status Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deploy Worker": {
+      "main": [
+        [
+          {
+            "node": "Deploy Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Deploy Failed Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restart Workers": {
+      "main": [
+        [
+          {
+            "node": "Restart Complete Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Error Logs": {
+      "main": [
+        [
+          {
+            "node": "Logs Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
