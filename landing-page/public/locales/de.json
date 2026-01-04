@@ -8,7 +8,7 @@
         "badge": "Start Q1 2026 - Wir entwickeln transparent",
         "titlePrefix": "Wenn Cookies verschwinden,",
         "titleHighlight": "bleiben Ihre Daten bestehen",
-        "subtitle": "Chrome führt Nutzerkontrolle ein, Safari und Firefox blockieren bereits das meiste Tracking. Das echte Problem: 90% Ihrer Attributionsdaten gehen verloren. <span class=\"text-white font-semibold\">AdsEngineer</span> sichert diese Daten server-seitig und macht Ihr Tracking auf <span class=\"text-white font-semibold\">jeder Plattform</span> unzerstörbar.",
+        "subtitle": "Chrome führt Nutzerkontrolle ein. Safari und Firefox blockieren bereits das meiste Tracking. <strong class=\"text-yellow-300\">Das echte Problem: 90% Ihrer Attributionsdaten gehen verloren.</strong> <span class=\"text-white font-semibold\">AdsEngineer</span> sichert diese Daten server-seitig und macht Ihr Tracking auf <span class=\"text-white font-semibold\">jeder Plattform</span> unzerstörbar.",
         "ctaPrimary": "Termin vereinbaren →",
         "ctaSecondary": "Webhook-API ansehen"
     },
