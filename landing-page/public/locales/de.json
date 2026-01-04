@@ -79,5 +79,27 @@
     },
     "footer": {
         "copyright": "© 2026 AdsEngineer.cloud. Alle Rechte vorbehalten."
+    },
+    "about": {
+        "title": "Über AdsEngineer",
+        "subtitle": "Wir bauen die Zukunft der Attributionsverfolgung in der Cookie-Apokalypse.",
+        "stats": {
+            "clients": "Zufriedene Kunden",
+            "clientsDesc": "Wächst jeden Tag",
+            "accuracy": "Attributionsgenauigkeit",
+            "accuracyDesc": "Server-seitige Präzision",
+            "conversions": "Verfolgte Conversions",
+            "conversionsDesc": "Und es werden mehr...",
+            "uptime": "Verfügbarkeit",
+            "uptimeDesc": "Cloudflare-powered"
+        },
+        "founder": "Der Gründer",
+        "mission": "Unsere Mission",
+        "offer": "Was wir bauen",
+        "audience": "Wen wir bedienen",
+        "philosophy": "Unsere Philosophie",
+        "contact": "Kontakt",
+        "cta": "Bereit, deine Attributionsverfolgung zu revolutionieren? Lass uns reden.",
+        "demoBtn": "Demo buchen"
     }
 }
