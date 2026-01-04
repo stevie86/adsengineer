@@ -1,6 +1,6 @@
 output "worker_url" {
   description = "URL of the deployed worker"
-  value       = var.environment != "production" ? "https://${cloudflare_worker_script.main.name}.workers.dev" : var.production_domain
+  value       = var.environment != "production" ? "https://${cloudflare_worker_script.main.name}.workers.dev" : "https://${var.production_domain}"
 }
 
 output "database_id" {

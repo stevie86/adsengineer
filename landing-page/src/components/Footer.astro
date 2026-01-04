@@ -1,3 +1,14 @@
 <footer class="bg-gray-800 text-white p-4 text-center">
   <p>&copy; 2026 AdsEngineer. All rights reserved.</p>
+  <p class="text-xs text-gray-400 mt-2">
+    <a href="/privacy-policy" class="hover:text-white">Privacy Policy</a> · 
+    <button id="open-cookie-settings" class="hover:text-white">Cookie Settings</button>
+  </p>
 </footer>
+
+<script>
+  document.getElementById('open-cookie-settings')?.addEventListener('click', () => {
+    localStorage.removeItem('adsengineer_cookie_consent');
+    window.location.reload();
+  });
+</script>

@@ -46,3 +46,19 @@ resource "cloudflare_workers_kv_namespace" "rate_limit" {
   account_id = local.account_id
   title       = "${var.worker_name}-rate-limit-${var.environment}"
 }
+
+# Custom domain for production worker
+resource "cloudflare_worker_domain" "main" {
+  count       = var.environment == "production" ? 1 : 0
+  zone_id     = var.cloudflare_zone_id != null ? var.cloudflare_zone_id : data.cloudflare_zones.domain[0].id
+  domain      = var.production_domain
+  script_name = cloudflare_worker_script.main.name
+}
+
+# Get Cloudflare zone for the custom domain
+data "cloudflare_zones" "domain" {
+  count = var.environment == "production" && var.cloudflare_zone_id == null ? 1 : 0
+  filter {
+    name = var.production_domain
+  }
+}

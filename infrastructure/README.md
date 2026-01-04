@@ -24,8 +24,8 @@ Or use the helper script from the root directory:
 
 ## Resources
 
-- Cloudflare Worker (advocate-cloud)
-- D1 Database (advocate-db)
+- Cloudflare Worker (adsengineer-cloud)
+- D1 Database (adsengineer-db)
 - KV Namespace (rate limiting)
 - Worker Routes (dev/staging)
 
@@ -36,8 +36,8 @@ Or use the helper script from the root directory:
 | `cloudflare_api_token` | Cloudflare API token | (required) |
 | `account_id` | Cloudflare account ID | null |
 | `environment` | Environment name | development |
-| `worker_name` | Worker name | advocate-cloud |
-| `database_name` | Database name | advocate-db |
+| `worker_name` | Worker name | adsengineer-cloud |
+| `database_name` | Database name | adsengineer-db |
 
 ## Outputs
 

@@ -19,11 +19,23 @@ variable "environment" {
 variable "worker_name" {
   type        = string
   description = "Name of the Cloudflare Worker"
-  default     = "advocate-cloud"
+  default     = "adsengineer-cloud"
 }
 
 variable "database_name" {
   type        = string
   description = "Name of the D1 database"
-  default     = "advocate-db"
+  default     = "adsengineer-db"
+}
+
+variable "production_domain" {
+  type        = string
+  description = "Custom domain for production (e.g., adsengineer.cloud)"
+  default     = "adsengineer.cloud"
+}
+
+variable "cloudflare_zone_id" {
+  type        = string
+  description = "Cloudflare zone ID for the custom domain"
+  default     = null
 }

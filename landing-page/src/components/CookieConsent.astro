@@ -1,0 +1,195 @@
+---
+interface Props {
+  show?: boolean;
+}
+
+const { show = true } = Astro.props;
+---
+
+{show && (
+  <div id="cookie-consent-banner" class="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 hidden">
+    <div class="max-w-6xl mx-auto bg-[#1a1a2e] border border-gray-700 rounded-2xl p-6 md:p-8 shadow-2xl">
+      <div class="flex flex-col md:flex-row gap-6 items-start">
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold text-white mb-2">🍪 Cookie Preferences</h3>
+          <p class="text-gray-300 text-sm mb-4">
+            We use cookies to improve your experience. 
+            <a href="/privacy-policy" class="text-purple-400 hover:text-purple-300 underline">Privacy Policy</a>
+          </p>
+          
+          <div id="cookie-preferences" class="hidden space-y-3 mt-4">
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked disabled class="w-4 h-4 accent-purple-500">
+              <span class="text-sm text-gray-300">Necessary (always active)</span>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" id="consent-analytics" class="w-4 h-4 accent-purple-500">
+              <span class="text-sm text-gray-300">Analytics - Help us improve</span>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" id="consent-marketing" class="w-4 h-4 accent-purple-500">
+              <span class="text-sm text-gray-300">Marketing - Personalised content</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-3 min-w-[200px]">
+          <div id="cookie-buttons" class="flex flex-col gap-3">
+            <button 
+              id="cookie-accept-all"
+              class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium py-3 px-6 rounded-xl transition-all"
+            >
+              Accept All
+            </button>
+            <button 
+              id="cookie-reject-all"
+              class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-xl transition-all"
+            >
+              Reject All
+            </button>
+            <button 
+              id="cookie-manage"
+              class="text-purple-400 hover:text-purple-300 text-sm font-medium"
+            >
+              Manage Preferences
+            </button>
+          </div>
+
+          <div id="cookie-save-btn" class="hidden">
+            <button 
+              id="cookie-save-preferences"
+              class="w-full bg-purple-600 hover:bg-purple-500 text-white font-medium py-3 px-6 rounded-xl transition-all"
+            >
+              Save Preferences
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+<script is:inline>
+  // Cookie Consent Manager
+  window.CookieConsent = {
+    consentKey: 'adsengineer_cookie_consent',
+    consent: null,
+
+    init() {
+      const stored = localStorage.getItem(this.consentKey);
+      if (stored) {
+        this.consent = JSON.parse(stored);
+      }
+      return this.consent;
+    },
+
+    acceptAll() {
+      this.consent = { necessary: true, analytics: true, marketing: true, timestamp: new Date().toISOString() };
+      localStorage.setItem(this.consentKey, JSON.stringify(this.consent));
+      this.dispatchEvent();
+      return this.consent;
+    },
+
+    rejectAll() {
+      this.consent = { necessary: true, analytics: false, marketing: false, timestamp: new Date().toISOString() };
+      localStorage.setItem(this.consentKey, JSON.stringify(this.consent));
+      this.dispatchEvent();
+      return this.consent;
+    },
+
+    savePreferences(prefs) {
+      this.consent = { ...prefs, necessary: true, timestamp: new Date().toISOString() };
+      localStorage.setItem(this.consentKey, JSON.stringify(this.consent));
+      this.dispatchEvent();
+      return this.consent;
+    },
+
+    hasConsent(type) {
+      if (!this.consent) this.init();
+      return this.consent?.[type] === true;
+    },
+
+    showBanner() {
+      return !this.consent;
+    },
+
+    dispatchEvent() {
+      window.dispatchEvent(new CustomEvent('cookie-consent-updated', { detail: this.consent }));
+    },
+
+    reset() {
+      localStorage.removeItem(this.consentKey);
+      this.consent = null;
+    }
+  };
+
+  // Initialize on load
+  CookieConsent.init();
+
+  const banner = document.getElementById('cookie-consent-banner');
+  const buttonsSection = document.getElementById('cookie-buttons');
+  const saveBtnSection = document.getElementById('cookie-save-btn');
+  const prefsSection = document.getElementById('cookie-preferences');
+  const manageBtn = document.getElementById('cookie-manage');
+  const acceptBtn = document.getElementById('cookie-accept-all');
+  const rejectBtn = document.getElementById('cookie-reject-all');
+  const savePrefBtn = document.getElementById('cookie-save-preferences');
+
+  function showBanner() {
+    if (CookieConsent.showBanner()) {
+      banner.classList.remove('hidden');
+    } else {
+      banner.classList.add('hidden');
+      // Load analytics if consented
+      if (CookieConsent.hasConsent('analytics')) {
+        loadAnalytics();
+      }
+    }
+  }
+
+  function loadAnalytics() {
+    // Add your analytics loading logic here
+    // Example: Google Analytics, Plausible, etc.
+    console.log('Analytics cookies enabled');
+  }
+
+  function hideBanner() {
+    banner.classList.add('hidden');
+  }
+
+  // Event listeners
+  manageBtn?.addEventListener('click', () => {
+    buttonsSection.classList.add('hidden');
+    saveBtnSection.classList.remove('hidden');
+    prefsSection.classList.remove('hidden');
+  });
+
+  acceptBtn?.addEventListener('click', () => {
+    CookieConsent.acceptAll();
+    hideBanner();
+    loadAnalytics();
+  });
+
+  rejectBtn?.addEventListener('click', () => {
+    CookieConsent.rejectAll();
+    hideBanner();
+  });
+
+  savePrefBtn?.addEventListener('click', () => {
+    const analytics = document.getElementById('consent-analytics').checked;
+    const marketing = document.getElementById('consent-marketing').checked;
+    
+    CookieConsent.savePreferences({ analytics, marketing });
+    hideBanner();
+    
+    if (analytics) loadAnalytics();
+  });
+
+  // Initialize
+  showBanner();
+
+  // Listen for consent changes
+  window.addEventListener('cookie-consent-updated', (e) => {
+    if (e.detail.analytics) loadAnalytics();
+  });
+</script>
