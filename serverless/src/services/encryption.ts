@@ -49,6 +49,13 @@ export class EncryptionService {
   }
 
   /**
+   * Reset the singleton for testing purposes only
+   */
+  static resetForTesting(): void {
+    EncryptionService.instance = null as any;
+  }
+
+  /**
    * Initialize the encryption service with master key
    */
   async initialize(masterKeySecret: string): Promise<void> {
@@ -107,9 +114,9 @@ export class EncryptionService {
       const tag = encryptedArray.slice(-16); // Extract auth tag
 
       const result: EncryptedData = {
-        encrypted: btoa(String.fromCharCode(...ciphertext)),
-        iv: btoa(String.fromCharCode(...iv)),
-        tag: btoa(String.fromCharCode(...tag)),
+        encrypted: uint8ArrayToBase64(ciphertext),
+        iv: uint8ArrayToBase64(iv),
+        tag: uint8ArrayToBase64(tag),
         algorithm: this.config.algorithm,
         timestamp: new Date().toISOString(),
       };
@@ -132,10 +139,10 @@ export class EncryptionService {
 
     try {
       // Decode base64 data
-      const encrypted = Uint8Array.from(atob(encryptedData.encrypted), (c) => c.charCodeAt(0));
-      const iv = Uint8Array.from(atob(encryptedData.iv), (c) => c.charCodeAt(0));
+      const encrypted = base64ToUint8Array(encryptedData.encrypted);
+      const iv = base64ToUint8Array(encryptedData.iv);
       const tag = encryptedData.tag
-        ? Uint8Array.from(atob(encryptedData.tag), (c) => c.charCodeAt(0))
+        ? base64ToUint8Array(encryptedData.tag)
         : null;
 
       // Reconstruct the encrypted data with auth tag
@@ -250,25 +257,45 @@ export class EncryptionService {
   }
 }
 
-// Convenience functions
-export const encryptionService = EncryptionService.getInstance();
+// Helper function to convert Uint8Array to base64 safely
+function uint8ArrayToBase64(data: Uint8Array): string {
+  let binary = '';
+  for (let i = 0; i < data.length; i++) {
+    binary += String.fromCharCode(data[i]);
+  }
+  return btoa(binary);
+}
 
+// Helper function to convert base64 to Uint8Array safely
+function base64ToUint8Array(base64: string): Uint8Array {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+}
+
+// Helper functions that always get the current singleton instance
 export const encryptCredential = async (
   credential: string,
   context?: string
 ): Promise<EncryptedData> => {
-  return await encryptionService.encrypt(credential, context);
+  const service = EncryptionService.getInstance();
+  return await service.encrypt(credential, context);
 };
 
 export const decryptCredential = async (
   encryptedData: EncryptedData,
   context?: string
 ): Promise<string> => {
-  return await encryptionService.decrypt(encryptedData, context);
+  const service = EncryptionService.getInstance();
+  return await service.decrypt(encryptedData, context);
 };
 
 export const initializeEncryption = async (masterKeySecret: string): Promise<void> => {
-  await encryptionService.initialize(masterKeySecret);
+  const service = EncryptionService.getInstance();
+  await service.initialize(masterKeySecret);
 };
 
 /**

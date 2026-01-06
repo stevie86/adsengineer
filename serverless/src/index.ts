@@ -11,6 +11,10 @@ import { adminRoutes } from './routes/admin';
 import { onboardingRoutes } from './routes/onboarding';
 import { billingRoutes } from './routes/billing';
 import { analyticsRoutes } from './routes/analytics';
+import { trackingRoutes } from './routes/tracking';
+import { oauthRoutes } from './routes/oauth';
+import { customEventsRoutes } from './routes/custom-events';
+import { customEventDefinitionsRoutes } from './routes/custom-event-definitions';
 import { authMiddleware } from './middleware/auth';
 import { createDb } from './database';
 import { setupDocs } from './openapi';
@@ -22,7 +26,7 @@ const app = new Hono<AppEnv>();
 app.use(
   '*',
   cors({
-    origin: ['https://app.adsengineer.com', 'http://localhost:3000', 'http://localhost:8090'],
+    origin: ['https://app.adsengineer.com', 'https://adsengineer-cloud.adsengineer.workers.dev', 'http://localhost:3000', 'http://localhost:8090'],
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   })
@@ -251,7 +255,8 @@ app.get('/snippet.js', async (c) => {
     c.header('Content-Type', 'application/javascript');
     c.header('Cache-Control', 'public, max-age=3600');
     return c.text(snippetContent);
-  } catch (error) {
+  } catch (err) {
+    console.error('Snippet error:', err instanceof Error ? err.message : 'Unknown error');
     return c.text('console.error("AdsEngineer snippet not found");', 404);
   }
 });
@@ -263,6 +268,8 @@ app.route('/api/v1/ghl', ghlRoutes);
 app.route('/api/v1/shopify', shopifyRoutes);
 app.route('/api/v1/gdpr', gdprRoutes);
 app.route('/api/v1/waitlist', waitlistRoutes);
+app.route('/api/v1/tracking', trackingRoutes);
+app.route('/api/v1/oauth', oauthRoutes);
 
 // Public billing routes (pricing info)
 app.route('/api/v1/billing', billingRoutes);
@@ -276,6 +283,8 @@ api.use('*', authMiddleware());
 api.route('/leads', leadsRoutes);
 api.route('/status', statusRoutes);
 api.route('/analytics', analyticsRoutes);
+api.route('/custom-events', customEventsRoutes);
+api.route('/custom-event-definitions', customEventDefinitionsRoutes);
 
 app.route('/api/v1', api);
 

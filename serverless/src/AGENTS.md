@@ -1,6 +1,10 @@
-# SOURCE CODE MODULE
+# SOURCE CODE KNOWLEDGE BASE
 
-TypeScript implementation of AdsEngineer API.
+**Generated:** 2026-01-05
+**Domain:** Core API Logic (TypeScript/Hono)
+
+## OVERVIEW
+Main TypeScript implementation of AdsEngineer API with routes, services, middleware, and tracking.
 
 ## STRUCTURE
 ```
@@ -9,9 +13,9 @@ src/
 ├── types.ts           # Shared interfaces
 ├── openapi.ts         # API schema (11k lines)
 ├── snippet.ts         # Tracking code generation
-├── routes/            # API endpoints (6 files)
-├── services/          # Business logic (2 files)
-├── middleware/        # Request processing
+├── routes/            # API endpoints (13 files)
+├── services/          # Business logic (10 files)
+├── middleware/        # Request processing (2 files)
 ├── database/          # D1 interactions
 └── workers/           # Background processing
 ```

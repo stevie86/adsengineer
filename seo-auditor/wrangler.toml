@@ -1,0 +1,14 @@
+name = "adsengineer-sst"
+main = "sst-api.js"
+compatibility_date = "2024-11-01"
+
+[[kv_namespaces]]
+binding = "ADS_ENGINEER_DB"
+preview_id = "d1-9a8b7c3f3c1e2c1a5a6a7c8d1e5b9"
+id = "7e5a8b8b-d185-4a7b-8a3a-4c8f9d1a5e6"
+
+[triggers]
+crons = []
+
+[vars]
+ENVIRONMENT = "production"

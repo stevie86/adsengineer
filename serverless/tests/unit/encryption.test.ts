@@ -35,12 +35,16 @@ describe('Encryption Service', () => {
   let encryptionService: EncryptionService;
 
   beforeAll(() => {
+    // Reset singleton before tests
+    EncryptionService.resetForTesting();
     encryptionService = EncryptionService.getInstance();
   });
 
   beforeEach(() => {
-    // Reset all mocks
+    // Reset all mocks and the singleton
     vi.clearAllMocks();
+    EncryptionService.resetForTesting();
+    encryptionService = EncryptionService.getInstance();
 
     // Setup default mock behaviors
     mockCrypto.subtle.importKey.mockResolvedValue(mockCryptoKey);

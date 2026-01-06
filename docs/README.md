@@ -1,8 +1,8 @@
-# AdVocate Documentation
+# AdsEngineer Documentation
 
-## How to Rule the Ads Market with Better Data
+## Enterprise Conversion Tracking for Modern E-commerce
 
-AdVocate gives small businesses and agencies **agency-level intelligence at WordPress-plugin simplicity**. It closes the massive data gap between ad clicks and actual customer revenue, turning Google/Meta from blind optimizers into smart machines that learn from your business outcomes.
+AdsEngineer delivers **bulletproof attribution** for Shopify, WooCommerce, and custom e-commerce platforms. Our multi-platform SST (Server-Side Tracking) system provides accurate Google Ads conversions while bypassing firewall restrictions and supporting advanced custom business events.
 
 ---
 

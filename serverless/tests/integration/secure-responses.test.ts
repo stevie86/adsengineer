@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { Hono } from 'hono';
-import { createMiddleware } from 'hono/testing';
+import { createMiddleware } from 'hono/factory';
 import type { AppEnv } from '../../src/types';
 
 // Create a test app to verify secure error responses
@@ -33,8 +33,8 @@ function createSecureErrorResponse(errorType: string, statusCode: number) {
 
 function getErrorMessage(errorType: string): string {
   const messages: Record<string, string> = {
-    invalid_signature: 'Webhook signature validation failed',
-    invalid_payload: 'Webhook payload validation failed',
+    invalid_signature: 'Authentication failed',
+    invalid_payload: 'Invalid request format',
     rate_limit_exceeded: 'Request rate limit exceeded',
     missing_shop_domain: 'Required shop domain header missing',
     configuration_error: 'Service configuration error',
@@ -50,11 +50,11 @@ testApp.get('/test-429', () => createSecureErrorResponse('rate_limit_exceeded', 
 testApp.get('/test-500', () => createSecureErrorResponse('processing_failed', 500));
 
 describe('Secure Error Response Integration', () => {
-  const middleware = createMiddleware(testApp);
+  const app = createMiddleware(testApp);
 
   describe('401 Unauthorized responses', () => {
     it('should include all security headers', async () => {
-      const res = await middleware.request('/test-401');
+      const res = await app.request('/test-401');
 
       expect(res.status).toBe(401);
       expect(res.headers.get('X-Content-Type-Options')).toBe('nosniff');
@@ -67,18 +67,18 @@ describe('Secure Error Response Integration', () => {
     });
 
     it('should include proper error message', async () => {
-      const res = await middleware.request('/test-401');
+      const res = await app.request('/test-401');
       const body = await res.json();
 
       expect(body.error).toBe('invalid_signature');
-      expect(body.message).toBe('Webhook signature validation failed');
+      expect(body.message).toBe('Authentication failed');
       expect(body.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);
     });
   });
 
   describe('400 Bad Request responses', () => {
     it('should include security headers', async () => {
-      const res = await middleware.request('/test-400');
+      const res = await app.request('/test-400');
 
       expect(res.status).toBe(400);
       expect(res.headers.get('X-Content-Type-Options')).toBe('nosniff');
@@ -86,24 +86,24 @@ describe('Secure Error Response Integration', () => {
     });
 
     it('should include proper error message', async () => {
-      const res = await middleware.request('/test-400');
+      const res = await app.request('/test-400');
       const body = await res.json();
 
       expect(body.error).toBe('invalid_payload');
-      expect(body.message).toBe('Webhook payload validation failed');
+      expect(body.message).toBe('Invalid request format');
     });
   });
 
   describe('429 Too Many Requests responses', () => {
     it('should include Retry-After header', async () => {
-      const res = await middleware.request('/test-429');
+      const res = await app.request('/test-429');
 
       expect(res.status).toBe(429);
       expect(res.headers.get('Retry-After')).toBe('60');
     });
 
     it('should include rate limit error message', async () => {
-      const res = await middleware.request('/test-429');
+      const res = await app.request('/test-429');
       const body = await res.json();
 
       expect(body.error).toBe('rate_limit_exceeded');
@@ -113,14 +113,14 @@ describe('Secure Error Response Integration', () => {
 
   describe('500 Internal Server Error responses', () => {
     it('should include security headers', async () => {
-      const res = await middleware.request('/test-500');
+      const res = await app.request('/test-500');
 
       expect(res.status).toBe(500);
       expect(res.headers.get('X-Content-Type-Options')).toBe('nosniff');
     });
 
     it('should include generic error message', async () => {
-      const res = await middleware.request('/test-500');
+      const res = await app.request('/test-500');
       const body = await res.json();
 
       expect(body.error).toBe('processing_failed');

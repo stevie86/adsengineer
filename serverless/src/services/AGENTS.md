@@ -1,6 +1,10 @@
-# SERVICES MODULE
+# SERVICES KNOWLEDGE BASE
 
-Core business logic implementations.
+**Generated:** 2026-01-05
+**Domain:** Business Logic Layer
+
+## OVERVIEW
+Core business logic implementations with singleton patterns for external API integrations.
 
 ## STRUCTURE
 ```

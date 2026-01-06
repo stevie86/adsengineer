@@ -23,14 +23,33 @@ curl https://adsengineer-cloud.adsengineer.workers.dev/health
 
 ## API Endpoints
 
+### Core Endpoints
 | Endpoint | Method | Auth | Description |
 |----------|--------|------|-------------|
 | `/health` | GET | No | Health check |
-| `/api/v1/ghl/webhook` | POST | Signature | GHL webhook receiver |
-| `/api/v1/waitlist` | POST | No | Landing page signups |
+| `/snippet.js` | GET | No | Tracking snippet for websites |
+
+### Platform Integration
+| Endpoint | Method | Auth | Description |
+|----------|--------|------|-------------|
+| `/api/v1/shopify/webhook` | POST | Signature | Shopify webhook receiver |
+| `/api/v1/ghl/webhook` | POST | Signature | GoHighLevel webhook receiver |
+
+### Lead & Attribution
+| Endpoint | Method | Auth | Description |
+|----------|--------|------|-------------|
 | `/api/v1/leads` | GET/POST | JWT | Lead management |
+| `/api/v1/custom-events` | GET/POST | JWT | Track/retrieve custom events |
+| `/api/v1/custom-event-definitions/definitions` | GET/POST | JWT | Manage event definitions |
+| `/api/v1/custom-event-definitions/sites/:siteId` | GET | JWT | Get site event assignments |
+| `/api/v1/custom-event-definitions/sites/:siteId/assign` | POST | JWT | Assign events to sites |
+
+### Management
+| Endpoint | Method | Auth | Description |
+|----------|--------|------|-------------|
 | `/api/v1/status` | GET | JWT | System status |
-| `/api/v1/admin/sites` | GET/POST | Admin | Site management |
+| `/api/v1/admin/*` | GET/POST | Admin | Administrative functions |
+| `/api/v1/waitlist` | POST | No | Landing page signups |
 
 ## Environment Setup
 

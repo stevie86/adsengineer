@@ -43,9 +43,9 @@ If automatic installation fails:
 <script>
 (function() {
   var script = document.createElement('script');
-  script.src = 'https://advocate-cloud.adsengineer.workers.dev/snippet.js';
+  script.src = 'https://adsengineer-cloud.adsengineer.workers.dev/snippet.js';
   script.async = true;
-  script.setAttribute('data-site-id', 'YOUR_SITE_ID');
+  script.setAttribute('data-site-id', 'mycannaby-687f1af9');
   document.head.appendChild(script);
 })();
 </script>

@@ -26,12 +26,18 @@ export const rateLimitMiddleware = (config: RateLimitConfig) => {
     const windowStart = now - config.windowMs;
 
     try {
-      // Get existing rate limit data from KV
-      const kv = c.env.RATE_LIMIT_KV;
-      if (!kv) {
-        console.warn('RATE_LIMIT_KV not bound, skipping rate limiting');
-        return next();
-      }
+    // Get existing rate limit data from KV
+    const kv = c.env.RATE_LIMIT_KV;
+    if (!kv) {
+      console.error('RATE_LIMIT_KV not bound - rate limiting cannot operate');
+      return c.json(
+        {
+          error: 'rate_limit_unavailable',
+          message: 'Rate limiting service is temporarily unavailable',
+        },
+        503
+      );
+    }
 
       const rateLimitKey = `rate_limit:${key}`;
       const existingData = await kv.get(rateLimitKey);
@@ -81,40 +87,49 @@ export const rateLimitMiddleware = (config: RateLimitConfig) => {
         // Log rate limit violation
         logger.logRateLimitExceeded(c, key, result.limit, config.windowMs);
 
-        // Return secure error response with rate limit headers
+        // Return secure error response with all headers in one call
         const response = c.json(
           {
             error: 'rate_limit_exceeded',
             message: config.message || 'Too many requests, please try again later.',
             retry_after: result.retryAfter,
           },
-          429
+          {
+            status: 429,
+            headers: {
+              'Retry-After': (result.retryAfter || 60).toString(),
+              'X-RateLimit-Limit': result.limit.toString(),
+              'X-RateLimit-Remaining': result.remaining.toString(),
+              'X-RateLimit-Reset': result.resetTime.toString(),
+              'X-Content-Type-Options': 'nosniff',
+              'X-Frame-Options': 'DENY',
+              'X-XSS-Protection': '1; mode=block',
+            },
+          }
         );
-
-        // Add rate limit specific headers
-        response.headers.set('Retry-After', (result.retryAfter || 60).toString());
-        response.headers.set('X-RateLimit-Limit', result.limit.toString());
-        response.headers.set('X-RateLimit-Remaining', result.remaining.toString());
-        response.headers.set('X-RateLimit-Reset', result.resetTime.toString());
-
-        // Add security headers
-        response.headers.set('X-Content-Type-Options', 'nosniff');
-        response.headers.set('X-Frame-Options', 'DENY');
-        response.headers.set('X-XSS-Protection', '1; mode=block');
 
         return response;
       }
 
       return next();
     } catch (error) {
-      logger.log(
-        'ERROR',
-        'Rate limiting middleware error',
-        { error: error instanceof Error ? error.message : 'Unknown error' },
-        c
+      console.error('Rate limiting middleware error:', error);
+      // Fail closed - reject request if rate limiting fails unexpectedly
+      return c.json(
+        {
+          error: 'rate_limit_error',
+          message: 'Rate limiting service encountered an error',
+        },
+        {
+          status: 503,
+          headers: {
+            'Retry-After': '60',
+            'X-Content-Type-Options': 'nosniff',
+            'X-Frame-Options': 'DENY',
+            'X-XSS-Protection': '1; mode=block',
+          },
+        }
       );
-      // Fail open - allow request if rate limiting fails
-      return next();
     }
   };
 };

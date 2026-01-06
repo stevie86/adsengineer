@@ -17,11 +17,60 @@ export interface AuthContext {
   role: 'owner' | 'admin' | 'member' | 'viewer';
 }
 
-function decodeJWT(token: string): JWTPayload | null {
+/**
+ * Compute HMAC-SHA256 signature
+ */
+async function computeHMAC(data: string, secret: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(secret);
+  const dataBytes = encoder.encode(data);
+
+  const key = await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+
+  const signature = await crypto.subtle.sign('HMAC', key, dataBytes);
+  return btoa(String.fromCharCode(...new Uint8Array(signature)));
+}
+
+/**
+ * Constant-time string comparison to prevent timing attacks
+ */
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return result === 0;
+}
+
+/**
+ * Verify JWT signature and decode payload
+ * Returns null if signature is invalid
+ */
+async function verifyAndDecodeJWT(token: string, secret: string): Promise<JWTPayload | null> {
   try {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
-    const decoded = atob(parts[1].replace(/-/g, '+').replace(/_/g, '/'));
+
+    const [header, payload, signature] = parts;
+
+    // Verify signature
+    const expectedSignature = await computeHMAC(`${header}.${payload}`, secret);
+    if (!timingSafeEqual(signature, expectedSignature)) {
+      console.warn('JWT signature verification failed');
+      return null;
+    }
+
+    // Decode payload
+    const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
     return JSON.parse(decoded);
   } catch {
     return null;
@@ -41,30 +90,31 @@ export const authMiddleware = (options: { requireAuth?: boolean } = { requireAut
 
     const token = authHeader.substring(7);
 
-    try {
-      const payload = decodeJWT(token);
-
-      if (!payload) {
-        return c.json({ error: 'Invalid token format' }, 401);
-      }
-
-      const now = Math.floor(Date.now() / 1000);
-      if (payload.exp && payload.exp < now) {
-        return c.json({ error: 'Token expired' }, 401);
-      }
-
-      c.set('auth', {
-        user_id: payload.sub,
-        org_id: payload.org_id || payload.tenant_id || payload.sub,
-        tenant_id: payload.tenant_id || payload.sub,
-        role: (payload.role || 'member') as AuthContext['role'],
-      } satisfies AuthContext);
-
-      return next();
-    } catch (error) {
-      console.error('JWT verification failed:', error);
-      return c.json({ error: 'Token verification failed' }, 401);
+    const jwtSecret = c.env.JWT_SECRET;
+    if (!jwtSecret) {
+      console.error('JWT_SECRET not configured');
+      return c.json({ error: 'Server misconfiguration' }, 500);
     }
+
+    const payload = await verifyAndDecodeJWT(token, jwtSecret);
+
+    if (!payload) {
+      return c.json({ error: 'Invalid or tampered token' }, 401);
+    }
+
+    const now = Math.floor(Date.now() / 1000);
+    if (payload.exp && payload.exp < now) {
+      return c.json({ error: 'Token expired' }, 401);
+    }
+
+    c.set('auth', {
+      user_id: payload.sub,
+      org_id: payload.org_id || payload.tenant_id || payload.sub,
+      tenant_id: payload.tenant_id || payload.sub,
+      role: (payload.role || 'member') as AuthContext['role'],
+    } satisfies AuthContext);
+
+    return next();
   };
 };
 
@@ -77,24 +127,25 @@ export const optionalAuthMiddleware = () => {
 
     const token = authHeader.substring(7);
 
-    try {
-      const payload = decodeJWT(token);
-
-      if (!payload || (payload.exp && payload.exp < Math.floor(Date.now() / 1000))) {
-        return next();
-      }
-
-      c.set('auth', {
-        user_id: payload.sub,
-        org_id: payload.org_id || payload.tenant_id || payload.sub,
-        tenant_id: payload.tenant_id || payload.sub,
-        role: (payload.role || 'member') as AuthContext['role'],
-      } satisfies AuthContext);
-
-      return next();
-    } catch {
+    const jwtSecret = c.env.JWT_SECRET;
+    if (!jwtSecret) {
       return next();
     }
+
+    const payload = await verifyAndDecodeJWT(token, jwtSecret);
+
+    if (!payload || (payload.exp && payload.exp < Math.floor(Date.now() / 1000))) {
+      return next();
+    }
+
+    c.set('auth', {
+      user_id: payload.sub,
+      org_id: payload.org_id || payload.tenant_id || payload.sub,
+      tenant_id: payload.tenant_id || payload.sub,
+      role: (payload.role || 'member') as AuthContext['role'],
+    } satisfies AuthContext);
+
+    return next();
   };
 };
 

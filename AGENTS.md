@@ -1,9 +1,9 @@
 # PROJECT KNOWLEDGE BASE
 
-**Generated:** 2026-01-03
-**Commit:** HEAD
+**Generated:** 2026-01-05
+**Commit:** cc4565a
 **Branch:** main
-**Last Major Update:** OpenTofu & Doppler Integration
+**Last Major Update:** Hierarchical AGENTS.md implementation
 
 ## OVERVIEW
 AdsEngineer: Enterprise conversion tracking SaaS (Google/Meta/TikTok/Shopify). Cloudflare Workers + Hono + D1 + Stripe.
@@ -17,13 +17,16 @@ AdsEngineer: Enterprise conversion tracking SaaS (Google/Meta/TikTok/Shopify). C
 ```
 ./
 ├── serverless/           # Core API (Hono/Workers)
-│   ├── src/routes/      # Endpoints (6 files)
-│   ├── src/services/    # Logic (2 files)
+│   ├── src/routes/      # Endpoints (13 files)
+│   ├── src/services/    # Logic (10 files) 
 │   ├── src/middleware/  # Auth (2 files)
+│   ├── migrations/       # D1 schema
 │   └── tests/           # Unit/Integration
 ├── infrastructure/       # IaC (OpenTofu)
 ├── frontend/             # UI (React/Vue)
+├── landing-page/         # Marketing landing page
 ├── docs/                 # Architecture/Specs
+├── seo-auditor/          # SEO analysis tools
 └── wp-content/           # WP Integration (Themes/Plugins)
 ```
 

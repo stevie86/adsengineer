@@ -1,0 +1,232 @@
+{
+  "name": "mycannaby Order Processing",
+  "nodes": [
+    {
+      "parameters": {
+        "pollInterval": 300,
+        "options": {}
+      },
+      "name": "Shopify Trigger",
+      "type": "n8n-nodes-base.shopifyTrigger",
+      "typeVersion": 1,
+      "position": [100, 200],
+      "credentials": {
+        "shopifyApi": {
+          "id": "mycannaby-shopify",
+          "name": "mycannaby Shopify"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.topic }}",
+              "operation": "equal",
+              "value2": "orders/create"
+            }
+          ]
+        }
+      },
+      "name": "Filter Orders",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [300, 200]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract GCLID from Shopify order\nconst order = $json;\nconst gclid = order.note_attributes?.find(a => a.name === 'gclid')?.value || \n              order.tags?.find(t => t.startsWith('gclid:'))?.replace('gclid:', '') ||\n              null;\n\nreturn {\n  order_id: order.id,\n  email: order.email,\n  total_price: parseFloat(order.total_price),\n  currency: order.currency,\n  gclid: gclid,\n  gclid_hash: gclid ? require('crypto').createHash('sha256').update(gclid).digest('hex') : null,\n  customer: {\n    id: order.customer?.id,\n    email: order.customer?.email,\n    first_name: order.customer?.first_name,\n    last_name: order.customer?.last_name\n  },\n  line_items: order.line_items?.map(item => ({\n    product_id: item.product_id,\n    variant_id: item.variant_id,\n    quantity: item.quantity,\n    price: parseFloat(item.price)\n  })),\n  landing_site: order.landing_site,\n  source_name: order.source_name,\n  created_at: order.created_at\n};"
+      },
+      "name": "Extract GCLID",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [500, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.adsengineer.cloud/api/v1/shopify/webhook",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Shopify-Shop-Domain",
+              "value": "mycannaby.myshopify.com"
+            },
+            {
+              "name": "X-Shopify-Topic",
+              "value": "orders/create"
+            },
+            {
+              "name": "X-Shopify-Webhook-Secret",
+              "value": "={{ $env.SHOPIFY_WEBHOOK_SECRET }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {
+          "error": "throw"
+        }
+      },
+      "name": "Send to AdsEngineer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [700, 200]
+    },
+    {
+      "parameters": {
+        "text": "=={{ 'Order #' + $json.order_id + ' - €' + $json.total_price + ' - GCLID: ' + ($json.gclid ? 'Yes' : 'No') }}"
+      },
+      "name": "Format Log Message",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "webhookUri": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "method": "post",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": null,\n  \"embeds\": [{\n    \"title\": \"🛒 New Order - mycannaby\",\n    \"description\": {{ $json.text }},\n    \"color\": 5763714,\n    \"fields\": [\n      { \"name\": \"Order ID\", \"value\": \"{{ $json.order_id }}\", \"inline\": true },\n      { \"name\": \"Amount\", \"value\": \"€{{ $json.total_price }}\", \"inline\": true },\n      { \"name\": \"GCLID\", \"value\": \"{{ $json.gclid ? '✅ ' + $json.gclid.substring(0, 20) + '...' : '❌ Not found' }}\", \"inline\": true }\n    ],\n    \"timestamp\": \"{{ new Date().toISOString() }}\"\n  }]\n}",
+        "options": {}
+      },
+      "name": "Discord Notification",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 1,
+      "position": [1100, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ parseFloat($json.total_price) }}",
+              "operation": "largerEqual",
+              "value2:": 100
+            }
+          ]
+        }
+      },
+      "name": "High Value Order?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [700, 350]
+    },
+    {
+      "parameters": {
+        "text": "=High-value order alert: €{{ $json.total_price }} from {{ $json.customer?.email || 'Unknown' }}"
+      },
+      "name": "Alert Message",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [900, 350]
+    },
+    {
+      "parameters": {
+        "webhookUri": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "method": "post",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": \"🚨 High-Value Order Alert\",\n  \"attachments\": [{\n    \"color\": \"danger\",\n    \"fields\": [\n      { \"title\": \"Amount\", \"value\": \"€{{ $json.total_price }}\", \"short\": true },\n      { \"title\": \"Customer\", \"value\": \"{{ $json.customer?.email || 'Unknown' }}\", \"short\": true },\n      { \"title\": \"GCLID\", \"value\": \"{{ $json.gclid || 'N/A' }}\", \"short\": true }\n    ]\n  }]\n}",
+        "options": {}
+      },
+      "name": "Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1100, 350]
+    }
+  ],
+  "connections": {
+    "Shopify Trigger": {
+      "main": [
+        [
+          {
+            "node": "Filter Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Orders": {
+      "main": [
+        [
+          {
+            "node": "Extract GCLID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract GCLID": {
+      "main": [
+        [
+          {
+            "node": "Send to AdsEngineer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "High Value Order?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to AdsEngineer": {
+      "main": [
+        [
+          {
+            "node": "Format Log Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Log Message": {
+      "main": [
+        [
+          {
+            "node": "Discord Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "High Value Order?": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Alert Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alert Message": {
+      "main": [
+        [
+          {
+            "node": "Slack Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

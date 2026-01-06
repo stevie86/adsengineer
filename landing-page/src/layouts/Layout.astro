@@ -48,6 +48,126 @@ import CookieConsent from '../components/CookieConsent.astro';
       });
     </script>
     <script src="/js/i18n.js" defer></script>
+    <script is:inline>
+      // AdsEngineer Page Visit Tracking
+      (function() {
+        'use strict';
+
+        const API_BASE = 'https://adsengineer-cloud.adsengineer.workers.dev/api/v1/tracking';
+
+        // Generate anonymous user ID
+        function getUserId() {
+          let userId = localStorage.getItem('adsengineer_user_id');
+          if (!userId) {
+            userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('adsengineer_user_id', userId);
+          }
+          return userId;
+        }
+
+        // Generate or get session ID
+        function getSessionId() {
+          let sessionId = sessionStorage.getItem('adsengineer_session_id');
+          if (!sessionId) {
+            sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            sessionStorage.setItem('adsengineer_session_id', sessionId);
+          }
+          return sessionId;
+        }
+
+        // Get UTM parameters from URL
+        function getUtmParams() {
+          const urlParams = new URLSearchParams(window.location.search);
+          return {
+            utmSource: urlParams.get('utm_source'),
+            utmMedium: urlParams.get('utm_medium'),
+            utmCampaign: urlParams.get('utm_campaign'),
+            utmContent: urlParams.get('utm_content'),
+            utmTerm: urlParams.get('utm_term'),
+            gclid: urlParams.get('gclid'),
+            fbclid: urlParams.get('fbclid')
+          };
+        }
+
+        // Track page visit
+        function trackPageVisit() {
+          const data = {
+            sessionId: getSessionId(),
+            userId: getUserId(),
+            pageUrl: window.location.href,
+            pageTitle: document.title,
+            referrer: document.referrer,
+            userAgent: navigator.userAgent,
+            screenResolution: `${screen.width}x${screen.height}`,
+            viewportSize: `${window.innerWidth}x${window.innerHeight}`,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            language: navigator.language,
+            isEntryPage: !sessionStorage.getItem('adsengineer_page_tracked'),
+            ...getUtmParams()
+          };
+
+          // Mark that we've tracked this page in this session
+          sessionStorage.setItem('adsengineer_page_tracked', 'true');
+
+          fetch(`${API_BASE}/page-visit`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+          }).catch(err => console.log('Tracking error:', err));
+        }
+
+        // Track time on page and interactions
+        let startTime = Date.now();
+        let interactions = 0;
+        let scrollDepth = 0;
+
+        function trackInteraction() {
+          interactions++;
+        }
+
+        function trackScroll() {
+          const scrolled = (window.scrollY + window.innerHeight) / document.body.scrollHeight * 100;
+          scrollDepth = Math.max(scrollDepth, scrolled);
+        }
+
+        // Track beforeunload to capture exit data
+        window.addEventListener('beforeunload', function() {
+          const timeOnPage = Math.round((Date.now() - startTime) / 1000);
+
+          fetch(`${API_BASE}/page-visit`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              sessionId: getSessionId(),
+              userId: getUserId(),
+              pageUrl: window.location.href,
+              pageTitle: document.title,
+              timeOnPage: timeOnPage,
+              scrollDepth: Math.round(scrollDepth),
+              interactions: interactions,
+              isExitPage: true
+            }),
+            keepalive: true // Send even after page unload
+          }).catch(err => console.log('Exit tracking error:', err));
+        });
+
+        // Set up event listeners
+        document.addEventListener('click', trackInteraction);
+        document.addEventListener('scroll', trackScroll);
+        document.addEventListener('keydown', trackInteraction);
+
+        // Track initial page visit
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', trackPageVisit);
+        } else {
+          trackPageVisit();
+        }
+      })();
+    </script>
   </head>
   <body class="bg-[#0B0B15] text-white">
     <div id="particles-js"></div>
