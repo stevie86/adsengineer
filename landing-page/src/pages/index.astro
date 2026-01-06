@@ -76,40 +76,15 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
           <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="pricing.title">Pricing for <span class="gradient-text">SMB Agencies</span></h2>
           <p class="text-gray-400 mt-4" data-i18n="pricing.subtitle">Realistic SaaS pricing. Not €2,000 - that's for Fortune 500s.</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-          <div class="glass-card p-8 border-white/5">
-            <h3 class="text-xl font-bold mb-4 text-white opacity-90" data-i18n="pricing.beta.name">Beta Access</h3>
-            <div class="text-4xl font-bold mb-6 text-white font-outfit">€<span data-i18n="pricing.beta.price">49</span><span class="text-lg text-gray-400" data-i18n="pricing.beta.period">/mo</span></div>
-            <ul class="space-y-4 text-gray-200 mb-8 font-medium">
-              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.beta.features.0">Up to $50k Ad Spend</span></li>
-              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.beta.features.1">Google Ads Integration</span></li>
-              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.beta.features.2">Server-Side Tracking</span></li>
-              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.beta.features.3">€0 Setup Fee (Beta exclusive)</span></li>
-            </ul>
-            <button data-cal-link="stefan-pirker-nmurov/30min" data-cal-config='{"layout":"month_view"}' class="block w-full text-center py-3 rounded-lg border border-white/20 hover:border-cyan-400 text-white transition-colors font-semibold" data-i18n="pricing.beta.btn">Join Beta</button>
+        <div class="max-w-4xl mx-auto text-center">
+          <div class="glass-card p-12 border-purple-500/30 shadow-[0_0_30px_rgba(188,19,254,0.2)]">
+            <h3 class="text-3xl font-bold mb-6 text-white" data-i18n="quote.title">Get Your Custom Quote</h3>
+            <p class="text-xl mb-8 text-gray-300" data-i18n="quote.subtitle">Every business is unique. Let's discuss your specific needs and create a tailored solution that maximizes your ROI.</p>
+            <button data-cal-link="stefan-pirker-nmurov/30min" data-cal-config='{"layout":"month_view"}' class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-12 py-5 rounded-xl text-xl font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] inline-block transform hover:-translate-y-1">
+              <span data-i18n="quote.btn">Get Quote Now →</span>
+            </button>
           </div>
-          <div class="glass-card p-8 border-purple-500 shadow-[0_0_30px_rgba(188,19,254,0.3)] md:scale-110 relative z-10 bg-white/5">
-            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-white" data-i18n="pricing.standard.popular">Recommended</div>
-            <h3 class="text-xl font-bold mb-4 text-white" data-i18n="pricing.standard.name">Standard</h3>
-            <div class="text-4xl font-bold mb-6 text-white font-outfit">€<span data-i18n="pricing.standard.price">99</span><span class="text-lg text-gray-400" data-i18n="pricing.standard.period">/mo</span></div>
-            <ul class="space-y-4 text-gray-100 mb-8 font-semibold">
-              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.standard.features.0">Up to $250k Ad Spend</span></li>
-              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.standard.features.1">Google Ads + Meta CAPI</span></li>
-              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.standard.features.2">Priority Support</span></li>
-              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.standard.features.3">€199 One-time Setup</span></li>
-            </ul>
-            <button data-cal-link="stefan-pirker-nmurov/30min" data-cal-config='{"layout":"month_view"}' class="block w-full text-center py-3 rounded-lg bg-gradient-to-r from-purple-600 to-cyan-500 font-bold text-white transition-all hover:shadow-[0_0_25px_rgba(188,19,254,0.5)]" data-i18n="pricing.standard.btn">Get Started</button>
-          </div>
-          <div class="glass-card p-8 border-white/5">
-            <h3 class="text-xl font-bold mb-4 text-white opacity-90" data-i18n="pricing.enterprise.name">Premium</h3>
-            <div class="text-4xl font-bold mb-6 text-white font-outfit">€<span data-i18n="pricing.enterprise.price">149</span><span class="text-lg text-gray-400" data-i18n="pricing.enterprise.period">/mo</span></div>
-            <ul class="space-y-4 text-gray-200 mb-8 font-medium">
-              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.enterprise.features.0">Unlimited Ad Spend</span></li>
-              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.enterprise.features.1">Custom Integrations</span></li>
-              <li><span class="text-cyan-400 mr-2 font-bold">✓</span> <span data-i18n="pricing.enterprise.features.2">Dedicated Manager</span></li>
-            </ul>
-            <button data-cal-link="stefan-pirker-nmurov/30min" data-cal-config='{"layout":"month_view"}' class="block w-full text-center py-3 rounded-lg border border-white/20 hover:border-cyan-400 text-white transition-colors font-semibold" data-i18n="pricing.enterprise.btn">Contact Sales</button>
-          </div>
+         </div>
         </div>
       </div>
     </section>

@@ -72,6 +72,11 @@
             "btn": "Vertrieb kontaktieren"
         }
     },
+    "quote": {
+        "title": "Erhalten Sie Ihr individuelles Angebot",
+        "subtitle": "Jedes Unternehmen ist einzigartig. Lassen Sie uns Ihre spezifischen Anforderungen besprechen und eine maßgeschneiderte Lösung erstellen, die Ihren ROI maximiert.",
+        "btn": "Jetzt Angebot anfordern →"
+    },
     "cta": {
         "title": "Bereit, Ihre Attribution zu reparieren?",
         "subtitle": "Schließen Sie sich Agenturen an, die ihre Performance revolutionieren. Denn Ihre Conversions verdienen es, gezählt zu werden.",

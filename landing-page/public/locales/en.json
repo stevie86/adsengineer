@@ -72,6 +72,11 @@
             "btn": "Contact Sales"
         }
     },
+    "quote": {
+        "title": "Get Your Custom Quote",
+        "subtitle": "Every business is unique. Let's discuss your specific needs and create a tailored solution that maximizes your ROI.",
+        "btn": "Get Quote Now →"
+    },
     "cta": {
         "title": "Ready to Fix Your Attribution?",
         "subtitle": "Join the agencies transforming their performance. Because your conversions deserve to be counted.",
