@@ -71,13 +71,23 @@ export function verifyHMACSignature(
 
   return timingSafeEqual(signature, expectedSignature);
 }
+
+export function createHMACSignature(
+  message: string,
+  secret: string,
+  algorithm: string = 'sha256'
+): string {
+  return createHmac(algorithm, secret)
+    .update(message)
+    .digest('base64url');
+}
 ```
 
 #### 2. Create JWT Service (`serverless/src/services/jwt.ts`)
 ```typescript
-import { verifyHMACSignature, timingSafeEqual } from '../utils/crypto';
+import { verifyHMACSignature } from '../utils/crypto';
 
-interface JWTPayload {
+export interface JWTPayload {
   sub: string;      // Subject (user ID)
   iss: string;      // Issuer
   aud: string;      // Audience
@@ -90,6 +100,11 @@ interface JWTPayload {
 export class JWTService {
   constructor(private secret: string) {}
 
+  /**
+   * Verify a JWT token and return the payload if valid
+   * @param token - The JWT token to verify
+   * @returns JWTPayload if valid, null if invalid
+   */
   verifyToken(token: string): JWTPayload | null {
     try {
       const parts = token.split('.');
@@ -119,6 +134,38 @@ export class JWTService {
     }
   }
 
+  /**
+   * Create a new JWT token
+   * @param payloadData - The payload data (without standard claims)
+   * @returns The complete JWT token
+   */
+  createToken(payloadData: Omit<JWTPayload, 'iss' | 'aud' | 'iat' | 'exp'>): string {
+    const now = Math.floor(Date.now() / 1000);
+    const fullPayload: JWTPayload = {
+      ...payloadData,
+      iss: 'adsengineer',
+      aud: 'adsengineer-api',
+      iat: now,
+      exp: now + 3600, // 1 hour
+    };
+
+    const header = { alg: 'HS256', typ: 'JWT' };
+    const headerB64 = btoa(JSON.stringify(header)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+    const payloadB64 = btoa(JSON.stringify(fullPayload)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+
+    const message = `${headerB64}.${payloadB64}`;
+    const signature = createHmac('sha256', this.secret)
+      .update(message)
+      .digest('base64url');
+
+    return `${message}.${signature}`;
+  }
+
+  /**
+   * Validate JWT claims
+   * @param payload - The JWT payload to validate
+   * @returns true if claims are valid, false otherwise
+   */
   private validateClaims(payload: JWTPayload): boolean {
     const now = Math.floor(Date.now() / 1000);
 
@@ -139,29 +186,10 @@ export class JWTService {
 
     return true;
   }
-
-  createToken(payload: Omit<JWTPayload, 'iss' | 'aud' | 'iat' | 'exp'>): string {
-    const now = Math.floor(Date.now() / 1000);
-    const fullPayload: JWTPayload = {
-      ...payload,
-      iss: 'adsengineer',
-      aud: 'adsengineer-api',
-      iat: now,
-      exp: now + 3600, // 1 hour
-    };
-
-    const header = { alg: 'HS256', typ: 'JWT' };
-    const headerB64 = btoa(JSON.stringify(header)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-    const payloadB64 = btoa(JSON.stringify(fullPayload)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-
-    const message = `${headerB64}.${payloadB64}`;
-    const signature = createHmac('sha256', this.secret)
-      .update(message)
-      .digest('base64url');
-
-    return `${message}.${signature}`;
-  }
 }
+
+// Import here to avoid circular dependency
+import { createHmac } from 'crypto';
 ```
 
 #### 3. Update Auth Middleware (`serverless/src/middleware/auth.ts`)
