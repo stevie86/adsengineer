@@ -55,23 +55,45 @@ function timingSafeEqual(a: string, b: string): boolean {
  * Verify JWT signature and decode payload
  * Returns null if signature is invalid
  */
-async function verifyAndDecodeJWT(token: string, secret: string): Promise<JWTPayload | null> {
+  async function verifyAndDecodeJWT(token: string, secret: string): Promise<JWTPayload | null> {
   try {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
 
-    const [header, payload, signature] = parts;
+    const [header, payloadB64, signature] = parts;
 
     // Verify signature
-    const expectedSignature = await computeHMAC(`${header}.${payload}`, secret);
+    const expectedSignature = await computeHMAC(`${header}.${payloadB64}`, secret);
     if (!timingSafeEqual(signature, expectedSignature)) {
       console.warn('JWT signature verification failed');
       return null;
     }
 
     // Decode payload
-    const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
-    return JSON.parse(decoded);
+    const decoded = atob(payloadB64.replace(/-/g, '+').replace(/_/g, '/'));
+    const payloadData: JWTPayload = JSON.parse(decoded);
+
+    // Validate claims
+    const now = Math.floor(Date.now() / 1000);
+
+    if (payloadData.exp && payloadData.exp < now) {
+      console.warn('Token expired');
+      return null;
+    }
+
+    // Validate issuer
+    if (payloadData.iss !== 'adsengineer') {
+      console.warn('Invalid token issuer:', payloadData.iss);
+      return null;
+    }
+
+    // Validate audience
+    if (payloadData.aud !== 'adsengineer-api') {
+      console.warn('Invalid token audience:', payloadData.aud);
+      return null;
+    }
+
+    return payloadData;
   } catch {
     return null;
   }

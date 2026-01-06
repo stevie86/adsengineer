@@ -256,3 +256,42 @@ export function isValidConversionTime(timeString: string): boolean {
   const pattern = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/;
   return pattern.test(timeString);
 }
+
+/**
+ * Google Ads Client class for managing conversions
+ * Wraps the uploadConversion function with a class-based interface
+ */
+export class GoogleAdsClient {
+  constructor(private credentials: GoogleAdsCredentials) {}
+
+  /**
+   * Upload a conversion to Google Ads
+   * @param conversionData The conversion data to upload
+   * @returns Promise<UploadResult>
+   */
+  async uploadConversion(conversionData: ConversionData): Promise<UploadResult> {
+    return uploadConversion(this.credentials, conversionData);
+  }
+
+  /**
+   * Get the customer ID for this client
+   * @returns string
+   */
+  getCustomerId(): string {
+    return this.credentials.customerId;
+  }
+
+  /**
+   * Check if this client has valid credentials
+   * @returns boolean
+   */
+  hasValidCredentials(): boolean {
+    return !!(
+      this.credentials.clientId &&
+      this.credentials.clientSecret &&
+      this.credentials.developerToken &&
+      this.credentials.refreshToken &&
+      this.credentials.customerId
+    );
+  }
+}
