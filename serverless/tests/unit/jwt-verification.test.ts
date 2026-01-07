@@ -14,6 +14,52 @@ describe('JWT Signature Verification', () => {
     it('rejects token with invalid HMAC signature', async () => {
       const validToken = jwtService.createToken({ sub: 'user123', org_id: 'org456' });
 
+      // Create tampered token by changing one character
+      const tamperedToken = validToken.slice(0, -1) + 'X' + validToken.slice(-1);
+
+      const result = jwtService.verifyToken(tamperedToken);
+      expect(result).toBeNull();
+    });
+
+    it('rejects token with corrupted signature', async () => {
+      const validToken = jwtService.createToken({ sub: 'user123', org_id: 'org456' });
+
+      // Remove signature completely (invalid format)
+      const noSignatureToken = validToken.split('.')[0] + '.' + validToken.split('.')[1];
+
+      const result = jwtService.verifyToken(noSignatureToken);
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('Invalid Claims', () => {
+    it('rejects token with wrong issuer', async () => {
+      const token = jwtService.createToken({ iss: 'attacker', sub: 'user123' });
+
+      const result = jwtService.verifyToken(token);
+      expect(result).toBeNull();
+    });
+
+    it('rejects token with wrong audience', async () => {
+      const token = jwtService.createToken({ aud: 'wrong-audience', sub: 'user123' });
+
+      const result = jwtService.verifyToken(token);
+      expect(result).toBeNull();
+    });
+
+    it('rejects expired token', async () => {
+      const expiredTime = Math.floor(Date.now() / 1000) - 3600;
+      const token = jwtService.createToken({ exp: expiredTime, sub: 'user123' });
+
+      const result = jwtService.verifyToken(token);
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('Invalid Signature', () => {
+    it('rejects token with invalid HMAC signature', async () => {
+      const validToken = jwtService.createToken({ sub: 'user123', org_id: 'org456' });
+
       // Tamper with signature by changing one character
       const tamperedToken = validToken.slice(0, -1) + 'X' + validToken.slice(-1);
 
