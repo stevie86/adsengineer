@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { JWTService } from '../services/jwt';
 
-const testSecret = 'test-secret-key-for-testing-only-do-not-use-in-production';
+const testSecret = 'secure-test-key-for-local-testing';
 
 describe('JWT Signature Verification', () => {
   let jwtService: JWTService;
