@@ -85,48 +85,48 @@ const getPricingTiers = (env: AppEnv['Bindings']) => {
 billing.get('/pricing', (c) => {
   // Return basic pricing info without requiring Stripe connection
   const pricing = {
-    starter: {
-      id: 'starter',
-      name: 'Starter',
-      price: 99,
-      currency: 'EUR',
-      interval: 'month',
-      features: [
-        'Basic conversion tracking',
-        'Google Ads integration',
-        'Email support',
-        'Standard analytics',
-        '1 website',
-      ],
-    },
-    professional: {
-      id: 'professional',
-      name: 'Professional',
-      price: 299,
-      currency: 'EUR',
-      interval: 'month',
-      features: [
-        'Advanced conversion tracking',
-        'Multi-platform integration',
-        'Priority support',
-        'Custom analytics',
-        '5 websites',
-      ],
-    },
-    enterprise: {
-      id: 'enterprise',
-      name: 'Enterprise',
-      price: 999,
-      currency: 'EUR',
-      interval: 'month',
-      features: [
-        'Unlimited conversion tracking',
-        'All platform integrations',
-        'Dedicated success manager',
-        'Custom integrations',
-        'Unlimited websites',
-      ],
-    },
+      starter: {
+        id: 'starter',
+        name: 'Starter',
+        price: 99,
+        currency: 'USD',
+        interval: 'month',
+        features: [
+          'Basic conversion tracking',
+          'Google Ads integration',
+          'Email support',
+          'Standard analytics',
+          '1 website',
+        ],
+      },
+      professional: {
+        id: 'professional',
+        name: 'Professional',
+        price: 299,
+        currency: 'USD',
+        interval: 'month',
+        features: [
+          'Advanced conversion tracking',
+          'Multi-platform integration',
+          'Priority support',
+          'Custom analytics',
+          '5 websites',
+        ],
+      },
+      enterprise: {
+        id: 'enterprise',
+        name: 'Enterprise',
+        price: 999,
+        currency: 'USD',
+        interval: 'month',
+        features: [
+          'Unlimited conversion tracking',
+          'All platform integrations',
+          'Dedicated success manager',
+          'Custom integrations',
+          'Unlimited websites',
+        ],
+      },
   };
 
   return c.json({
@@ -176,12 +176,12 @@ billing.post('/customers', async (c) => {
 
     // Store encrypted Stripe credentials if provided
     if (stripe_config) {
-      const credentialSuccess = await db.updateAgencyCredentials(agency_id, {
-        stripe: stripe_config,
-      });
-
-      if (!credentialSuccess) {
-        console.warn('Failed to store Stripe credentials for agency:', agency_id);
+      try {
+        await db.prepare(
+          'UPDATE customers SET stripe_config = ?, updated_at = datetime(\'now\') WHERE id = ?'
+        ).bind(JSON.stringify(stripe_config), agency_id).run();
+      } catch (error) {
+        console.warn('Failed to store Stripe credentials for agency:', agency_id, error);
         // Don't fail the request, just log the warning
       }
     }
@@ -267,12 +267,12 @@ billing.get('/subscriptions/:agency_id', async (c) => {
       SELECT
         s.*,
         c.stripe_customer_id,
-        p.name as plan_name,
-        p.lead_limit,
-        p.features
+        COALESCE(p.name, 'Unknown Plan') as plan_name,
+        COALESCE(p.lead_limit, 0) as lead_limit,
+        COALESCE(p.features, '[]') as features
       FROM subscriptions s
       JOIN customers c ON s.agency_id = c.id
-      JOIN pricing_tiers p ON s.stripe_price_id = p.stripe_price_id
+      LEFT JOIN pricing_tiers p ON s.stripe_price_id = p.stripe_price_id
       WHERE s.agency_id = ? AND s.status = 'active'
       ORDER BY s.created_at DESC
       LIMIT 1
@@ -295,7 +295,7 @@ billing.get('/subscriptions/:agency_id', async (c) => {
         COUNT(*) as leads_this_month,
         SUM(lead_value_cents) as revenue_this_month
       FROM leads
-      WHERE agency_id = ?
+      WHERE org_id = ?
       AND created_at >= date('now', 'start of month')
     `)
       .bind(agency_id)
@@ -309,7 +309,7 @@ billing.get('/subscriptions/:agency_id', async (c) => {
         status: subscription.status,
         plan: subscription.plan_name,
         lead_limit: subscription.lead_limit,
-        features: JSON.parse(subscription.features),
+        features: JSON.parse(subscription.features || '[]'),
         current_period_start: subscription.current_period_start,
         current_period_end: subscription.current_period_end,
         usage: {
