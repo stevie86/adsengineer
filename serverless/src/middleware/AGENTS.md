@@ -11,6 +11,7 @@ Auth and rate limiting middleware. Applied via Hono middleware chain.
 |------|---------|
 | `auth.ts` | JWT validation, HMAC webhook verification |
 | `rate-limit.ts` | Multi-tier rate limiting (uses KV) |
+| `dev-guard.ts` | Environment-based access control for non-production |
 
 ## USAGE PATTERN
 ```typescript
@@ -33,6 +34,25 @@ app.use('/api/v1/*', rateLimit({ tier: 'standard' }));
 | JWT | Dashboard API | `Authorization: Bearer <token>` |
 | HMAC | Webhooks (Shopify, GHL) | Platform-specific signature header |
 | API Key | Admin operations | `X-Admin-Token` |
+
+## DEV GUARD MIDDLEWARE
+
+Blocks unauthenticated requests in non-production (dev/staging) environments.
+
+| Path Type | Behavior |
+|-----------|----------|
+| Public (`/health`, `/snippet.js`, `/waitlist`) | Always allowed |
+| Webhooks (`/shopify/webhook`, `/ghl/webhook`) | Allowed (HMAC auth) |
+| All other paths | Requires `Authorization: Bearer` header |
+
+Production environment passes through (route-level auth handles it).
+
+```typescript
+import { devGuardMiddleware, devLoggingMiddleware } from './middleware/dev-guard';
+
+app.use('*', devLoggingMiddleware());  // Optional request logging
+app.use('*', devGuardMiddleware());    // Access control
+```
 
 ## CONVENTIONS
 - Middleware injects user/agency via `c.set()`

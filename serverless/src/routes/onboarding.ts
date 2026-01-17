@@ -282,3 +282,182 @@ onboardingRoutes.post('/agreements/:customerId/accept', async (c) => {
     return c.json({ error: 'Failed to record agreement' }, 500);
   }
 });
+
+onboardingRoutes.post('/site-setup', async (c) => {
+  const db = c.env.DB;
+
+  try {
+    const body = await c.req.json<{
+      customer_id: string;
+      website: string;
+      sgtm_container_url?: string;
+      measurement_id?: string;
+      api_secret?: string;
+      client_tier?: 'internal' | 'tier1' | 'tier2';
+    }>();
+
+    if (!body.customer_id || !body.website) {
+      return c.json({ error: 'customer_id and website are required' }, 400);
+    }
+
+    const customer = await db
+      .prepare('SELECT id, email, company_name FROM customers WHERE id = ?')
+      .bind(body.customer_id)
+      .first<{ id: string; email: string; company_name: string | null }>();
+
+    if (!customer) {
+      return c.json({ error: 'Customer not found' }, 404);
+    }
+
+    const sgtmConfig = body.sgtm_container_url && body.measurement_id
+      ? JSON.stringify({
+          container_url: body.sgtm_container_url,
+          measurement_id: body.measurement_id,
+          api_secret: body.api_secret || null,
+        })
+      : null;
+
+    await db
+      .prepare(`
+        UPDATE customers 
+        SET website = ?, sgtm_config = ?, client_tier = ?, updated_at = ?
+        WHERE id = ?
+      `)
+      .bind(
+        body.website,
+        sgtmConfig,
+        body.client_tier || 'tier2',
+        new Date().toISOString(),
+        body.customer_id
+      )
+      .run();
+
+    const apiBaseUrl = c.env.ENVIRONMENT === 'production'
+      ? 'https://api.adsengineer.cloud'
+      : 'https://adsengineer-cloud-staging.adsengineer.workers.dev';
+
+    const snippetUrl = `${apiBaseUrl}/api/v1/onboarding/snippet.js`;
+    const webhookUrl = `${apiBaseUrl}/api/v1/shopify/webhook`;
+
+    const response: Record<string, unknown> = {
+      success: true,
+      customer_id: body.customer_id,
+      website: body.website,
+      tracking_snippet: {
+        script_tag: `<script src="${snippetUrl}" async></script>`,
+        inline_snippet: gclidSnippet,
+        installation: 'Add the script tag to your website <head> or before </body>',
+      },
+      webhook_endpoints: {
+        shopify: webhookUrl,
+        woocommerce: `${apiBaseUrl}/api/v1/woocommerce/webhook`,
+        generic: `${apiBaseUrl}/api/v1/events`,
+      },
+      test_urls: {
+        health: `${apiBaseUrl}/health`,
+        snippet: `${apiBaseUrl}/api/v1/onboarding/snippet`,
+      },
+    };
+
+    if (sgtmConfig) {
+      response.sgtm_setup = {
+        status: 'configured',
+        container_url: body.sgtm_container_url,
+        measurement_id: body.measurement_id,
+        instructions: [
+          '1. Deploy your sGTM container to Cloud Run or App Engine',
+          '2. Add a Measurement Protocol Client to receive server-to-server events',
+          '3. Configure triggers for: purchase, add_to_cart, begin_checkout, generate_lead',
+          '4. Add tags for each platform: GA4, Google Ads, Meta CAPI, TikTok Events API',
+          '5. Test using sGTM Preview mode before going live',
+        ],
+      };
+    } else {
+      response.sgtm_setup = {
+        status: 'not_configured',
+        instructions: [
+          'To enable server-side tracking via sGTM:',
+          '1. Create a Server container in Google Tag Manager',
+          '2. Deploy to Cloud Run (recommended) - costs ~$45/month',
+          '3. Get your container URL (e.g., https://gtm.yourdomain.com)',
+          '4. Create a GA4 property and get your Measurement ID (G-XXXXXXX)',
+          '5. Call this endpoint again with sgtm_container_url and measurement_id',
+        ],
+        docs_url: 'https://developers.google.com/tag-platform/tag-manager/server-side',
+      };
+    }
+
+    response.ga4_setup = {
+      measurement_protocol: {
+        endpoint: body.sgtm_container_url
+          ? `${body.sgtm_container_url}/g/collect`
+          : 'https://www.google-analytics.com/g/collect',
+        required_params: {
+          v: '2 (protocol version)',
+          tid: 'G-XXXXXXX (your Measurement ID)',
+          cid: 'client_id (unique visitor identifier)',
+          en: 'event_name (purchase, add_to_cart, etc.)',
+        },
+        example_purchase: `POST ${body.sgtm_container_url || 'https://gtm.yourdomain.com'}/g/collect
+Content-Type: application/x-www-form-urlencoded
+
+v=2&tid=${body.measurement_id || 'G-XXXXXXX'}&cid=123.456&en=purchase&ep.transaction_id=ORD-123&epn.value=99.99&ep.currency=USD`,
+      },
+    };
+
+    return c.json(response);
+  } catch (error) {
+    console.error('Site setup error:', error);
+    return c.json(
+      {
+        error: 'Site setup failed',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      500
+    );
+  }
+});
+
+onboardingRoutes.get('/site-setup/:customerId', async (c) => {
+  const db = c.env.DB;
+  const customerId = c.req.param('customerId');
+
+  try {
+    const customer = await db
+      .prepare('SELECT id, email, company_name, website, sgtm_config, client_tier FROM customers WHERE id = ?')
+      .bind(customerId)
+      .first<{
+        id: string;
+        email: string;
+        company_name: string | null;
+        website: string | null;
+        sgtm_config: string | null;
+        client_tier: string | null;
+      }>();
+
+    if (!customer) {
+      return c.json({ error: 'Customer not found' }, 404);
+    }
+
+    const sgtmConfig = customer.sgtm_config ? JSON.parse(customer.sgtm_config) : null;
+
+    return c.json({
+      customer_id: customer.id,
+      email: customer.email,
+      company_name: customer.company_name,
+      website: customer.website,
+      client_tier: customer.client_tier || 'tier2',
+      sgtm_configured: !!sgtmConfig,
+      sgtm_config: sgtmConfig
+        ? {
+            container_url: sgtmConfig.container_url,
+            measurement_id: sgtmConfig.measurement_id,
+            has_api_secret: !!sgtmConfig.api_secret,
+          }
+        : null,
+    });
+  } catch (error) {
+    console.error('Get site setup error:', error);
+    return c.json({ error: 'Failed to get site setup' }, 500);
+  }
+});

@@ -1,4 +1,5 @@
 import type { AppEnv } from '../types';
+import { resolveEventTimeSeconds } from '../utils/event-time';
 
 // SHA256 hash function for Meta privacy compliance
 async function hashData(data: string): Promise<string> {
@@ -156,7 +157,7 @@ export async function processMetaConversionBatch(env: AppEnv['Bindings'], job: a
     const metaConversions: MetaConversionData[] = conversions.map((conv: any) => ({
       fbclid: conv.fbclid,
       event_name: 'Purchase', // Meta standard event for conversions
-      event_time: Math.floor(new Date(conv.conversion_time).getTime() / 1000),
+      event_time: resolveEventTimeSeconds({ timestamp: conv.conversion_time }),
       event_id: `advocate_${conv.order_id || conv.external_id}_${Math.floor(new Date(conv.conversion_time).getTime() / 1000)}`, // Deduplication key
       value: conv.conversion_value,
       currency: conv.currency_code,

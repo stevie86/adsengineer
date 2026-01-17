@@ -1,6 +1,6 @@
 # SERVERLESS KNOWLEDGE BASE
 
-**Generated:** 2026-01-13
+**Generated:** 2026-01-17
 **Domain:** Core API (Hono/Cloudflare Workers)
 
 ## OVERVIEW
@@ -12,7 +12,7 @@ serverless/
 ├── src/
 │   ├── routes/         # API endpoints (14 files) - SEE src/routes/AGENTS.md
 │   ├── services/       # Business logic (28 files) - SEE src/services/AGENTS.md
-│   ├── middleware/     # Auth/rate-limit (2 files) - SEE src/middleware/AGENTS.md
+│   ├── middleware/     # Auth/rate-limit/dev-guard (3 files) - SEE src/middleware/AGENTS.md
 │   ├── database/       # D1 queries
 │   ├── workers/        # Background jobs
 │   ├── index.ts        # Hono app entry

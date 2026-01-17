@@ -51,6 +51,20 @@ routes/
 | Connect TikTok | `oauth.ts` | OAuth2 |
 | Stripe billing | `billing.ts` | Webhook signature |
 | Custom events | `custom-events.ts` | JWT |
+| Site setup + sGTM config | `onboarding.ts` | None (public) |
+
+## SITE SETUP ENDPOINTS
+
+Configure customer sites with tracking and sGTM:
+
+```
+POST /api/v1/onboarding/site-setup
+  Body: { customer_id, website, sgtm_container_url?, measurement_id?, client_tier? }
+  Returns: tracking snippet, webhook URLs, sGTM/GA4 setup instructions
+
+GET /api/v1/onboarding/site-setup/:customerId
+  Returns: current site configuration (website, sgtm_config, client_tier)
+```
 
 ## ROUTE PATTERN
 ```typescript

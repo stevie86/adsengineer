@@ -20,6 +20,7 @@ services/
 ├── jwt.ts                  # JWT token generation/validation
 ├── oauth-storage.ts        # Encrypted OAuth token storage
 ├── crypto.ts               # Crypto utilities
+├── sgtm-forwarder.ts       # Server-Side GTM Measurement Protocol forwarder
 │
 ├── # ANALYTICS & SCORING
 ├── lead-scoring.ts         # Lead qualification scoring
@@ -88,6 +89,38 @@ export class {Platform}ConversionsAPI {
 | Google Ads | `gclid` | `google_ads_config` |
 | Meta/Facebook | `fbclid` | `meta_config` |
 | TikTok | `ttclid` | `tiktok_config` |
+
+## sGTM FORWARDER
+
+Single integration hub using Server-Side GTM as destination for all platforms.
+
+### Usage
+```typescript
+import { createSGTMForwarder } from './services/sgtm-forwarder';
+
+const forwarder = createSGTMForwarder({
+  container_url: 'https://gtm.customer.com',
+  measurement_id: 'G-XXXXXXX',
+  api_secret: 'optional',
+});
+
+await forwarder.sendPurchase({
+  order_id: 'ORD-123',
+  total: 99.99,
+  currency: 'USD',
+  customer_email: 'user@example.com',
+  items: [{ id: 'SKU-1', name: 'Product', price: 99.99, quantity: 1 }],
+});
+```
+
+### Available Methods
+| Method | Event Name | Use Case |
+|--------|------------|----------|
+| `sendEvent()` | Custom | Generic event |
+| `sendPurchase()` | `purchase` | Order completion |
+| `sendAddToCart()` | `add_to_cart` | Cart additions |
+| `sendBeginCheckout()` | `begin_checkout` | Checkout start |
+| `sendLead()` | `generate_lead` | Form submissions |
 
 ## CONVENTIONS
 - **Platform modules:** Stateless classes with async methods

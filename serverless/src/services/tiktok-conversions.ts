@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import type { AppEnv } from '../types';
+import { resolveEventTimeSeconds } from '../utils/event-time';
 
 export interface TikTokConversionData {
   ttclid?: string;
@@ -66,7 +67,7 @@ export class TikTokConversionsAPI {
     
     const eventData = conversions.map(conversion => ({
       event_type: conversion.event_name || 'CustomEvent',
-      event_time: conversion.event_time || Math.floor(Date.now() / 1000),
+      event_time: resolveEventTimeSeconds({ event_time: conversion.event_time }),
       properties: {
         ttclid: conversion.ttclid || null,
         conversion_value: conversion.conversion_value || null,

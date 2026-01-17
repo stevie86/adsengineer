@@ -1,8 +1,8 @@
 # PROJECT KNOWLEDGE BASE
 
-**Generated:** 2026-01-13
-**Commit:** 8ac0573
-**Branch:** secfix-p0
+**Generated:** 2026-01-17
+**Commit:** f15987d
+**Branch:** main
 
 ## OVERVIEW
 AdsEngineer: Enterprise conversion tracking SaaS (Google/Meta/TikTok/Shopify). Server-side tracking with closed-loop attribution.
@@ -16,17 +16,19 @@ AdsEngineer: Enterprise conversion tracking SaaS (Google/Meta/TikTok/Shopify). S
 ```
 ./
 ├── serverless/           # Core API (Hono/Workers) - SEE serverless/AGENTS.md
-│   ├── src/routes/      # Endpoints (14 files)
-│   ├── src/services/    # Logic (28+ files)
+│   ├── src/routes/      # Endpoints (18 files)
+│   ├── src/services/    # Logic (29 files)
 │   ├── src/middleware/  # Auth (2 files)
-│   ├── migrations/      # D1 schema (8 files)
+│   ├── migrations/      # D1 schema (10 files)
 │   └── tests/           # Vitest (Unit/Integration/E2E)
 ├── infrastructure/       # IaC (OpenTofu) - SEE infrastructure/AGENTS.md
 ├── frontend/             # Dashboard UI (React) - SEE frontend/AGENTS.md
-├── landing-page/         # Marketing (Nuxt/Vue) - SEE landing-page/AGENTS.md
+├── landing-page/         # Marketing (Astro) - SEE landing-page/AGENTS.md
 ├── docs/                 # Architecture/Specs - SEE docs/AGENTS.md
 ├── seo-auditor/          # SEO tools + Universal SST - SEE seo-auditor/AGENTS.md
-├── shopify-plugin/       # Shopify webhook proxy (Express)
+├── shopify-plugin/       # Shopify webhook proxy (Express) - SEE shopify-plugin/AGENTS.md
+├── admin-dashboard/      # Internal admin UI (Vite/React) - WIP
+├── tasks/                # Kanban task tracking (planned/doing/done/for_review)
 └── inspiration/          # Reference implementations (read-only)
 ```
 
@@ -40,7 +42,7 @@ AdsEngineer: Enterprise conversion tracking SaaS (Google/Meta/TikTok/Shopify). S
 | Billing | `serverless/src/services/billing*.ts` | Stripe integration |
 | Google Ads | `serverless/src/services/google-ads.ts` | Conversion upload |
 | Frontend UI | `frontend/` | React + Tailwind |
-| Landing Page | `landing-page/` | Nuxt 3 + Tailwind |
+| Landing Page | `landing-page/` | Astro + Tailwind |
 | SEO/SST | `seo-auditor/` | Universal tracking snippet |
 | Docs | `docs/` | Strategy, specs, playbooks |
 
@@ -92,6 +94,40 @@ git worktree prune                             # Clean up stale
 
 ## POTENTIAL INTEGRATIONS
 - **GTM API for LLMs** ([paolobietolini/gtm-api-for-llms](https://github.com/paolobietolini/gtm-api-for-llms)): Structured GTM API docs for AI. Could enable automated tag/trigger management for customers.
+
+## SERVER-SIDE GTM ARCHITECTURE (PROPOSED)
+**Status:** Proposed pivot - see `docs/sgtm-architecture-proposal.md`
+
+Strategic shift: Use **Server-Side GTM (sGTM)** as single integration hub instead of direct platform APIs.
+
+### sGTM vs Google Tag Gateway
+
+| Feature | Google Tag Gateway | Server-Side GTM |
+|---------|-------------------|-----------------|
+| **Purpose** | Proxy scripts from YOUR domain | Process events on YOUR server |
+| **What it does** | First-party script serving | Tag/trigger/variable processing |
+| **Runs on** | CDN/Load balancer | Cloud Run (~$45/mo) |
+| **Our integration** | N/A (client-side) | **Server-to-server events** |
+
+**Key insight:** Gateway is complementary (client-side), sGTM is our focus (server-side).
+
+### Architecture
+```
+WooCommerce/Shopify → AdsEngineer API → Customer's sGTM → GA4/Ads/Meta/TikTok
+                           │
+                    sgtm-forwarder.ts
+                    (Measurement Protocol)
+```
+
+### Benefits
+- 1 service to maintain (vs 3+ platform APIs)
+- Customer controls tags in GTM GUI
+- Tag vendors handle API versioning
+- Self-service debugging via sGTM Preview
+
+### Key Docs
+- `docs/sgtm-architecture-proposal.md` - Full technical proposal
+- `docs/sgtm-vs-gateway.md` - Comparison explanation
 
 ## MODULAR PLATFORM ARCHITECTURE
 Ad platforms are **modular** - each is a separate service module:

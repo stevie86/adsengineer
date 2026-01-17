@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { swaggerUI } from '@hono/swagger-ui';
+import { devGuardMiddleware, devLoggingMiddleware } from './middleware/dev-guard';
 // Temporarily commented out evaluation router during development
 // import { evaluationRouter } from './routes/evaluate';
 import { tiktokRouter } from './routes/tiktok';
@@ -9,13 +10,14 @@ import { billingRoutes } from './routes/billing';
 
 const app = new Hono();
 
-// Basic API documentation removed for now to fix startup issues
-
 app.use('*', cors({
   origin: ['http://localhost:3000', 'http://172.104.241.225:3000', 'http://100.111.164.18:3000', 'https://adsengineer.com'],
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization', 'X-Webhook-Signature'],
 }));
+
+app.use('*', devLoggingMiddleware());
+app.use('*', devGuardMiddleware());
 
 // app.doc('/docs', swaggerUI({ url: '/openapi.json' })); // Temporarily disabled
 

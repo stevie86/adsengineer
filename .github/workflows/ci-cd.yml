@@ -18,15 +18,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
         cache: 'pnpm'
         cache-dependency-path: serverless/pnpm-lock.yaml
-
-    - name: Install pnpm
-      run: npm install -g pnpm
 
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
@@ -123,12 +125,23 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
     - name: Setup Doppler CLI
-      uses: dopplerhq/cli-action@v4
+      uses: dopplerhq/cli-action@v3
 
     - name: Deploy Backend to Staging via Doppler
       run: |
         cd serverless
+        pnpm install --frozen-lockfile
         doppler run --config=staging -- pnpm deploy
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
@@ -148,12 +161,23 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
     - name: Setup Doppler CLI
-      uses: dopplerhq/cli-action@v4
+      uses: dopplerhq/cli-action@v3
 
     - name: Deploy Backend to Production via Doppler
       run: |
         cd serverless
+        pnpm install --frozen-lockfile
         doppler run --config=production -- pnpm deploy
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
