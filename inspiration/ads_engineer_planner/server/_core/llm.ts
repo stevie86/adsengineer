@@ -209,14 +209,44 @@ const normalizeToolChoice = (
   return toolChoice;
 };
 
-const resolveApiUrl = () =>
-  ENV.forgeApiUrl && ENV.forgeApiUrl.trim().length > 0
-    ? `${ENV.forgeApiUrl.replace(/\/$/, "")}/v1/chat/completions`
-    : "https://forge.manus.im/v1/chat/completions";
+type AIProvider = "openai" | "gemini" | "anthropic" | "forge";
 
-const assertApiKey = () => {
-  if (!ENV.forgeApiKey) {
-    throw new Error("OPENAI_API_KEY is not configured");
+const getProviderConfig = (provider: AIProvider = "openai") => {
+  switch (provider) {
+    case "openai":
+      return {
+        apiUrl: `${ENV.openaiBaseUrl.replace(/\/$/, "")}/chat/completions`,
+        apiKey: ENV.openaiApiKey,
+        model: "gpt-4o",
+      };
+    case "gemini":
+      return {
+        apiUrl: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent",
+        apiKey: ENV.geminiApiKey,
+        model: "gemini-2.0-flash-exp",
+      };
+    case "anthropic":
+      return {
+        apiUrl: "https://api.anthropic.com/v1/messages",
+        apiKey: ENV.anthropicApiKey,
+        model: "claude-3-5-sonnet-20241022",
+      };
+    case "forge":
+    default:
+      return {
+        apiUrl: ENV.forgeApiUrl && ENV.forgeApiUrl.trim().length > 0
+          ? `${ENV.forgeApiUrl.replace(/\/$/, "")}/v1/chat/completions`
+          : "https://forge.manus.im/v1/chat/completions",
+        apiKey: ENV.forgeApiKey,
+        model: "gemini-2.5-flash",
+      };
+  }
+};
+
+const assertApiKey = (provider: AIProvider = "openai") => {
+  const config = getProviderConfig(provider);
+  if (!config.apiKey) {
+    throw new Error(`${provider.toUpperCase()}_API_KEY is not configured`);
   }
 };
 
@@ -265,8 +295,11 @@ const normalizeResponseFormat = ({
   };
 };
 
-export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
-  assertApiKey();
+export async function invokeLLM(
+  params: InvokeParams & { provider?: AIProvider }
+): Promise<InvokeResult> {
+  const { provider = "openai" } = params;
+  assertApiKey(provider);
 
   const {
     messages,
@@ -279,8 +312,9 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     response_format,
   } = params;
 
+  const config = getProviderConfig(provider);
   const payload: Record<string, unknown> = {
-    model: "gemini-2.5-flash",
+    model: config.model,
     messages: messages.map(normalizeMessage),
   };
 
@@ -312,14 +346,26 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     payload.response_format = normalizedResponseFormat;
   }
 
-  const response = await fetch(resolveApiUrl(), {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      authorization: `Bearer ${ENV.forgeApiKey}`,
-    },
-    body: JSON.stringify(payload),
-  });
+  const headers: Record<string, string> = {
+  "content-type": "application/json",
+};
+
+if (provider === "anthropic") {
+  headers["x-api-key"] = config.apiKey;
+  headers["anthropic-version"] = "2023-06-01";
+} else if (provider === "gemini") {
+  const url = new URL(config.apiUrl);
+  url.searchParams.set("key", config.apiKey);
+  config.apiUrl = url.toString();
+} else {
+  headers["authorization"] = `Bearer ${config.apiKey}`;
+}
+
+const response = await fetch(config.apiUrl, {
+  method: "POST",
+  headers,
+  body: JSON.stringify(payload),
+});
 
   if (!response.ok) {
     const errorText = await response.text();

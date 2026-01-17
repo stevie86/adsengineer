@@ -16,8 +16,9 @@ CREATE TABLE lead_technologies (
   detected_at TEXT NOT NULL DEFAULT (datetime('now')),
   confidence_score REAL DEFAULT 1.0, -- 0.0 to 1.0, how confident we are in detection
 
-  FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE CASCADE,
-  FOREIGN KEY (technology_id) REFERENCES technologies(id) ON DELETE CASCADE,
+  -- Note: Foreign keys commented out for D1 compatibility
+  -- FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE CASCADE,
+  -- FOREIGN KEY (technology_id) REFERENCES technologies(id) ON DELETE CASCADE,
   UNIQUE(lead_id, technology_id) -- Prevent duplicate associations
 );
 

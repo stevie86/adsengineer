@@ -1,37 +1,88 @@
 # ROUTES KNOWLEDGE BASE
 
-**Generated:** 2026-01-05
+**Generated:** 2026-01-13
 **Domain:** API Endpoints (Hono Routes)
 
 ## OVERVIEW
-All HTTP API endpoints implementing AdsEngineer functionality with proper authentication and validation.
+HTTP API endpoints. Routes validate input, call services, return JSON.
 
 ## STRUCTURE
 ```
 routes/
-├── ghl.ts              # GoHighLevel webhooks
-├── shopify.ts          # Shopify webhooks
-├── leads.ts            # Lead management
-├── admin.ts            # Admin ops
-└── billing.ts          # Stripe integration
+├── index.ts              # Route registration (imports all routers)
+│
+├── # WEBHOOKS (HMAC validated)
+├── shopify.ts            # Shopify order/customer webhooks
+├── ghl.ts                # GoHighLevel CRM webhooks
+├── tiktok.ts             # TikTok Events API webhooks
+│
+├── # OAUTH (Platform connections)
+├── oauth.ts              # Google, Meta, TikTok OAuth flows
+│
+├── # CORE API (JWT protected)
+├── leads.ts              # Lead CRUD
+├── custom-events.ts      # Custom event tracking
+├── custom-event-definitions.ts  # Event type definitions
+├── analytics.ts          # Reporting/dashboards
+│
+├── # BILLING (Stripe)
+├── billing.ts            # Subscriptions, webhooks, portal
+│
+├── # PUBLIC
+├── tracking.ts           # Tracking snippet delivery
+├── waitlist.ts           # Landing page signups
+├── status.ts             # Health check
+│
+├── # ADMIN
+├── admin.ts              # Agency management
+├── onboarding.ts         # Customer onboarding
+├── evaluate.ts           # Prospect evaluation
+└── gdpr.ts               # Data deletion requests
 ```
 
 ## WHERE TO LOOK
-| Endpoint Type | Location | Notes |
-|---------------|----------|-------|
-| Webhook receivers | `ghl.ts`, `shopify.ts` | External integrations |
-| Lead management | `leads.ts` | CRUD operations |
-| Admin operations | `admin.ts` | Agency management |
-| Billing | `billing.ts` | Stripe webhooks |
+| Task | File | Auth |
+|------|------|------|
+| Add Shopify webhook | `shopify.ts` | HMAC signature |
+| Add GHL webhook | `ghl.ts` | HMAC signature |
+| Add TikTok webhook | `tiktok.ts` | HMAC signature |
+| Connect Google Ads | `oauth.ts` | OAuth2 |
+| Connect Meta | `oauth.ts` | OAuth2 |
+| Connect TikTok | `oauth.ts` | OAuth2 |
+| Stripe billing | `billing.ts` | Webhook signature |
+| Custom events | `custom-events.ts` | JWT |
+
+## ROUTE PATTERN
+```typescript
+import { Hono } from 'hono';
+import { zValidator } from '@hono/zod-validator';
+import { z } from 'zod';
+import type { AppEnv } from '../types';
+
+const router = new Hono<AppEnv>();
+
+const InputSchema = z.object({
+  field: z.string(),
+});
+
+router.post('/endpoint', zValidator('json', InputSchema), async (c) => {
+  const data = c.req.valid('json');
+  // Call service, NOT direct DB
+  const result = await myService(c.env.DB, data);
+  return c.json({ success: true, data: result });
+});
+
+export { router as myRouter };
+```
 
 ## CONVENTIONS
-- **Scope:** One file per domain
-- **Pattern:** Hono router instances
-- **Validation:** Zod schemas on all inputs
-- **Error handling:** Consistent JSON format
+- **One domain per file.** Export named router.
+- **Zod validation** on all inputs
+- **Services layer** for business logic
+- **Consistent response:** `{ success: boolean, data?: any, error?: string }`
 
-## ANTI-PATTERNS (ROUTES)
-- Business logic in routes (Delegate to services)
-- Direct DB access from routes
+## ANTI-PATTERNS
+- Business logic in routes → Use services
+- Direct DB queries → Use services
+- Missing Zod validation
 - Unprotected admin endpoints
-- Missing input validation

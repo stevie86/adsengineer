@@ -10,7 +10,6 @@
     "deploy": "wrangler deploy",
     "deploy:staging": "wrangler deploy --env staging",
     "types:check": "tsc --noEmit",
-
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
@@ -50,11 +49,13 @@
     "@cloudflare/workers-types": "^4.20260101.0",
     "@faker-js/faker": "^8.4.1",
     "@types/jest": "^29.5.14",
+    "@types/node": "^20.0.0",
     "@vitest/coverage-v8": "^4.0.16",
     "@vitest/ui": "^4.0.16",
+    "playwright": "^1.40.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.16",
-    "wrangler": "^4.54.0"
+    "wrangler": "^4.59.1"
   },
   "license": "UNLICENSED"
 }

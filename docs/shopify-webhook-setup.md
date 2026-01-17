@@ -57,7 +57,7 @@ After saving webhooks, Shopify generates a **webhook signature secret** for each
 
 **Example webhook secret:**
 ```
-[YOUR_SHOPIFY_ACCESS_TOKEN]
+[EXAMPLE]
 ```
 
 ### 4. Provide Credentials to AdsEngineer

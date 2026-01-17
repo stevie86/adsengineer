@@ -1,0 +1,460 @@
+# POST /api/v1/auth/register
+
+```yaml
+openapi: 3.0.3
+info:
+  title: Register New Customer
+  description: Create a new customer account with email and agreement acceptance
+  version: 1.0.0
+servers:
+  - url: https://advocate-cloud.adsengineer.workers.dev/api/v1
+    description: AdsEngineer API
+
+paths:
+  /api/v1/auth/register:
+    post:
+      summary: Register new customer
+      operationId: registerCustomer
+      requestBody:
+        required:
+          email:
+            type: string
+            format: email
+            description: Customer email address (RFC5322)
+          company_name:
+            type: string
+            description: Company or organization name
+          website:
+            type: string
+            format: uri
+            description: Website URL
+          ghl_location_id:
+            type: string
+            description: GoHighLevel location ID
+          accept_tos:
+            type: boolean
+            description: Accept Terms of Service
+          accept_dpa:
+            type: boolean
+            description: Accept Data Processing Agreement
+          accept_privacy:
+            type: boolean
+            description: Accept Privacy Policy
+      responses:
+        '201':
+          description: Customer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerCreated'
+              example:
+                success: true
+                customer_id: "550e8400-e29b-41d4-a716-446665474"
+                message: "Registration successful. Agreements recorded."
+                next_steps:
+                  snippet_url: "/api/v1/onboarding/snippet"
+                  webhook_url: "/api/v1/ghl/webhook"
+                  docs_url: "/docs"
+        '409':
+          description: Email already registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Email already registered"
+                message: "Please login or use a different email"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "All agreements must be accepted"
+                required:
+                  - accept_tos
+                  - accept_dpa
+                  - accept_privacy
+
+components:
+  schemas:
+    CustomerCreated:
+      type: object
+      properties:
+        success:
+          type: boolean
+        customer_id:
+          type: string
+        message:
+          type: string
+        next_steps:
+          type: object
+          properties:
+            snippet_url:
+              type: string
+              format: uri
+            webhook_url:
+              type: string
+              format: uri
+            docs_url:
+              type: string
+              format: uri
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        required:
+          type: array
+          items:
+            type: string
+```
+
+---
+
+# POST /api/v1/auth/login
+
+```yaml
+openapi: 3.0.3
+info:
+  title: Customer Login
+  description: Authenticate customer with email and password
+  version: 1.0.0
+servers:
+  - url: https://advocate-cloud.adsengineer.workers.dev/api/v1
+    description: AdsEngineer API
+
+paths:
+  /api/v1/auth/login:
+    post:
+      summary: Authenticate existing customer
+      operationId: loginCustomer
+      requestBody:
+        required:
+          email:
+            type: string
+            format: email
+            description: Customer email address
+          password:
+            type: string
+            format: password
+            description: Customer password (min 8 characters)
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccess'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    AuthSuccess:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT authentication token
+        customer_id:
+          type: string
+        role:
+          type: string
+          enum:
+            - owner
+            - admin
+            - member
+            - viewer
+          description: User role
+        expires_in:
+          type: integer
+          description: Token expiration time in seconds
+          example: 86400
+        message:
+          type: string
+          description: Success message
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+```
+
+---
+
+# POST /api/v1/auth/logout
+
+```yaml
+openapi: 3.0.3
+info:
+  title: Customer Logout
+  description: Invalidate JWT token and end customer session
+  version: 1.0.0
+servers:
+  - url: https://advocate-cloud.adsengineer.workers.dev/api/v1
+    description: AdsEngineer API
+
+paths:
+  /api/v1/auth/logout:
+    post:
+      summary: Logout customer
+      operationId: logoutCustomer
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+```
+
+---
+
+# POST /api/v1/auth/reset-password
+
+```yaml
+openapi: 3.0.3
+info:
+  title: Request Password Reset
+  description: Send password reset email to customer
+  version: 1.0.0
+servers:
+  - url: https://advocate-cloud.adsengineer.workers.dev/api/v1
+    description: AdsEngineer API
+
+paths:
+  /api/v1/auth/reset-password:
+    post:
+      summary: Request password reset
+      operationId: requestPasswordReset
+      requestBody:
+        required:
+          email:
+            type: string
+            format: email
+            description: Customer email address
+      responses:
+        '200':
+          description: Reset email sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+```
+
+---
+
+# GET /api/v1/auth/agreements
+
+```yaml
+openapi: 3.0.3
+info:
+  title: Get Agreement Versions
+  description: Get current versions and text for Terms of Service, DPA, and Privacy Policy
+  version: 1.0.0
+servers:
+  - url: https://advocate-cloud.adsengineer.workers.dev/api/v1
+    description: AdsEngineer API
+
+paths:
+  /api/v1/auth/agreements:
+    get:
+      summary: Get agreement versions
+      operationId: getAgreementVersions
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Customer ID
+      responses:
+        '200':
+          description: Agreement versions retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  current_versions:
+                    type: object
+                    properties:
+                      tos:
+                        type: string
+                        description: Current Terms of Service version
+                      dpa:
+                        type: string
+                        description: Current Data Processing Agreement version
+                      privacy:
+                        type: string
+                        description: Current Privacy Policy version
+                  agreements:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        agreement_type:
+                          type: string
+                          enum:
+                            - tos
+                            - dpa
+                            - privacy
+                        agreement_version:
+                          type: string
+                        accepted_at:
+                          type: string
+                          format: date-time
+                        ip_address:
+                          type: string
+                        consent_text_hash:
+                          type: string
+                        metadata:
+                          type: object
+```
+
+---
+
+# POST /api/v1/auth/agreements/{customerId}/accept
+
+```yaml
+openapi: 3.0.3
+info:
+  title: Accept Legal Agreement
+  description: Accept Terms of Service, DPA, or Privacy Policy
+  version: 1.0.0
+servers:
+  - url: https://advocate-cloud.adsengineer.workers.dev/api/v1
+    description: AdsEngineer API
+
+paths:
+  /api/v1/auth/agreements/{customerId}/accept:
+    post:
+      summary: Accept legal agreement
+      operationId: acceptAgreement
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Customer ID
+      requestBody:
+        required:
+          agreement_type:
+            type: string
+            enum:
+              - tos
+              - dpa
+              - privacy
+        responses:
+        '200':
+          description: Agreement accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  agreement_type:
+                    type: string
+                  version:
+                    type: string
+                  accepted_at:
+                    type: string
+                    format: date-time
+```
+
+---
+
+# GET /api/v1/auth/agreements/{customerId}
+
+```yaml
+openapi: 3.0.3
+info:
+  title: Get Customer's Agreements
+  description: Retrieve list of agreements accepted by customer
+  version: 1.0.0
+servers:
+  - url: https://advocate-cloud.adsengineer.workers.dev/api/v1
+    description: AdsEngineer API
+
+paths:
+  /api/v1/auth/agreements/{customerId}:
+    get:
+      summary: Get customer agreements
+      operationId: getCustomerAgreements
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Customer ID
+      responses:
+        '200':
+          description: Agreements retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customer_id:
+                    type: string
+                  agreements:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        agreement_type:
+                          type: string
+                        agreement_version:
+                          type: string
+                        accepted_at:
+                          type: string
+                          format: date-time
+                        ip_address:
+                          type: string
+                        consent_text_hash:
+                          type: string
+                        metadata:
+                          type: object
+```

@@ -1,19 +1,46 @@
-# MIDDLEWARE MODULE
+# MIDDLEWARE KNOWLEDGE BASE
 
-Request processing and security.
+**Generated:** 2026-01-13
+**Domain:** Request Processing & Security
 
-## STRUCTURE
+## OVERVIEW
+Auth and rate limiting middleware. Applied via Hono middleware chain.
+
+## FILES
+| File | Purpose |
+|------|---------|
+| `auth.ts` | JWT validation, HMAC webhook verification |
+| `rate-limit.ts` | Multi-tier rate limiting (uses KV) |
+
+## USAGE PATTERN
+```typescript
+import { jwtAuth, hmacAuth } from './middleware/auth';
+import { rateLimit } from './middleware/rate-limit';
+
+// JWT protected route
+app.use('/api/v1/*', jwtAuth());
+
+// Webhook with HMAC validation
+app.post('/webhook', hmacAuth('X-Signature'), handler);
+
+// Rate limited endpoint
+app.use('/api/v1/*', rateLimit({ tier: 'standard' }));
 ```
-middleware/
-├── auth.ts             # JWT validation
-└── rate-limit.ts       # Multi-tier limits
-```
+
+## AUTH TYPES
+| Type | Use Case | Header |
+|------|----------|--------|
+| JWT | Dashboard API | `Authorization: Bearer <token>` |
+| HMAC | Webhooks (Shopify, GHL) | Platform-specific signature header |
+| API Key | Admin operations | `X-Admin-Token` |
 
 ## CONVENTIONS
-- **Pattern:** Higher-order functions
-- **State:** Context injection (c.set)
-- **Security:** Fail-open for rate limits
+- Middleware injects user/agency via `c.set()`
+- Routes access via `c.get('user')`, `c.get('agency')`
+- Fail closed on auth errors (401/403)
+- Rate limits stored in KV namespace
 
 ## ANTI-PATTERNS
-- Auth bypasses
-- Hard-coded rate limits
+- Auth bypass logic
+- Hardcoded rate limits (use config)
+- Blocking on rate limit check (use KV)
