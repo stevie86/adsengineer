@@ -22,7 +22,6 @@ export class ConversionRouter {
     const agency = await this.getAgencyConfig(agencyId);
     if (!agency) return { error: 'Agency not found' };
 
-    // Check if secondary config exists to determine parallel mode
     const hasSecondaryConfig = agency.secondary_google_ads_config &&
                                JSON.parse(agency.secondary_google_ads_config).customerId;
     const mode = hasSecondaryConfig ? 'parallel' : 'single';
@@ -67,32 +66,8 @@ export class ConversionRouter {
     return results;
   }
 
-  private async uploadToTikTok(conversions: Conversion[], agency: any): Promise<any> {
-    const tiktokConversions = conversions.filter(c => c.ttclid);
-    
-    if (tiktokConversions.length > 0 && agency.tiktok_config) {
-      try {
-        const config = JSON.parse(agency.tiktok_config);
-        const tiktokClient = new TikTokConversionsAPI(config.access_token, config.app_id);
-        return await tiktokClient.uploadConversions(tiktokConversions);
-      } catch (error) {
-        return { error: error.message };
-      }
-    }
-    
-    return null;
-  }
-      try {
-        const config = JSON.parse(agency.tiktok_config);
-        const tiktokClient = new TikTokConversionsAPI(config.access_token, config.app_id);
-        results.tiktok = await tiktokClient.uploadConversions(tiktokConversions);
-      } catch (error) {
-        results.tiktok = { error: error.message };
-      }
-    }
-    
-    return results;
-  }
+  private async uploadToSecondary(conversions: Conversion[], agency: any) {
+    const googleConversions = conversions.filter(c => c.gclid);
 
     if (googleConversions.length > 0 && agency.secondary_google_ads_config) {
       try {
@@ -112,21 +87,5 @@ export class ConversionRouter {
       .bind(agencyId).first();
 
     return result;
-  }
-
-  private async uploadToTikTok(conversions: Conversion[], agency: any): Promise<any> {
-    const tiktokConversions = conversions.filter(c => c.ttclid);
-    
-    if (tiktokConversions.length > 0 && agency.tiktok_config) {
-      try {
-        const config = JSON.parse(agency.tiktok_config);
-        const tiktokClient = new TikTokConversionsAPI(config.access_token, config.app_id);
-        return await tiktokClient.uploadConversions(tiktokConversions);
-      } catch (error) {
-        return { error: error.message };
-      }
-    }
-    
-    return null;
   }
 }

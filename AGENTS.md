@@ -1,7 +1,6 @@
 # PROJECT KNOWLEDGE BASE
 
-**Generated:** 2026-01-17
-**Commit:** f15987d
+**Generated:** 2026-01-19
 **Branch:** main
 
 ## OVERVIEW
@@ -28,8 +27,9 @@ AdsEngineer: Enterprise conversion tracking SaaS (Google/Meta/TikTok/Shopify). S
 ├── seo-auditor/          # SEO tools + Universal SST - SEE seo-auditor/AGENTS.md
 ├── shopify-plugin/       # Shopify webhook proxy (Express) - SEE shopify-plugin/AGENTS.md
 ├── admin-dashboard/      # Internal admin UI (Vite/React) - WIP
+├── wiki/                 # Project Wiki & Knowledge Base
 ├── tasks/                # Kanban task tracking (planned/doing/done/for_review)
-└── inspiration/          # Reference implementations (read-only)
+└── inspiration/          # Reference implementations (read-only) - SEE inspiration/AGENTS.md
 ```
 
 ## WHERE TO LOOK
@@ -45,11 +45,14 @@ AdsEngineer: Enterprise conversion tracking SaaS (Google/Meta/TikTok/Shopify). S
 | Landing Page | `landing-page/` | Astro + Tailwind |
 | SEO/SST | `seo-auditor/` | Universal tracking snippet |
 | Docs | `docs/` | Strategy, specs, playbooks |
+| Admin UI | `admin-dashboard/` | Internal tools (WIP) |
 
 ## CONVENTIONS
 - **Package Manager:** `pnpm` ONLY. No `npm`/`yarn`.
 - **Secrets:** `Doppler` ONLY. No `.env` files in git.
-- **Linting:** `BiomeJS` (replaces ESLint/Prettier). Run `pnpm lint:fix`.
+- **Linting:** 
+  - Backend (`serverless`): `BiomeJS` (Strict)
+  - Frontend (`frontend`): ESLint + Prettier (Legacy)
 - **Type Safety:** Strict TypeScript. `noExplicitAny: warn`, `noVar: error`.
 - **Formatting:** 2 spaces, single quotes, trailing commas (es5), semicolons.
 - **Testing:** Vitest for all packages. Coverage required.
@@ -76,14 +79,6 @@ cd infrastructure && tofu apply
 cd landing-page && pnpm build && wrangler pages deploy dist/
 ```
 
-## WORKTREE MANAGEMENT
-```bash
-git worktree list                              # List all
-git worktree remove .worktrees/<feature>       # Remove after merge
-git worktree remove --force .worktrees/<name>  # Force if build artifacts
-git worktree prune                             # Clean up stale
-```
-
 ## EXTERNAL INTEGRATIONS
 | Platform | Integration Point | Auth |
 |----------|-------------------|------|
@@ -92,24 +87,10 @@ git worktree prune                             # Clean up stale
 | Shopify | `routes/shopify.ts`, `shopify-plugin/` | HMAC signature |
 | GoHighLevel | `routes/ghl.ts` | Webhook signature |
 
-## POTENTIAL INTEGRATIONS
-- **GTM API for LLMs** ([paolobietolini/gtm-api-for-llms](https://github.com/paolobietolini/gtm-api-for-llms)): Structured GTM API docs for AI. Could enable automated tag/trigger management for customers.
-
 ## SERVER-SIDE GTM ARCHITECTURE (PROPOSED)
 **Status:** Proposed pivot - see `docs/sgtm-architecture-proposal.md`
 
 Strategic shift: Use **Server-Side GTM (sGTM)** as single integration hub instead of direct platform APIs.
-
-### sGTM vs Google Tag Gateway
-
-| Feature | Google Tag Gateway | Server-Side GTM |
-|---------|-------------------|-----------------|
-| **Purpose** | Proxy scripts from YOUR domain | Process events on YOUR server |
-| **What it does** | First-party script serving | Tag/trigger/variable processing |
-| **Runs on** | CDN/Load balancer | Cloud Run (~$45/mo) |
-| **Our integration** | N/A (client-side) | **Server-to-server events** |
-
-**Key insight:** Gateway is complementary (client-side), sGTM is our focus (server-side).
 
 ### Architecture
 ```
@@ -118,27 +99,6 @@ WooCommerce/Shopify → AdsEngineer API → Customer's sGTM → GA4/Ads/Meta/Tik
                     sgtm-forwarder.ts
                     (Measurement Protocol)
 ```
-
-### Benefits
-- 1 service to maintain (vs 3+ platform APIs)
-- Customer controls tags in GTM GUI
-- Tag vendors handle API versioning
-- Self-service debugging via sGTM Preview
-
-### Key Docs
-- `docs/sgtm-architecture-proposal.md` - Full technical proposal
-- `docs/sgtm-vs-gateway.md` - Comparison explanation
-
-## MODULAR PLATFORM ARCHITECTURE
-Ad platforms are **modular** - each is a separate service module:
-
-| Platform | Service | Click ID | Config Field |
-|----------|---------|----------|--------------|
-| Google Ads | `google-ads.ts` | `gclid` | `google_ads_config` |
-| Meta/Facebook | `meta-conversions.ts` | `fbclid` | `meta_config` |
-| TikTok | `tiktok-conversions.ts` | `ttclid` | `tiktok_config` |
-
-**Adding new platform?** See `serverless/.opencode/skill/add-platform/SKILL.md`
 
 ## AI SKILLS (OpenCode Compatible)
 Skills provide focused guidance for specific tasks:
@@ -153,10 +113,8 @@ serverless/.opencode/skill/
 ## ANTI-PATTERNS
 - Committing secrets (Use Doppler)
 - Direct `node_modules` modification
-- Bypassing Biome rules (`@ts-ignore`, `as any`)
+- Bypassing Biome/ESLint rules
 - Leaving worktrees unmerged/unremoved
 - Hardcoded external API keys
-- Missing validation middleware (use Zod)
-- Database queries in route handlers (use services)
-- Empty catch blocks
+- Database queries in route handlers
 - Synchronous operations in workers

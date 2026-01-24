@@ -28,7 +28,8 @@ export const openApiSpec = {
     { name: 'GHL', description: 'GoHighLevel webhook integration' },
     { name: 'Shopify', description: 'Shopify webhook integration' },
     { name: 'Waitlist', description: 'Landing page waitlist signups' },
-    { name: 'Leads', description: 'Lead management (authenticated)' },
+    { name: 'Leads', description: 'Lead management (JWT authenticated)' },
+    { name: 'Custom Events', description: 'Custom event tracking (JWT authenticated)' },
     { name: 'Admin', description: 'Admin operations (admin token required)' },
   ],
   paths: {
@@ -537,6 +538,132 @@ export const openApiSpec = {
         },
       },
     },
+    '/api/v1/custom-events': {
+      get: {
+        tags: ['Custom Events'],
+        summary: 'List custom events',
+        description: 'Retrieve custom events with pagination and filtering',
+        security: [{ jwtAuth: [] }],
+        parameters: [
+          {
+            name: 'site_id',
+            in: 'query',
+            schema: { type: 'string' },
+            description: 'Filter by site ID',
+          },
+          {
+            name: 'limit',
+            in: 'query',
+            schema: { type: 'integer', default: 50 },
+            description: 'Number of results per page',
+          },
+          {
+            name: 'offset',
+            in: 'query',
+            schema: { type: 'integer', default: 0 },
+            description: 'Number of results to skip',
+          },
+        ],
+        responses: {
+          '200': {
+            description: 'Custom events retrieved',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean' },
+                    events: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          id: { type: 'string' },
+                          site_id: { type: 'string' },
+                          event_name: { type: 'string' },
+                          value: { type: 'number' },
+                          currency: { type: 'string' },
+                          created_at: { type: 'string', format: 'date-time' },
+                        },
+                      },
+                    },
+                    pagination: {
+                      type: 'object',
+                      properties: {
+                        total: { type: 'integer' },
+                        limit: { type: 'integer' },
+                        offset: { type: 'integer' },
+                        has_more: { type: 'boolean' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '401': { description: 'Unauthorized - Invalid JWT token' },
+          '500': { description: 'Server error' },
+        },
+      },
+      post: {
+        tags: ['Custom Events'],
+        summary: 'Create custom event',
+        description: 'Track a custom business event for conversion',
+        security: [{ jwtAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['site_id', 'event_name', 'value'],
+                properties: {
+                  site_id: { type: 'string', description: 'Site identifier' },
+                  event_name: { type: 'string', description: 'Event name (e.g., subscription_start, high_value_purchase)' },
+                  value: { type: 'number', description: 'Event value in cents' },
+                  currency: { type: 'string', description: 'Currency code (default: USD)' },
+                  customer_email: { type: 'string', format: 'email', description: 'Customer email for PII hashing' },
+                  gclid: { type: 'string', description: 'Google Click ID' },
+                  fbclid: { type: 'string', description: 'Facebook Click ID' },
+                  utm_source: { type: 'string' },
+                  utm_medium: { type: 'string' },
+                  utm_campaign: { type: 'string' },
+                  metadata: { type: 'object', description: 'Additional event data' },
+                },
+              },
+              example: {
+                site_id: 'site-123',
+                event_name: 'subscription_start',
+                value: 9900,
+                currency: 'USD',
+                customer_email: 'customer@example.com',
+                gclid: 'CjwKCAtest123',
+                utm_source: 'google',
+                utm_medium: 'cpc',
+              },
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description: 'Event created successfully',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean' },
+                    event_id: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+          '400': { description: 'Invalid request data' },
+          '401': { description: 'Unauthorized - Invalid JWT token' },
+        },
+      },
+    },
     '/api/v1/admin/backup': {
       get: {
         tags: ['Admin'],
@@ -600,6 +727,88 @@ export const openApiSpec = {
           '400': { description: 'Missing data or iv' },
           '401': { description: 'Missing authorization' },
         },
+        },
+      },
+    '/api/v1/custom-event-definitions/definitions': {
+      get: {
+        tags: ['Custom Events'],
+        summary: 'List event definitions',
+        description: 'Retrieve custom event definitions for organization',
+        security: [{ jwtAuth: [] }],
+        responses: {
+          '200': {
+            description: 'Definitions retrieved',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean' },
+                    definitions: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          id: { type: 'string' },
+                          event_name: { type: 'string' },
+                          display_name: { type: 'string' },
+                          description: { type: 'string' },
+                          trigger_type: { type: 'string', enum: ['webhook', 'frontend', 'api', 'manual'] },
+                          is_active: { type: 'boolean' },
+                          google_ads_conversion_action: { type: 'string' },
+                          google_ads_category: { type: 'string' },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '401': { description: 'Unauthorized - Invalid JWT token' },
+        },
+      },
+      post: {
+        tags: ['Custom Events'],
+        summary: 'Create event definition',
+        description: 'Define a new custom event type with trigger conditions',
+        security: [{ jwtAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['event_name', 'display_name', 'trigger_type'],
+                properties: {
+                  event_name: { type: 'string', description: 'Unique event identifier' },
+                  display_name: { type: 'string', description: 'Human-readable name' },
+                  description: { type: 'string', description: 'Event purpose and behavior' },
+                  trigger_type: { type: 'string', enum: ['webhook', 'frontend', 'api', 'manual'] },
+                  trigger_conditions: { type: 'object', description: 'Platform-specific conditions' },
+                  google_ads_conversion_action: { type: 'string', description: 'Google Ads conversion action name' },
+                  google_ads_category: { type: 'string', description: 'Google Ads conversion category' },
+                  strategic_value: { type: 'string', description: 'Business value description' },
+                  priority: { type: 'integer', description: 'Display and processing priority' },
+                },
+                example: {
+                  event_name: 'subscription_start',
+                  display_name: 'Subscription Start',
+                  description: 'Track when customer starts subscription',
+                  trigger_type: 'webhook',
+                  google_ads_conversion_action: 'subscription_start',
+                  google_ads_category: 'LEAD',
+                  priority: 1,
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': { description: 'Definition created' },
+          '400': { description: 'Invalid request data' },
+          '401': { description: 'Unauthorized - Invalid JWT token' },
+        },
       },
     },
     '/api/v1/admin/stats': {
@@ -648,6 +857,12 @@ export const openApiSpec = {
         type: 'http',
         scheme: 'bearer',
         description: 'Admin endpoints require ADMIN_SECRET as bearer token',
+      },
+      jwtAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'JWT token with HMAC-SHA256 signature verification for API authentication',
       },
     },
   },

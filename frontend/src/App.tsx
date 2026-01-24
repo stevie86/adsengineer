@@ -1,30 +1,38 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Layout } from './components/Layout';
+import { Dashboard } from './pages/Dashboard';
+import { Login } from './pages/Login';
+import { Signup } from './pages/Signup';
+import { AgenciesPage } from './pages/Admin/Agencies';
+import { IntegrationView } from './pages/Admin/IntegrationView';
 
-// Components
-import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
-import Admin from './pages/Admin';
-import Login from './pages/Login';
-
-// Load Stripe
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const token = localStorage.getItem('auth_token');
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+};
 
 function App() {
   return (
-    <Elements stripe={stripePromise}>
-      <Router>
-        <div className="min-h-screen bg-gray-50">
-          <Routes>
-            <Route path="/" element={<Signup />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/admin" element={<Admin />} />
-          </Routes>
-        </div>
-      </Router>
-    </Elements>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        
+        <Route path="/" element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<Dashboard />} />
+          <Route path="admin/agencies" element={<AgenciesPage />} />
+          <Route path="admin/agencies/:id" element={<IntegrationView />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 

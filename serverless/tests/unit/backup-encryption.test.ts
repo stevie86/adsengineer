@@ -67,7 +67,7 @@ describe('Backup Encryption Fail-Close', () => {
 
       expect(body.encrypted).toBeDefined();
       expect(body.encrypted.encrypted).toBeDefined();
-      expect(body.encrypted).encrypted.length).toBeGreaterThan(0);
+      expect(body.encrypted.encrypted.length).toBeGreaterThan(0);
 
       expect(body.tables.leads[0]).toHaveProperty('id');
       expect(body.tables.leads[0]).toHaveProperty('email');
@@ -82,7 +82,7 @@ describe('Backup Encryption Fail-Close', () => {
       const body = await response.json() as any;
       expect(body.encrypted).toBeDefined();
       expect(body.encrypted.encrypted).toBeDefined();
-      expect(body.encrypted).iv).toBeDefined();
+      expect(body.encrypted.iv).toBeDefined();
       expect(body.encrypted.iv.length).toBe(24); // Base64 of 12 bytes
     });
   });

@@ -1,6 +1,6 @@
 # SERVERLESS KNOWLEDGE BASE
 
-**Generated:** 2026-01-17
+**Generated:** 2026-01-19
 **Domain:** Core API (Hono/Cloudflare Workers)
 
 ## OVERVIEW
@@ -19,11 +19,11 @@ serverless/
 │   ├── types.ts        # Shared interfaces
 │   ├── openapi.ts      # OpenAPI schema (auto-generated)
 │   └── snippet.ts      # Client-side tracking code
-├── tests/
+├── tests/              # Vitest Suite - SEE tests/AGENTS.md
 │   ├── unit/           # Service/utility tests
 │   ├── integration/    # API endpoint tests
 │   └── e2e/            # End-to-end flows
-├── migrations/         # D1 schema (numbered: 0001_*.sql)
+├── migrations/         # D1 schema (numbered) - SEE migrations/AGENTS.md
 ├── scripts/            # Health checks, migration tools
 └── wrangler.jsonc      # Cloudflare config (JSONC format)
 ```
@@ -46,6 +46,7 @@ serverless/
 - **Auth:** JWT for dashboard, HMAC for webhooks
 - **Secrets:** All via Cloudflare secrets. Access via `c.env.SECRET_NAME`
 - **Errors:** Return `{ success: false, error: "message" }` with appropriate HTTP status
+- **Linting:** BiomeJS (Strict). `pnpm lint:fix`.
 
 ## KEY FILES
 | File | Purpose |

@@ -1,10 +1,10 @@
 # LANDING PAGE KNOWLEDGE BASE
 
-**Generated:** 2026-01-12
+**Generated:** 2026-01-19
 **Domain:** Marketing Website (Nuxt/Vue)
 
 ## OVERVIEW
-Marketing website for AdsEngineer SaaS - lead generation, product showcase, and customer acquisition.
+Marketing website for lead generation and product showcase.
 
 ## STRUCTURE
 ```
@@ -19,28 +19,13 @@ landing-page/
 └── dist/            # Build output
 ```
 
-## WHERE TO LOOK
-| Task | Location | Notes |
-|------|----------|-------|
-| Page Components | src/pages/ | Homepage, pricing, about |
-| UI Components | src/components/ | Reusable elements |
-| Content | src/content/ | Blog posts, case studies |
-| Layouts | src/layouts/ | Page structure templates |
-| Configuration | nuxt.config.ts | Nuxt setup, modules |
-| SEO Meta | Each page | Head tags, meta optimization |
-| Build Output | dist/ | Production build |
-
 ## CONVENTIONS
-- **Framework:** Nuxt 3 with Vue 3 and TypeScript
-- **Styling:** Tailwind CSS for utility-first styling
-- **Content:** Markdown files for blog/case studies
-- **SEO:** Automatic sitemap, meta tags optimization
-- **Performance:** Cloudflare Pages deployment
-- **Analytics:** Google Analytics 4 integration
+- **Framework:** Nuxt 3 with Vue 3 and TypeScript.
+- **Styling:** Tailwind CSS.
+- **Content:** Markdown for blog.
+- **Deployment:** Cloudflare Pages.
 
-## ANTI-PATTERNS (LANDING PAGE)
-- Inline styles (Use Tailwind utilities)
-- Client-side routing for static content
-- Heavy images without optimization
-- Missing SEO meta tags
-- Broken responsive design
+## ANTI-PATTERNS
+- Inline styles.
+- Heavy unoptimized images.
+- Missing SEO meta tags.

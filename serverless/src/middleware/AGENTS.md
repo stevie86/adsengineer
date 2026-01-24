@@ -1,6 +1,6 @@
 # MIDDLEWARE KNOWLEDGE BASE
 
-**Generated:** 2026-01-13
+**Generated:** 2026-01-19
 **Domain:** Request Processing & Security
 
 ## OVERVIEW

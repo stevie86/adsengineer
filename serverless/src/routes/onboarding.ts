@@ -290,14 +290,41 @@ onboardingRoutes.post('/site-setup', async (c) => {
     const body = await c.req.json<{
       customer_id: string;
       website: string;
+      attribution_mode?: 'sgtm' | 'direct';
       sgtm_container_url?: string;
       measurement_id?: string;
       api_secret?: string;
+      ga4_measurement_id?: string;
+      ga4_api_secret?: string;
       client_tier?: 'internal' | 'tier1' | 'tier2';
     }>();
 
     if (!body.customer_id || !body.website) {
       return c.json({ error: 'customer_id and website are required' }, 400);
+    }
+
+    const attributionMode = body.attribution_mode || 'sgtm';
+
+    if (attributionMode === 'direct' && (!body.ga4_measurement_id || !body.ga4_api_secret)) {
+      return c.json(
+        {
+          error: 'Missing GA4 configuration',
+          message: 'ga4_measurement_id and ga4_api_secret are required for Direct Mode',
+          required_fields: ['ga4_measurement_id', 'ga4_api_secret'],
+        },
+        400
+      );
+    }
+
+    if (attributionMode === 'sgtm' && (!body.sgtm_container_url || !body.measurement_id)) {
+      return c.json(
+        {
+          error: 'Missing sGTM configuration',
+          message: 'sgtm_container_url and measurement_id are required for sGTM mode',
+          required_fields: ['sgtm_container_url', 'measurement_id'],
+        },
+        400
+      );
     }
 
     const customer = await db
@@ -309,7 +336,7 @@ onboardingRoutes.post('/site-setup', async (c) => {
       return c.json({ error: 'Customer not found' }, 404);
     }
 
-    const sgtmConfig = body.sgtm_container_url && body.measurement_id
+    const sgtmConfig = attributionMode === 'sgtm' && body.sgtm_container_url && body.measurement_id
       ? JSON.stringify({
           container_url: body.sgtm_container_url,
           measurement_id: body.measurement_id,
@@ -319,13 +346,16 @@ onboardingRoutes.post('/site-setup', async (c) => {
 
     await db
       .prepare(`
-        UPDATE customers 
-        SET website = ?, sgtm_config = ?, client_tier = ?, updated_at = ?
+        UPDATE customers
+        SET website = ?, attribution_mode = ?, sgtm_config = ?, ga4_measurement_id = ?, ga4_api_secret = ?, client_tier = ?, updated_at = ?
         WHERE id = ?
       `)
       .bind(
         body.website,
+        attributionMode,
         sgtmConfig,
+        attributionMode === 'direct' ? body.ga4_measurement_id : null,
+        attributionMode === 'direct' ? body.ga4_api_secret : null,
         body.client_tier || 'tier2',
         new Date().toISOString(),
         body.customer_id
@@ -343,6 +373,7 @@ onboardingRoutes.post('/site-setup', async (c) => {
       success: true,
       customer_id: body.customer_id,
       website: body.website,
+      attribution_mode: attributionMode,
       tracking_snippet: {
         script_tag: `<script src="${snippetUrl}" async></script>`,
         inline_snippet: gclidSnippet,
@@ -359,7 +390,7 @@ onboardingRoutes.post('/site-setup', async (c) => {
       },
     };
 
-    if (sgtmConfig) {
+    if (attributionMode === 'sgtm' && sgtmConfig) {
       response.sgtm_setup = {
         status: 'configured',
         container_url: body.sgtm_container_url,
@@ -372,7 +403,7 @@ onboardingRoutes.post('/site-setup', async (c) => {
           '5. Test using sGTM Preview mode before going live',
         ],
       };
-    } else {
+    } else if (attributionMode === 'sgtm') {
       response.sgtm_setup = {
         status: 'not_configured',
         instructions: [
@@ -387,23 +418,27 @@ onboardingRoutes.post('/site-setup', async (c) => {
       };
     }
 
-    response.ga4_setup = {
-      measurement_protocol: {
-        endpoint: body.sgtm_container_url
-          ? `${body.sgtm_container_url}/g/collect`
-          : 'https://www.google-analytics.com/g/collect',
-        required_params: {
-          v: '2 (protocol version)',
-          tid: 'G-XXXXXXX (your Measurement ID)',
-          cid: 'client_id (unique visitor identifier)',
-          en: 'event_name (purchase, add_to_cart, etc.)',
-        },
-        example_purchase: `POST ${body.sgtm_container_url || 'https://gtm.yourdomain.com'}/g/collect
-Content-Type: application/x-www-form-urlencoded
-
-v=2&tid=${body.measurement_id || 'G-XXXXXXX'}&cid=123.456&en=purchase&ep.transaction_id=ORD-123&epn.value=99.99&ep.currency=USD`,
-      },
-    };
+    if (attributionMode === 'direct') {
+      response.direct_mode_setup = {
+        status: 'configured',
+        ga4_measurement_id: body.ga4_measurement_id,
+        instructions: [
+          '1. Your site is now using Direct Mode (sends events directly to GA4)',
+          '2. No sGTM container required',
+          '3. Events will appear in GA4 within 10 seconds of being sent',
+          '4. Custom parameters are preserved in GA4',
+          '5. Configure webhooks to send events to our platform',
+        ],
+        ga4_admin_setup: [
+          '1. Go to Google Analytics > Admin > Data Streams',
+          '2. Select your GA4 property',
+          '3. Click "Create Measurement Protocol API secret"',
+          '4. Copy the Secret Value (not Display name)',
+          '5. The Secret Value is your api_secret',
+          '6. Measurement ID is in the format G-XXXXXXXXXX',
+        ],
+      };
+    }
 
     return c.json(response);
   } catch (error) {
@@ -424,14 +459,16 @@ onboardingRoutes.get('/site-setup/:customerId', async (c) => {
 
   try {
     const customer = await db
-      .prepare('SELECT id, email, company_name, website, sgtm_config, client_tier FROM customers WHERE id = ?')
+      .prepare('SELECT id, email, company_name, website, attribution_mode, sgtm_config, ga4_measurement_id, client_tier FROM customers WHERE id = ?')
       .bind(customerId)
       .first<{
         id: string;
         email: string;
         company_name: string | null;
         website: string | null;
+        attribution_mode: string;
         sgtm_config: string | null;
+        ga4_measurement_id: string | null;
         client_tier: string | null;
       }>();
 
@@ -446,6 +483,7 @@ onboardingRoutes.get('/site-setup/:customerId', async (c) => {
       email: customer.email,
       company_name: customer.company_name,
       website: customer.website,
+      attribution_mode: customer.attribution_mode,
       client_tier: customer.client_tier || 'tier2',
       sgtm_configured: !!sgtmConfig,
       sgtm_config: sgtmConfig
@@ -455,6 +493,8 @@ onboardingRoutes.get('/site-setup/:customerId', async (c) => {
             has_api_secret: !!sgtmConfig.api_secret,
           }
         : null,
+      ga4_direct_mode: customer.attribution_mode === 'direct',
+      ga4_configured: !!customer.ga4_measurement_id,
     });
   } catch (error) {
     console.error('Get site setup error:', error);

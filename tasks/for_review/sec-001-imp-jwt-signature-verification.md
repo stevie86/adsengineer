@@ -6,7 +6,7 @@ story_points: 5
 hours: 16
 owner: "Backend Engineer"
 dependencies: []
-lane: "doing"
+lane: "for_review"
 assignee: "Sisyphus AI Agent"
 agent: "claude"
 shell_pid: "24053"

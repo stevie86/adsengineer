@@ -1,0 +1,10 @@
+tasks:
+  - title: "Task 1: Payload-Derived Timestamps. Instruction: Update attribution services in serverless/src to use client_event_time from payloads with a 60s skew safeguard."
+    completed: false
+    parallel_group: 1
+  - title: "Task 2: PII Log Redaction. Instruction: Find all console.log statements in serverless/src and wrap PII fields in a SHA-256 hashing utility."
+    completed: false
+    parallel_group: 1
+  - title: "Task 3: Click ID Normalization. Instruction: Create a normalization utility for click IDs and apply it to all incoming routes in serverless/src/routes."
+    completed: false
+    parallel_group: 1

@@ -132,6 +132,29 @@
           "suspicious": { "noExplicitAny": "warn", "noVar": "error" }
         }
       }
+    },
+    {
+      "includes": ["**/tests/unit/{oauth,custom-events,analytics,gdpr,status,tracking,waitlist}.test.ts", "**/tests/utils/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [".wrangler/**", "**/wrangler/**"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedPrivateClassMembers": "off"
+          },
+          "suspicious": {
+            "noEmptyBlockStatements": "off"
+          }
+        }
+      }
     }
   ],
   "assist": {

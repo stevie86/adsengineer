@@ -7,6 +7,9 @@ import { devGuardMiddleware, devLoggingMiddleware } from './middleware/dev-guard
 import { tiktokRouter } from './routes/tiktok';
 import { adminRoutes } from './routes/admin';
 import { billingRoutes } from './routes/billing';
+import { shopifyRoutes } from './routes/shopify';
+import { woocommerceRoutes } from './routes/woocommerce';
+import { ghlRoutes } from './routes/ghl';
 
 const app = new Hono();
 
@@ -34,5 +37,8 @@ app.get('/health', (c) => {
 app.route('/api/v1/admin', adminRoutes);
 app.route('/api/v1/billing', billingRoutes);
 app.route('/api/v1/tiktok', tiktokRouter);
+app.route('/api/v1/shopify', shopifyRoutes);
+app.route('/api/v1/woocommerce', woocommerceRoutes);
+app.route('/api/v1/ghl', ghlRoutes);
 
 export default app;
