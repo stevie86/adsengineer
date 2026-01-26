@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Hono } from 'hono';
-import { analytics } from '../../src/routes/analytics';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { analyticsRoutes as analytics } from '../../src/routes/analytics';
 
 describe('Analytics Routes', () => {
   let app: Hono;
@@ -22,23 +22,23 @@ describe('Analytics Routes', () => {
         topConvertingSources: ['google', 'facebook', 'email'],
         dailyBreakdown: [
           { date: '2026-01-12', conversions: 12, value: 600 },
-          { date: '2026-01-11', conversions: 8, value: 400 }
-        ]
+          { date: '2026-01-11', conversions: 8, value: 400 },
+        ],
       };
 
       vi.mock('../../src/middleware/auth', () => ({
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'agency-123', role: 'agency' });
           await next();
-        }
+        },
       }));
 
       const response = await app.request('/api/v1/analytics/conversions', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${mockToken}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${mockToken}`,
+          'Content-Type': 'application/json',
+        },
       });
 
       expect(response.status).toBe(200);
@@ -51,7 +51,7 @@ describe('Analytics Routes', () => {
     it('should require authentication', async () => {
       const response = await app.request('/api/v1/analytics/conversions', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(401);
@@ -68,7 +68,7 @@ describe('Analytics Routes', () => {
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'agency-123', role: 'agency' });
           await next();
-        }
+        },
       }));
 
       const response = await app.request(
@@ -76,9 +76,9 @@ describe('Analytics Routes', () => {
         {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${mockToken}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${mockToken}`,
+            'Content-Type': 'application/json',
+          },
         }
       );
 
@@ -87,7 +87,7 @@ describe('Analytics Routes', () => {
       expect(data).toHaveProperty('success', true);
       expect(data.data).toHaveProperty('filteredRange', {
         startDate,
-        endDate
+        endDate,
       });
     });
   });
@@ -100,15 +100,15 @@ describe('Analytics Routes', () => {
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'agency-123', role: 'agency' });
           await next();
-        }
+        },
       }));
 
       const response = await app.request('/api/v1/analytics/performance', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${mockToken}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${mockToken}`,
+          'Content-Type': 'application/json',
+        },
       });
 
       expect(response.status).toBe(200);
@@ -128,25 +128,25 @@ describe('Analytics Routes', () => {
         format: 'csv',
         dateRange: {
           startDate: '2026-01-01',
-          endDate: '2026-01-12'
+          endDate: '2026-01-12',
         },
-        metrics: ['conversions', 'value', 'sources']
+        metrics: ['conversions', 'value', 'sources'],
       };
 
       vi.mock('../../src/middleware/auth', () => ({
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'agency-123', role: 'agency' });
           await next();
-        }
+        },
       }));
 
       const response = await app.request('/api/v1/analytics/export', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${mockToken}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${mockToken}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(exportRequest)
+        body: JSON.stringify(exportRequest),
       });
 
       expect(response.status).toBe(200);
@@ -157,23 +157,23 @@ describe('Analytics Routes', () => {
     it('should validate export request parameters', async () => {
       const mockToken = 'valid.jwt.token';
       const invalidRequest = {
-        format: 'xml'
+        format: 'xml',
       };
 
       vi.mock('../../src/middleware/auth', () => ({
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'agency-123', role: 'agency' });
           await next();
-        }
+        },
       }));
 
       const response = await app.request('/api/v1/analytics/export', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${mockToken}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${mockToken}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(invalidRequest)
+        body: JSON.stringify(invalidRequest),
       });
 
       expect(response.status).toBe(400);
@@ -190,9 +190,9 @@ describe('Analytics Routes', () => {
         app.request('/api/v1/analytics/conversions', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${mockToken}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${mockToken}`,
+            'Content-Type': 'application/json',
+          },
         })
       );
 
@@ -200,12 +200,12 @@ describe('Analytics Routes', () => {
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'agency-123', role: 'agency' });
           await next();
-        }
+        },
       }));
 
       const responses = await Promise.allSettled(requests);
       const rateLimitedResponses = responses.filter(
-        result => result.status === 'fulfilled' && result.value.status === 429
+        (result) => result.status === 'fulfilled' && result.value.status === 429
       );
 
       expect(rateLimitedResponses.length).toBeGreaterThan(0);

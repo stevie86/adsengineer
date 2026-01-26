@@ -1,7 +1,16 @@
 import { z } from 'zod';
 
 export const CustomerScoringSchema = z.object({
-  source: z.enum(['outreach', 'referral', 'inbound', 'website-visit', 'demo-request', 'trade-show', 'cold-email', 'partner-referral']),
+  source: z.enum([
+    'outreach',
+    'referral',
+    'inbound',
+    'website-visit',
+    'demo-request',
+    'trade-show',
+    'cold-email',
+    'partner-referral',
+  ]),
   websiteUrl: z.string().url(),
   contactInfo: z.object({
     firstName: z.string(),
@@ -11,65 +20,84 @@ export const CustomerScoringSchema = z.object({
     company: z.string(),
     title: z.string().optional(),
     linkedin: z.string().url().optional(),
-    decisionMaker: z.boolean()
+    decisionMaker: z.boolean(),
   }),
   techStack: z.object({
     platforms: z.array(z.enum(['shopify', 'woocommerce', 'magento', 'bigcommerce', 'custom'])),
-    analytics: z.array(z.enum(['google-analytics', 'adobe-analytics', 'mixpanel', 'segment', 'klaviyo', 'none'])),
-    advertising: z.array(z.enum(['google-ads', 'meta-ads', 'tiktok-ads', 'linkedin-ads', 'microsoft-ads', 'none'])),
-    crm: z.array(z.enum(['hubspot', 'salesforce', 'pipedrive', 'zoho', 'freshworks', 'insightly', 'none', 'custom'])),
-    inventory: z.array(z.enum(['shopify', 'manual', 'erp', 'dropshipping', 'none']))
+    analytics: z.array(
+      z.enum(['google-analytics', 'adobe-analytics', 'mixpanel', 'segment', 'klaviyo', 'none'])
+    ),
+    advertising: z.array(
+      z.enum(['google-ads', 'meta-ads', 'tiktok-ads', 'linkedin-ads', 'microsoft-ads', 'none'])
+    ),
+    crm: z.array(
+      z.enum([
+        'hubspot',
+        'salesforce',
+        'pipedrive',
+        'zoho',
+        'freshworks',
+        'insightly',
+        'none',
+        'custom',
+      ])
+    ),
+    inventory: z.array(z.enum(['shopify', 'manual', 'erp', 'dropshipping', 'none'])),
   }),
   outreach: z.object({
     channels: z.array(z.enum(['email', 'phone', 'linkedin', 'social', 'events', 'content'])),
     frequency: z.enum(['weekly', 'biweekly', 'monthly', 'quarterly']),
     lastContact: z.string().optional(),
-    engagementScore: z.number().min(0).max(100)
+    engagementScore: z.number().min(0).max(100),
   }),
   budgetInfo: z.object({
     monthlyBudget: z.number().min(0),
     teamSize: z.number().min(1),
     decisionProcess: z.enum(['unanimous', 'consensus', 'individual', 'committee']),
     approvalRequired: z.boolean(),
-    salesCycle: z.number().min(1)
+    salesCycle: z.number().min(1),
   }),
   teamSize: z.object({
     marketing: z.number().min(0),
     sales: z.number().min(0),
     technical: z.number().min(0),
     customerSuccess: z.number().min(0),
-    supportCapacity: z.number().min(0)
+    supportCapacity: z.number().min(0),
   }),
   revenue: z.object({
     monthly: z.number().min(0),
-    yearly: z.number().min(0)
+    yearly: z.number().min(0),
   }),
   marketPosition: z.enum(['startup', 'challenger', 'leader', 'niche']),
-  painPoints: z.array(z.enum([
-    'no-conversion-tracking',
-    'manual-bid-management',
-    'poor-attribution',
-    'high-ad-spend',
-    'low-traffic',
-    'technical-debt',
-    'customer-service-issues',
-    'inventory-management',
-    'low-margins',
-    'competition-increased',
-    'inaccurate-data'
-  ])),
-  adSpendAnalysis: z.array(z.object({
-    platform: z.enum(['google-ads', 'meta-ads', 'tiktok-ads', 'linkedin-ads', 'microsoft-ads']),
-    monthlySpend: z.number().min(0),
-    ctr: z.number().min(0).max(1),
-    cpc: z.number().min(0),
-    conversionRate: z.number().min(0).max(1),
-    cpa: z.number().min(0),
-    roas: z.number().min(0),
-    impressions: z.number().min(0),
-    clicks: z.number().min(0),
-    conversions: z.number().min(0)
-  }))
+  painPoints: z.array(
+    z.enum([
+      'no-conversion-tracking',
+      'manual-bid-management',
+      'poor-attribution',
+      'high-ad-spend',
+      'low-traffic',
+      'technical-debt',
+      'customer-service-issues',
+      'inventory-management',
+      'low-margins',
+      'competition-increased',
+      'inaccurate-data',
+    ])
+  ),
+  adSpendAnalysis: z.array(
+    z.object({
+      platform: z.enum(['google-ads', 'meta-ads', 'tiktok-ads', 'linkedin-ads', 'microsoft-ads']),
+      monthlySpend: z.number().min(0),
+      ctr: z.number().min(0).max(1),
+      cpc: z.number().min(0),
+      conversionRate: z.number().min(0).max(1),
+      cpa: z.number().min(0),
+      roas: z.number().min(0),
+      impressions: z.number().min(0),
+      clicks: z.number().min(0),
+      conversions: z.number().min(0),
+    })
+  ),
 });
 
 export type CustomerScoring = z.infer<typeof CustomerScoringSchema>;
@@ -176,75 +204,75 @@ export class CustomerScorer {
     source: {
       weight: 10,
       scoreMultipliers: {
-        'referral': 1.5,
-        'inbound': 1.3,
+        referral: 1.5,
+        inbound: 1.3,
         'demo-request': 1.2,
         'website-visit': 1.0,
         'trade-show': 0.9,
         'partner-referral': 0.8,
-        'outreach': 0.7,
-        'cold-email': 0.5
-      }
+        outreach: 0.7,
+        'cold-email': 0.5,
+      },
     },
     techStack: {
       weight: 20,
       platformScoreMultipliers: {
-        'shopify': 1.3,
-        'woocommerce': 1.0,
-        'magento': 0.9,
-        'bigcommerce': 1.1,
-        'custom': 0.6
+        shopify: 1.3,
+        woocommerce: 1.0,
+        magento: 0.9,
+        bigcommerce: 1.1,
+        custom: 0.6,
       },
       compatibilityScoreMultipliers: {
         'google-analytics': 1.0,
         'adobe-analytics': 0.9,
-        'mixpanel': 0.8,
-        'segment': 0.9,
-        'klaviyo': 1.2,
-        'none': 0.3
-      }
+        mixpanel: 0.8,
+        segment: 0.9,
+        klaviyo: 1.2,
+        none: 0.3,
+      },
     },
     revenue: {
       weight: 25,
       thresholds: {
         high: 10000000,
         medium: 1000000,
-        low: 100000
-      }
+        low: 100000,
+      },
     },
     budget: {
       weight: 15,
       readinessScoreMultipliers: {
-        'individual': 1.5,
-        'consensus': 1.0,
-        'committee': 0.7,
-        'unanimous': 0.5
-      }
+        individual: 1.5,
+        consensus: 1.0,
+        committee: 0.7,
+        unanimous: 0.5,
+      },
     },
     teamSize: {
       weight: 10,
       capacityThresholds: {
         high: 50,
         medium: 20,
-        low: 5
-      }
+        low: 5,
+      },
     },
     engagement: {
       weight: 10,
       engagementThresholds: {
         high: 70,
         medium: 40,
-        low: 20
-      }
+        low: 20,
+      },
     },
     marketPosition: {
       weight: 5,
       scoreMultipliers: {
-        'leader': 1.3,
-        'challenger': 1.0,
-        'niche': 0.9,
-        'startup': 0.7
-      }
+        leader: 1.3,
+        challenger: 1.0,
+        niche: 0.9,
+        startup: 0.7,
+      },
     },
     painPoints: {
       weight: 5,
@@ -259,12 +287,15 @@ export class CustomerScorer {
         'technical-debt': 0.9,
         'low-margins': 0.8,
         'inventory-management': 0.7,
-        'customer-service-issues': 0.6
-      }
-    }
+        'customer-service-issues': 0.6,
+      },
+    },
   };
 
-  calculateCustomerScore(customerData: CustomerScoring, factors?: Partial<CustomerScoreFactors>): CustomerScoringResult {
+  calculateCustomerScore(
+    customerData: CustomerScoring,
+    factors?: Partial<CustomerScoreFactors>
+  ): CustomerScoringResult {
     const breakdown = this.calculateBreakdown(customerData, factors);
     const overallScore = Object.values(breakdown).reduce((sum, score) => sum + score, 0);
     const category = this.determineCategory(overallScore);
@@ -280,25 +311,28 @@ export class CustomerScorer {
       recommendations,
       riskFactors,
       acquisitionStrategy,
-      conversionProbability
+      conversionProbability,
     };
   }
 
-  private calculateBreakdown(customerData: CustomerScoring, factors?: Partial<CustomerScoreFactors>) {
+  private calculateBreakdown(
+    customerData: CustomerScoring,
+    factors?: Partial<CustomerScoreFactors>
+  ) {
     const f = { ...this.factors, ...factors };
 
     const sourceScore = f.source.scoreMultipliers[customerData.source] * f.source.weight;
 
     let techStackScore = 0;
-    customerData.techStack.platforms.forEach(platform => {
+    customerData.techStack.platforms.forEach((platform) => {
       techStackScore += f.techStack.platformScoreMultipliers[platform] || 0.5;
     });
-    
+
     let compatibilityScore = 0;
-    customerData.techStack.analytics.forEach(analytic => {
+    customerData.techStack.analytics.forEach((analytic) => {
       compatibilityScore += f.techStack.compatibilityScoreMultipliers[analytic] || 0.5;
     });
-    
+
     const totalTechScore = (techStackScore + compatibilityScore) * 0.5;
 
     const yearlyRevenue = customerData.revenue.yearly || customerData.revenue.monthly * 12;
@@ -311,7 +345,8 @@ export class CustomerScorer {
       revenueScore = f.revenue.weight * 0.5;
     }
 
-    const budgetScore = f.budget.readinessScoreMultipliers[customerData.budgetInfo.decisionProcess] * f.budget.weight;
+    const budgetScore =
+      f.budget.readinessScoreMultipliers[customerData.budgetInfo.decisionProcess] * f.budget.weight;
 
     const totalTeamSize = Object.values(customerData.teamSize).reduce((sum, size) => sum + size, 0);
     let teamSizeScore = 0;
@@ -332,21 +367,22 @@ export class CustomerScorer {
       engagementScore = f.engagement.weight * 0.5;
     }
 
-    const marketPositionScore = f.marketPosition.scoreMultipliers[customerData.marketPosition] * f.marketPosition.weight;
+    const marketPositionScore =
+      f.marketPosition.scoreMultipliers[customerData.marketPosition] * f.marketPosition.weight;
 
     let painPointsScore = 0;
-    customerData.painPoints.forEach(painPoint => {
+    customerData.painPoints.forEach((painPoint) => {
       painPointsScore += f.painPoints.painScoreMultipliers[painPoint] || 0.5;
     });
 
-    const totalPossible = 
-      f.source.weight + 
-      f.techStack.weight + 
-      f.revenue.weight + 
-      f.budget.weight + 
-      f.teamSize.weight + 
-      f.engagement.weight + 
-      f.marketPosition.weight + 
+    const totalPossible =
+      f.source.weight +
+      f.techStack.weight +
+      f.revenue.weight +
+      f.budget.weight +
+      f.teamSize.weight +
+      f.engagement.weight +
+      f.marketPosition.weight +
       f.painPoints.weight;
 
     return {
@@ -358,7 +394,7 @@ export class CustomerScorer {
       engagement: engagementScore,
       marketPosition: marketPositionScore,
       painPoints: Math.min(painPointsScore, f.painPoints.weight),
-      totalPossible
+      totalPossible,
     };
   }
 
@@ -406,7 +442,10 @@ export class CustomerScorer {
       riskFactors.push('Long sales cycle - extended follow-up required');
     }
 
-    if (customerData.techStack.platforms.includes('custom') && customerData.teamSize.technical < 5) {
+    if (
+      customerData.techStack.platforms.includes('custom') &&
+      customerData.teamSize.technical < 5
+    ) {
       riskFactors.push('Custom platform with limited technical resources');
     }
 
@@ -460,7 +499,7 @@ export class CustomerScorer {
       channels,
       messaging,
       timeline,
-      budgetAllocation
+      budgetAllocation,
     };
   }
 
@@ -474,27 +513,30 @@ export class CustomerScorer {
     }
 
     if (breakdown.revenue > 20) {
-      probability += 0.20;
+      probability += 0.2;
       factors.push('Strong revenue profile');
     }
 
     if (breakdown.techStack > 15) {
-      probability += 0.20;
+      probability += 0.2;
       factors.push('Technology compatibility');
     }
 
-    if (customerData.painPoints.includes('no-conversion-tracking') || customerData.painPoints.includes('poor-attribution')) {
+    if (
+      customerData.painPoints.includes('no-conversion-tracking') ||
+      customerData.painPoints.includes('poor-attribution')
+    ) {
       probability += 0.15;
       factors.push('Clear pain points identified');
     }
 
     if (customerData.source === 'referral') {
-      probability += 0.10;
+      probability += 0.1;
       factors.push('Warm introduction');
     }
 
     if (breakdown.engagement > 7) {
-      probability += 0.10;
+      probability += 0.1;
       factors.push('High engagement score');
     }
 
@@ -503,7 +545,7 @@ export class CustomerScorer {
     return {
       probability: Math.min(probability, 1.0),
       confidence,
-      factors
+      factors,
     };
   }
 

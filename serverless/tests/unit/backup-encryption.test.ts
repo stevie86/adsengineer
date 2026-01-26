@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { EncryptionService } from '../services/encryption';
 
 const testSecret = 'test-backup-encryption-key';
@@ -17,7 +17,7 @@ describe('Backup Encryption Fail-Close', () => {
       expect(response.status).toBe(503);
       expect(response.status).toBe(503);
 
-      const body = await response.json() as any;
+      const body = (await response.json()) as any;
       expect(body.success).toBe(false);
       expect(body.error).toBe('backup_encryption_required');
       expect(body.code).toBe('BACKUP_ENCRYPTION_REQUIRED');
@@ -34,11 +34,11 @@ describe('Backup Encryption Fail-Close', () => {
 
       expect(response.status).toBe(503);
 
-      const body = await response.json() as any;
+      const body = (await response.json()) as any;
       expect(body.leads).toBeUndefined();
       expect(body.waitlist).toBeUndefined();
       expect(body.optimization_triggers).toBeUndefined();
-    expect(body.tables).toBeUndefined();
+      expect(body.tables).toBeUndefined();
       expect(body.counts).toBeUndefined();
       expect(body.exported_at).toBeUndefined();
       expect(body.encrypted).toBeUndefined();
@@ -51,7 +51,7 @@ describe('Backup Encryption Fail-Close', () => {
 
       expect(response.status).toBe(200);
 
-      const body = await response.json() as any;
+      const body = (await response.json()) as any;
       expect(body.success).toBe(true);
       expect(body.error).toBeUndefined();
       expect(body.exported_at).toBeDefined();
@@ -79,7 +79,7 @@ describe('Backup Encryption Fail-Close', () => {
 
       expect(response.status).toBe(200);
 
-      const body = await response.json() as any;
+      const body = (await response.json()) as any;
       expect(body.encrypted).toBeDefined();
       expect(body.encrypted.encrypted).toBeDefined();
       expect(body.encrypted.iv).toBeDefined();
@@ -100,7 +100,7 @@ describe('Backup Encryption Fail-Close', () => {
 
       expect(response.status).toBe(200);
 
-      const body = await response.json() as any;
+      const body = (await response.json()) as any;
       expect(body.leads).toBeDefined();
       expect(body.waitlist).toBeDefined();
       expect(body.optimization_triggers).toBeDefined();
@@ -111,7 +111,7 @@ describe('Backup Encryption Fail-Close', () => {
 
       expect(response.status).toBe(503);
 
-      const body = await response.json() as any;
+      const body = (await response.json()) as any;
       expect(body.error).toContain('BACKUP_ENCRYPTION_KEY not configured');
       expect(body.leads).toBeUndefined();
     });

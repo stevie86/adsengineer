@@ -134,7 +134,10 @@
       }
     },
     {
-      "includes": ["**/tests/unit/{oauth,custom-events,analytics,gdpr,status,tracking,waitlist}.test.ts", "**/tests/utils/**"],
+      "includes": [
+        "**/tests/unit/{oauth,custom-events,analytics,gdpr,status,tracking,waitlist}.test.ts",
+        "**/tests/utils/**"
+      ],
       "linter": {
         "rules": {
           "suspicious": {

@@ -66,19 +66,11 @@ export class GA4MeasurementClient {
     return `${this.getEndpoint()}?measurement_id=${this.measurementId}&api_secret=${this.apiSecret}`;
   }
 
-  async sendEvent(
-    event: GA4Event,
-    clientId?: string,
-    userId?: string
-  ): Promise<GA4Response> {
+  async sendEvent(event: GA4Event, clientId?: string, userId?: string): Promise<GA4Response> {
     return this.sendBatch([event], clientId, userId);
   }
 
-  async sendBatch(
-    events: GA4Event[],
-    clientId?: string,
-    userId?: string
-  ): Promise<GA4Response> {
+  async sendBatch(events: GA4Event[], clientId?: string, userId?: string): Promise<GA4Response> {
     if (events.length === 0) {
       throw new GA4MeasurementError('No events to send', 'NO_EVENTS');
     }
@@ -170,11 +162,11 @@ export class GA4MeasurementClient {
       if (error instanceof GA4MeasurementError) {
         if (attempt < MAX_RETRIES && this.shouldRetry(error)) {
           const delay = RETRY_DELAY_MS * Math.pow(2, attempt - 1);
-        logger.log('WARN', `GA4 request failed, retrying in ${delay}ms`, {
-          attempt,
-          max_retries: MAX_RETRIES,
-          error: error.message,
-        });
+          logger.log('WARN', `GA4 request failed, retrying in ${delay}ms`, {
+            attempt,
+            max_retries: MAX_RETRIES,
+            error: error.message,
+          });
 
           await this.sleep(delay);
           return this.retryRequest(url, payload, attempt + 1);
@@ -245,10 +237,7 @@ export async function createGA4Client(
   debugMode: boolean = false
 ): Promise<GA4MeasurementClient> {
   if (!measurementId || !apiSecret) {
-    throw new GA4MeasurementError(
-      'Missing GA4 configuration',
-      'MISSING_CONFIG'
-    );
+    throw new GA4MeasurementError('Missing GA4 configuration', 'MISSING_CONFIG');
   }
 
   return new GA4MeasurementClient(

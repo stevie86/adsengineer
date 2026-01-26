@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Hono } from 'hono';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { gdpr } from '../../src/routes/gdpr';
 
 describe('GDPR Routes', () => {
@@ -17,27 +17,27 @@ describe('GDPR Routes', () => {
       const requestData = {
         type: 'access',
         email: 'user@example.com',
-        requestId: 'req-123456'
+        requestId: 'req-123456',
       };
 
       vi.mock('../../src/middleware/auth', () => ({
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'user-123', role: 'user' });
           await next();
-        }
+        },
       }));
 
       vi.mock('../../src/services/logging', () => ({
-        logAuditEvent: vi.fn().mockResolvedValue(undefined)
+        logAuditEvent: vi.fn().mockResolvedValue(undefined),
       }));
 
       const response = await app.request('/api/v1/gdpr/data-request', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${mockToken}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${mockToken}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestData)
+        body: JSON.stringify(requestData),
       });
 
       expect(response.status).toBe(200);
@@ -51,23 +51,23 @@ describe('GDPR Routes', () => {
       const mockToken = 'valid.jwt.token';
       const invalidRequest = {
         type: 'invalid-type',
-        email: 'user@example.com'
+        email: 'user@example.com',
       };
 
       vi.mock('../../src/middleware/auth', () => ({
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'user-123', role: 'user' });
           await next();
-        }
+        },
       }));
 
       const response = await app.request('/api/v1/gdpr/data-request', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${mockToken}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${mockToken}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(invalidRequest)
+        body: JSON.stringify(invalidRequest),
       });
 
       expect(response.status).toBe(400);
@@ -80,23 +80,23 @@ describe('GDPR Routes', () => {
       const mockToken = 'valid.jwt.token';
       const invalidRequest = {
         type: 'access',
-        email: 'invalid-email'
+        email: 'invalid-email',
       };
 
       vi.mock('../../src/middleware/auth', () => ({
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'user-123', role: 'user' });
           await next();
-        }
+        },
       }));
 
       const response = await app.request('/api/v1/gdpr/data-request', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${mockToken}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${mockToken}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(invalidRequest)
+        body: JSON.stringify(invalidRequest),
       });
 
       expect(response.status).toBe(400);
@@ -112,27 +112,27 @@ describe('GDPR Routes', () => {
       const deleteRequest = {
         email: 'user@example.com',
         confirmation: true,
-        requestId: 'del-123456'
+        requestId: 'del-123456',
       };
 
       vi.mock('../../src/middleware/auth', () => ({
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'user-123', role: 'user' });
           await next();
-        }
+        },
       }));
 
       vi.mock('../../src/services/logging', () => ({
-        logAuditEvent: vi.fn().mockResolvedValue(undefined)
+        logAuditEvent: vi.fn().mockResolvedValue(undefined),
       }));
 
       const response = await app.request('/api/v1/gdpr/data-deletion', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${mockToken}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${mockToken}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(deleteRequest)
+        body: JSON.stringify(deleteRequest),
       });
 
       expect(response.status).toBe(200);
@@ -146,23 +146,23 @@ describe('GDPR Routes', () => {
       const mockToken = 'valid.jwt.token';
       const deleteRequest = {
         email: 'user@example.com',
-        confirmation: false
+        confirmation: false,
       };
 
       vi.mock('../../src/middleware/auth', () => ({
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'user-123', role: 'user' });
           await next();
-        }
+        },
       }));
 
       const response = await app.request('/api/v1/gdpr/data-deletion', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${mockToken}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${mockToken}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(deleteRequest)
+        body: JSON.stringify(deleteRequest),
       });
 
       expect(response.status).toBe(400);
@@ -181,7 +181,7 @@ describe('GDPR Routes', () => {
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'user-123', role: 'user' });
           await next();
-        }
+        },
       }));
 
       vi.mock('../../src/database/gdpr', () => ({
@@ -191,16 +191,16 @@ describe('GDPR Routes', () => {
           type: 'access',
           createdAt: '2026-01-12T10:00:00Z',
           completedAt: '2026-01-12T10:30:00Z',
-          downloadUrl: 'https://example.com/download/data.zip'
-        })
+          downloadUrl: 'https://example.com/download/data.zip',
+        }),
       }));
 
       const response = await app.request(`/api/v1/gdpr/request-status/${requestId}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${mockToken}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${mockToken}`,
+          'Content-Type': 'application/json',
+        },
       });
 
       expect(response.status).toBe(200);
@@ -220,19 +220,19 @@ describe('GDPR Routes', () => {
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'user-123', role: 'user' });
           await next();
-        }
+        },
       }));
 
       vi.mock('../../src/database/gdpr', () => ({
-        getRequestStatus: vi.fn().mockResolvedValue(null)
+        getRequestStatus: vi.fn().mockResolvedValue(null),
       }));
 
       const response = await app.request(`/api/v1/gdpr/request-status/${nonExistentRequestId}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${mockToken}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${mockToken}`,
+          'Content-Type': 'application/json',
+        },
       });
 
       expect(response.status).toBe(404);
@@ -246,7 +246,7 @@ describe('GDPR Routes', () => {
     it('should return privacy policy information', async () => {
       const response = await app.request('/api/v1/gdpr/privacy-policy', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(200);

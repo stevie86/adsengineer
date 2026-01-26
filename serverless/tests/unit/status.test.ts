@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Hono } from 'hono';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { status } from '../../src/routes/status';
 
 describe('Status Routes', () => {
@@ -22,14 +22,14 @@ describe('Status Routes', () => {
           services: {
             database: { status: 'healthy', responseTime: 45 },
             googleAds: { status: 'healthy', responseTime: 120 },
-            stripe: { status: 'healthy', responseTime: 85 }
-          }
-        })
+            stripe: { status: 'healthy', responseTime: 85 },
+          },
+        }),
       }));
 
       const response = await app.request('/api/v1/status', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(200);
@@ -51,14 +51,14 @@ describe('Status Routes', () => {
             averageResponseTime: 125,
             errorRate: 0.01,
             memoryUsage: { used: 512, total: 1024 },
-            cpuUsage: 45
-          }
-        })
+            cpuUsage: 45,
+          },
+        }),
       }));
 
       const response = await app.request('/api/v1/status', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(200);
@@ -74,7 +74,7 @@ describe('Status Routes', () => {
     it('should return simple health check for load balancers', async () => {
       const response = await app.request('/api/v1/status/health', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(200);
@@ -88,7 +88,7 @@ describe('Status Routes', () => {
     it('should return application version information', async () => {
       const response = await app.request('/api/v1/status/version', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(200);
@@ -104,7 +104,7 @@ describe('Status Routes', () => {
     it('should require admin authentication', async () => {
       const response = await app.request('/api/v1/status/metrics', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(401);
@@ -119,7 +119,7 @@ describe('Status Routes', () => {
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'admin-123', role: 'admin' });
           await next();
-        }
+        },
       }));
 
       vi.mock('../../src/services/api-monitor', () => ({
@@ -127,32 +127,32 @@ describe('Status Routes', () => {
           requests: {
             total: 1000000,
             last24h: 15000,
-            perMinute: 150
+            perMinute: 150,
           },
           errors: {
             total: 1000,
             last24h: 15,
-            rate: 0.001
+            rate: 0.001,
           },
           performance: {
             averageResponseTime: 125,
             p95ResponseTime: 250,
-            p99ResponseTime: 500
+            p99ResponseTime: 500,
           },
           resources: {
             memory: { used: 512, total: 1024, percentage: 50 },
             cpu: { average: 45, peak: 80 },
-            storage: { used: 1024, total: 10240, percentage: 10 }
-          }
-        })
+            storage: { used: 1024, total: 10240, percentage: 10 },
+          },
+        }),
       }));
 
       const response = await app.request('/api/v1/status/metrics', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${mockAdminToken}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${mockAdminToken}`,
+          'Content-Type': 'application/json',
+        },
       });
 
       expect(response.status).toBe(200);

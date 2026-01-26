@@ -1,9 +1,9 @@
 import { Hono } from 'hono';
-import type { AppEnv } from '../types';
 import { webhookRateLimit } from '../middleware/rate-limit';
 import { validateShopifyWebhook } from '../services/crypto';
-import { isValidGCLID, hashGCLID, redactGCLID } from '../utils/gclid';
 import { logger } from '../services/logging';
+import type { AppEnv } from '../types';
+import { hashGCLID, isValidGCLID, redactGCLID } from '../utils/gclid';
 
 export const shopifyRoutes = new Hono<AppEnv>();
 
@@ -115,10 +115,9 @@ async function findAgencyByDomain(db: any, shopDomain: string): Promise<any> {
 
   for (const agency of agencies.results || agencies) {
     try {
-      const config = typeof agency.config === 'string' 
-        ? JSON.parse(agency.config || '{}') 
-        : agency.config || {};
-      
+      const config =
+        typeof agency.config === 'string' ? JSON.parse(agency.config || '{}') : agency.config || {};
+
       if (config.shopify_domain === shopDomain) {
         return { ...agency, config };
       }
@@ -205,7 +204,7 @@ shopifyRoutes.post('/webhook', webhookRateLimit, async (c) => {
   const rawBody = await c.req.text();
 
   // Find agency by shop domain
-  const agency = await findAgencyByDomain(c.get('db'), shopDomain);
+  const agency = await findAgencyByDomain(c.env.DB, shopDomain);
   if (!agency) {
     logger.warn('Unknown shop domain', { shopDomain });
     return createErrorResponse(c, 'agency_not_found', 404);
@@ -253,7 +252,7 @@ shopifyRoutes.post('/webhook', webhookRateLimit, async (c) => {
     }
 
     // Store lead in database
-    const stored = await c.get('db').insertLead({
+    const stored = await c.env.DB.insertLead({
       org_id: agency.id,
       site_id: shopDomain,
       email: leadData.email,

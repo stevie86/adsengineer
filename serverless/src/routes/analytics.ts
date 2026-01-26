@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import type { AppEnv } from '../types';
+import type { TechnologyDetection } from './leads';
 
 const analyticsRoutes = new Hono<AppEnv>();
 
@@ -7,7 +8,7 @@ const analyticsRoutes = new Hono<AppEnv>();
 analyticsRoutes.get('/analytics/technologies', async (c) => {
   try {
     const auth = c.get('auth');
-    const db = c.get('db');
+    const db = c.env.DB;
     if (!auth) {
       return c.json({ error: 'Authentication required' }, 401);
     }
@@ -37,8 +38,7 @@ analyticsRoutes.get('/analytics/technologies', async (c) => {
       .all();
 
     // Technology detection methods
-    const detectionMethods = await db
-      .prepare(`
+    const detectionMethods = await c.env.DB.prepare(`
       SELECT
         detected_via,
         COUNT(*) as detection_count
@@ -51,8 +51,7 @@ analyticsRoutes.get('/analytics/technologies', async (c) => {
       .all();
 
     // Technology combinations (leads with multiple technologies)
-    const multiTechLeads = await db
-      .prepare(`
+    const multiTechLeads = await c.env.DB.prepare(`
       SELECT
         l.id,
         COUNT(lt.technology_id) as tech_count,

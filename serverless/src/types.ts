@@ -1,5 +1,5 @@
-import type { AuthContext } from './middleware/auth';
 import type { Database } from './database';
+import type { AuthContext } from './middleware/auth';
 
 export type Bindings = {
   ENVIRONMENT: string;

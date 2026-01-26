@@ -18,11 +18,7 @@ export function normalizeClickId(type: ClickIdType, value: unknown): string | nu
   }
 }
 
-export function normalizeClickIds(input: {
-  gclid?: unknown;
-  fbclid?: unknown;
-  ttclid?: unknown;
-}): {
+export function normalizeClickIds(input: { gclid?: unknown; fbclid?: unknown; ttclid?: unknown }): {
   gclid: string | null;
   fbclid: string | null;
   ttclid: string | null;

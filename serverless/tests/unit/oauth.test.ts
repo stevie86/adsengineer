@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Hono } from 'hono';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { oauth } from '../../src/routes/oauth';
 
 describe('OAuth Routes', () => {
@@ -14,15 +14,20 @@ describe('OAuth Routes', () => {
   describe('GET /api/v1/oauth/google', () => {
     it('should redirect to Google OAuth consent screen', async () => {
       vi.mock('../../src/services/oauth', () => ({
-        getGoogleAuthUrl: vi.fn().mockReturnValue(
-          'https://accounts.google.com/oauth/authorize?client_id=123&redirect_uri=...'
-        )
+        getGoogleAuthUrl: vi
+          .fn()
+          .mockReturnValue(
+            'https://accounts.google.com/oauth/authorize?client_id=123&redirect_uri=...'
+          ),
       }));
 
-      const response = await app.request('/api/v1/oauth/google?redirect_uri=http://localhost:3000/callback', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
+      const response = await app.request(
+        '/api/v1/oauth/google?redirect_uri=http://localhost:3000/callback',
+        {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
 
       expect(response.status).toBe(302);
       expect(response.headers.get('location')).toContain('accounts.google.com');
@@ -32,7 +37,7 @@ describe('OAuth Routes', () => {
     it('should require redirect_uri parameter', async () => {
       const response = await app.request('/api/v1/oauth/google', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(400);
@@ -44,7 +49,7 @@ describe('OAuth Routes', () => {
     it('should validate redirect URI', async () => {
       const response = await app.request('/api/v1/oauth/google?redirect_uri=http://malicious.com', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(400);
@@ -58,7 +63,7 @@ describe('OAuth Routes', () => {
     it('should handle Google OAuth callback with authorization code', async () => {
       const callbackData = {
         code: 'authorization-code-123',
-        state: 'state-456'
+        state: 'state-456',
       };
 
       vi.mock('../../src/services/oauth', () => ({
@@ -68,19 +73,19 @@ describe('OAuth Routes', () => {
           user: {
             id: 'google-user-123',
             email: 'user@example.com',
-            name: 'Test User'
-          }
-        })
+            name: 'Test User',
+          },
+        }),
       }));
 
       vi.mock('../../src/services/jwt', () => ({
-        createJWT: vi.fn().mockReturnValue('jwt-token-123')
+        createJWT: vi.fn().mockReturnValue('jwt-token-123'),
       }));
 
       const response = await app.request('/api/v1/oauth/google/callback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(callbackData)
+        body: JSON.stringify(callbackData),
       });
 
       expect(response.status).toBe(200);
@@ -95,13 +100,13 @@ describe('OAuth Routes', () => {
     it('should handle OAuth error response', async () => {
       const errorData = {
         error: 'access_denied',
-        error_description: 'User denied access'
+        error_description: 'User denied access',
       };
 
       const response = await app.request('/api/v1/oauth/google/callback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(errorData)
+        body: JSON.stringify(errorData),
       });
 
       expect(response.status).toBe(400);
@@ -112,13 +117,13 @@ describe('OAuth Routes', () => {
 
     it('should verify state parameter', async () => {
       const callbackData = {
-        code: 'authorization-code-123'
+        code: 'authorization-code-123',
       };
 
       const response = await app.request('/api/v1/oauth/google/callback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(callbackData)
+        body: JSON.stringify(callbackData),
       });
 
       expect(response.status).toBe(400);
@@ -131,20 +136,20 @@ describe('OAuth Routes', () => {
   describe('POST /api/v1/oauth/refresh', () => {
     it('should refresh access token', async () => {
       const refreshData = {
-        refreshToken: 'refresh-token-123'
+        refreshToken: 'refresh-token-123',
       };
 
       vi.mock('../../src/services/oauth', () => ({
         refreshAccessToken: vi.fn().mockResolvedValue({
           accessToken: 'new-access-token-456',
-          expiresIn: 3600
-        })
+          expiresIn: 3600,
+        }),
       }));
 
       const response = await app.request('/api/v1/oauth/refresh', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(refreshData)
+        body: JSON.stringify(refreshData),
       });
 
       expect(response.status).toBe(200);
@@ -157,13 +162,13 @@ describe('OAuth Routes', () => {
 
     it('should validate refresh token', async () => {
       const refreshData = {
-        refreshToken: ''
+        refreshToken: '',
       };
 
       const response = await app.request('/api/v1/oauth/refresh', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(refreshData)
+        body: JSON.stringify(refreshData),
       });
 
       expect(response.status).toBe(400);
@@ -174,17 +179,17 @@ describe('OAuth Routes', () => {
 
     it('should handle invalid refresh token', async () => {
       const refreshData = {
-        refreshToken: 'invalid-refresh-token'
+        refreshToken: 'invalid-refresh-token',
       };
 
       vi.mock('../../src/services/oauth', () => ({
-        refreshAccessToken: vi.fn().mockRejectedValue(new Error('Invalid refresh token'))
+        refreshAccessToken: vi.fn().mockRejectedValue(new Error('Invalid refresh token')),
       }));
 
       const response = await app.request('/api/v1/oauth/refresh', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(refreshData)
+        body: JSON.stringify(refreshData),
       });
 
       expect(response.status).toBe(401);
@@ -202,19 +207,19 @@ describe('OAuth Routes', () => {
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'user-123', role: 'user' });
           await next();
-        }
+        },
       }));
 
       vi.mock('../../src/services/oauth', () => ({
-        revokeTokens: vi.fn().mockResolvedValue(true)
+        revokeTokens: vi.fn().mockResolvedValue(true),
       }));
 
       const response = await app.request('/api/v1/oauth/logout', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${mockToken}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${mockToken}`,
+          'Content-Type': 'application/json',
+        },
       });
 
       expect(response.status).toBe(200);
@@ -226,7 +231,7 @@ describe('OAuth Routes', () => {
     it('should require authentication', async () => {
       const response = await app.request('/api/v1/oauth/logout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(401);
@@ -239,7 +244,7 @@ describe('OAuth Routes', () => {
     it('should list available OAuth providers', async () => {
       const response = await app.request('/api/v1/oauth/providers', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(200);

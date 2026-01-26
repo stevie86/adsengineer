@@ -1,4 +1,4 @@
-import { test, expect, describe, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { createDb } from '../src/database';
 import { agenciesRoutes } from '../src/routes/onboarding';
 

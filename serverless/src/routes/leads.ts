@@ -1,9 +1,7 @@
 import { Hono } from 'hono';
-import type { AppEnv } from '../types';
-import { queueConversions, ConversionData } from '../services/google-ads-queue';
 import { ConversionRouter } from '../services/conversion-router';
-
-
+import { ConversionData, queueConversions } from '../services/google-ads-queue';
+import type { AppEnv } from '../types';
 
 interface Lead {
   id?: string;
@@ -37,7 +35,7 @@ interface Lead {
   updated_at?: string;
 }
 
-interface TechnologyDetection {
+export interface TechnologyDetection {
   name: string;
   category: string;
   confidence: number;
@@ -64,7 +62,7 @@ export const leadsRoutes = new Hono<AppEnv>();
 leadsRoutes.post('/', async (c) => {
   try {
     const auth = c.get('auth');
-    const db = c.get('db');
+    const db = c.env.DB;
     if (!auth) {
       return c.json({ error: 'Authentication required' }, 401);
     }
@@ -126,7 +124,6 @@ leadsRoutes.post('/', async (c) => {
         total_leads: storedLeads.length,
         consented_leads: validLeads.length,
         denied_leads: storedLeads.length - validLeads.length,
-  
       };
       console.log('GDPR Consent Summary:', consentSummary);
     }
@@ -159,7 +156,7 @@ leadsRoutes.post('/', async (c) => {
 leadsRoutes.get('/', async (c) => {
   try {
     const auth = c.get('auth');
-    const db = c.get('db');
+    const db = c.env.DB;
     if (!auth) {
       return c.json({ error: 'Authentication required' }, 401);
     }
@@ -199,7 +196,7 @@ leadsRoutes.get('/', async (c) => {
 leadsRoutes.get('/:id', async (c) => {
   try {
     const auth = c.get('auth');
-    const db = c.get('db');
+    const db = c.env.DB;
     if (!auth) {
       return c.json({ error: 'Authentication required' }, 401);
     }
@@ -227,7 +224,7 @@ leadsRoutes.get('/:id', async (c) => {
 leadsRoutes.put('/:id', async (c) => {
   try {
     const auth = c.get('auth');
-    const db = c.get('db');
+    const db = c.env.DB;
     if (!auth) {
       return c.json({ error: 'Authentication required' }, 401);
     }

@@ -1,5 +1,5 @@
-import { SiteDetection, DetectionResult } from './technology-detector';
-import { SiteAnalysis, AdSpendAnalysis, WasteAnalysis } from './ecommerce-analysis';
+import { AdSpendAnalysis, SiteAnalysis, WasteAnalysis } from './ecommerce-analysis';
+import { DetectionResult, SiteDetection } from './technology-detector';
 
 export interface ConfidenceScore {
   overall: number;
@@ -37,9 +37,9 @@ export class ConfidenceScorer {
         advertising,
         tracking,
         technical,
-        data
+        data,
       },
-      factors: this.getConfidenceFactors(detection, analysis)
+      factors: this.getConfidenceFactors(detection, analysis),
     };
   }
 
@@ -86,12 +86,12 @@ export class ConfidenceScorer {
 
     let score = advertising.reduce((sum, a) => sum + a.confidence, 0) / advertising.length;
 
-    const googleAds = advertising.find(a => a.technology === 'google-ads');
+    const googleAds = advertising.find((a) => a.technology === 'google-ads');
     if (googleAds?.details?.hasConversionTracking) {
       score += 0.2;
     }
 
-    const metaAds = advertising.find(a => a.technology === 'meta-ads');
+    const metaAds = advertising.find((a) => a.technology === 'meta-ads');
     if (metaAds?.details?.hasPixel) {
       score += 0.1;
     }
@@ -161,7 +161,10 @@ export class ConfidenceScorer {
     return Math.min(score, 1);
   }
 
-  private getConfidenceFactors(detection: SiteDetection, analysis: SiteAnalysis): {
+  private getConfidenceFactors(
+    detection: SiteDetection,
+    analysis: SiteAnalysis
+  ): {
     positive: string[];
     negative: string[];
     uncertain: string[];
@@ -179,13 +182,17 @@ export class ConfidenceScorer {
     }
 
     if (detection.analytics.length > 0) {
-      positive.push(`Analytics detected: ${detection.analytics.map(a => a.technology).join(', ')}`);
+      positive.push(
+        `Analytics detected: ${detection.analytics.map((a) => a.technology).join(', ')}`
+      );
     } else {
       negative.push('No analytics platform detected');
     }
 
     if (detection.advertising.length > 0) {
-      positive.push(`Advertising platforms detected: ${detection.advertising.map(a => a.technology).join(', ')}`);
+      positive.push(
+        `Advertising platforms detected: ${detection.advertising.map((a) => a.technology).join(', ')}`
+      );
     } else {
       negative.push('No advertising platforms detected');
     }
@@ -223,7 +230,8 @@ export class ConfidenceScorer {
     }
 
     if (waste.categories.length > 0) {
-      const avgCategoryConfidence = waste.categories.reduce((sum, cat) => sum + cat.confidence, 0) / waste.categories.length;
+      const avgCategoryConfidence =
+        waste.categories.reduce((sum, cat) => sum + cat.confidence, 0) / waste.categories.length;
       confidence += avgCategoryConfidence * 0.3;
     }
 
@@ -242,13 +250,14 @@ export class ConfidenceScorer {
     }
 
     if (adSpend.platforms.length > 0) {
-      const avgPlatformConfidence = adSpend.platforms.reduce((sum, platform) => {
-        let platformConfidence = 0.5;
-        if (platform.conversions > 0) platformConfidence += 0.2;
-        if (platform.roas > 1) platformConfidence += 0.2;
-        if (platform.ctr > 0.01) platformConfidence += 0.1;
-        return sum + platformConfidence;
-      }, 0) / adSpend.platforms.length;
+      const avgPlatformConfidence =
+        adSpend.platforms.reduce((sum, platform) => {
+          let platformConfidence = 0.5;
+          if (platform.conversions > 0) platformConfidence += 0.2;
+          if (platform.roas > 1) platformConfidence += 0.2;
+          if (platform.ctr > 0.01) platformConfidence += 0.1;
+          return sum + platformConfidence;
+        }, 0) / adSpend.platforms.length;
       confidence += avgPlatformConfidence * 0.3;
     }
 

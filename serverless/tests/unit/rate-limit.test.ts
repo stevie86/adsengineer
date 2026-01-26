@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { webhookIpRateLimit, webhookShopRateLimit } from '../../src/middleware/rate-limit';
 
 // Mock KV namespace

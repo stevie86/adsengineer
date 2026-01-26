@@ -1,4 +1,4 @@
-import { chromium, Browser, BrowserContext, Page } from 'playwright';
+import { Browser, BrowserContext, chromium, Page } from 'playwright';
 
 let browser: Browser;
 let context: BrowserContext;
@@ -7,17 +7,17 @@ let page: Page;
 export async function setupE2E() {
   browser = await chromium.launch({
     headless: process.env.CI === 'true',
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
-  
+
   context = await browser.newContext({
     viewport: { width: 1280, height: 720 },
-    ignoreHTTPSErrors: true
+    ignoreHTTPSErrors: true,
   });
-  
-  page = await context.newPage();  
+
+  page = await context.newPage();
   await page.goto('http://localhost:3000');
-  
+
   (global as any).page = page;
   (global as any).context = context;
   (global as any).browser = browser;

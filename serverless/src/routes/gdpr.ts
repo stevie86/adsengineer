@@ -9,7 +9,7 @@ export const gdprRoutes = new Hono<AppEnv>();
 gdprRoutes.get('/data-request/:email', async (c) => {
   try {
     const email = c.req.param('email');
-    const db = c.get('db');
+    const db = c.env.DB;
 
     // Find all data associated with this email
     const leads = await db.prepare('SELECT * FROM leads WHERE email = ?').bind(email).all();
@@ -60,7 +60,7 @@ gdprRoutes.get('/data-request/:email', async (c) => {
 gdprRoutes.get('/data-export/:email', async (c) => {
   try {
     const email = c.req.param('email');
-    const db = c.get('db');
+    const db = c.env.DB;
 
     // Comprehensive data export
     const userData = {
@@ -122,7 +122,7 @@ gdprRoutes.put('/data-rectify/:email', async (c) => {
   try {
     const email = c.req.param('email');
     const updates = await c.req.json();
-    const db = c.get('db');
+    const db = c.env.DB;
 
     // Only allow updates to non-sensitive fields
     const allowedFields = ['vertical', 'status'];
@@ -164,7 +164,7 @@ gdprRoutes.put('/data-rectify/:email', async (c) => {
 gdprRoutes.delete('/data-erase/:email', async (c) => {
   try {
     const email = c.req.param('email');
-    const db = c.get('db');
+    const db = c.env.DB;
 
     // Start transaction for data deletion
     const leads = await db.prepare('SELECT id FROM leads WHERE email = ?').bind(email).all();
@@ -209,7 +209,7 @@ gdprRoutes.post('/restrict-processing/:email', async (c) => {
   try {
     const email = c.req.param('email');
     const { restrict } = await c.req.json(); // true to restrict, false to lift
-    const db = c.get('db');
+    const db = c.env.DB;
 
     const status = restrict ? 'restricted' : 'active';
 
@@ -240,7 +240,7 @@ gdprRoutes.post('/restrict-processing/:email', async (c) => {
 gdprRoutes.post('/consent-withdraw/:email', async (c) => {
   try {
     const email = c.req.param('email');
-    const db = c.get('db');
+    const db = c.env.DB;
 
     // Update consent status
     await db

@@ -1,4 +1,4 @@
-import { test, expect, describe, vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 
 // Mock fetch for API calls
 global.fetch = vi.fn();

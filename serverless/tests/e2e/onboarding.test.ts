@@ -1,4 +1,4 @@
-import { test, expect, describe } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
 describe('End-to-End Agency Onboarding', () => {
   test('complete agency registration and activation flow', () => {

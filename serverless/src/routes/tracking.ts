@@ -32,16 +32,20 @@ trackingRoutes.post('/page-visit', async (c) => {
     const isEntryPage = body.isEntryPage || false;
     const isExitPage = body.isExitPage || false;
 
-    const clientIP = c.req.header('CF-Connecting-IP') ||
-                    c.req.header('X-Forwarded-For') ||
-                    c.req.header('X-Real-IP') ||
-                    'unknown';
+    const clientIP =
+      c.req.header('CF-Connecting-IP') ||
+      c.req.header('X-Forwarded-For') ||
+      c.req.header('X-Real-IP') ||
+      'unknown';
 
     const country = c.req.header('CF-IPCountry') || 'unknown';
     const city = 'unknown';
 
-    const deviceType = userAgent?.toLowerCase().includes('mobile') ? 'mobile' :
-                      userAgent?.toLowerCase().includes('tablet') ? 'tablet' : 'desktop';
+    const deviceType = userAgent?.toLowerCase().includes('mobile')
+      ? 'mobile'
+      : userAgent?.toLowerCase().includes('tablet')
+        ? 'tablet'
+        : 'desktop';
 
     let browser = 'unknown';
     if (userAgent) {
@@ -75,11 +79,36 @@ trackingRoutes.post('/page-visit', async (c) => {
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `)
       .bind(
-        visitId, sessionId, userId, pageUrl, pageTitle, referrer, userAgent,
-        clientIP, country, city, deviceType, browser, os, screenResolution,
-        viewportSize, timeZone, language, utmSource, utmMedium, utmCampaign,
-        utmContent, utmTerm, gclid, fbclid, isEntryPage, isExitPage, timeOnPage,
-        scrollDepth, interactions, new Date().toISOString()
+        visitId,
+        sessionId,
+        userId,
+        pageUrl,
+        pageTitle,
+        referrer,
+        userAgent,
+        clientIP,
+        country,
+        city,
+        deviceType,
+        browser,
+        os,
+        screenResolution,
+        viewportSize,
+        timeZone,
+        language,
+        utmSource,
+        utmMedium,
+        utmCampaign,
+        utmContent,
+        utmTerm,
+        gclid,
+        fbclid,
+        isEntryPage,
+        isExitPage,
+        timeOnPage,
+        scrollDepth,
+        interactions,
+        new Date().toISOString()
       )
       .run();
 
@@ -100,10 +129,28 @@ trackingRoutes.post('/page-visit', async (c) => {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           `)
           .bind(
-            sessionId, userId, clientIP, userAgent, referrer, pageUrl,
-            browser, os, deviceType, country, city, screenResolution,
-            timeZone, language, utmSource, utmMedium, utmCampaign,
-            utmContent, utmTerm, gclid, fbclid, new Date().toISOString(),
+            sessionId,
+            userId,
+            clientIP,
+            userAgent,
+            referrer,
+            pageUrl,
+            browser,
+            os,
+            deviceType,
+            country,
+            city,
+            screenResolution,
+            timeZone,
+            language,
+            utmSource,
+            utmMedium,
+            utmCampaign,
+            utmContent,
+            utmTerm,
+            gclid,
+            fbclid,
+            new Date().toISOString(),
             new Date().toISOString()
           )
           .run();
@@ -148,15 +195,13 @@ trackingRoutes.get('/analytics/visits', async (c) => {
       .bind(limit, offset)
       .all();
 
-    const total = await db
-      .prepare('SELECT COUNT(*) as count FROM page_visits')
-      .first();
+    const total = await db.prepare('SELECT COUNT(*) as count FROM page_visits').first();
 
     return c.json({
       visits: visits.results || visits,
       total: total?.count || 0,
       limit,
-      offset
+      offset,
     });
   } catch (error) {
     console.error('Analytics fetch error:', error);

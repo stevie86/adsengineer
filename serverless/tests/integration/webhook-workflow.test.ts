@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { app } from '../src';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import app from '../src';
 
 describe('Webhook Processing Integration', () => {
   beforeEach(() => {
@@ -23,15 +23,15 @@ describe('Webhook Processing Integration', () => {
             product_id: 987654321,
             variant_id: 123456789,
             quantity: 2,
-            price: '75.00'
-          }
+            price: '75.00',
+          },
         ],
         customer: {
           id: 456789012,
           email: 'customer@example.com',
           first_name: 'John',
           last_name: 'Doe',
-          phone: '+1234567890'
+          phone: '+1234567890',
         },
         shipping_address: {
           first_name: 'John',
@@ -40,16 +40,16 @@ describe('Webhook Processing Integration', () => {
           city: 'New York',
           province: 'NY',
           country: 'US',
-          zip: '10001'
+          zip: '10001',
         },
         gateway: 'stripe',
-        financial_status: 'paid'
+        financial_status: 'paid',
       };
 
       const shopifyHmac = 'shopify-webhook-signature-123';
 
       vi.mock('../src/middleware/webhook', () => ({
-        verifyShopifyWebhook: vi.fn().mockReturnValue(true)
+        verifyShopifyWebhook: vi.fn().mockReturnValue(true),
       }));
 
       vi.mock('../src/services/shopify', () => ({
@@ -61,9 +61,9 @@ describe('Webhook Processing Integration', () => {
           customerData: {
             email: 'customer@example.com',
             totalOrders: 1,
-            lifetimeValue: 15000
-          }
-        })
+            lifetimeValue: 15000,
+          },
+        }),
       }));
 
       vi.mock('../src/services/custom-events', () => ({
@@ -76,21 +76,21 @@ describe('Webhook Processing Integration', () => {
           metadata: {
             orderId: 123456789,
             gateway: 'stripe',
-            customerEmail: 'customer@example.com'
-          }
-        })
+            customerEmail: 'customer@example.com',
+          },
+        }),
       }));
 
       vi.mock('../src/services/google-ads', () => ({
         uploadConversion: vi.fn().mockResolvedValue({
           success: true,
-          conversionId: 'gconv-789'
-        })
+          conversionId: 'gconv-789',
+        }),
       }));
 
       vi.mock('../src/services/logging', () => ({
         logWebhookEvent: vi.fn().mockResolvedValue(undefined),
-        logAuditEvent: vi.fn().mockResolvedValue(undefined)
+        logAuditEvent: vi.fn().mockResolvedValue(undefined),
       }));
 
       const response = await app.request('/api/v1/shopify/webhook', {
@@ -99,9 +99,9 @@ describe('Webhook Processing Integration', () => {
           'Content-Type': 'application/json',
           'X-Shopify-Hmac-Sha256': shopifyHmac,
           'X-Shopify-Topic': 'orders/create',
-          'X-Shopify-Shop-Domain': 'test-shop.myshopify.com'
+          'X-Shopify-Shop-Domain': 'test-shop.myshopify.com',
         },
-        body: JSON.stringify(shopifyOrderPayload)
+        body: JSON.stringify(shopifyOrderPayload),
       });
 
       expect(response.status).toBe(200);
@@ -128,13 +128,13 @@ describe('Webhook Processing Integration', () => {
         tax_exempt: false,
         tags: '',
         last_order_name: null,
-        currency: 'USD'
+        currency: 'USD',
       };
 
       const shopifyHmac = 'shopify-customer-signature-456';
 
       vi.mock('../src/middleware/webhook', () => ({
-        verifyShopifyWebhook: vi.fn().mockReturnValue(true)
+        verifyShopifyWebhook: vi.fn().mockReturnValue(true),
       }));
 
       vi.mock('../src/services/shopify', () => ({
@@ -142,8 +142,8 @@ describe('Webhook Processing Integration', () => {
           success: true,
           eventId: 'customer-event-123',
           customerCreated: true,
-          leadScore: 0.3
-        })
+          leadScore: 0.3,
+        }),
       }));
 
       vi.mock('../src/services/leads', () => ({
@@ -153,8 +153,8 @@ describe('Webhook Processing Integration', () => {
           source: 'shopify',
           status: 'new',
           leadScore: 0.3,
-          createdAt: new Date().toISOString()
-        })
+          createdAt: new Date().toISOString(),
+        }),
       }));
 
       const response = await app.request('/api/v1/shopify/webhook', {
@@ -163,9 +163,9 @@ describe('Webhook Processing Integration', () => {
           'Content-Type': 'application/json',
           'X-Shopify-Hmac-Sha256': shopifyHmac,
           'X-Shopify-Topic': 'customers/create',
-          'X-Shopify-Shop-Domain': 'test-shop.myshopify.com'
+          'X-Shopify-Shop-Domain': 'test-shop.myshopify.com',
         },
-        body: JSON.stringify(customerPayload)
+        body: JSON.stringify(customerPayload),
       });
 
       expect(response.status).toBe(200);
@@ -177,7 +177,7 @@ describe('Webhook Processing Integration', () => {
       const invalidPayload = { test: 'data' };
 
       vi.mock('../src/middleware/webhook', () => ({
-        verifyShopifyWebhook: vi.fn().mockReturnValue(false)
+        verifyShopifyWebhook: vi.fn().mockReturnValue(false),
       }));
 
       const response = await app.request('/api/v1/shopify/webhook', {
@@ -185,9 +185,9 @@ describe('Webhook Processing Integration', () => {
         headers: {
           'Content-Type': 'application/json',
           'X-Shopify-Hmac-Sha256': 'invalid-signature',
-          'X-Shopify-Topic': 'orders/create'
+          'X-Shopify-Topic': 'orders/create',
         },
-        body: JSON.stringify(invalidPayload)
+        body: JSON.stringify(invalidPayload),
       });
 
       expect(response.status).toBe(401);
@@ -210,20 +210,20 @@ describe('Webhook Processing Integration', () => {
             gclid: 'EAIaIQobChMI_789',
             utm_source: 'google',
             utm_medium: 'cpc',
-            utm_campaign: 'winter-sale'
+            utm_campaign: 'winter-sale',
           },
           tags: ['hot-lead', 'interested'],
           dateAdded: '2026-01-12T15:30:00Z',
-          lastActivity: '2026-01-12T15:35:00Z'
+          lastActivity: '2026-01-12T15:35:00Z',
         },
         locationId: 'location-789',
-        type: 'ContactCreated'
+        type: 'ContactCreated',
       };
 
       const ghlSignature = 'ghl-webhook-signature-123';
 
       vi.mock('../src/middleware/webhook', () => ({
-        verifyGHLWebhook: vi.fn().mockReturnValue(true)
+        verifyGHLWebhook: vi.fn().mockReturnValue(true),
       }));
 
       vi.mock('../src/services/ghl', () => ({
@@ -232,8 +232,8 @@ describe('Webhook Processing Integration', () => {
           leadId: 'lead-456',
           leadScore: 0.8,
           converted: false,
-          followUpRequired: true
-        })
+          followUpRequired: true,
+        }),
       }));
 
       vi.mock('../src/services/leads', () => ({
@@ -246,25 +246,25 @@ describe('Webhook Processing Integration', () => {
           gclid: 'EAIaIQobChMI_789',
           metadata: {
             locationId: 'location-789',
-            tags: ['hot-lead', 'interested']
-          }
-        })
+            tags: ['hot-lead', 'interested'],
+          },
+        }),
       }));
 
       vi.mock('../src/services/google-ads', () => ({
         uploadLeadConversion: vi.fn().mockResolvedValue({
           success: true,
-          conversionId: 'gconv-123'
-        })
+          conversionId: 'gconv-123',
+        }),
       }));
 
       const response = await app.request('/api/v1/ghl/webhook', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-GHL-Signature': ghlSignature
+          'X-GHL-Signature': ghlSignature,
         },
-        body: JSON.stringify(ghlContactPayload)
+        body: JSON.stringify(ghlContactPayload),
       });
 
       expect(response.status).toBe(200);
@@ -285,16 +285,16 @@ describe('Webhook Processing Integration', () => {
           probability: 75,
           expectedCloseDate: '2026-02-15',
           dateAdded: '2026-01-12T15:30:00Z',
-          lastUpdated: '2026-01-12T16:00:00Z'
+          lastUpdated: '2026-01-12T16:00:00Z',
         },
         locationId: 'location-789',
-        type: 'OpportunityCreated'
+        type: 'OpportunityCreated',
       };
 
       const ghlSignature = 'ghl-opp-signature-456';
 
       vi.mock('../src/middleware/webhook', () => ({
-        verifyGHLWebhook: vi.fn().mockReturnValue(true)
+        verifyGHLWebhook: vi.fn().mockReturnValue(true),
       }));
 
       vi.mock('../src/services/ghl', () => ({
@@ -302,8 +302,8 @@ describe('Webhook Processing Integration', () => {
           success: true,
           opportunityId: 'opp-123456',
           value: 15000,
-          stage: 'Qualified'
-        })
+          stage: 'Qualified',
+        }),
       }));
 
       vi.mock('../src/services/custom-events', () => ({
@@ -316,18 +316,18 @@ describe('Webhook Processing Integration', () => {
           metadata: {
             opportunityId: 'opp-123456',
             stage: 'Qualified',
-            probability: 75
-          }
-        })
+            probability: 75,
+          },
+        }),
       }));
 
       const response = await app.request('/api/v1/ghl/webhook', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-GHL-Signature': ghlSignature
+          'X-GHL-Signature': ghlSignature,
         },
-        body: JSON.stringify(ghlOpportunityPayload)
+        body: JSON.stringify(ghlOpportunityPayload),
       });
 
       expect(response.status).toBe(200);
@@ -343,31 +343,29 @@ describe('Webhook Processing Integration', () => {
         id: 123456789,
         email: 'customer@example.com',
         total_price: '150.00',
-        currency: 'USD'
+        currency: 'USD',
       };
 
       const shopifyHmac = 'shopify-webhook-signature-123';
 
       vi.mock('../src/middleware/webhook', () => ({
-        verifyShopifyWebhook: vi.fn().mockReturnValue(true)
+        verifyShopifyWebhook: vi.fn().mockReturnValue(true),
       }));
 
       vi.mock('../src/services/shopify', () => ({
-        processShopifyOrder: vi.fn().mockRejectedValue(
-          new Error('Database connection timeout')
-        )
+        processShopifyOrder: vi.fn().mockRejectedValue(new Error('Database connection timeout')),
       }));
 
       vi.mock('../src/services/logging', () => ({
         logError: vi.fn().mockResolvedValue(undefined),
-        logWebhookEvent: vi.fn().mockResolvedValue(undefined)
+        logWebhookEvent: vi.fn().mockResolvedValue(undefined),
       }));
 
       vi.mock('../src/services/queue', () => ({
         addToQueue: vi.fn().mockResolvedValue({
           success: true,
-          queueId: 'retry-123'
-        })
+          queueId: 'retry-123',
+        }),
       }));
 
       const response = await app.request('/api/v1/shopify/webhook', {
@@ -375,9 +373,9 @@ describe('Webhook Processing Integration', () => {
         headers: {
           'Content-Type': 'application/json',
           'X-Shopify-Hmac-Sha256': shopifyHmac,
-          'X-Shopify-Topic': 'orders/create'
+          'X-Shopify-Topic': 'orders/create',
         },
-        body: JSON.stringify(shopifyOrderPayload)
+        body: JSON.stringify(shopifyOrderPayload),
       });
 
       expect(response.status).toBe(202);
@@ -393,13 +391,13 @@ describe('Webhook Processing Integration', () => {
         calculateBackoffDelay: vi.fn().mockReturnValue(16000),
         scheduleRetry: vi.fn().mockResolvedValue({
           success: true,
-          nextAttempt: new Date(Date.now() + 16000).toISOString()
-        })
+          nextAttempt: new Date(Date.now() + 16000).toISOString(),
+        }),
       }));
 
       const response = await app.request('/api/v1/webhook/retry/queue-123', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(200);

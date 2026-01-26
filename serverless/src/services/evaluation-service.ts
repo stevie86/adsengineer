@@ -14,7 +14,7 @@ evaluation.get('/', (c) => {
   return c.json({
     success: true,
     message: 'Evaluation service is running',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -22,7 +22,7 @@ evaluation.get('/', (c) => {
 evaluation.post('/evaluate', async (c) => {
   const db = c.get('db');
   const data = await c.req.json();
-  
+
   try {
     const customer = await db
       .prepare('SELECT first_name, last_name FROM customers WHERE id = ?')
@@ -34,16 +34,18 @@ evaluation.post('/evaluate', async (c) => {
       message: `Evaluation completed for customer ${customer.first_name || 'Unknown'}`,
       insights: {
         customer_id: data.customer_id,
-        name: customer.first_name || 'Unknown'
-      }
+        name: customer.first_name || 'Unknown',
+      },
     });
-
   } catch (error) {
     console.error('Simple evaluation error:', error);
-    return c.json({
-      success: false,
-      message: `Failed to evaluate customer: ${error.message}`
-    }, 500);
+    return c.json(
+      {
+        success: false,
+        message: `Failed to evaluate customer: ${error.message}`,
+      },
+      500
+    );
   }
 });
 

@@ -25,8 +25,8 @@ export class TechnologyDetector {
   async analyzeSite(url: string): Promise<SiteDetection> {
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-      }
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      },
     });
 
     if (!response.ok) {
@@ -44,35 +44,48 @@ export class TechnologyDetector {
       tracking: await this.detectTracking(html, headers),
       performance: await this.detectPerformance(html, headers),
       security: await this.detectSecurity(html, headers),
-      overallConfidence: 0
+      overallConfidence: 0,
     };
   }
 
-  private async detectPlatform(html: string, headers: Record<string, string>): Promise<DetectionResult> {
+  private async detectPlatform(
+    html: string,
+    headers: Record<string, string>
+  ): Promise<DetectionResult> {
     const detections: DetectionResult[] = [];
 
     for (const [platform, patterns] of Object.entries(this.patterns)) {
-      if (platform === 'shopify' || platform === 'woocommerce' || platform === 'magento' || platform === 'bigcommerce') {
+      if (
+        platform === 'shopify' ||
+        platform === 'woocommerce' ||
+        platform === 'magento' ||
+        platform === 'bigcommerce'
+      ) {
         const confidence = this.calculateConfidence(html, headers, patterns);
         if (confidence > 0.3) {
           detections.push({
             technology: platform,
             confidence,
             evidence: this.getEvidence(html, headers, patterns),
-            version: this.extractVersion(html, patterns)
+            version: this.extractVersion(html, patterns),
           });
         }
       }
     }
 
-    return detections.length > 0 ? detections[0] : {
-      technology: 'unknown',
-      confidence: 0,
-      evidence: []
-    };
+    return detections.length > 0
+      ? detections[0]
+      : {
+          technology: 'unknown',
+          confidence: 0,
+          evidence: [],
+        };
   }
 
-  private async detectAnalytics(html: string, headers: Record<string, string>): Promise<DetectionResult[]> {
+  private async detectAnalytics(
+    html: string,
+    headers: Record<string, string>
+  ): Promise<DetectionResult[]> {
     const detections: DetectionResult[] = [];
 
     if (this.hasPattern(html, this.patterns.googleAnalytics)) {
@@ -84,15 +97,18 @@ export class TechnologyDetector {
         details: {
           hasGtag: html.includes('gtag('),
           hasDataLayer: html.includes('dataLayer'),
-          hasEcommerce: html.includes('ecommerce') || html.includes('purchase')
-        }
+          hasEcommerce: html.includes('ecommerce') || html.includes('purchase'),
+        },
       });
     }
 
     return detections;
   }
 
-  private async detectAdvertising(html: string, headers: Record<string, string>): Promise<DetectionResult[]> {
+  private async detectAdvertising(
+    html: string,
+    headers: Record<string, string>
+  ): Promise<DetectionResult[]> {
     const detections: DetectionResult[] = [];
 
     if (this.hasPattern(html, this.patterns.googleAds)) {
@@ -103,8 +119,8 @@ export class TechnologyDetector {
         details: {
           hasConversionTracking: html.includes('google_conversion'),
           hasGCLID: html.includes('gclid'),
-          hasEnhancedEcommerce: html.includes('enhanced_ecommerce')
-        }
+          hasEnhancedEcommerce: html.includes('enhanced_ecommerce'),
+        },
       });
     }
 
@@ -116,8 +132,8 @@ export class TechnologyDetector {
         details: {
           hasPixel: html.includes('fbevents'),
           hasCAPI: html.includes('facebook.com/tr'),
-          hasFBCLID: html.includes('fbclid')
-        }
+          hasFBCLID: html.includes('fbclid'),
+        },
       });
     }
 
@@ -129,15 +145,18 @@ export class TechnologyDetector {
         details: {
           hasPixel: html.includes('ttq'),
           hasTTCLID: html.includes('ttclid'),
-          hasWebEvents: html.includes('tiktok')
-        }
+          hasWebEvents: html.includes('tiktok'),
+        },
       });
     }
 
     return detections;
   }
 
-  private async detectTracking(html: string, headers: Record<string, string>): Promise<DetectionResult[]> {
+  private async detectTracking(
+    html: string,
+    headers: Record<string, string>
+  ): Promise<DetectionResult[]> {
     const detections: DetectionResult[] = [];
 
     if (html.includes('dataLayer')) {
@@ -148,8 +167,8 @@ export class TechnologyDetector {
         details: {
           hasEcommerceEvents: html.includes('ecommerce'),
           hasUserTracking: html.includes('user_id'),
-          hasProductData: html.includes('product_id')
-        }
+          hasProductData: html.includes('product_id'),
+        },
       });
     }
 
@@ -160,22 +179,25 @@ export class TechnologyDetector {
         evidence: ['Consent management detected'],
         details: {
           hasGDPRCompliance: html.includes('gdpr'),
-          hasCookieBanner: html.includes('cookie')
-        }
+          hasCookieBanner: html.includes('cookie'),
+        },
       });
     }
 
     return detections;
   }
 
-  private async detectPerformance(html: string, headers: Record<string, string>): Promise<DetectionResult[]> {
+  private async detectPerformance(
+    html: string,
+    headers: Record<string, string>
+  ): Promise<DetectionResult[]> {
     const detections: DetectionResult[] = [];
 
     if (html.includes('rel="preload"')) {
       detections.push({
         technology: 'resource-preloading',
         confidence: 0.7,
-        evidence: ['Resource preloading detected']
+        evidence: ['Resource preloading detected'],
       });
     }
 
@@ -183,21 +205,24 @@ export class TechnologyDetector {
       detections.push({
         technology: 'script-optimization',
         confidence: 0.6,
-        evidence: ['Async/defer scripts detected']
+        evidence: ['Async/defer scripts detected'],
       });
     }
 
     return detections;
   }
 
-  private async detectSecurity(html: string, headers: Record<string, string>): Promise<DetectionResult[]> {
+  private async detectSecurity(
+    html: string,
+    headers: Record<string, string>
+  ): Promise<DetectionResult[]> {
     const detections: DetectionResult[] = [];
 
     if (headers['x-frame-options']) {
       detections.push({
         technology: 'clickjacking-protection',
         confidence: 0.9,
-        evidence: ['X-Frame-Options header present']
+        evidence: ['X-Frame-Options header present'],
       });
     }
 
@@ -205,35 +230,47 @@ export class TechnologyDetector {
       detections.push({
         technology: 'csp',
         confidence: 0.9,
-        evidence: ['Content-Security-Policy header present']
+        evidence: ['Content-Security-Policy header present'],
       });
     }
 
     return detections;
   }
 
-  private calculateConfidence(html: string, headers: Record<string, string>, patterns: any): number {
+  private calculateConfidence(
+    html: string,
+    headers: Record<string, string>,
+    patterns: any
+  ): number {
     let confidence = 0;
     let totalChecks = 0;
 
     if (patterns.scripts) {
       totalChecks += patterns.scripts.length;
-      confidence += patterns.scripts.filter((script: string) => html.includes(script)).length / patterns.scripts.length;
+      confidence +=
+        patterns.scripts.filter((script: string) => html.includes(script)).length /
+        patterns.scripts.length;
     }
 
     if (patterns.meta) {
       totalChecks += patterns.meta.length;
-      confidence += patterns.meta.filter((meta: string) => html.includes(meta) || headers[meta]).length / patterns.meta.length;
+      confidence +=
+        patterns.meta.filter((meta: string) => html.includes(meta) || headers[meta]).length /
+        patterns.meta.length;
     }
 
     if (patterns.domains) {
       totalChecks += patterns.domains.length;
-      confidence += patterns.domains.filter((domain: string) => html.includes(domain)).length / patterns.domains.length;
+      confidence +=
+        patterns.domains.filter((domain: string) => html.includes(domain)).length /
+        patterns.domains.length;
     }
 
     if (patterns.cookies) {
       totalChecks += patterns.cookies.length;
-      confidence += patterns.cookies.filter((cookie: string) => html.includes(cookie)).length / patterns.cookies.length;
+      confidence +=
+        patterns.cookies.filter((cookie: string) => html.includes(cookie)).length /
+        patterns.cookies.length;
     }
 
     return totalChecks > 0 ? confidence / totalChecks : 0;

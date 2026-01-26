@@ -130,9 +130,7 @@ statusRoutes.get('/metrics', async (c) => {
   }
 });
 
-async function checkDatabaseHealth(
-  db: D1Database
-): Promise<{
+async function checkDatabaseHealth(db: D1Database): Promise<{
   status: 'healthy' | 'degraded' | 'error';
   message: string;
   response_time_ms: number;

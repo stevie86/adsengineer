@@ -34,7 +34,8 @@ async function computeHMAC(data: string, secret: string): Promise<string> {
   );
 
   const signature = await crypto.subtle.sign('HMAC', key, dataBytes);
-  return btoa(String.fromCharCode(...new Uint8Array(signature)));
+  const signatureB64 = btoa(String.fromCharCode(...new Uint8Array(signature)));
+  return signatureB64.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 }
 
 /**
@@ -55,7 +56,7 @@ function timingSafeEqual(a: string, b: string): boolean {
  * Verify JWT signature and decode payload
  * Returns null if signature is invalid
  */
-  async function verifyAndDecodeJWT(token: string, secret: string): Promise<JWTPayload | null> {
+async function verifyAndDecodeJWT(token: string, secret: string): Promise<JWTPayload | null> {
   try {
     const parts = token.split('.');
     if (parts.length !== 3) return null;

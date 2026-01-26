@@ -14,7 +14,7 @@ app.get('/', (c) => {
       endpoints: {
         evaluate: 'POST /api/v1/evaluate',
         status: 'GET /api/v1/evaluate/status/:jobId',
-        templates: 'GET /api/v1/evaluate/templates'
+        templates: 'GET /api/v1/evaluate/templates',
       },
       capabilities: [
         'E-commerce platform detection',
@@ -22,10 +22,10 @@ app.get('/', (c) => {
         'Ad spend waste detection',
         'Optimization recommendations',
         'Confidence scoring',
-        'ROI calculations'
+        'ROI calculations',
       ],
-      documentation: '/api/docs'
-    }
+      documentation: '/api/docs',
+    },
   });
 });
 
@@ -41,13 +41,13 @@ app.get('/api/docs', (c) => {
           description: 'Analyze e-commerce site for ad optimization opportunities',
           parameters: {
             url: 'Website URL to analyze',
-            adSpend: 'Monthly ad spend data by platform'
+            adSpend: 'Monthly ad spend data by platform',
           },
-          response: 'Complete evaluation with waste detection and recommendations'
+          response: 'Complete evaluation with waste detection and recommendations',
         },
         technologyDetection: {
           supported: ['Shopify', 'WooCommerce', 'Magento', 'BigCommerce', 'Custom'],
-          confidence: 'Confidence score based on detected patterns'
+          confidence: 'Confidence score based on detected patterns',
         },
         wasteDetection: {
           categories: [
@@ -55,12 +55,12 @@ app.get('/api/docs', (c) => {
             'Incorrect attribution',
             'Poor targeting',
             'Technical issues',
-            'Budget drift'
+            'Budget drift',
           ],
-          calculations: 'Based on conversion value and ad spend analysis'
-        }
-      }
-    }
+          calculations: 'Based on conversion value and ad spend analysis',
+        },
+      },
+    },
   });
 });
 

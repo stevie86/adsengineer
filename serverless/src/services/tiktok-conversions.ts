@@ -43,7 +43,7 @@ export class TikTokConversionsAPI {
   async uploadConversions(conversions: TikTokConversionData[]): Promise<TikTokConversionResult> {
     const url = 'https://business-api.tiktok.com/open_api/v1.3/event/upload/';
 
-    const eventData = conversions.map(conversion => ({
+    const eventData = conversions.map((conversion) => ({
       event_type: conversion.event_name || 'CustomEvent',
       event_time: conversion.event_time || Math.floor(Date.now() / 1000),
       properties: {
@@ -56,29 +56,29 @@ export class TikTokConversionsAPI {
         user_data: conversion.user_data || {},
         custom_data: conversion.custom_data || {},
         test_event: conversion.event_name?.startsWith('test_') || false,
-        ...conversion.custom_data
+        ...conversion.custom_data,
       },
       context: {
         ad: {
-          callback: conversion.event_time + 86400
-        }
-      }
+          callback: conversion.event_time + 86400,
+        },
+      },
     }));
 
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.accessToken}`,
+          Authorization: `Bearer ${this.accessToken}`,
           'Content-Type': 'application/json',
-          'Access-Token': this.accessToken
+          'Access-Token': this.accessToken,
         },
         body: JSON.stringify({
           app_id: this.appId,
           pixel_code: this.appId,
           event_data: {
             batch: [
-              ...eventData.map(event => ({
+              ...eventData.map((event) => ({
                 event: 'CompletePayment',
                 event_time: event.event_time || Math.floor(Date.now() / 1000),
                 properties: {
@@ -91,17 +91,17 @@ export class TikTokConversionsAPI {
                   user_data: event.user_data || {},
                   custom_data: event.custom_data || {},
                   test_event: event.event_name?.startsWith('test_') || false,
-                  ...event.custom_data
+                  ...event.custom_data,
                 },
                 context: {
                   ad: {
-                    callback: event.event_time + 86400
-                  }
-                }
-              }))
-            ]
-          }
-        })
+                    callback: event.event_time + 86400,
+                  },
+                },
+              })),
+            ],
+          },
+        }),
       });
 
       if (!response.ok) {
@@ -116,13 +116,13 @@ export class TikTokConversionsAPI {
         events_received: conversions.length,
         events_processed: result.data?.event_response?.received_number_of_events || 0,
         errors: [],
-        job_id: `tiktok_batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+        job_id: `tiktok_batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       };
     } catch (error) {
       console.error('TikTok conversion upload failed:', error);
       return {
         success: false,
-        errors: [{ code: 500, message: error.message }]
+        errors: [{ code: 500, message: error.message }],
       };
     }
   }
@@ -134,15 +134,15 @@ export class TikTokConversionsAPI {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.accessToken}`,
+          Authorization: `Bearer ${this.accessToken}`,
           'Content-Type': 'application/json',
-          'Access-Token': this.accessToken
+          'Access-Token': this.accessToken,
         },
         body: JSON.stringify({
           app_id: this.appId,
           pixel_code: this.appId,
-          job_id: jobId
-        })
+          job_id: jobId,
+        }),
       });
 
       if (!response.ok) {

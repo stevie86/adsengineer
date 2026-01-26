@@ -8,6 +8,10 @@ const PUBLIC_PATHS = [
   '/snippet.js',
   '/openapi.json',
   '/docs',
+  '/api/v1/woocommerce/info',
+  '/api/v1/woocommerce/download',
+  '/api/v1/woocommerce/zip',
+  '/api/v1/shopify/info',
 ] as const;
 
 // SECURITY: Webhook paths use HMAC signature auth, not JWT
@@ -18,7 +22,7 @@ const WEBHOOK_PATHS = [
 ] as const;
 
 function matchesPath(path: string, patterns: readonly string[]): boolean {
-  return patterns.some(pattern => {
+  return patterns.some((pattern) => {
     if (pattern.endsWith('*')) {
       return path.startsWith(pattern.slice(0, -1));
     }
@@ -34,13 +38,13 @@ function matchesPath(path: string, patterns: readonly string[]): boolean {
 export const devGuardMiddleware = () => {
   return async (c: Context<{ Bindings: Bindings }>, next: Next) => {
     const environment = c.env.ENVIRONMENT || 'development';
-    
+
     if (environment === 'production') {
       return next();
     }
 
     const path = new URL(c.req.url).pathname;
-    
+
     if (matchesPath(path, PUBLIC_PATHS) || matchesPath(path, WEBHOOK_PATHS)) {
       return next();
     }
@@ -65,7 +69,7 @@ export const devGuardMiddleware = () => {
 export const devLoggingMiddleware = () => {
   return async (c: Context<{ Bindings: Bindings }>, next: Next) => {
     const environment = c.env.ENVIRONMENT || 'development';
-    
+
     if (environment === 'production') {
       return next();
     }
@@ -73,14 +77,14 @@ export const devLoggingMiddleware = () => {
     const start = Date.now();
     const method = c.req.method;
     const path = new URL(c.req.url).pathname;
-    
+
     console.log(`[${environment.toUpperCase()}] ${method} ${path} - started`);
 
     await next();
 
     const duration = Date.now() - start;
     const status = c.res.status;
-    
+
     console.log(`[${environment.toUpperCase()}] ${method} ${path} - ${status} (${duration}ms)`);
   };
 };

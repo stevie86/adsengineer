@@ -1,5 +1,5 @@
-import { test, expect, describe } from 'vitest';
 import { createId } from '@paralleldrive/cuid2';
+import { describe, expect, test } from 'vitest';
 
 describe('Agency Onboarding API', () => {
   describe('Agency Registration', () => {

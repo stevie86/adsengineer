@@ -1,4 +1,4 @@
-import { test, expect, describe, vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 
 // Mock Stripe
 vi.mock('stripe', () => ({

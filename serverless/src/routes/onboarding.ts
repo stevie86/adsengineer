@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
-import type { AppEnv } from '../types';
 import { gclidSnippet, gclidSnippetReadable } from '../snippet';
+import type { AppEnv } from '../types';
 
 export const onboardingRoutes = new Hono<AppEnv>();
 
@@ -336,13 +336,14 @@ onboardingRoutes.post('/site-setup', async (c) => {
       return c.json({ error: 'Customer not found' }, 404);
     }
 
-    const sgtmConfig = attributionMode === 'sgtm' && body.sgtm_container_url && body.measurement_id
-      ? JSON.stringify({
-          container_url: body.sgtm_container_url,
-          measurement_id: body.measurement_id,
-          api_secret: body.api_secret || null,
-        })
-      : null;
+    const sgtmConfig =
+      attributionMode === 'sgtm' && body.sgtm_container_url && body.measurement_id
+        ? JSON.stringify({
+            container_url: body.sgtm_container_url,
+            measurement_id: body.measurement_id,
+            api_secret: body.api_secret || null,
+          })
+        : null;
 
     await db
       .prepare(`
@@ -362,9 +363,10 @@ onboardingRoutes.post('/site-setup', async (c) => {
       )
       .run();
 
-    const apiBaseUrl = c.env.ENVIRONMENT === 'production'
-      ? 'https://api.adsengineer.cloud'
-      : 'https://adsengineer-cloud-staging.adsengineer.workers.dev';
+    const apiBaseUrl =
+      c.env.ENVIRONMENT === 'production'
+        ? 'https://api.adsengineer.cloud'
+        : 'https://adsengineer-cloud-staging.adsengineer.workers.dev';
 
     const snippetUrl = `${apiBaseUrl}/api/v1/onboarding/snippet.js`;
     const webhookUrl = `${apiBaseUrl}/api/v1/shopify/webhook`;
@@ -459,7 +461,9 @@ onboardingRoutes.get('/site-setup/:customerId', async (c) => {
 
   try {
     const customer = await db
-      .prepare('SELECT id, email, company_name, website, attribution_mode, sgtm_config, ga4_measurement_id, client_tier FROM customers WHERE id = ?')
+      .prepare(
+        'SELECT id, email, company_name, website, attribution_mode, sgtm_config, ga4_measurement_id, client_tier FROM customers WHERE id = ?'
+      )
       .bind(customerId)
       .first<{
         id: string;

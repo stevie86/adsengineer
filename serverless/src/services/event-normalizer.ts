@@ -146,9 +146,7 @@ export function normalizeShopifyEvent(webhook: ShopifyWebhook): NormalizedEvent 
   };
 }
 
-export function normalizeWooCommerceEvent(
-  webhook: WooCommerceWebhook
-): NormalizedEvent {
+export function normalizeWooCommerceEvent(webhook: WooCommerceWebhook): NormalizedEvent {
   const eventTimeSeconds = resolveEventTimeSeconds({
     timestamp: webhook.date_created,
   });
@@ -184,9 +182,7 @@ export function normalizeWooCommerceEvent(
   };
 }
 
-export function normalizeCustomEvent(
-  customEvent: CustomEvent
-): NormalizedEvent {
+export function normalizeCustomEvent(customEvent: CustomEvent): NormalizedEvent {
   const eventTimeSeconds = resolveEventTimeSeconds({
     event_time: customEvent.event_time,
     timestamp: customEvent.timestamp,
@@ -237,9 +233,7 @@ export function toGA4Event(normalized: NormalizedEvent): GA4Event {
   return event;
 }
 
-export function normalizeEvent(
-  event: ShopifyWebhook | WooCommerceWebhook | CustomEvent
-): GA4Event {
+export function normalizeEvent(event: ShopifyWebhook | WooCommerceWebhook | CustomEvent): GA4Event {
   let normalized: NormalizedEvent;
 
   if ('topic' in event) {

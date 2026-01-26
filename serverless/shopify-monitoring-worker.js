@@ -14,15 +14,15 @@ const CLIENTS = [
     url: 'https://mycannaby.de',
     siteId: 'mycannaby-687f1af9',
     snippetUrl: 'https://adsengineer-cloud.adsengineer.workers.dev/snippet.js',
-    checkInterval: 300000
+    checkInterval: 300000,
   },
   {
     name: 'Example Shop 2',
     url: 'https://example-shop2.com',
     siteId: 'example-shop-2-abc123',
     snippetUrl: 'https://adsengineer-cloud.adsengineer.workers.dev/snippet.js',
-    checkInterval: 300000
-  }
+    checkInterval: 300000,
+  },
   // Add more clients here...
 ];
 
@@ -35,8 +35,8 @@ const FIREWALL_GUIDE = {
     '2. Add AdsEngineer to IP/domain allowlist',
     '3. Configure rate limiting exemptions',
     '4. Use specific authentication headers',
-    '5. Implement request signature validation'
-  ]
+    '5. Implement request signature validation',
+  ],
 };
 
 // Verbose logging configuration - Cloudflare Workers don't have process.env
@@ -47,7 +47,7 @@ const LOG_LEVELS = {
   ERROR: 0,
   WARN: 1,
   INFO: 2,
-  DEBUG: 3
+  DEBUG: 3,
 };
 
 const CURRENT_LOG_LEVEL = VERBOSE_LOGGING ? LOG_LEVELS.DEBUG : LOG_LEVELS.INFO;
@@ -57,12 +57,13 @@ function log(level, message, data = null) {
   if (LOG_LEVELS[level] > CURRENT_LOG_LEVEL) return;
 
   const timestamp = new Date().toISOString();
-  const levelEmoji = {
-    ERROR: '❌',
-    WARN: '⚠️',
-    INFO: 'ℹ️',
-    DEBUG: '🔍'
-  }[level] || '📝';
+  const levelEmoji =
+    {
+      ERROR: '❌',
+      WARN: '⚠️',
+      INFO: 'ℹ️',
+      DEBUG: '🔍',
+    }[level] || '📝';
 
   const logMessage = `${levelEmoji} [${timestamp}] ${level}: ${message}`;
 
@@ -87,8 +88,7 @@ async function checkAllClients() {
   // Detect if running in production vs localhost for testing
   const isLocalhost =
     typeof self !== 'undefined' &&
-    (self.location.hostname === 'localhost' ||
-    self.location.hostname.includes('127.0.0.1'));
+    (self.location.hostname === 'localhost' || self.location.hostname.includes('127.0.0.1'));
 
   log('INFO', `🌍 Monitoring mode: ${isLocalhost ? 'LOCALHOST TESTING' : 'PRODUCTION'}`);
   log('INFO', '🌍 Checking all client connectivity and firewall awareness...');
@@ -117,7 +117,8 @@ async function checkAllClients() {
         snippet: snippetStatus,
         tracking: trackingStatus,
         firewall: firewallStatus,
-        overall: snippetStatus.hasCorrectSnippet && trackingStatus.success && !firewallStatus.isBlocked
+        overall:
+          snippetStatus.hasCorrectSnippet && trackingStatus.success && !firewallStatus.isBlocked,
       });
 
       log('INFO', `   ${client.name}: ${snippetStatus.hasSnippet ? '✅' : '❌'} Snippet`);
@@ -128,32 +129,31 @@ async function checkAllClients() {
         log('DEBUG', `Detailed results for ${client.name}:`, {
           snippet: snippetStatus,
           tracking: trackingStatus,
-          firewall: firewallStatus
+          firewall: firewallStatus,
         });
       }
-
     } catch (error) {
       log('ERROR', `${client.name} check failed:`, error.message);
       results.push({
         client: client.name,
         url: client.url,
         error: error.message,
-        overall: false
+        overall: false,
       });
     }
   }
 
   log('INFO', '\n📊 MONITORING SUMMARY');
   log('INFO', '================================');
-  const operationalClients = results.filter(r => r.overall);
-  const blockedClients = results.filter(r => !r.overall);
+  const operationalClients = results.filter((r) => r.overall);
+  const blockedClients = results.filter((r) => !r.overall);
   log('INFO', `✅ Operational clients: ${operationalClients.length}`);
   log('INFO', `🔥 Blocked clients: ${blockedClients.length}`);
 
   if (blockedClients.length > 0) {
     log('ERROR', `\n🚨 CRITICAL ALERT at ${new Date().toISOString()}`);
     log('ERROR', 'Blocked clients:');
-    blockedClients.forEach(client => {
+    blockedClients.forEach((client) => {
       log('ERROR', `   ❌ ${client.client} (${client.url})`);
     });
     log('WARN', '\n🔧 IMMEDIATE ACTION REQUIRED:');
@@ -165,9 +165,14 @@ async function checkAllClients() {
   if (operationalClients.length < results.length) {
     log('WARN', '\n⚠️ WARNING: Clients experiencing issues');
     log('WARN', 'Problematic clients:');
-    results.filter(r => !r.overall).forEach(client => {
-      log('WARN', `   ⚠️ ${client.client}: ${client.snippet.hasSnippet ? '✅' : '❌'} snippet, ${client.tracking.success ? '✅' : '❌'} tracking, ${client.firewall.isBlocked ? '🔥' : '✅'} firewall`);
-    });
+    results
+      .filter((r) => !r.overall)
+      .forEach((client) => {
+        log(
+          'WARN',
+          `   ⚠️ ${client.client}: ${client.snippet.hasSnippet ? '✅' : '❌'} snippet, ${client.tracking.success ? '✅' : '❌'} tracking, ${client.firewall.isBlocked ? '🔥' : '✅'} firewall`
+        );
+      });
     log('INFO', '\n🔧 RECOMMENDED ACTIONS:');
     log('INFO', '1. Investigate client-specific issues');
     log('INFO', '2. Schedule follow-up checks');
@@ -176,12 +181,17 @@ async function checkAllClients() {
   if (operationalClients.length > 0) {
     log('INFO', '\n✅ SUCCESS: All clients operational');
     log('INFO', '📊 Performance Summary:');
-    const avgResponseTime = operationalClients.reduce((sum, client) => sum + client.responseTime, 0) / operationalClients.length;
+    const avgResponseTime =
+      operationalClients.reduce((sum, client) => sum + client.responseTime, 0) /
+      operationalClients.length;
     log('INFO', `   Average response time: ${avgResponseTime.toFixed(2)}ms`);
   }
 
-  const avgResponseTime = operationalClients.length > 0 ?
-    operationalClients.reduce((sum, client) => sum + client.responseTime, 0) / operationalClients.length : 0;
+  const avgResponseTime =
+    operationalClients.length > 0
+      ? operationalClients.reduce((sum, client) => sum + client.responseTime, 0) /
+        operationalClients.length
+      : 0;
 
   const report = {
     timestamp: new Date().toISOString(),
@@ -190,7 +200,7 @@ async function checkAllClients() {
     blockedClients: blockedClients.length,
     criticalIssues: blockedClients.length,
     avgResponseTime: avgResponseTime,
-    clientDetails: results
+    clientDetails: results,
   };
 
   log('INFO', '\n📈 Generating monitoring report...');
@@ -205,7 +215,11 @@ async function checkAllClients() {
     // Here you could send to your monitoring system or external service
   }
 
-  return { alert: blockedClients.length > 0 ? 'CRITICAL' : 'SUCCESS', report, clientResults: results };
+  return {
+    alert: blockedClients.length > 0 ? 'CRITICAL' : 'SUCCESS',
+    report,
+    clientResults: results,
+  };
 }
 
 async function checkClientSnippet(client) {
@@ -219,9 +233,9 @@ async function checkClientSnippet(client) {
     const response = await fetch(client.url, {
       method: 'GET',
       headers: {
-        'User-Agent': 'AdsEngineer-Monitoring/1.0'
+        'User-Agent': 'AdsEngineer-Monitoring/1.0',
       },
-      signal: AbortSignal.timeout(15000)
+      signal: AbortSignal.timeout(15000),
     });
 
     const endTime = performance.now();
@@ -236,14 +250,14 @@ async function checkClientSnippet(client) {
       hasCorrectScript,
       responseTime: `${responseTime.toFixed(2)}ms`,
       statusCode: response.status,
-      htmlLength: html.length
+      htmlLength: html.length,
     });
 
     return {
       hasSnippet,
       hasCorrectScript,
       responseTime,
-      statusCode: response.status
+      statusCode: response.status,
     };
   } catch (error) {
     const endTime = performance.now();
@@ -255,7 +269,7 @@ async function checkClientSnippet(client) {
       hasSnippet: false,
       hasCorrectScript: false,
       responseTime,
-      error: error.message
+      error: error.message,
     };
   }
 }
@@ -272,7 +286,7 @@ async function checkClientTracking(client) {
     consent_status: 'granted',
     utm_source: 'worker_monitoring',
     utm_medium: 'automated',
-    utm_campaign: 'connectivity_check'
+    utm_campaign: 'connectivity_check',
   };
 
   if (VERBOSE_LOGGING) {
@@ -288,10 +302,10 @@ async function checkClientTracking(client) {
         'Content-Type': 'application/json',
         'User-Agent': 'Multi-Client-Monitoring/1.0',
         'X-Test-Source': 'multi-client-monitoring',
-        'X-Client-Name': client.name
+        'X-Client-Name': client.name,
       },
       body: JSON.stringify(testData),
-      signal: AbortSignal.timeout(10000)
+      signal: AbortSignal.timeout(10000),
     });
 
     const endTime = performance.now();
@@ -308,7 +322,7 @@ async function checkClientTracking(client) {
           success: response.status === 200,
           responseTime,
           statusCode: response.status,
-          response: responseData
+          response: responseData,
         };
       } catch (e) {
         log('ERROR', `   ${client.name} response parsing error:`, e.message);
@@ -316,7 +330,7 @@ async function checkClientTracking(client) {
           success: false,
           responseTime,
           statusCode: response.status,
-          error: 'Invalid JSON response'
+          error: 'Invalid JSON response',
         };
       }
     } else {
@@ -326,7 +340,7 @@ async function checkClientTracking(client) {
         success: false,
         responseTime,
         statusCode: response.status,
-        error: errorText
+        error: errorText,
       };
     }
   } catch (error) {
@@ -338,7 +352,7 @@ async function checkClientTracking(client) {
     return {
       success: false,
       responseTime,
-      error: error.message
+      error: error.message,
     };
   }
 }
@@ -349,16 +363,16 @@ async function checkFirewallBlocking(client) {
   const tests = [
     {
       name: 'Direct IP Test',
-      method: 'direct_connection_test'
+      method: 'direct_connection_test',
     },
     {
       name: 'User Agent Test',
-      method: 'user_agent_test'
+      method: 'user_agent_test',
     },
     {
       name: 'Header Test',
-      method: 'header_test'
-    }
+      method: 'header_test',
+    },
   ];
 
   const results = { tests: [], isBlocked: false };
@@ -379,7 +393,7 @@ async function checkFirewallBlocking(client) {
       results.tests.push({
         name: test.name,
         error: error.message,
-        isBlocked: true
+        isBlocked: true,
       });
     }
   }
@@ -398,9 +412,9 @@ async function runFirewallTest(client, test) {
       method: 'GET',
       headers: {
         'User-Agent': 'Firewall-Detection/1.0',
-        'X-Test-Method': test.method
+        'X-Test-Method': test.method,
       },
-      signal: controller.signal
+      signal: controller.signal,
     });
 
     clearTimeout(timeoutId);
@@ -421,7 +435,7 @@ async function runFirewallTest(client, test) {
       name: test.name,
       isBlocked,
       responseTime,
-      statusCode: response.status
+      statusCode: response.status,
     };
   } catch (error) {
     const endTime = performance.now();
@@ -431,7 +445,7 @@ async function runFirewallTest(client, test) {
       name: test.name,
       isBlocked: true,
       error: error.message,
-      responseTime
+      responseTime,
     };
   }
 }
@@ -447,19 +461,21 @@ export default {
   async scheduled(event, env, ctx) {
     console.log('🕐 Running scheduled Shopify monitoring...');
     await checkAllClients();
-  }
+  },
 };
 
 // For local testing
 if (typeof globalThis !== 'undefined' && typeof globalThis.process !== 'undefined') {
-  checkAllClients().then((result) => {
-    console.log('\n✅ Monitoring completed successfully');
-    console.log('Result:', result);
-    process.exit(0);
-  }).catch(error => {
-    console.error('\n❌ Monitoring failed:', error.message);
-    process.exit(1);
-  });
+  checkAllClients()
+    .then((result) => {
+      console.log('\n✅ Monitoring completed successfully');
+      console.log('Result:', result);
+      process.exit(0);
+    })
+    .catch((error) => {
+      console.error('\n❌ Monitoring failed:', error.message);
+      process.exit(1);
+    });
 }
 
 export {
@@ -467,5 +483,5 @@ export {
   checkClientSnippet,
   checkClientTracking,
   checkFirewallBlocking,
-  runFirewallTest
+  runFirewallTest,
 };

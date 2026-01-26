@@ -30,9 +30,9 @@ export class WasteDetector {
         'No purchase confirmation events',
         'Missing thank you page tracking',
         'No checkout funnel analysis',
-        'No cart abandonment tracking'
+        'No cart abandonment tracking',
       ],
-      fixComplexity: 'medium'
+      fixComplexity: 'medium',
     },
     {
       type: 'attribution-window',
@@ -43,9 +43,9 @@ export class WasteDetector {
         '90-day default attribution window',
         'No custom attribution by product type',
         'Missing post-view attribution',
-        'No device cross-reference'
+        'No device cross-reference',
       ],
-      fixComplexity: 'easy'
+      fixComplexity: 'easy',
     },
     {
       type: 'targeting-mismatch',
@@ -57,9 +57,9 @@ export class WasteDetector {
         'Geographic targeting mismatch',
         'Demographic targeting errors',
         'Time of day optimization issues',
-        'Device targeting inefficiencies'
+        'Device targeting inefficiencies',
       ],
-      fixComplexity: 'medium'
+      fixComplexity: 'medium',
     },
     {
       type: 'technical-configuration',
@@ -71,10 +71,10 @@ export class WasteDetector {
         'Missing mobile optimization',
         'Broken conversion tracking',
         'Pixel implementation errors',
-        'API integration failures'
+        'API integration failures',
       ],
-      fixComplexity: 'medium'
-    }
+      fixComplexity: 'medium',
+    },
   ];
 
   analyzeWaste(adSpend: AdSpendAnalysis): WasteAnalysis {
@@ -85,7 +85,7 @@ export class WasteDetector {
       technicalIssues: 0,
       invalidVersions: 0,
       budgetDrift: 0,
-      fraud: 0
+      fraud: 0,
     };
 
     const detectedIssues: string[] = [];
@@ -93,78 +93,78 @@ export class WasteDetector {
     let totalWastedSpend = 0;
 
     // Analyze tracking issues
-    const noTrackingPattern = this.wastePatterns.find(p => p.type === 'no-tracking');
+    const noTrackingPattern = this.wastePatterns.find((p) => p.type === 'no-tracking');
     if (noTrackingPattern && this.detectNoTracking(adSpend)) {
       const wastedSpend = adSpend.monthlySpend * 0.3;
       totalWastedSpend += wastedSpend;
-      
+
       categories.noTracking = wastedSpend;
       detectedIssues.push(noTrackingPattern.description);
-      
+
       opportunities.push({
         type: 'quick-win',
         description: 'Implement basic conversion tracking',
         potentialSavings: wastedSpend,
         implementationDifficulty: 'medium',
         timeToImplement: '2-4 weeks',
-        impact: 'high'
+        impact: 'high',
       });
     }
 
     // Analyze attribution issues
-    const attributionPattern = this.wastePatterns.find(p => p.type === 'attribution-window');
+    const attributionPattern = this.wastePatterns.find((p) => p.type === 'attribution-window');
     if (attributionPattern && this.detectAttributionIssues(adSpend)) {
       const wastedSpend = adSpend.monthlySpend * 0.15;
       totalWastedSpend += wastedSpend;
-      
+
       categories.wrongAttribution = wastedSpend;
       detectedIssues.push(attributionPattern.description);
-      
+
       opportunities.push({
         type: 'strategic',
         description: 'Optimize attribution windows by product type',
         potentialSavings: wastedSpend,
         implementationDifficulty: 'hard',
         timeToImplement: '4-8 weeks',
-        impact: 'medium'
+        impact: 'medium',
       });
     }
 
     // Analyze targeting issues
-    const targetingPattern = this.wastePatterns.find(p => p.type === 'targeting-mismatch');
+    const targetingPattern = this.wastePatterns.find((p) => p.type === 'targeting-mismatch');
     if (targetingPattern && this.detectTargetingIssues(adSpend)) {
       const wastedSpend = adSpend.monthlySpend * 0.2;
       totalWastedSpend += wastedSpend;
-      
+
       categories.poorTargeting = wastedSpend;
       detectedIssues.push(targetingPattern.description);
-      
+
       opportunities.push({
         type: 'technical',
         description: 'Optimize audience targeting and bid management',
         potentialSavings: wastedSpend,
         implementationDifficulty: 'medium',
         timeToImplement: '3-6 weeks',
-        impact: 'high'
+        impact: 'high',
       });
     }
 
     // Analyze technical issues
-    const technicalPattern = this.wastePatterns.find(p => p.type === 'technical-configuration');
+    const technicalPattern = this.wastePatterns.find((p) => p.type === 'technical-configuration');
     if (technicalPattern && this.detectTechnicalIssues()) {
       const wastedSpend = adSpend.monthlySpend * 0.1;
       totalWastedSpend += wastedSpend;
-      
+
       categories.technicalIssues = wastedSpend;
       detectedIssues.push(technicalPattern.description);
-      
+
       opportunities.push({
         type: 'technical',
         description: 'Fix technical implementation and performance issues',
         potentialSavings: wastedSpend,
         implementationDifficulty: 'easy',
         timeToImplement: '1-3 weeks',
-        impact: 'high'
+        impact: 'high',
       });
     }
 
@@ -173,22 +173,23 @@ export class WasteDetector {
     if (budgetDrift > 0.05) {
       const wastedSpend = adSpend.monthlySpend * budgetDrift;
       totalWastedSpend += wastedSpend;
-      
+
       categories.budgetDrift = wastedSpend;
       detectedIssues.push('Budget drift detected');
-      
+
       opportunities.push({
         type: 'technical',
         description: 'Implement automated budget monitoring and alerts',
         potentialSavings: wastedSpend * 12,
         implementationDifficulty: 'easy',
         timeToImplement: '1-2 weeks',
-        impact: 'medium'
+        impact: 'medium',
       });
     }
 
-    const wastePercentage = adSpend.monthlySpend > 0 ? (totalWastedSpend / adSpend.monthlySpend) * 100 : 0;
-    const confidence = Math.min(0.9, Math.max(0.1, 1 - (detectedIssues.length * 0.1)));
+    const wastePercentage =
+      adSpend.monthlySpend > 0 ? (totalWastedSpend / adSpend.monthlySpend) * 100 : 0;
+    const confidence = Math.min(0.9, Math.max(0.1, 1 - detectedIssues.length * 0.1));
 
     return {
       totalWastedSpend,
@@ -196,39 +197,48 @@ export class WasteDetector {
       categories,
       confidence,
       recommendations: this.generateRecommendations(detectedIssues),
-      detectedIssues
+      detectedIssues,
     };
   }
 
   private detectNoTracking(adSpend: AdSpendAnalysis): boolean {
-    return adSpend.platforms.some(platform => {
+    return adSpend.platforms.some((platform) => {
       const googleAds = platform.platform === 'google-ads';
       if (googleAds) {
-        return !googleAds.hasConversionTracking || 
-               (!googleAds.conversionActionTypes || googleAds.conversionActionTypes.length === 0);
+        return (
+          !googleAds.hasConversionTracking ||
+          !googleAds.conversionActionTypes ||
+          googleAds.conversionActionTypes.length === 0
+        );
       }
-      
+
       const metaAds = platform.platform === 'meta-ads';
       if (metaAds) {
-        return !metaAds.hasPixel || 
-               (!metaAds.conversionActionTypes || metaAds.conversionActionTypes.length === 0);
+        return (
+          !metaAds.hasPixel ||
+          !metaAds.conversionActionTypes ||
+          metaAds.conversionActionTypes.length === 0
+        );
       }
-      
+
       return false;
     });
   }
 
   private detectAttributionIssues(adSpend: AdSpendAnalysis): boolean {
-    return adSpend.attribution.conversionWindow.defaultDays > 30 ||
-           adSpend.attribution.model === 'last-click' && 
-           adSpend.attribution.crossDevice === false;
+    return (
+      adSpend.attribution.conversionWindow.defaultDays > 30 ||
+      (adSpend.attribution.model === 'last-click' && adSpend.attribution.crossDevice === false)
+    );
   }
 
   private detectTargetingIssues(adSpend: AdSpendAnalysis): boolean {
-    return adSpend.platforms.some(platform => {
-      return (platform.ctr < 0.01 && platform.cpc > 10) ||
-             (platform.ctr > 0.05 && platform.conversionRate < 0.02) ||
-             platform.roas < 1.0;
+    return adSpend.platforms.some((platform) => {
+      return (
+        (platform.ctr < 0.01 && platform.cpc > 10) ||
+        (platform.ctr > 0.05 && platform.conversionRate < 0.02) ||
+        platform.roas < 1.0
+      );
     });
   }
 
@@ -240,16 +250,16 @@ export class WasteDetector {
     const latestMonth = adSpend.platforms[0]?.lastImportDate;
     if (!latestMonth) return 0;
 
-    const threeMonthsAgo = new Date(Date.now() - (90 * 24 * 60 * 60 * 1000));
+    const threeMonthsAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
     if (new Date(latestMonth) < threeMonthsAgo) return 0;
 
     const recentPlatforms = adSpend.platforms.slice(-3);
     if (recentPlatforms.length < 3) return 0;
 
-    const monthlySpends = recentPlatforms.map(p => p.monthlySpend);
+    const monthlySpends = recentPlatforms.map((p) => p.monthlySpend);
     const avgSpend = monthlySpends.reduce((sum, spend) => sum + spend, 0) / monthlySpends.length;
     const latestSpend = monthlySpends[monthlySpends.length - 1];
-    
+
     return Math.abs((latestSpend - avgSpend) / avgSpend);
   }
 
@@ -303,7 +313,7 @@ export class WasteDetector {
       technicalIssues: 'Technical implementation problems',
       invalidVersions: 'Outdated platform or pixel versions',
       budgetDrift: 'Budget not optimized or monitored',
-      fraud: 'Invalid or fraudulent activity'
+      fraud: 'Invalid or fraudulent activity',
     };
   }
 }

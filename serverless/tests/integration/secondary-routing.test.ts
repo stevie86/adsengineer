@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Hono } from 'hono';
-import type { AppEnv } from '../../src/types';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { leadsRoutes } from '../../src/routes/leads';
+import type { AppEnv } from '../../src/types';
 
 describe('End-to-End Secondary Conversion Routing', () => {
   let app: Hono<AppEnv>;
@@ -22,15 +22,15 @@ describe('End-to-End Secondary Conversion Routing', () => {
               clientSecret: 'test-client-secret',
               developerToken: 'test-developer-token',
               customerId: '123-456-7890',
-              conversionActionId: '123456789'
+              conversionActionId: '123456789',
             }),
             secondary_google_ads_config: JSON.stringify({
               customerId: '987-654-3210',
-              conversionActionId: '987654321'
-            })
-          }))
-        }))
-      }))
+              conversionActionId: '987654321',
+            }),
+          })),
+        })),
+      })),
     };
 
     app.use('*', async (c, next) => {
@@ -40,12 +40,12 @@ describe('End-to-End Secondary Conversion Routing', () => {
         user_id: 'test-user',
         org_id: 'mycannaby-mk059g16',
         tenant_id: 'mycannaby-mk059g16',
-        role: 'admin' as const
+        role: 'admin' as const,
       });
       // Mock environment
       c.env = {
         DB: mockDb,
-        JWT_SECRET: 'test-secret'
+        JWT_SECRET: 'test-secret',
       } as any;
       await next();
     });
@@ -59,7 +59,7 @@ describe('End-to-End Secondary Conversion Routing', () => {
       site_id: 'mycannaby-687f1af9',
       gclid: 'EAIaIQv3i3m8e7vOZ-1572532743',
       email: 'test@mycannaby.de',
-      created_at: '2026-01-01T12:00:00Z'
+      created_at: '2026-01-01T12:00:00Z',
     });
 
     const testLead = {
@@ -69,16 +69,16 @@ describe('End-to-End Secondary Conversion Routing', () => {
       landing_page: 'https://mycannaby.de/product/1',
       adjusted_value_cents: 4500,
       consent_status: 'granted',
-      consent_timestamp: '2026-01-01T12:00:00Z'
+      consent_timestamp: '2026-01-01T12:00:00Z',
     };
 
     const res = await app.request('/leads', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer test-jwt-token'
+        Authorization: 'Bearer test-jwt-token',
       },
-      body: JSON.stringify([testLead])
+      body: JSON.stringify([testLead]),
     });
 
     expect(res.status).toBe(200);
@@ -103,11 +103,11 @@ describe('End-to-End Secondary Conversion Routing', () => {
             clientSecret: 'test-client-secret',
             developerToken: 'test-developer-token',
             customerId: '123-456-7890',
-            conversionActionId: '123456789'
+            conversionActionId: '123456789',
           }),
-          secondary_google_ads_config: null
-        }))
-      }))
+          secondary_google_ads_config: null,
+        })),
+      })),
     });
 
     mockDb.insertLead.mockResolvedValue({
@@ -115,7 +115,7 @@ describe('End-to-End Secondary Conversion Routing', () => {
       site_id: 'mycannaby-687f1af9',
       gclid: 'EAIaIQv3i3m8e7vOZ-1572532744',
       email: 'test2@mycannaby.de',
-      created_at: '2026-01-01T12:05:00Z'
+      created_at: '2026-01-01T12:05:00Z',
     });
 
     const testLead = {
@@ -125,16 +125,16 @@ describe('End-to-End Secondary Conversion Routing', () => {
       landing_page: 'https://mycannaby.de/product/2',
       adjusted_value_cents: 3500,
       consent_status: 'granted',
-      consent_timestamp: '2026-01-01T12:05:00Z'
+      consent_timestamp: '2026-01-01T12:05:00Z',
     };
 
     const res = await app.request('/leads', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer test-jwt-token'
+        Authorization: 'Bearer test-jwt-token',
       },
-      body: JSON.stringify([testLead])
+      body: JSON.stringify([testLead]),
     });
 
     expect(res.status).toBe(200);
@@ -152,7 +152,7 @@ describe('End-to-End Secondary Conversion Routing', () => {
       site_id: 'mycannaby-687f1af9',
       gclid: 'EAIaIQv3i3m8e7vOZ-1572532745',
       email: 'test3@mycannaby.de',
-      created_at: '2026-01-01T12:10:00Z'
+      created_at: '2026-01-01T12:10:00Z',
     });
 
     const testLead = {
@@ -162,16 +162,16 @@ describe('End-to-End Secondary Conversion Routing', () => {
       landing_page: 'https://mycannaby.de/product/3',
       adjusted_value_cents: 4500,
       consent_status: 'denied',
-      consent_timestamp: '2026-01-01T12:10:00Z'
+      consent_timestamp: '2026-01-01T12:10:00Z',
     };
 
     const res = await app.request('/leads', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer test-jwt-token'
+        Authorization: 'Bearer test-jwt-token',
       },
-      body: JSON.stringify([testLead])
+      body: JSON.stringify([testLead]),
     });
 
     expect(res.status).toBe(200);
@@ -189,13 +189,13 @@ describe('End-to-End Secondary Conversion Routing', () => {
         site_id: 'mycannaby-687f1af9',
         gclid: 'EAIaIQv3i3m8e7vOZ-1572532746',
         email: 'consented@mycannaby.de',
-        created_at: '2026-01-01T12:15:00Z'
+        created_at: '2026-01-01T12:15:00Z',
       })
       .mockResolvedValueOnce({
         id: 'lead-denied',
         site_id: 'mycannaby-687f1af9',
         email: 'denied@mycannaby.de',
-        created_at: '2026-01-01T12:20:00Z'
+        created_at: '2026-01-01T12:20:00Z',
       });
 
     const testLeads = [
@@ -205,23 +205,23 @@ describe('End-to-End Secondary Conversion Routing', () => {
         email: 'consented@mycannaby.de',
         landing_page: 'https://mycannaby.de/product/4',
         adjusted_value_cents: 4500,
-        consent_status: 'granted'
+        consent_status: 'granted',
       },
       {
         site_id: 'mycannaby-687f1af9',
         email: 'denied@mycannaby.de',
         landing_page: 'https://mycannaby.de/product/5',
         adjusted_value_cents: 4500,
-        consent_status: 'denied'
-      }
+        consent_status: 'denied',
+      },
     ];
 
     const res = await app.request('/leads', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(testLeads)
+      body: JSON.stringify(testLeads),
     });
 
     expect(res.status).toBe(200);

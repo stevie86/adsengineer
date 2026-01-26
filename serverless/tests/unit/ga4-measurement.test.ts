@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { GA4MeasurementClient, GA4MeasurementError } from '../../src/services/ga4-measurement';
 
 describe('GA4 Measurement Client', () => {
@@ -9,7 +9,7 @@ describe('GA4 Measurement Client', () => {
     global.fetch = mockFetch;
     client = new GA4MeasurementClient({
       measurementId: 'G-TEST123',
-      apiSecret: 'test-secret'
+      apiSecret: 'test-secret',
     });
   });
 
@@ -23,12 +23,10 @@ describe('GA4 Measurement Client', () => {
         ok: true,
         status: 200,
         text: () => Promise.resolve(''),
-        clone: () => ({ text: () => Promise.resolve('') })
+        clone: () => ({ text: () => Promise.resolve('') }),
       });
 
-      const events = [
-        { name: 'test_event', params: { value: 100 } }
-      ];
+      const events = [{ name: 'test_event', params: { value: 100 } }];
 
       const result = await client.sendBatch(events);
 
@@ -41,8 +39,8 @@ describe('GA4 Measurement Client', () => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            events: [{ name: 'test_event', params: { value: 100 } }]
-          })
+            events: [{ name: 'test_event', params: { value: 100 } }],
+          }),
         })
       );
     });
@@ -52,12 +50,12 @@ describe('GA4 Measurement Client', () => {
         ok: true,
         status: 200,
         text: () => Promise.resolve(''),
-        clone: () => ({ text: () => Promise.resolve('') })
+        clone: () => ({ text: () => Promise.resolve('') }),
       });
 
       const events = Array.from({ length: 30 }, (_, i) => ({
         name: `event_${i}`,
-        params: { value: i }
+        params: { value: i },
       }));
 
       const result = await client.sendBatch(events);
@@ -81,14 +79,14 @@ describe('GA4 Measurement Client', () => {
             ok: false,
             status: 500,
             text: () => Promise.resolve('Internal Server Error'),
-            clone: () => ({ text: () => Promise.resolve('Internal Server Error') })
+            clone: () => ({ text: () => Promise.resolve('Internal Server Error') }),
           });
         }
         return Promise.resolve({
           ok: true,
           status: 200,
           text: () => Promise.resolve(''),
-          clone: () => ({ text: () => Promise.resolve('') })
+          clone: () => ({ text: () => Promise.resolve('') }),
         });
       });
 
@@ -106,7 +104,7 @@ describe('GA4 Measurement Client', () => {
         ok: false,
         status: 500,
         text: () => Promise.resolve('Internal Server Error'),
-        clone: () => ({ text: () => Promise.resolve('Internal Server Error') })
+        clone: () => ({ text: () => Promise.resolve('Internal Server Error') }),
       });
 
       const events = [{ name: 'test_event' }];
@@ -123,7 +121,7 @@ describe('GA4 Measurement Client', () => {
         ok: false,
         status: 400,
         text: () => Promise.resolve('Bad Request'),
-        clone: () => ({ text: () => Promise.resolve('Bad Request') })
+        clone: () => ({ text: () => Promise.resolve('Bad Request') }),
       });
 
       const events = [{ name: 'test_event' }];
@@ -147,7 +145,7 @@ describe('GA4 Measurement Client', () => {
         ok: true,
         status: 200,
         text: () => Promise.resolve(''),
-        clone: () => ({ text: () => Promise.resolve('') })
+        clone: () => ({ text: () => Promise.resolve('') }),
       });
 
       const result = await client.sendEvent({ name: 'test_event' });

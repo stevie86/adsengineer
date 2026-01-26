@@ -1,6 +1,6 @@
 /**
  * GCLID Test Utilities
- * 
+ *
  * Generate valid GCLIDs for testing
  * Simulate GCLID processing flow
  */
@@ -16,7 +16,7 @@ export function generateTestGCLID(length: number = 32): string {
   let result = 'GCLID_';
   const randomValues = new Uint8Array(length);
   crypto.getRandomValues(randomValues);
-  
+
   for (let i = 0; i < length; i++) {
     result += chars[randomValues[i] % chars.length];
   }
@@ -33,7 +33,9 @@ export function generateGCLIDs(count: number, length: number = 32): string[] {
 /**
  * Generate GCLID with specific characteristics
  */
-export function generateSpecialGCLID(type: 'underscore-heavy' | 'hyphen-heavy' | 'numeric' | 'mixed'): string {
+export function generateSpecialGCLID(
+  type: 'underscore-heavy' | 'hyphen-heavy' | 'numeric' | 'mixed'
+): string {
   switch (type) {
     case 'underscore-heavy':
       return 'GCLID_' + '_'.repeat(10) + 'abc123' + '_'.repeat(10);
@@ -56,14 +58,14 @@ export const INVALID_GCLIDS = [
   undefined,
   '',
   'invalid',
-  'gclid_short',  // No prefix
-  'GCLID_short',  // Too short
-  'GCLID_' + 'a'.repeat(50),  // Too long
-  'GCLID_test<script>alert(1)</script>',  // XSS attempt
-  'GCLID_test\' OR 1=1--',  // SQL injection attempt
-  'GCLID_../../etc/passwd',  // Path traversal
-  '123456789012345678901234',  // No prefix
-  'EAIaIQv3i3m8e7vOZ-1572532743',  // Fake but looks real (wrong prefix)
+  'gclid_short', // No prefix
+  'GCLID_short', // Too short
+  'GCLID_' + 'a'.repeat(50), // Too long
+  'GCLID_test<script>alert(1)</script>', // XSS attempt
+  "GCLID_test' OR 1=1--", // SQL injection attempt
+  'GCLID_../../etc/passwd', // Path traversal
+  '123456789012345678901234', // No prefix
+  'EAIaIQv3i3m8e7vOZ-1572532743', // Fake but looks real (wrong prefix)
 ];
 
 /**
@@ -106,31 +108,34 @@ export function createTestLead(overrides: Partial<TestLead> = {}): TestLead {
 /**
  * Create batch of test leads
  */
-export function createTestLeads(count: number, options: {
-  withGCLID?: boolean;
-  withValidGCLID?: boolean;
-  mixedValidInvalid?: boolean;
-} = {}): TestLead[] {
+export function createTestLeads(
+  count: number,
+  options: {
+    withGCLID?: boolean;
+    withValidGCLID?: boolean;
+    mixedValidInvalid?: boolean;
+  } = {}
+): TestLead[] {
   const { withGCLID = true, withValidGCLID = true, mixedValidInvalid = false } = options;
-  
+
   const leads: TestLead[] = [];
-  
+
   for (let i = 0; i < count; i++) {
     let gclid: string | null = null;
-    
+
     if (withGCLID) {
       if (mixedValidInvalid && i % 3 === 0) {
-        gclid = 'INVALID_GCLID';  // Invalid for testing
+        gclid = 'INVALID_GCLID'; // Invalid for testing
       } else if (withValidGCLID) {
         gclid = generateTestGCLID();
       } else {
         gclid = generateSpecialGCLID('underscore-heavy');
       }
     }
-    
+
     leads.push(createTestLead({ gclid, email: `test-${i}-${Date.now()}@example.com` }));
   }
-  
+
   return leads;
 }
 
@@ -162,10 +167,7 @@ export function createShopifyWebhookPayload(overrides: Record<string, any> = {})
     id: crypto.randomUUID().substring(0, 8),
     email: `customer-${Date.now()}@example.com`,
     phone: '+1234567890',
-    tags: [
-      'gclid:' + generateTestGCLID(),
-      'utm_source:google',
-    ],
+    tags: ['gclid:' + generateTestGCLID(), 'utm_source:google'],
     landing_site: 'https://example.com/shop?utm_source=google',
     ...overrides,
   };
@@ -221,10 +223,10 @@ export async function testGCLIDValidation(gclid: string | null | undefined): Pro
   try {
     // Dynamic import to avoid issues if file doesn't exist yet
     const { isValidGCLID, sanitizeGCLID } = await import('./gclid.js');
-    
+
     const valid = isValidGCLID(gclid);
     const sanitized = sanitizeGCLID(gclid);
-    
+
     if (!gclid) {
       return { valid: false, sanitized: null, error: 'GCLID is null or undefined' };
     }
@@ -234,13 +236,13 @@ export async function testGCLIDValidation(gclid: string | null | undefined): Pro
     if (!valid) {
       return { valid: false, sanitized: null, error: 'Invalid GCLID format' };
     }
-    
+
     return { valid: true, sanitized };
   } catch (error) {
-    return { 
-      valid: false, 
-      sanitized: null, 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+    return {
+      valid: false,
+      sanitized: null,
+      error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
 }
@@ -256,7 +258,7 @@ export async function runGCLIDValidationTests(): Promise<{
   const results: Array<{ gclid: any; result: ReturnType<typeof testGCLIDValidation> }> = [];
   let passed = 0;
   let failed = 0;
-  
+
   // Test valid GCLIDs
   const validGCLIDs = [
     generateTestGCLID(),
@@ -265,20 +267,22 @@ export async function runGCLIDValidationTests(): Promise<{
     generateSpecialGCLID('numeric'),
     generateSpecialGCLID('mixed'),
   ];
-  
+
   for (const gclid of validGCLIDs) {
     const result = await testGCLIDValidation(gclid);
     results.push({ gclid, result });
-    if (result.valid) passed++; else failed++;
+    if (result.valid) passed++;
+    else failed++;
   }
-  
+
   // Test invalid GCLIDs
   for (const gclid of INVALID_GCLIDS) {
     const result = await testGCLIDValidation(gclid);
     results.push({ gclid, result });
-    if (!result.valid) passed++; else failed++;
+    if (!result.valid) passed++;
+    else failed++;
   }
-  
+
   return { passed, failed, results };
 }
 
@@ -293,12 +297,12 @@ export async function simulateLeadProcessing(lead: TestLead): Promise<{
 }> {
   const errors: string[] = [];
   let gclidValid = false;
-  
+
   // Validate email
   if (!lead.email || !lead.email.includes('@')) {
     errors.push('Invalid email');
   }
-  
+
   // Validate GCLID
   if (lead.gclid) {
     const result = await testGCLIDValidation(lead.gclid);
@@ -307,7 +311,7 @@ export async function simulateLeadProcessing(lead: TestLead): Promise<{
       errors.push(`Invalid GCLID: ${result.error}`);
     }
   }
-  
+
   return {
     success: errors.length === 0,
     gclidCaptured: !!lead.gclid,
@@ -333,11 +337,11 @@ export async function simulateBatchProcessing(
   let total = 0;
   let success = 0;
   const gclidStats = { total: 0, valid: 0, invalid: 0 };
-  
+
   const processLead = async (lead: TestLead) => {
     const result = await simulateLeadProcessing(lead);
     total++;
-    
+
     if (result.success) success++;
     if (lead.gclid) {
       gclidStats.total++;
@@ -345,7 +349,7 @@ export async function simulateBatchProcessing(
       else gclidStats.invalid++;
     }
   };
-  
+
   if (parallel) {
     await Promise.all(leads.map(processLead));
   } else {
@@ -353,7 +357,7 @@ export async function simulateBatchProcessing(
       await processLead(lead);
     }
   }
-  
+
   return {
     total,
     success,
@@ -371,7 +375,7 @@ export const TEST_DATA = {
     'GCLID_123456789012345678901234567890',
     'GCLID_ABC-DEF_GHI-JKL_MNO-PQR',
   ],
-  
+
   // Invalid GCLIDs
   INVALID_GCLIDS: [
     null,
@@ -383,11 +387,11 @@ export const TEST_DATA = {
     'GCLID_' + 'a'.repeat(50),
     '123456789012345678901234',
   ],
-  
+
   // Test leads
   SAMPLE_LEADS: [
     createTestLead({ gclid: 'GCLID_EAIaIQv3i3m8e7vOZ-1572532743' }),
-    createTestLead({ gclid: null }),  // No GCLID
-    createTestLead({ gclid: 'INVALID' }),  // Invalid GCLID
+    createTestLead({ gclid: null }), // No GCLID
+    createTestLead({ gclid: 'INVALID' }), // Invalid GCLID
   ],
 };

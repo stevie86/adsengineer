@@ -1,17 +1,16 @@
 import { z } from 'zod';
-import { 
-  MarketResearchQuery, 
-  MarketOpportunity, 
-  MarketInsight, 
+import {
   CompetitorAnalysis,
+  MarketInsight,
+  MarketOpportunity,
+  MarketResearchQuery,
+  MarketResearchResponse,
   MarketResearchResult,
   ShopifyDiscoveryCriteria,
+  ShopifyDiscoveryResponse,
   ShopifyStoreAnalysis,
-  MarketResearchResponse,
-  ShopifyDiscoveryResponse
 } from '../types/market-research';
 import { TechStackAnalyzer } from './tech-stack-analyzer';
-
 
 export class MarketResearchService {
   private techAnalyzer: TechStackAnalyzer;
@@ -22,12 +21,12 @@ export class MarketResearchService {
 
   async performMarketResearch(query: MarketResearchQuery): Promise<MarketResearchResponse> {
     const startTime = Date.now();
-    
+
     try {
       const opportunities = await this.findOpportunities(query);
       const insights = await this.generateMarketInsights(query);
       const competitors = await this.analyzeCompetitors(query);
-      
+
       const result: MarketResearchResult = {
         opportunities,
         insights,
@@ -35,7 +34,7 @@ export class MarketResearchService {
         summary: this.generateSummary(opportunities, insights, competitors),
         query,
         generatedAt: new Date(),
-        processingTime: Date.now() - startTime
+        processingTime: Date.now() - startTime,
       };
 
       return {
@@ -45,8 +44,8 @@ export class MarketResearchService {
           requestId: crypto.randomUUID(),
           processingTime: Date.now() - startTime,
           dataSourceCount: 5,
-          cacheHit: false
-        }
+          cacheHit: false,
+        },
       };
     } catch (error) {
       console.error('Market research failed:', error);
@@ -54,13 +53,15 @@ export class MarketResearchService {
     }
   }
 
-  async discoverShopifyStores(criteria: ShopifyDiscoveryCriteria): Promise<ShopifyDiscoveryResponse> {
+  async discoverShopifyStores(
+    criteria: ShopifyDiscoveryCriteria
+  ): Promise<ShopifyDiscoveryResponse> {
     const startTime = Date.now();
-    
+
     try {
       const stores = await this.searchShopifyStores(criteria);
       const analyzedStores = await Promise.all(
-        stores.map(store => this.analyzeShopifyStore(store))
+        stores.map((store) => this.analyzeShopifyStore(store))
       );
 
       return {
@@ -69,14 +70,14 @@ export class MarketResearchService {
           stores: analyzedStores,
           totalFound: stores.length,
           searchCriteria: criteria,
-          searchTime: Date.now() - startTime
+          searchTime: Date.now() - startTime,
         },
         metadata: {
           requestId: crypto.randomUUID(),
           searchEngine: 'Google Shopping API',
           resultPage: 1,
-          totalPages: Math.ceil(stores.length / 50)
-        }
+          totalPages: Math.ceil(stores.length / 50),
+        },
       };
     } catch (error) {
       console.error('Shopify discovery failed:', error);
@@ -88,14 +89,14 @@ export class MarketResearchService {
     const opportunities: MarketOpportunity[] = [];
 
     const searchQueries = this.buildSearchQueries(query);
-    
+
     for (const searchQuery of searchQueries) {
       const results = await this.searchBusinesses(searchQuery);
-      
+
       for (const business of results) {
         const techAnalysis = await this.techAnalyzer.analyzeTechStack(business.website);
         const opportunity = await this.createMarketOpportunity(business, techAnalysis, query);
-        
+
         if (this.meetsCriteria(opportunity, query)) {
           opportunities.push(opportunity);
         }
@@ -113,7 +114,8 @@ export class MarketResearchService {
         id: crypto.randomUUID(),
         type: 'trend',
         title: 'Rising Ad Spend Waste in E-commerce',
-        description: '68% of e-commerce businesses are wasting 30%+ of ad budget due to poor tracking',
+        description:
+          '68% of e-commerce businesses are wasting 30%+ of ad budget due to poor tracking',
         impact: 'high',
         timeframe: 'immediate',
         affectedIndustries: ['ecommerce'],
@@ -121,12 +123,12 @@ export class MarketResearchService {
         data: {
           wastePercentage: 68,
           averageWasteAmount: 45000,
-          potentialMarketSize: 2400000000
+          potentialMarketSize: 2400000000,
         },
         confidence: 0.85,
         sources: ['industry_report_2024', 'customer_surveys'],
         createdAt: new Date(),
-        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       });
     }
 
@@ -143,11 +145,11 @@ export class MarketResearchService {
         data: {
           migrationRate: 0.23,
           averageBudgetIncrease: 0.45,
-          targetMarketSize: 120000
+          targetMarketSize: 120000,
         },
         confidence: 0.72,
         sources: ['shopify_trends_2024', 'migration_analysis'],
-        createdAt: new Date()
+        createdAt: new Date(),
       });
     }
 
@@ -164,7 +166,7 @@ export class MarketResearchService {
         strengths: ['Shopify integration', 'Real-time analytics', 'User-friendly UI'],
         weaknesses: ['Limited multi-platform support', 'Higher pricing'],
         pricingStrategy: 'premium' as const,
-        targetSegments: ['DTC brands', 'Shopify merchants']
+        targetSegments: ['DTC brands', 'Shopify merchants'],
       },
       {
         name: 'Hyros',
@@ -172,7 +174,7 @@ export class MarketResearchService {
         strengths: ['Call tracking', 'Multi-touch attribution', 'Advanced analytics'],
         weaknesses: ['Complex setup', 'Steep learning curve'],
         pricingStrategy: 'premium' as const,
-        targetSegments: ['High-volume advertisers', 'Info products']
+        targetSegments: ['High-volume advertisers', 'Info products'],
       },
       {
         name: 'Northbeam',
@@ -180,8 +182,8 @@ export class MarketResearchService {
         strengths: ['Marketing mix modeling', 'Cross-platform attribution'],
         weaknesses: ['Limited real-time features', 'Enterprise focus'],
         pricingStrategy: 'premium' as const,
-        targetSegments: ['Enterprise brands', 'Agency partners']
-      }
+        targetSegments: ['Enterprise brands', 'Agency partners'],
+      },
     ];
 
     for (const competitor of knownCompetitors) {
@@ -196,10 +198,10 @@ export class MarketResearchService {
         recentMoves: [
           'Launched AI-powered insights',
           'Expanded platform integrations',
-          'Lowered entry pricing'
+          'Lowered entry pricing',
         ],
         threatLevel: 'medium',
-        lastAnalyzed: new Date()
+        lastAnalyzed: new Date(),
       });
     }
 
@@ -211,25 +213,30 @@ export class MarketResearchService {
     insights: MarketInsight[],
     competitors: CompetitorAnalysis[]
   ) {
-    const highValueOpps = opportunities.filter(opp => opp.opportunityScore >= 70);
-    const avgScore = opportunities.length > 0 
-      ? opportunities.reduce((sum, opp) => sum + opp.opportunityScore, 0) / opportunities.length 
-      : 0;
+    const highValueOpps = opportunities.filter((opp) => opp.opportunityScore >= 70);
+    const avgScore =
+      opportunities.length > 0
+        ? opportunities.reduce((sum, opp) => sum + opp.opportunityScore, 0) / opportunities.length
+        : 0;
 
-    const industryCounts = opportunities.reduce((acc, opp) => {
-      acc[opp.industry] = (acc[opp.industry] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const industryCounts = opportunities.reduce(
+      (acc, opp) => {
+        acc[opp.industry] = (acc[opp.industry] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     const topIndustries = Object.entries(industryCounts)
-      .sort(([,a], [,b]) => b - a)
+      .sort(([, a], [, b]) => b - a)
       .slice(0, 5)
       .map(([industry, count]) => ({
         industry,
         count,
-        averageScore: opportunities
-          .filter(opp => opp.industry === industry)
-          .reduce((sum, opp) => sum + opp.opportunityScore, 0) / count
+        averageScore:
+          opportunities
+            .filter((opp) => opp.industry === industry)
+            .reduce((sum, opp) => sum + opp.opportunityScore, 0) / count,
       }));
 
     return {
@@ -237,7 +244,7 @@ export class MarketResearchService {
       highValueOpportunities: highValueOpps.length,
       averageOpportunityScore: Math.round(avgScore),
       topIndustries,
-      keyInsights: insights.slice(0, 3).map(insight => insight.title)
+      keyInsights: insights.slice(0, 3).map((insight) => insight.title),
     };
   }
 
@@ -263,7 +270,7 @@ export class MarketResearchService {
       }
     }
 
-    return queries.filter(q => q.trim().length > 0);
+    return queries.filter((q) => q.trim().length > 0);
   }
 
   private getIndustryTerms(industries?: string[]): string[] {
@@ -274,14 +281,14 @@ export class MarketResearchService {
       beauty: ['beauty', 'cosmetics', 'skincare'],
       electronics: ['electronics', 'tech gadgets', 'digital devices'],
       home: ['home goods', 'furniture', 'decor'],
-      health: ['health', 'wellness', 'supplements']
+      health: ['health', 'wellness', 'supplements'],
     };
 
     if (!industries || industries.length === 0) {
       return Object.values(industryMap).flat();
     }
 
-    return industries.flatMap(industry => industryMap[industry.toLowerCase()] || [industry]);
+    return industries.flatMap((industry) => industryMap[industry.toLowerCase()] || [industry]);
   }
 
   private getPlatformTerm(platform: string): string {
@@ -290,7 +297,7 @@ export class MarketResearchService {
       woocommerce: 'WooCommerce',
       magento: 'Magento',
       bigcommerce: 'BigCommerce',
-      custom: 'custom built'
+      custom: 'custom built',
     };
     return platformMap[platform.toLowerCase()] || platform;
   }
@@ -303,7 +310,7 @@ export class MarketResearchService {
         industry: 'fashion',
         region: 'US',
         revenue: { min: 1000000, max: 5000000 },
-        employees: 25
+        employees: 25,
       },
       {
         name: 'TechGadgets Pro',
@@ -311,7 +318,7 @@ export class MarketResearchService {
         industry: 'electronics',
         region: 'US',
         revenue: { min: 2000000, max: 8000000 },
-        employees: 45
+        employees: 45,
       },
       {
         name: 'Beauty Essentials',
@@ -319,14 +326,14 @@ export class MarketResearchService {
         industry: 'beauty',
         region: 'US',
         revenue: { min: 500000, max: 2000000 },
-        employees: 15
-      }
+        employees: 15,
+      },
     ];
   }
 
   private async createMarketOpportunity(
-    business: any, 
-    techAnalysis: TechStackAnalysis, 
+    business: any,
+    techAnalysis: TechStackAnalysis,
     query: MarketResearchQuery
   ): Promise<MarketOpportunity> {
     const wasteScore = this.calculateWasteScore(techAnalysis);
@@ -344,32 +351,32 @@ export class MarketResearchService {
         min: business.revenue.min,
         max: business.revenue.max,
         currency: 'USD',
-        confidence: 0.7
+        confidence: 0.7,
       },
       technology: {
         platform: techAnalysis.platform,
-        analytics: techAnalysis.analytics.map(a => a.name),
-        advertising: techAnalysis.advertising.map(a => a.name),
-        integrations: techAnalysis.integrations
+        analytics: techAnalysis.analytics.map((a) => a.name),
+        advertising: techAnalysis.advertising.map((a) => a.name),
+        integrations: techAnalysis.integrations,
       },
       marketPosition: {
         competitionLevel: 'medium',
-        growthRate: 0.15
+        growthRate: 0.15,
       },
       adSpendAnalysis: {
         estimatedMonthlySpend: {
           min: 5000,
-          max: 25000
+          max: 25000,
         },
         platforms: ['google', 'meta'],
         efficiency: 0.6,
-        wasteScore
+        wasteScore,
       },
       opportunityScore,
       readinessSignals: ['hiring'],
       riskFactors: wasteScore > 50 ? [] : ['lowBudget'],
       lastUpdated: new Date(),
-      dataSources: ['website_analysis', 'public_records', 'industry_data']
+      dataSources: ['website_analysis', 'public_records', 'industry_data'],
     };
   }
 
@@ -386,8 +393,8 @@ export class MarketResearchService {
   }
 
   private calculateOpportunityScore(
-    business: any, 
-    techAnalysis: TechnologyAnalysisResult, 
+    business: any,
+    techAnalysis: TechnologyAnalysisResult,
     wasteScore: number
   ): number {
     let score = 0;
@@ -411,12 +418,19 @@ export class MarketResearchService {
 
     if (criteria.minRevenue && opportunity.estimatedRevenue.max < criteria.minRevenue) return false;
     if (criteria.maxRevenue && opportunity.estimatedRevenue.min > criteria.maxRevenue) return false;
-    if (criteria.wasteScoreThreshold && opportunity.adSpendAnalysis.wasteScore < criteria.wasteScoreThreshold) return false;
+    if (
+      criteria.wasteScoreThreshold &&
+      opportunity.adSpendAnalysis.wasteScore < criteria.wasteScoreThreshold
+    )
+      return false;
 
     return true;
   }
 
-  private sortOpportunities(opportunities: MarketOpportunity[], query: MarketResearchQuery): MarketOpportunity[] {
+  private sortOpportunities(
+    opportunities: MarketOpportunity[],
+    query: MarketResearchQuery
+  ): MarketOpportunity[] {
     const sortBy = query.pagination?.sortBy || 'relevance';
     const sortOrder = query.pagination?.sortOrder || 'desc';
 
@@ -445,16 +459,16 @@ export class MarketResearchService {
     return [
       {
         url: 'https://modern-fashion-store.myshopify.com',
-        name: 'Modern Fashion Store'
+        name: 'Modern Fashion Store',
       },
       {
         url: 'https://tech-gadgets-plus.myshopify.com',
-        name: 'Tech Gadgets Plus'
+        name: 'Tech Gadgets Plus',
       },
       {
         url: 'httpsbeauty-haven.myshopify.com',
-        name: 'Beauty Haven'
-      }
+        name: 'Beauty Haven',
+      },
     ];
   }
 
@@ -468,49 +482,49 @@ export class MarketResearchService {
           price: 49.99,
           currency: 'USD',
           category: 'Fashion',
-          images: ['https://example.com/image.jpg']
-        }
+          images: ['https://example.com/image.jpg'],
+        },
       ],
       storeMetrics: {
         totalProducts: 150,
-        averagePrice: 67.50,
+        averagePrice: 67.5,
         priceRange: { min: 19.99, max: 299.99 },
         reviewCount: 1250,
         averageRating: 4.3,
-        lastUpdated: new Date()
+        lastUpdated: new Date(),
       },
       technology: {
         theme: 'Dawn Theme',
         apps: ['Klaviyo', 'ReCharge', 'Loox'],
-        customizations: ['Custom product pages', 'Advanced search']
+        customizations: ['Custom product pages', 'Advanced search'],
       },
       businessSignals: {
         aboutUs: 'We create sustainable fashion for modern consumers.',
         contactInfo: {
           email: 'contact@store.com',
-          phone: '+1-555-0123'
+          phone: '+1-555-0123',
         },
         socialMedia: {
           instagram: 'https://instagram.com/modernfashion',
-          facebook: 'https://facebook.com/modernfashion'
+          facebook: 'https://facebook.com/modernfashion',
         },
         shipping: {
           freeShippingThreshold: 75,
-          internationalShipping: true
+          internationalShipping: true,
         },
         policies: {
           returns: '30-day return policy',
           privacy: 'Privacy policy available',
-          terms: 'Terms of service available'
-        }
+          terms: 'Terms of service available',
+        },
       },
       estimatedMetrics: {
         monthlyVisitors: { min: 25000, max: 75000 },
         monthlyRevenue: { min: 75000, max: 225000 },
-        conversionRate: 0.025
+        conversionRate: 0.025,
       },
       opportunityScore: 78,
-      analysisDate: new Date()
+      analysisDate: new Date(),
     };
   }
 }

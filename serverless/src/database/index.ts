@@ -235,6 +235,88 @@ export function createDb(d1: D1Database) {
     },
 
     // Encrypted credential management
+    async getAgencyCredentials(agencyId: string): Promise<Record<string, any> | null> {
+      const agency = await d1
+        .prepare('SELECT google_ads_config, meta_config, stripe_config FROM agencies WHERE id = ?')
+        .bind(agencyId)
+        .first();
+
+      if (!agency) return null;
+
+      try {
+        const { decryptCredential } = await import('../services/encryption');
+        const credentials: Record<string, any> = {};
+
+        if (agency.google_ads_config) {
+          credentials.googleAds = JSON.parse(
+            await decryptCredential(JSON.parse(agency.google_ads_config), `agency-${agencyId}-googleAds`)
+          );
+        }
+        if (agency.meta_config) {
+          credentials.meta = JSON.parse(
+            await decryptCredential(JSON.parse(agency.meta_config), `agency-${agencyId}-meta`)
+          );
+        }
+        if (agency.stripe_config) {
+          credentials.stripe = JSON.parse(
+            await decryptCredential(JSON.parse(agency.stripe_config), `agency-${agencyId}-stripe`)
+          );
+        }
+
+        return credentials;
+      } catch (error) {
+        console.error('Failed to decrypt credentials:', error);
+        return null;
+      }
+    },
+
+    async validateCredentialFormat(platform: string, credentials: any): Promise<{ valid: boolean; errors?: string[] }> {
+      try {
+        switch (platform) {
+          case 'googleAds':
+            if (!credentials.apiKey || !credentials.clientId || !credentials.clientSecret || !credentials.developerToken) {
+              return {
+                valid: false,
+                errors: ['Google Ads credentials require apiKey, clientId, clientSecret, and developerToken']
+              };
+            }
+            // Basic format validation
+            if (typeof credentials.apiKey !== 'string' || !credentials.apiKey.startsWith('AIza')) {
+              return { valid: false, errors: ['Invalid Google Ads API key format'] };
+            }
+            break;
+
+          case 'stripe':
+            if (!credentials.secretKey || !credentials.publishableKey) {
+              return {
+                valid: false,
+                errors: ['Stripe credentials require secretKey and publishableKey']
+              };
+            }
+            if (!credentials.secretKey.startsWith('sk_') || !credentials.publishableKey.startsWith('pk_')) {
+              return { valid: false, errors: ['Invalid Stripe key format'] };
+            }
+            break;
+
+          case 'meta':
+            if (!credentials.accessToken || !credentials.appId || !credentials.appSecret) {
+              return {
+                valid: false,
+                errors: ['Meta credentials require accessToken, appId, and appSecret']
+              };
+            }
+            break;
+
+          default:
+            return { valid: false, errors: [`Unknown platform: ${platform}`] };
+        }
+
+        return { valid: true };
+      } catch (_error) {
+        return { valid: false, errors: ['Internal validation error'] };
+      }
+    },
+
     async updateAgencyCredentials(
       agencyId: string,
       credentials: {
@@ -281,112 +363,116 @@ export function createDb(d1: D1Database) {
 
         return true;
       } catch (error) {
-        console.error('Failed to update agency credentials:', error);
-        return false;
+        console.error('Failed to validate credential format:', error);
+        return { valid: false, errors: ['Internal validation error'] };
       }
     },
 
-    async getAgencyCredentials(agencyId: string): Promise<{
-      googleAds?: any;
-      meta?: any;
-      stripe?: any;
-    } | null> {
-      try {
-        const result = await d1
-          .prepare(`
-          SELECT google_ads_config, meta_config, stripe_config
-          FROM agencies WHERE id = ?
+    // Custom events management
+    async insertCustomEvent(data: {
+      id?: string;
+      org_id: string;
+      site_id: string;
+      event_name: string;
+      event_value?: number;
+      event_currency?: string;
+      customer_email?: string;
+      gclid_hash?: string;
+      event_timestamp?: string;
+      metadata?: Record<string, any>;
+    }): Promise<{ id: string }> {
+      const id = data.id || crypto.randomUUID();
+      await d1
+        .prepare(`
+          INSERT INTO custom_events (
+            id, org_id, site_id, event_name, event_value, event_currency,
+            customer_email, gclid_hash, event_timestamp, metadata, created_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `)
-          .bind(agencyId)
-          .first();
+        .bind(
+          id,
+          data.org_id,
+          data.site_id,
+          data.event_name,
+          data.event_value || null,
+          data.event_currency || 'USD',
+          data.customer_email || null,
+          data.gclid_hash || null,
+          data.event_timestamp || new Date().toISOString(),
+          JSON.stringify(data.metadata || {}),
+          new Date().toISOString()
+        )
+        .run();
 
-        if (!result) return null;
-
-        const credentials: Record<string, any> = {};
-
-        // Decrypt each credential type
-        if (result.google_ads_config) {
-          try {
-            const encryptedData = JSON.parse(result.google_ads_config);
-            // @ts-ignore - TypeScript inference issue with dynamic import
-            const decryptedValue: string = await decryptCredential(
-              encryptedData,
-              `agency-${agencyId}-googleAds`
-            );
-            credentials.googleAds = JSON.parse(decryptedValue as any);
-          } catch (error) {
-            console.error('Failed to decrypt Google Ads credentials:', error);
-          }
-        }
-
-        if (result.meta_config) {
-          try {
-            const encryptedData = JSON.parse(result.meta_config);
-            // @ts-ignore - TypeScript inference issue with dynamic import
-            const decryptedValue: string = await decryptCredential(
-              encryptedData,
-              `agency-${agencyId}-meta`
-            );
-            credentials.meta = JSON.parse(decryptedValue as any);
-          } catch (error) {
-            console.error('Failed to decrypt Meta credentials:', error);
-          }
-        }
-
-        if (result.stripe_config) {
-          try {
-            const encryptedData = JSON.parse(result.stripe_config);
-            // @ts-ignore - TypeScript inference issue with dynamic import
-            const decryptedValue: string = await decryptCredential(
-              encryptedData,
-              `agency-${agencyId}-stripe`
-            );
-            credentials.stripe = JSON.parse(decryptedValue as any);
-          } catch (error) {
-            console.error('Failed to decrypt Stripe credentials:', error);
-          }
-        }
-
-        return credentials;
-      } catch (error) {
-        console.error('Failed to retrieve agency credentials:', error);
-        return null;
-      }
+      return { id };
     },
 
-    async validateCredentialFormat(
-      platform: string,
-      credentials: any
-    ): Promise<{ valid: boolean; errors: string[] }> {
-      const errors: string[] = [];
+    async getCustomEventsByOrg(
+      orgId: string,
+      options: {
+        siteId?: string;
+        eventName?: string;
+        limit?: number;
+        offset?: number;
+        startDate?: string;
+        endDate?: string;
+      } = {}
+    ): Promise<any[]> {
+      const { siteId, eventName, limit = 50, offset = 0, startDate, endDate } = options;
 
-      switch (platform) {
-        case 'googleAds':
-          if (!credentials.apiKey?.startsWith('AIza'))
-            errors.push('Invalid Google Ads API key format');
-          if (!credentials.clientId) errors.push('Client ID required');
-          if (!credentials.clientSecret) errors.push('Client secret required');
-          if (!credentials.developerToken) errors.push('Developer token required');
-          break;
+      let query = 'SELECT * FROM custom_events WHERE org_id = ?';
+      const params: any[] = [orgId];
 
-        case 'meta':
-          if (!credentials.accessToken) errors.push('Access token required');
-          if (!credentials.appId) errors.push('App ID required');
-          if (!credentials.appSecret) errors.push('App secret required');
-          break;
-
-        case 'stripe':
-          if (!credentials.secretKey?.startsWith('sk_'))
-            errors.push('Invalid Stripe secret key format');
-          if (!credentials.publishableKey?.startsWith('pk_'))
-            errors.push('Invalid Stripe publishable key format');
-          break;
-
-        default:
-          errors.push(`Unknown platform: ${platform}`);
+      if (siteId) {
+        query += ' AND site_id = ?';
+        params.push(siteId);
+      }
+      if (eventName) {
+        query += ' AND event_name = ?';
+        params.push(eventName);
+      }
+      if (startDate) {
+        query += ' AND event_timestamp >= ?';
+        params.push(startDate);
+      }
+      if (endDate) {
+        query += ' AND event_timestamp <= ?';
+        params.push(endDate);
       }
 
-      return { valid: errors.length === 0, errors };
+      query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+      params.push(limit, offset);
+
+      const result = await d1
+        .prepare(query)
+        .bind(...params)
+        .all();
+      return result.results || [];
+    },
+
+    async countCustomEventsByOrg(
+      orgId: string,
+      options: { siteId?: string; eventName?: string } = {}
+    ): Promise<number> {
+      const { siteId, eventName } = options;
+
+      let query = 'SELECT COUNT(*) as count FROM custom_events WHERE org_id = ?';
+      const params: any[] = [orgId];
+
+      if (siteId) {
+        query += ' AND site_id = ?';
+        params.push(siteId);
+      }
+      if (eventName) {
+        query += ' AND event_name = ?';
+        params.push(eventName);
+      }
+
+      const result = await d1
+        .prepare(query)
+        .bind(...params)
+        .first<{ count: number }>();
+      return result?.count || 0;
     },
   };
 }

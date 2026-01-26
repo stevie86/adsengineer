@@ -1,6 +1,6 @@
-import { test, expect, describe, beforeAll, afterAll } from 'vitest';
-import { createApp } from '../../src/index';
 import { createId } from '@paralleldrive/cuid2';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { createApp } from '../../src/index';
 
 describe('Agency Onboarding Integration', () => {
   let app: any;

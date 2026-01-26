@@ -141,9 +141,7 @@ export class EncryptionService {
       // Decode base64 data
       const encrypted = base64ToUint8Array(encryptedData.encrypted);
       const iv = base64ToUint8Array(encryptedData.iv);
-      const tag = encryptedData.tag
-        ? base64ToUint8Array(encryptedData.tag)
-        : null;
+      const tag = encryptedData.tag ? base64ToUint8Array(encryptedData.tag) : null;
 
       // Reconstruct the encrypted data with auth tag
       const fullEncrypted = new Uint8Array(encrypted.length + (tag?.length || 0));

@@ -1,5 +1,5 @@
-import { Hono } from 'hono';
 import type { Context } from 'hono';
+import { Hono } from 'hono';
 
 export class OAuthStorageService {
   constructor(private db: D1Database) {}
@@ -7,20 +7,22 @@ export class OAuthStorageService {
   async storeEncryptedTokens(agencyId: string, tokens: any) {
     const encryptedTokens = await this.encryptOAuthTokens(tokens);
 
-    await this.db.prepare(`
+    await this.db
+      .prepare(`
       UPDATE agencies
       SET config = json_patch(config, json(?)),
           updated_at = datetime('now')
       WHERE id = ?
-    `).bind(
-      JSON.stringify({ oauth_tokens: encryptedTokens }),
-      agencyId
-    ).run();
+    `)
+      .bind(JSON.stringify({ oauth_tokens: encryptedTokens }), agencyId)
+      .run();
   }
 
   async getTokens(agencyId: string): Promise<any> {
-    const agency = await this.db.prepare('SELECT config FROM agencies WHERE id = ?')
-      .bind(agencyId).first();
+    const agency = await this.db
+      .prepare('SELECT config FROM agencies WHERE id = ?')
+      .bind(agencyId)
+      .first();
 
     if (!agency?.config?.oauth_tokens) return null;
 

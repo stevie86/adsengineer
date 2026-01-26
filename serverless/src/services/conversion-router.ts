@@ -22,25 +22,32 @@ export class ConversionRouter {
     const agency = await this.getAgencyConfig(agencyId);
     if (!agency) return { error: 'Agency not found' };
 
-    const hasSecondaryConfig = agency.secondary_google_ads_config &&
-                               JSON.parse(agency.secondary_google_ads_config).customerId;
+    const hasSecondaryConfig =
+      agency.secondary_google_ads_config &&
+      JSON.parse(agency.secondary_google_ads_config).customerId;
     const mode = hasSecondaryConfig ? 'parallel' : 'single';
 
     const results: any = {
       primary: null,
       secondary: null,
       mode: mode,
-      tiktok: null
+      tiktok: null,
     };
 
     if (mode === 'parallel') {
       const [primaryResult, secondaryResult] = await Promise.allSettled([
         this.uploadToPrimary(conversions, agency),
-        this.uploadToSecondary(conversions, agency)
+        this.uploadToSecondary(conversions, agency),
       ]);
 
-      results.primary = primaryResult.status === 'fulfilled' ? primaryResult.value : { error: primaryResult.reason };
-      results.secondary = secondaryResult.status === 'fulfilled' ? secondaryResult.value : { error: secondaryResult.reason };
+      results.primary =
+        primaryResult.status === 'fulfilled'
+          ? primaryResult.value
+          : { error: primaryResult.reason };
+      results.secondary =
+        secondaryResult.status === 'fulfilled'
+          ? secondaryResult.value
+          : { error: secondaryResult.reason };
     } else {
       results.primary = await this.uploadToPrimary(conversions, agency);
     }
@@ -49,7 +56,7 @@ export class ConversionRouter {
   }
 
   private async uploadToPrimary(conversions: Conversion[], agency: any) {
-    const googleConversions = conversions.filter(c => c.gclid);
+    const googleConversions = conversions.filter((c) => c.gclid);
 
     const results: any = {};
 
@@ -67,7 +74,7 @@ export class ConversionRouter {
   }
 
   private async uploadToSecondary(conversions: Conversion[], agency: any) {
-    const googleConversions = conversions.filter(c => c.gclid);
+    const googleConversions = conversions.filter((c) => c.gclid);
 
     if (googleConversions.length > 0 && agency.secondary_google_ads_config) {
       try {
@@ -83,8 +90,10 @@ export class ConversionRouter {
   }
 
   private async getAgencyConfig(agencyId: string) {
-    const result = await this.db.prepare('SELECT * FROM agencies WHERE id = ?')
-      .bind(agencyId).first();
+    const result = await this.db
+      .prepare('SELECT * FROM agencies WHERE id = ?')
+      .bind(agencyId)
+      .first();
 
     return result;
   }

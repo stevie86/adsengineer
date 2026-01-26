@@ -95,7 +95,13 @@ adminRoutes.get('/backup', async (c) => {
     await encryptBackup(JSON.stringify(backup), encryptionKey);
     return c.json(backup);
   } catch (error) {
-    return c.json({ error: 'Backup generation failed', details: error.message }, 500);
+    return c.json(
+      {
+        error: 'Backup generation failed',
+        details: error instanceof Error ? error.message : String(error),
+      },
+      500
+    );
   }
 });
 
@@ -268,8 +274,8 @@ adminRoutes.get('/agencies', async (c) => {
       pagination: {
         page,
         limit,
-        total: agencies.meta?.total || 0
-      }
+        total: agencies.meta?.total || 0,
+      },
     });
   } catch (error) {
     console.error('Agencies fetch error:', error);
@@ -287,7 +293,7 @@ adminRoutes.post('/agencies', async (c) => {
   try {
     const customerId = `cust_${crypto.randomUUID()}`;
     const agencyId = crypto.randomUUID();
-    
+
     const result = await db
       .prepare(`
         INSERT INTO agencies (id, name, customer_id, contact_email, google_ads_config, status, created_at, updated_at)
@@ -697,8 +703,8 @@ adminRoutes.post('/stripe/test-customer', async (c) => {
       livemode: false,
       metadata: {
         source: 'adsengineer-admin-test',
-        created_by: 'admin-dashboard'
-      }
+        created_by: 'admin-dashboard',
+      },
     };
 
     // In production, this would be:
@@ -712,16 +718,17 @@ adminRoutes.post('/stripe/test-customer', async (c) => {
       success: true,
       message: 'Stripe test customer created successfully',
       customer: testCustomer,
-      note: 'This is a mock response. In production, this would create a real Stripe customer.'
+      note: 'This is a mock response. In production, this would create a real Stripe customer.',
     });
-
   } catch (error) {
     console.error('Stripe test error:', error);
-    return c.json({
-      success: false,
-      error: 'Failed to create test customer',
-      details: error.message
-    }, 500);
+    return c.json(
+      {
+        success: false,
+        error: 'Failed to create test customer',
+        details: error instanceof Error ? error.message : String(error),
+      },
+      500
+    );
   }
 });
-

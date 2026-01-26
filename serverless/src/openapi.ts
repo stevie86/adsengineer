@@ -619,10 +619,17 @@ export const openApiSpec = {
                 required: ['site_id', 'event_name', 'value'],
                 properties: {
                   site_id: { type: 'string', description: 'Site identifier' },
-                  event_name: { type: 'string', description: 'Event name (e.g., subscription_start, high_value_purchase)' },
+                  event_name: {
+                    type: 'string',
+                    description: 'Event name (e.g., subscription_start, high_value_purchase)',
+                  },
                   value: { type: 'number', description: 'Event value in cents' },
                   currency: { type: 'string', description: 'Currency code (default: USD)' },
-                  customer_email: { type: 'string', format: 'email', description: 'Customer email for PII hashing' },
+                  customer_email: {
+                    type: 'string',
+                    format: 'email',
+                    description: 'Customer email for PII hashing',
+                  },
                   gclid: { type: 'string', description: 'Google Click ID' },
                   fbclid: { type: 'string', description: 'Facebook Click ID' },
                   utm_source: { type: 'string' },
@@ -727,8 +734,8 @@ export const openApiSpec = {
           '400': { description: 'Missing data or iv' },
           '401': { description: 'Missing authorization' },
         },
-        },
       },
+    },
     '/api/v1/custom-event-definitions/definitions': {
       get: {
         tags: ['Custom Events'],
@@ -753,7 +760,10 @@ export const openApiSpec = {
                           event_name: { type: 'string' },
                           display_name: { type: 'string' },
                           description: { type: 'string' },
-                          trigger_type: { type: 'string', enum: ['webhook', 'frontend', 'api', 'manual'] },
+                          trigger_type: {
+                            type: 'string',
+                            enum: ['webhook', 'frontend', 'api', 'manual'],
+                          },
                           is_active: { type: 'boolean' },
                           google_ads_conversion_action: { type: 'string' },
                           google_ads_category: { type: 'string' },
@@ -785,9 +795,18 @@ export const openApiSpec = {
                   display_name: { type: 'string', description: 'Human-readable name' },
                   description: { type: 'string', description: 'Event purpose and behavior' },
                   trigger_type: { type: 'string', enum: ['webhook', 'frontend', 'api', 'manual'] },
-                  trigger_conditions: { type: 'object', description: 'Platform-specific conditions' },
-                  google_ads_conversion_action: { type: 'string', description: 'Google Ads conversion action name' },
-                  google_ads_category: { type: 'string', description: 'Google Ads conversion category' },
+                  trigger_conditions: {
+                    type: 'object',
+                    description: 'Platform-specific conditions',
+                  },
+                  google_ads_conversion_action: {
+                    type: 'string',
+                    description: 'Google Ads conversion action name',
+                  },
+                  google_ads_category: {
+                    type: 'string',
+                    description: 'Google Ads conversion category',
+                  },
                   strategic_value: { type: 'string', description: 'Business value description' },
                   priority: { type: 'integer', description: 'Display and processing priority' },
                 },

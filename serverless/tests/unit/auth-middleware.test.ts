@@ -1,7 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import { Hono } from 'hono';
-import { authMiddleware, optionalAuthMiddleware, extractAuthContext } from '../../src/middleware/auth';
+import { beforeEach, describe, expect, it } from 'vitest';
 import type { JWTPayload } from '../../src/middleware/auth';
+import {
+  authMiddleware,
+  extractAuthContext,
+  optionalAuthMiddleware,
+} from '../../src/middleware/auth';
 
 const testSecret = 'test-jwt-secret-key-for-testing-purposes';
 
@@ -17,8 +21,14 @@ async function createValidJWT(payload: Partial<JWTPayload> = {}): Promise<string
   };
 
   const header = { alg: 'HS256', typ: 'JWT' };
-  const headerB64 = btoa(JSON.stringify(header)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-  const payloadB64 = btoa(JSON.stringify(fullPayload)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+  const headerB64 = btoa(JSON.stringify(header))
+    .replace(/=/g, '')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_');
+  const payloadB64 = btoa(JSON.stringify(fullPayload))
+    .replace(/=/g, '')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_');
 
   const message = `${headerB64}.${payloadB64}`;
 
@@ -26,10 +36,19 @@ async function createValidJWT(payload: Partial<JWTPayload> = {}): Promise<string
   const keyData = encoder.encode(testSecret);
   const dataBytes = encoder.encode(message);
 
-  const key = await crypto.subtle.importKey('raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const key = await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
 
   const signature = await crypto.subtle.sign('HMAC', key, dataBytes);
-  const signatureB64 = btoa(String.fromCharCode(...new Uint8Array(signature))).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+  const signatureB64 = btoa(String.fromCharCode(...new Uint8Array(signature)))
+    .replace(/=/g, '')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_');
 
   return `${message}.${signatureB64}`;
 }
@@ -46,8 +65,13 @@ describe('Auth Middleware', () => {
 
   beforeEach(() => {
     app = new Hono();
-    app.use('*', authMiddleware());
-    app.get('/protected', (c) => {
+    // Global middleware to set JWT_SECRET for all tests
+    app.use('*', (c, next) => {
+      c.env = { ...c.env, JWT_SECRET: testSecret };
+      return next();
+    });
+    // Apply auth middleware only to protected routes
+    app.get('/protected', authMiddleware(), (c) => {
       const auth = extractAuthContext(c);
       if (!auth) {
         return c.json({ error: 'No auth context' }, 500);
@@ -70,9 +94,16 @@ describe('Auth Middleware', () => {
   describe('Valid JWT', () => {
     it('allows access with valid token', async () => {
       const token = await createValidJWT();
+      console.log('Test token:', token.substring(0, 50) + '...');
+      console.log('Test secret:', testSecret);
       const res = await requestWithEnv('/protected', {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log('Response status:', res.status);
+      if (res.status !== 200) {
+        const data = await res.json();
+        console.log('Response data:', data);
+      }
       expect(res.status).toBe(200);
       const data = await res.json();
       expect(data.user_id).toBe('user123');
@@ -133,23 +164,38 @@ describe('Auth Middleware', () => {
     it('rejects token with wrong issuer', async () => {
       const now = Math.floor(Date.now() / 1000);
       const header = { alg: 'HS256', typ: 'JWT' };
-      const headerB64 = btoa(JSON.stringify(header)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+      const headerB64 = btoa(JSON.stringify(header))
+        .replace(/=/g, '')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_');
       const payload = {
         sub: 'user123',
         iss: 'attacker',
         aud: 'adsengineer-api',
         exp: now + 3600,
       };
-      const payloadB64 = btoa(JSON.stringify(payload)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+      const payloadB64 = btoa(JSON.stringify(payload))
+        .replace(/=/g, '')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_');
       const message = `${headerB64}.${payloadB64}`;
 
       const encoder = new TextEncoder();
       const keyData = encoder.encode(testSecret);
       const dataBytes = encoder.encode(message);
 
-      const key = await crypto.subtle.importKey('raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+      const key = await crypto.subtle.importKey(
+        'raw',
+        keyData,
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign']
+      );
       const signature = await crypto.subtle.sign('HMAC', key, dataBytes);
-      const signatureB64 = btoa(String.fromCharCode(...new Uint8Array(signature))).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+      const signatureB64 = btoa(String.fromCharCode(...new Uint8Array(signature)))
+        .replace(/=/g, '')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_');
 
       const token = `${message}.${signatureB64}`;
       const res = await requestWithEnv('/protected', {
@@ -161,23 +207,38 @@ describe('Auth Middleware', () => {
     it('rejects token with wrong audience', async () => {
       const now = Math.floor(Date.now() / 1000);
       const header = { alg: 'HS256', typ: 'JWT' };
-      const headerB64 = btoa(JSON.stringify(header)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+      const headerB64 = btoa(JSON.stringify(header))
+        .replace(/=/g, '')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_');
       const payload = {
         sub: 'user123',
         iss: 'adsengineer',
         aud: 'wrong-audience',
         exp: now + 3600,
       };
-      const payloadB64 = btoa(JSON.stringify(payload)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+      const payloadB64 = btoa(JSON.stringify(payload))
+        .replace(/=/g, '')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_');
       const message = `${headerB64}.${payloadB64}`;
 
       const encoder = new TextEncoder();
       const keyData = encoder.encode(testSecret);
       const dataBytes = encoder.encode(message);
 
-      const key = await crypto.subtle.importKey('raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+      const key = await crypto.subtle.importKey(
+        'raw',
+        keyData,
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign']
+      );
       const signature = await crypto.subtle.sign('HMAC', key, dataBytes);
-      const signatureB64 = btoa(String.fromCharCode(...new Uint8Array(signature))).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+      const signatureB64 = btoa(String.fromCharCode(...new Uint8Array(signature)))
+        .replace(/=/g, '')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_');
 
       const token = `${message}.${signatureB64}`;
       const res = await requestWithEnv('/protected', {

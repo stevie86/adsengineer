@@ -31,31 +31,27 @@ export class TechStackAnalyzer {
       indicators: [
         'Shopify Analytics object present',
         'Buy Button implemented',
-        'HTTPS enabled on checkout'
-      ]
+        'HTTPS enabled on checkout',
+      ],
     },
     woocommerce: {
       scripts: ['woocommerce', 'wc-add-to-cart', 'wc-checkout'],
       meta: ['woocommerce_version', 'wc-api-version'],
       apis: ['/wc-api/v3/', '?rest_route=/wc/'],
       classes: ['woocommerce', 'WooCommerce', 'WC-'],
-      indicators: [
-        'WC REST API available',
-        'Product data accessible',
-        'Checkout flow implemented'
-      ]
+      indicators: ['WC REST API available', 'Product data accessible', 'Checkout flow implemented'],
     },
     magento: {
       scripts: ['Mage.Cookies', 'Mage.Cookies'],
       meta: ['magento-version', 'magento-edition'],
       apis: ['/rest/', '/V1/'],
-      classes: ['Mage-', 'Magento_']
+      classes: ['Mage-', 'Magento_'],
     },
     bigcommerce: {
       scripts: ['bigcommerce'],
       meta: ['bigcommerce-token'],
       apis: ['/api/', '/stores/'],
-      classes: ['bc-', 'BigCommerce']
+      classes: ['bc-', 'BigCommerce'],
     },
     googleAnalytics: {
       scripts: ['gtag', 'ga', 'analytics'],
@@ -64,8 +60,8 @@ export class TechStackAnalyzer {
       indicators: [
         'Google Analytics tracking implemented',
         'Enhanced ecommerce tracking active',
-        'DataLayer present'
-      ]
+        'DataLayer present',
+      ],
     },
     googleAds: {
       scripts: ['googleads', 'google_conversion'],
@@ -74,45 +70,36 @@ export class TechStackAnalyzer {
       indicators: [
         'Google Ads conversion tracking',
         'Conversion action types defined',
-        'GCLID parameter handling'
-      ]
+        'GCLID parameter handling',
+      ],
     },
     metaAds: {
       scripts: ['fbevents', 'facebook', 'pixel'],
       params: ['fbclid', 'fbp', '_fbc'],
       conversionFormat: ['fb_pixel', 'fb_server_to_server'],
-      indicators: [
-        'Meta Pixel implemented',
-        'CAPI available',
-        'Facebook pixel tracking'
-      ]
+      indicators: ['Meta Pixel implemented', 'CAPI available', 'Facebook pixel tracking'],
     },
     tiktok: {
       scripts: ['tiktok', 'ttq'],
       params: ['ttclid', 'tiktok_click_id'],
       pixelEvents: ['PageView', 'ViewContent', 'Purchase'],
-      indicators: [
-        'TikTok Pixel implemented',
-        'TikTok events configured'
-      ]
+      indicators: ['TikTok Pixel implemented', 'TikTok events configured'],
     },
     linkedinAds: {
       scripts: ['linkedininsight', 'linkedin'],
       params: ['msclkid'],
       conversionFormat: ['msclkid'],
-      indicators: [
-        'LinkedIn Insight Tag present',
-        'Conversion tracking active'
-      ]
-    }
+      indicators: ['LinkedIn Insight Tag present', 'Conversion tracking active'],
+    },
   };
 
   async analyzeTechStack(url: string): Promise<TechStackAnalysis> {
     try {
       const response = await fetch(url, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0; Safari/537.36'
-        }
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0; Safari/537.36',
+        },
       });
 
       if (!response.ok) {
@@ -131,7 +118,7 @@ export class TechStackAnalyzer {
         integration: await this.detectIntegration(html, headers),
         security: await this.detectSecurity(html, headers),
         performance: await this.detectPerformance(html, headers),
-        overallConfidence: 0
+        overallConfidence: 0,
       };
 
       const allDetections = [
@@ -142,11 +129,12 @@ export class TechStackAnalyzer {
         analysis.ecommerce,
         ...analysis.integration,
         ...analysis.security,
-        ...analysis.performance
+        ...analysis.performance,
       ];
 
-      const confidenceScores = allDetections.map(detection => detection.confidence);
-      const avgConfidence = confidenceScores.reduce((sum, score) => sum + score, 0) / confidenceScores.length;
+      const confidenceScores = allDetections.map((detection) => detection.confidence);
+      const avgConfidence =
+        confidenceScores.reduce((sum, score) => sum + score, 0) / confidenceScores.length;
 
       analysis.overallConfidence = Math.max(0.1, Math.min(avgConfidence, 1.0));
 
@@ -157,11 +145,19 @@ export class TechStackAnalyzer {
     }
   }
 
-  private async detectPlatform(html: string, headers: Record<string, string>): Promise<TechDetection> {
+  private async detectPlatform(
+    html: string,
+    headers: Record<string, string>
+  ): Promise<TechDetection> {
     const detections: TechDetection[] = [];
 
     for (const [platform, patterns] of Object.entries(this.patterns)) {
-      if (platform === 'shopify' || platform === 'woocommerce' || platform === 'magento' || platform === 'bigcommerce') {
+      if (
+        platform === 'shopify' ||
+        platform === 'woocommerce' ||
+        platform === 'magento' ||
+        platform === 'bigcommerce'
+      ) {
         const confidence = this.calculateConfidence(html, headers, patterns);
         if (confidence > 0.3) {
           const evidence = this.getEvidence(html, headers, patterns);
@@ -171,46 +167,54 @@ export class TechStackAnalyzer {
             technology: platform,
             confidence,
             evidence,
-            version
+            version,
           });
         }
       }
     }
 
-    return detections.length > 0 ? detections[0] : {
-      technology: 'unknown',
-      confidence: 0,
-      evidence: []
-    };
+    return detections.length > 0
+      ? detections[0]
+      : {
+          technology: 'unknown',
+          confidence: 0,
+          evidence: [],
+        };
   }
 
-  private async detectAnalytics(html: string, headers: Record<string, string>): Promise<TechDetection[]> {
+  private async detectAnalytics(
+    html: string,
+    headers: Record<string, string>
+  ): Promise<TechDetection[]> {
     const detections: TechDetection[] = [];
 
     if (this.hasPattern(html, this.patterns.googleAnalytics)) {
       const confidence = this.calculateConfidence(html, headers, this.patterns.googleAnalytics);
       const evidence = this.getEvidence(html, headers, this.patterns.googleAnalytics);
-      
+
       const details = {
         hasGtag: html.includes('gtag('),
         hasDataLayer: html.includes('dataLayer'),
         hasEcommerce: html.includes('ecommerce') || html.includes('purchase'),
         hasUserTracking: html.includes('user_id'),
-        hasProductData: html.includes('product_id')
+        hasProductData: html.includes('product_id'),
       };
 
       detections.push({
         technology: 'google-analytics',
         confidence,
         evidence,
-        details
+        details,
       });
     }
 
     return detections;
   }
 
-  private async detectAdvertising(html: string, headers: Record<string, string>): Promise<TechDetection[]> {
+  private async detectAdvertising(
+    html: string,
+    headers: Record<string, string>
+  ): Promise<TechDetection[]> {
     const detections: TechDetection[] = [];
 
     if (this.hasPattern(html, this.patterns.googleAds)) {
@@ -221,8 +225,8 @@ export class TechStackAnalyzer {
         details: {
           hasConversionTracking: html.includes('google_conversion'),
           hasGCLID: html.includes('gclid'),
-          hasEnhancedEcommerce: html.includes('enhanced_ecommerce')
-        }
+          hasEnhancedEcommerce: html.includes('enhanced_ecommerce'),
+        },
       });
     }
 
@@ -234,8 +238,8 @@ export class TechStackAnalyzer {
         details: {
           hasPixel: html.includes('fbevents'),
           hasCAPI: html.includes('facebook.com/tr'),
-          hasFBCLID: html.includes('fbclid')
-        }
+          hasFBCLID: html.includes('fbclid'),
+        },
       });
     }
 
@@ -247,8 +251,8 @@ export class TechStackAnalyzer {
         details: {
           hasPixel: html.includes('ttq'),
           hasTTCLID: html.includes('ttclid'),
-          hasWebEvents: html.includes('tiktok')
-        }
+          hasWebEvents: html.includes('tiktok'),
+        },
       });
     }
 
@@ -257,13 +261,13 @@ export class TechStackAnalyzer {
 
   private async detectCRM(html: string, headers: Record<string, string>): Promise<TechDetection> {
     const crmList = ['hubspot', 'salesforce', 'pipedrive', 'zoho', 'freshworks', 'insightly'];
-    
+
     for (const crm of crmList) {
       if (this.hasPattern(html, { scripts: [crm] })) {
         return {
           technology: crm,
           confidence: 0.7,
-          evidence: [`${crm} detected in HTML`]
+          evidence: [`${crm} detected in HTML`],
         };
       }
     }
@@ -271,32 +275,48 @@ export class TechStackAnalyzer {
     return {
       technology: 'none',
       confidence: 0,
-      evidence: []
+      evidence: [],
     };
   }
 
-  private async detectEcommerce(html: string, headers: Record<string, string>): Promise<TechDetection> {
+  private async detectEcommerce(
+    html: string,
+    headers: Record<string, string>
+  ): Promise<TechDetection> {
     const detections: TechDetection[] = [];
 
     for (const platform of ['shopify', 'woocommerce', 'magento', 'bigcommerce']) {
       if (this.hasPattern(html, this.patterns[platform as keyof typeof this.patterns])) {
         detections.push({
           technology: platform,
-          confidence: this.calculateConfidence(html, headers, this.patterns[platform as keyof typeof this.patterns]),
-          evidence: this.getEvidence(html, headers, this.patterns[platform as keyof typeof this.patterns]),
-          version: this.extractVersion(html, this.patterns[platform as keyof typeof this.patterns])
+          confidence: this.calculateConfidence(
+            html,
+            headers,
+            this.patterns[platform as keyof typeof this.patterns]
+          ),
+          evidence: this.getEvidence(
+            html,
+            headers,
+            this.patterns[platform as keyof typeof this.patterns]
+          ),
+          version: this.extractVersion(html, this.patterns[platform as keyof typeof this.patterns]),
         });
       }
     }
 
-    return detections.length > 0 ? detections[0] : {
-      technology: 'none',
-      confidence: 0,
-      evidence: []
-    };
+    return detections.length > 0
+      ? detections[0]
+      : {
+          technology: 'none',
+          confidence: 0,
+          evidence: [],
+        };
   }
 
-  private async detectIntegration(html: string, headers: Record<string, string>): Promise<TechDetection[]> {
+  private async detectIntegration(
+    html: string,
+    headers: Record<string, string>
+  ): Promise<TechDetection[]> {
     const detections: TechDetection[] = [];
 
     const paymentProcessors = ['stripe', 'paypal', 'adyen', 'square'];
@@ -305,7 +325,7 @@ export class TechStackAnalyzer {
         detections.push({
           technology: `payment-${processor}`,
           confidence: 0.8,
-          evidence: [`${processor} payment processor detected`]
+          evidence: [`${processor} payment processor detected`],
         });
       }
     }
@@ -316,7 +336,7 @@ export class TechStackAnalyzer {
         detections.push({
           technology: `shipping-${service}`,
           confidence: 0.7,
-          evidence: [`${service} shipping service detected`]
+          evidence: [`${service} shipping service detected`],
         });
       }
     }
@@ -324,14 +344,17 @@ export class TechStackAnalyzer {
     return detections;
   }
 
-  private async detectSecurity(html: string, headers: Record<string, string>): Promise<TechDetection[]> {
+  private async detectSecurity(
+    html: string,
+    headers: Record<string, string>
+  ): Promise<TechDetection[]> {
     const detections: TechDetection[] = [];
 
     if (headers['x-frame-options']) {
       detections.push({
         technology: 'clickjacking-protection',
         confidence: 0.9,
-        evidence: ['X-Frame-Options header present']
+        evidence: ['X-Frame-Options header present'],
       });
     }
 
@@ -339,7 +362,7 @@ export class TechStackAnalyzer {
       detections.push({
         technology: 'csp',
         confidence: 0.9,
-        evidence: ['Content-Security-Policy header present']
+        evidence: ['Content-Security-Policy header present'],
       });
     }
 
@@ -347,21 +370,24 @@ export class TechStackAnalyzer {
       detections.push({
         technology: 'https-only',
         confidence: 0.8,
-        evidence: ['HTTPS protocol detected']
+        evidence: ['HTTPS protocol detected'],
       });
     }
 
     return detections;
   }
 
-  private async detectPerformance(html: string, headers: Record<string, string>): Promise<TechDetection[]> {
+  private async detectPerformance(
+    html: string,
+    headers: Record<string, string>
+  ): Promise<TechDetection[]> {
     const detections: TechDetection[] = [];
 
     if (html.includes('rel="preload"')) {
       detections.push({
         technology: 'resource-preloading',
         confidence: 0.7,
-        evidence: ['Resource preloading detected']
+        evidence: ['Resource preloading detected'],
       });
     }
 
@@ -369,30 +395,40 @@ export class TechStackAnalyzer {
       detections.push({
         technology: 'script-optimization',
         confidence: 0.6,
-        evidence: ['Async/defer scripts detected']
+        evidence: ['Async/defer scripts detected'],
       });
     }
 
     return detections;
   }
 
-  private calculateConfidence(html: string, headers: Record<string, string>, patterns: any): number {
+  private calculateConfidence(
+    html: string,
+    headers: Record<string, string>,
+    patterns: any
+  ): number {
     let confidence = 0;
     let totalChecks = 0;
 
     if (patterns.scripts) {
       totalChecks += patterns.scripts.length;
-      confidence += patterns.scripts.filter((script: string) => html.includes(script)).length / patterns.scripts.length;
+      confidence +=
+        patterns.scripts.filter((script: string) => html.includes(script)).length /
+        patterns.scripts.length;
     }
 
     if (patterns.meta) {
       totalChecks += patterns.meta.length;
-      confidence += patterns.meta.filter((meta: string) => html.includes(meta) || headers[meta]).length / patterns.meta.length;
+      confidence +=
+        patterns.meta.filter((meta: string) => html.includes(meta) || headers[meta]).length /
+        patterns.meta.length;
     }
 
     if (patterns.domains) {
       totalChecks += patterns.domains.length;
-      confidence += patterns.domains.filter((domain: string) => html.includes(domain)).length / patterns.domains.length;
+      confidence +=
+        patterns.domains.filter((domain: string) => html.includes(domain)).length /
+        patterns.domains.length;
     }
 
     return totalChecks > 0 ? Math.min(confidence / totalChecks, 1) : 0;

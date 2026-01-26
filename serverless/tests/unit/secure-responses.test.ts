@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Local implementations for testing (copied from shopify.ts)
 function createSecureErrorResponse(errorType: string, statusCode: number) {

@@ -1,5 +1,5 @@
-import { test, expect, describe, vi } from 'vitest';
 import { Hono } from 'hono';
+import { describe, expect, test, vi } from 'vitest';
 import { adminRoutes } from '../../src/routes/admin';
 
 // Create a proper mock for D1 database that supports chaining

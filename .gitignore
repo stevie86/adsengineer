@@ -11,7 +11,11 @@ node_modules/
 .env
 .env.*
 .stripe.env
+.dev.vars
 !.env.example
+
+# Wrangler
+.wrangler/
 
 # Doppler
 doppler/

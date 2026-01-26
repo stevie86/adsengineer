@@ -29,7 +29,7 @@ interface GHLWebhookPayload {
 ghlRoutes.post('/webhook', async (c) => {
   try {
     const payload: GHLWebhookPayload = await c.req.json();
-    const db = c.get('db');
+    const db = c.env.DB;
 
     if (!payload.email && !payload.contact_id) {
       return c.json({ error: 'email or contact_id required' }, 400);

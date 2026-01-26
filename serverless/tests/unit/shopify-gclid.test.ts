@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { isValidGCLID, hashGCLID, redactGCLID } from '../../src/utils/gclid';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { hashGCLID, isValidGCLID, redactGCLID } from '../../src/utils/gclid';
 
 describe('GCLID Utilities - Shopify MVP', () => {
   describe('isValidGCLID', () => {
@@ -117,9 +117,7 @@ describe('Shopify Webhook GCLID Extraction', () => {
       id: 123,
       email: 'customer@example.com',
       landing_site: 'https://mycannaby.de/checkout',
-      note_attributes: [
-        { name: 'gclid', value: 'GCLID_FromJS_abcdefghijklmnopqrstuvwxyz' },
-      ],
+      note_attributes: [{ name: 'gclid', value: 'GCLID_FromJS_abcdefghijklmnopqrstuvwxyz' }],
     };
 
     const gclid = await extractGCLIDFromOrder(order);

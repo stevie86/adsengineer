@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Hono } from 'hono';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { waitlist } from '../../src/routes/waitlist';
 
 describe('Waitlist Routes', () => {
@@ -19,7 +19,7 @@ describe('Waitlist Routes', () => {
         company: 'Test Company',
         phone: '+1234567890',
         useCase: 'e-commerce attribution',
-        source: 'landing-page'
+        source: 'landing-page',
       };
 
       vi.mock('../../src/services/waitlist', () => ({
@@ -27,18 +27,18 @@ describe('Waitlist Routes', () => {
           id: 'waitlist-123',
           ...waitlistData,
           status: 'pending',
-          addedAt: '2026-01-12T15:30:00Z'
-        })
+          addedAt: '2026-01-12T15:30:00Z',
+        }),
       }));
 
       vi.mock('../../src/services/email', () => ({
-        sendWaitlistConfirmation: vi.fn().mockResolvedValue(true)
+        sendWaitlistConfirmation: vi.fn().mockResolvedValue(true),
       }));
 
       const response = await app.request('/api/v1/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(waitlistData)
+        body: JSON.stringify(waitlistData),
       });
 
       expect(response.status).toBe(201);
@@ -53,13 +53,13 @@ describe('Waitlist Routes', () => {
     it('should validate email format', async () => {
       const invalidData = {
         email: 'invalid-email',
-        name: 'John Doe'
+        name: 'John Doe',
       };
 
       const response = await app.request('/api/v1/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(invalidData)
+        body: JSON.stringify(invalidData),
       });
 
       expect(response.status).toBe(400);
@@ -70,13 +70,13 @@ describe('Waitlist Routes', () => {
 
     it('should require email field', async () => {
       const invalidData = {
-        name: 'John Doe'
+        name: 'John Doe',
       };
 
       const response = await app.request('/api/v1/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(invalidData)
+        body: JSON.stringify(invalidData),
       });
 
       expect(response.status).toBe(400);
@@ -88,17 +88,17 @@ describe('Waitlist Routes', () => {
     it('should check for existing email', async () => {
       const waitlistData = {
         email: 'existing@example.com',
-        name: 'John Doe'
+        name: 'John Doe',
       };
 
       vi.mock('../../src/services/waitlist', () => ({
-        addToWaitlist: vi.fn().mockRejectedValue(new Error('Email already exists'))
+        addToWaitlist: vi.fn().mockRejectedValue(new Error('Email already exists')),
       }));
 
       const response = await app.request('/api/v1/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(waitlistData)
+        body: JSON.stringify(waitlistData),
       });
 
       expect(response.status).toBe(409);
@@ -111,7 +111,7 @@ describe('Waitlist Routes', () => {
       const waitlistData = {
         email: 'user@example.com',
         name: '<script>alert("xss")</script>',
-        company: 'Test Company'
+        company: 'Test Company',
       };
 
       vi.mock('../../src/services/waitlist', () => ({
@@ -120,14 +120,14 @@ describe('Waitlist Routes', () => {
           email: 'user@example.com',
           name: 'alert("xss")',
           company: 'Test Company',
-          status: 'pending'
-        })
+          status: 'pending',
+        }),
       }));
 
       const response = await app.request('/api/v1/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(waitlistData)
+        body: JSON.stringify(waitlistData),
       });
 
       expect(response.status).toBe(201);
@@ -148,13 +148,13 @@ describe('Waitlist Routes', () => {
           status: 'pending',
           position: 45,
           estimatedAccess: '2026-02-15',
-          addedAt: '2026-01-12T15:30:00Z'
-        })
+          addedAt: '2026-01-12T15:30:00Z',
+        }),
       }));
 
       const response = await app.request(`/api/v1/waitlist/status/${encodeURIComponent(email)}`, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(200);
@@ -169,12 +169,12 @@ describe('Waitlist Routes', () => {
       const email = 'nonexistent@example.com';
 
       vi.mock('../../src/services/waitlist', () => ({
-        getWaitlistStatus: vi.fn().mockResolvedValue(null)
+        getWaitlistStatus: vi.fn().mockResolvedValue(null),
       }));
 
       const response = await app.request(`/api/v1/waitlist/status/${encodeURIComponent(email)}`, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(404);
@@ -188,7 +188,7 @@ describe('Waitlist Routes', () => {
 
       const response = await app.request(`/api/v1/waitlist/status/${invalidEmail}`, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(400);
@@ -207,23 +207,23 @@ describe('Waitlist Routes', () => {
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'user-123', role: 'user' });
           await next();
-        }
+        },
       }));
 
       vi.mock('../../src/services/waitlist', () => ({
         removeFromWaitlist: vi.fn().mockResolvedValue({
           id: 'waitlist-123',
           email: email,
-          removedAt: '2026-01-12T15:30:00Z'
-        })
+          removedAt: '2026-01-12T15:30:00Z',
+        }),
       }));
 
       const response = await app.request(`/api/v1/waitlist/${encodeURIComponent(email)}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${mockToken}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${mockToken}`,
+          'Content-Type': 'application/json',
+        },
       });
 
       expect(response.status).toBe(200);
@@ -237,7 +237,7 @@ describe('Waitlist Routes', () => {
 
       const response = await app.request(`/api/v1/waitlist/${encodeURIComponent(email)}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
 
       expect(response.status).toBe(401);
@@ -253,19 +253,19 @@ describe('Waitlist Routes', () => {
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'different-user-456', role: 'user' });
           await next();
-        }
+        },
       }));
 
       vi.mock('../../src/services/waitlist', () => ({
-        removeFromWaitlist: vi.fn().mockRejectedValue(new Error('Email does not belong to user'))
+        removeFromWaitlist: vi.fn().mockRejectedValue(new Error('Email does not belong to user')),
       }));
 
       const response = await app.request(`/api/v1/waitlist/${encodeURIComponent(email)}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${mockToken}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${mockToken}`,
+          'Content-Type': 'application/json',
+        },
       });
 
       expect(response.status).toBe(403);
@@ -283,25 +283,25 @@ describe('Waitlist Routes', () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: `user${i}@example.com`,
-            name: `User ${i}`
-          })
+            name: `User ${i}`,
+          }),
         })
       );
 
       vi.mock('../../src/services/rate-limit', () => ({
-        checkRateLimit: vi.fn().mockImplementation(function() {
+        checkRateLimit: vi.fn().mockImplementation(function () {
           const attempts = this.mock.calls.length;
           return Promise.resolve({
             allowed: attempts <= 10,
             limit: 10,
-            resetTime: '2026-01-12T16:00:00Z'
+            resetTime: '2026-01-12T16:00:00Z',
           });
-        })
+        }),
       }));
 
       const responses = await Promise.allSettled(requests);
       const rateLimitedResponses = responses.filter(
-        result => result.status === 'fulfilled' && result.value.status === 429
+        (result) => result.status === 'fulfilled' && result.value.status === 429
       );
 
       expect(rateLimitedResponses.length).toBeGreaterThan(0);

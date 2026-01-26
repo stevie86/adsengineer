@@ -1,5 +1,5 @@
-import { test, expect, describe, beforeEach, afterEach, vi } from 'vitest';
 import { createId } from '@paralleldrive/cuid2';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock implementations
 vi.mock('@paralleldrive/cuid2', () => ({

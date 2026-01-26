@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
-import { z } from 'zod';
 import Stripe from 'stripe';
+import { z } from 'zod';
 import type { AppEnv } from '../types';
 
 const billing = new Hono<AppEnv>();
@@ -85,48 +85,48 @@ const getPricingTiers = (env: AppEnv['Bindings']) => {
 billing.get('/pricing', (c) => {
   // Return basic pricing info without requiring Stripe connection
   const pricing = {
-      starter: {
-        id: 'starter',
-        name: 'Starter',
-        price: 99,
-        currency: 'USD',
-        interval: 'month',
-        features: [
-          'Basic conversion tracking',
-          'Google Ads integration',
-          'Email support',
-          'Standard analytics',
-          '1 website',
-        ],
-      },
-      professional: {
-        id: 'professional',
-        name: 'Professional',
-        price: 299,
-        currency: 'USD',
-        interval: 'month',
-        features: [
-          'Advanced conversion tracking',
-          'Multi-platform integration',
-          'Priority support',
-          'Custom analytics',
-          '5 websites',
-        ],
-      },
-      enterprise: {
-        id: 'enterprise',
-        name: 'Enterprise',
-        price: 999,
-        currency: 'USD',
-        interval: 'month',
-        features: [
-          'Unlimited conversion tracking',
-          'All platform integrations',
-          'Dedicated success manager',
-          'Custom integrations',
-          'Unlimited websites',
-        ],
-      },
+    starter: {
+      id: 'starter',
+      name: 'Starter',
+      price: 99,
+      currency: 'USD',
+      interval: 'month',
+      features: [
+        'Basic conversion tracking',
+        'Google Ads integration',
+        'Email support',
+        'Standard analytics',
+        '1 website',
+      ],
+    },
+    professional: {
+      id: 'professional',
+      name: 'Professional',
+      price: 299,
+      currency: 'USD',
+      interval: 'month',
+      features: [
+        'Advanced conversion tracking',
+        'Multi-platform integration',
+        'Priority support',
+        'Custom analytics',
+        '5 websites',
+      ],
+    },
+    enterprise: {
+      id: 'enterprise',
+      name: 'Enterprise',
+      price: 999,
+      currency: 'USD',
+      interval: 'month',
+      features: [
+        'Unlimited conversion tracking',
+        'All platform integrations',
+        'Dedicated success manager',
+        'Custom integrations',
+        'Unlimited websites',
+      ],
+    },
   };
 
   return c.json({
@@ -138,7 +138,7 @@ billing.get('/pricing', (c) => {
 
 // Create Stripe customer
 billing.post('/customers', async (c) => {
-  const db = c.get('db');
+  const db = c.env.DB;
   const { email, name, agency_id, stripe_config } = await c.req.json();
 
   try {
@@ -177,9 +177,12 @@ billing.post('/customers', async (c) => {
     // Store encrypted Stripe credentials if provided
     if (stripe_config) {
       try {
-        await db.prepare(
-          'UPDATE customers SET stripe_config = ?, updated_at = datetime(\'now\') WHERE id = ?'
-        ).bind(JSON.stringify(stripe_config), agency_id).run();
+        await db
+          .prepare(
+            "UPDATE customers SET stripe_config = ?, updated_at = datetime('now') WHERE id = ?"
+          )
+          .bind(JSON.stringify(stripe_config), agency_id)
+          .run();
       } catch (error) {
         console.warn('Failed to store Stripe credentials for agency:', agency_id, error);
         // Don't fail the request, just log the warning
@@ -199,7 +202,7 @@ billing.post('/customers', async (c) => {
 
 // Create subscription
 billing.post('/subscriptions', async (c) => {
-  const db = c.get('db');
+  const db = c.env.DB;
   const { customer_id, price_id, agency_id } = await c.req.json();
 
   try {
@@ -247,7 +250,7 @@ billing.post('/subscriptions', async (c) => {
     return c.json({
       success: true,
       subscription_id: subscription.id,
-      client_secret: subscription.latest_invoice.payment_intent.client_secret,
+      client_secret: subscription.latest_invoice?.payment_intent?.client_secret,
       status: subscription.status,
     });
   } catch (error) {
@@ -258,7 +261,7 @@ billing.post('/subscriptions', async (c) => {
 
 // Get subscription status
 billing.get('/subscriptions/:agency_id', async (c) => {
-  const db = c.get('db');
+  const db = c.env.DB;
   const agency_id = c.req.param('agency_id');
 
   try {
@@ -327,7 +330,7 @@ billing.get('/subscriptions/:agency_id', async (c) => {
 
 // Cancel subscription
 billing.post('/subscriptions/:subscription_id/cancel', async (c) => {
-  const db = c.get('db');
+  const db = c.env.DB;
   const subscription_id = c.req.param('subscription_id');
   const { agency_id, cancel_at_period_end } = await c.req.json();
 
@@ -381,7 +384,7 @@ billing.post('/webhooks/stripe', async (c) => {
       c.env.STRIPE_WEBHOOK_SECRET!
     );
 
-    const db = c.get('db');
+    const db = c.env.DB;
 
     switch (event.type) {
       case 'customer.subscription.created':

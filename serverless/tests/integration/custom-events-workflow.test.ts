@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { app } from '../src';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import app from '../src';
 
 describe('Custom Events Workflow Integration', () => {
   beforeEach(() => {
@@ -19,7 +19,7 @@ describe('Custom Events Workflow Integration', () => {
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'agency-123', role: 'agency' });
           await next();
-        }
+        },
       }));
 
       vi.mock('../src/services/custom-events', () => ({
@@ -28,31 +28,31 @@ describe('Custom Events Workflow Integration', () => {
           name: 'high-value-purchase',
           description: 'Purchases over $1000',
           valueThreshold: 1000,
-          agencyId: 'agency-123'
+          agencyId: 'agency-123',
         }),
         createCustomEvent: vi.fn().mockImplementation((data) => {
           createdEventId = 'event-' + Math.random().toString(36).substr(2, 9);
           return Promise.resolve({
             id: createdEventId,
             ...data,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
           });
         }),
         getCustomEvents: vi.fn().mockResolvedValue({
           events: [],
-          pagination: { page: 1, limit: 50, total: 0, hasMore: false }
-        })
+          pagination: { page: 1, limit: 50, total: 0, hasMore: false },
+        }),
       }));
 
       vi.mock('../src/services/google-ads', () => ({
         uploadConversion: vi.fn().mockResolvedValue({
           success: true,
-          conversionId: 'gconv-456'
-        })
+          conversionId: 'gconv-456',
+        }),
       }));
 
       vi.mock('../src/services/logging', () => ({
-        logAuditEvent: vi.fn().mockResolvedValue(undefined)
+        logAuditEvent: vi.fn().mockResolvedValue(undefined),
       }));
 
       const testSiteId = 'site-123';
@@ -62,23 +62,23 @@ describe('Custom Events Workflow Integration', () => {
         {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${agencyToken}`,
-            'Content-Type': 'application/json'
+            Authorization: `Bearer ${agencyToken}`,
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             eventDefinitions: [
               {
                 name: 'high-value-purchase',
                 description: 'Purchases over $1000',
-                valueThreshold: 1000
+                valueThreshold: 1000,
               },
               {
                 name: 'subscription-signup',
                 description: 'Monthly subscription signup',
-                valueThreshold: 50
-              }
-            ]
-          })
+                valueThreshold: 50,
+              },
+            ],
+          }),
         }
       );
 
@@ -92,17 +92,17 @@ describe('Custom Events Workflow Integration', () => {
         currency: 'USD',
         metadata: {
           productId: 'premium-product',
-          customerId: 'customer-789'
-        }
+          customerId: 'customer-789',
+        },
       };
 
       const eventResponse = await app.request('/api/v1/custom-events', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${agencyToken}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${agencyToken}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(createEventData)
+        body: JSON.stringify(createEventData),
       });
 
       expect(eventResponse.status).toBe(201);
@@ -115,9 +115,9 @@ describe('Custom Events Workflow Integration', () => {
         {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${agencyToken}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${agencyToken}`,
+            'Content-Type': 'application/json',
+          },
         }
       );
 
@@ -136,23 +136,23 @@ describe('Custom Events Workflow Integration', () => {
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'agency-123', role: 'agency' });
           await next();
-        }
+        },
       }));
 
       vi.mock('../src/services/custom-events', () => ({
         assignEventToSites: vi.fn().mockResolvedValue({
           success: true,
-          assignments: siteIds.map(siteId => ({
+          assignments: siteIds.map((siteId) => ({
             siteId,
             eventDefinitionId: 'def-123',
-            assignedAt: new Date().toISOString()
-          }))
-        })
+            assignedAt: new Date().toISOString(),
+          })),
+        }),
       }));
 
-      const assignments = siteIds.map(siteId => ({
+      const assignments = siteIds.map((siteId) => ({
         siteId,
-        eventDefinitions: ['high-value-purchase']
+        eventDefinitions: ['high-value-purchase'],
       }));
 
       for (const assignment of assignments) {
@@ -161,10 +161,10 @@ describe('Custom Events Workflow Integration', () => {
           {
             method: 'POST',
             headers: {
-              'Authorization': `Bearer ${agencyToken}`,
-              'Content-Type': 'application/json'
+              Authorization: `Bearer ${agencyToken}`,
+              'Content-Type': 'application/json',
             },
-            body: JSON.stringify(assignment)
+            body: JSON.stringify(assignment),
           }
         );
 
@@ -184,26 +184,26 @@ describe('Custom Events Workflow Integration', () => {
         currency: 'USD',
         metadata: {
           gclid: 'EAIaIQobChMI_123',
-          customerId: 'customer-456'
-        }
+          customerId: 'customer-456',
+        },
       };
 
       vi.mock('../src/services/google-ads', () => ({
         uploadConversion: vi.fn().mockResolvedValue({
           success: true,
           conversionId: 'gconv-789',
-          warnings: []
+          warnings: [],
         }),
-        validateGCLID: vi.fn().mockReturnValue(true)
+        validateGCLID: vi.fn().mockReturnValue(true),
       }));
 
       vi.mock('../src/services/custom-events', () => ({
         createCustomEvent: vi.fn().mockResolvedValue({
           id: 'event-123',
           ...eventData,
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
         }),
-        markEventAsProcessed: vi.fn().mockResolvedValue(true)
+        markEventAsProcessed: vi.fn().mockResolvedValue(true),
       }));
 
       const agencyToken = 'agency.jwt.token';
@@ -211,16 +211,16 @@ describe('Custom Events Workflow Integration', () => {
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'agency-123', role: 'agency' });
           await next();
-        }
+        },
       }));
 
       const response = await app.request('/api/v1/custom-events', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${agencyToken}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${agencyToken}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(eventData)
+        body: JSON.stringify(eventData),
       });
 
       expect(response.status).toBe(201);
@@ -236,15 +236,15 @@ describe('Custom Events Workflow Integration', () => {
         value: 15000,
         currency: 'USD',
         metadata: {
-          gclid: 'EAIaIQobChMI_123'
-        }
+          gclid: 'EAIaIQobChMI_123',
+        },
       };
 
       vi.mock('../src/services/google-ads', () => ({
-        uploadConversion: vi.fn().mockRejectedValue(
-          new Error('QUOTA_EXCEEDED: Daily budget exceeded')
-        ),
-        validateGCLID: vi.fn().mockReturnValue(true)
+        uploadConversion: vi
+          .fn()
+          .mockRejectedValue(new Error('QUOTA_EXCEEDED: Daily budget exceeded')),
+        validateGCLID: vi.fn().mockReturnValue(true),
       }));
 
       vi.mock('../src/services/custom-events', () => ({
@@ -252,12 +252,12 @@ describe('Custom Events Workflow Integration', () => {
           id: 'event-123',
           ...eventData,
           createdAt: new Date().toISOString(),
-          status: 'pending_google_upload'
-        })
+          status: 'pending_google_upload',
+        }),
       }));
 
       vi.mock('../src/services/logging', () => ({
-        logError: vi.fn().mockResolvedValue(undefined)
+        logError: vi.fn().mockResolvedValue(undefined),
       }));
 
       const agencyToken = 'agency.jwt.token';
@@ -265,16 +265,16 @@ describe('Custom Events Workflow Integration', () => {
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'agency-123', role: 'agency' });
           await next();
-        }
+        },
       }));
 
       const response = await app.request('/api/v1/custom-events', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${agencyToken}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${agencyToken}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(eventData)
+        body: JSON.stringify(eventData),
       });
 
       expect(response.status).toBe(201);
@@ -291,7 +291,7 @@ describe('Custom Events Workflow Integration', () => {
         authMiddleware: () => async (c, next) => {
           c.set('jwt', { sub: 'agency-123', role: 'agency' });
           await next();
-        }
+        },
       }));
 
       vi.mock('../src/services/analytics', () => ({
@@ -304,15 +304,15 @@ describe('Custom Events Workflow Integration', () => {
           topEvents: ['purchase', 'signup', 'quote-request'],
           dailyBreakdown: [
             { date: '2026-01-12', conversions: 25, value: 12500 },
-            { date: '2026-01-11', conversions: 22, value: 11000 }
-          ]
+            { date: '2026-01-11', conversions: 22, value: 11000 },
+          ],
         }),
         getPerformanceMetrics: vi.fn().mockResolvedValue({
           responseTime: { average: 145, p95: 280, p99: 450 },
           errorRate: 0.002,
           uptime: 0.999,
-          throughput: 150
-        })
+          throughput: 150,
+        }),
       }));
 
       const conversionsResponse = await app.request(
@@ -320,9 +320,9 @@ describe('Custom Events Workflow Integration', () => {
         {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${agencyToken}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${agencyToken}`,
+            'Content-Type': 'application/json',
+          },
         }
       );
 
@@ -335,9 +335,9 @@ describe('Custom Events Workflow Integration', () => {
       const performanceResponse = await app.request('/api/v1/analytics/performance', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${agencyToken}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${agencyToken}`,
+          'Content-Type': 'application/json',
+        },
       });
 
       expect(performanceResponse.status).toBe(200);

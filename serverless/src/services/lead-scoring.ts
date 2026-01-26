@@ -6,41 +6,56 @@ export const LeadScoringSchema = z.object({
     industry: z.enum(['ecommerce', 'retail', 'saas', 'b2b', 'other']),
     revenue: z.object({
       monthly: z.number().min(0),
-      yearly: z.number().min(0)
+      yearly: z.number().min(0),
     }),
     employeeCount: z.object({
       marketing: z.number().min(0),
       sales: z.number().min(0),
-      total: z.number().min(0)
+      total: z.number().min(0),
     }),
     marketPosition: z.enum(['startup', 'challenger', 'leader', 'niche']),
     techStack: z.object({
       platforms: z.array(z.enum(['shopify', 'woocommerce', 'magento', 'bigcommerce', 'custom'])),
-      analytics: z.array(z.enum(['google-analytics', 'adobe-analytics', 'mixpanel', 'segment', 'klaviyo', 'none'])),
-      advertising: z.array(z.enum(['google-ads', 'meta-ads', 'tiktok-ads', 'linkedin-ads', 'microsoft-ads', 'none'])),
-      crm: z.enum(['hubspot', 'salesforce', 'pipedrive', 'zoho', 'freshworks', 'insightly', 'none', 'custom']),
-      inventory: z.enum(['shopify', 'manual', 'erp', 'dropshipping', 'none'])
+      analytics: z.array(
+        z.enum(['google-analytics', 'adobe-analytics', 'mixpanel', 'segment', 'klaviyo', 'none'])
+      ),
+      advertising: z.array(
+        z.enum(['google-ads', 'meta-ads', 'tiktok-ads', 'linkedin-ads', 'microsoft-ads', 'none'])
+      ),
+      crm: z.enum([
+        'hubspot',
+        'salesforce',
+        'pipedrive',
+        'zoho',
+        'freshworks',
+        'insightly',
+        'none',
+        'custom',
+      ]),
+      inventory: z.enum(['shopify', 'manual', 'erp', 'dropshipping', 'none']),
     }),
-    painPoints: z.array(z.enum([
-      'no-conversion-tracking',
-      'manual-bid-management',
-      'poor-attribution',
-      'high-ad-spend',
-      'low-traffic',
-      'technical-debt',
-      'customer-service-issues',
-      'inventory-management',
-      'low-margins',
-      'competition-increased',
-      'inaccurate-data'
-    ])),
+    painPoints: z.array(
+      z.enum([
+        'no-conversion-tracking',
+        'manual-bid-management',
+        'poor-attribution',
+        'high-ad-spend',
+        'low-traffic',
+        'technical-debt',
+        'customer-service-issues',
+        'inventory-management',
+        'low-margins',
+        'competition-increased',
+        'inaccurate-data',
+      ])
+    ),
     budgetInfo: z.object({
       monthlyMarketing: z.number().min(0),
       monthlyAdSpend: z.number().min(0),
       budgetOwner: z.enum(['founder', 'cto', 'cmo', 'vp-marketing', 'agency']),
       budgetApproval: z.boolean(),
       decisionMaker: z.boolean(),
-      decisionProcess: z.enum(['unanimous', 'consensus', 'individual', 'committee'])
+      decisionProcess: z.enum(['unanimous', 'consensus', 'individual', 'committee']),
     }),
     contactInfo: z.object({
       firstName: z.string(),
@@ -49,35 +64,39 @@ export const LeadScoringSchema = z.object({
       phone: z.string().optional(),
       linkedin: z.string().url().optional(),
       title: z.string().optional(),
-      decisionMaker: z.boolean()
-    })
+      decisionMaker: z.boolean(),
+    }),
   }),
-  adSpendAnalysis: z.array(z.object({
-    platform: z.enum(['google-ads', 'meta-ads', 'tiktok-ads', 'linkedin-ads', 'microsoft-ads']),
-    monthlySpend: z.number().min(0),
-    ctr: z.number().min(0).max(1),
-    cpc: z.number().min(0),
-    conversionRate: z.number().min(0).max(1),
-    cpa: z.number().min(0),
-    roas: z.number().min(0),
-    impressions: z.number().min(0),
-    clicks: z.number().min(0),
-    conversions: z.number().min(0),
-    lastImportDate: z.string().optional()
-  })),
+  adSpendAnalysis: z.array(
+    z.object({
+      platform: z.enum(['google-ads', 'meta-ads', 'tiktok-ads', 'linkedin-ads', 'microsoft-ads']),
+      monthlySpend: z.number().min(0),
+      ctr: z.number().min(0).max(1),
+      cpc: z.number().min(0),
+      conversionRate: z.number().min(0).max(1),
+      cpa: z.number().min(0),
+      roas: z.number().min(0),
+      impressions: z.number().min(0),
+      clicks: z.number().min(0),
+      conversions: z.number().min(0),
+      lastImportDate: z.string().optional(),
+    })
+  ),
   attribution: z.object({
     model: z.enum(['last-click', 'first-click', 'linear', 'time-decay', 'data-driven', 'none']),
     conversionWindow: z.object({
       defaultDays: z.number().min(1).max(90),
-      customWindows: z.array(z.object({
-        name: z.string(),
-        days: z.number().min(1).max(365),
-        conditions: z.array(z.string())
-      }))
+      customWindows: z.array(
+        z.object({
+          name: z.string(),
+          days: z.number().min(1).max(365),
+          conditions: z.array(z.string()),
+        })
+      ),
     }),
     crossDevice: z.boolean(),
-    offlineConversions: z.boolean()
-  })
+    offlineConversions: z.boolean(),
+  }),
 });
 
 export type LeadScoring = z.infer<typeof LeadScoringSchema>;
@@ -144,38 +163,38 @@ export class LeadScorer {
     industry: {
       weight: 15,
       scoreMultipliers: {
-        'ecommerce': 1.0,
-        'retail': 0.8,
-        'saas': 1.1,
-        'b2b': 0.9,
-        'other': 0.5
-      }
+        ecommerce: 1.0,
+        retail: 0.8,
+        saas: 1.1,
+        b2b: 0.9,
+        other: 0.5,
+      },
     },
     revenue: {
       weight: 25,
       thresholds: {
         high: 10000000,
         medium: 1000000,
-        low: 100000
-      }
+        low: 100000,
+      },
     },
     techStack: {
       weight: 20,
       platformScoreMultipliers: {
-        'shopify': 1.2,
-        'woocommerce': 1.0,
-        'magento': 0.9,
-        'bigcommerce': 1.1,
-        'custom': 0.7
+        shopify: 1.2,
+        woocommerce: 1.0,
+        magento: 0.9,
+        bigcommerce: 1.1,
+        custom: 0.7,
       },
       compatibilityScoreMultipliers: {
         'google-analytics': 1.0,
         'adobe-analytics': 0.9,
-        'mixpanel': 0.8,
-        'segment': 0.9,
-        'klaviyo': 1.1,
-        'none': 0.3
-      }
+        mixpanel: 0.8,
+        segment: 0.9,
+        klaviyo: 1.1,
+        none: 0.3,
+      },
     },
     painPoints: {
       weight: 15,
@@ -190,26 +209,26 @@ export class LeadScorer {
         'inventory-management': 0.7,
         'low-margins': 1.3,
         'competition-increased': 1.1,
-        'inaccurate-data': 1.9
-      }
+        'inaccurate-data': 1.9,
+      },
     },
     marketPosition: {
       weight: 10,
       scoreMultipliers: {
-        'startup': 0.7,
-        'challenger': 1.0,
-        'leader': 1.2,
-        'niche': 0.9
-      }
+        startup: 0.7,
+        challenger: 1.0,
+        leader: 1.2,
+        niche: 0.9,
+      },
     },
     budgetInfo: {
       weight: 15,
       budgetReadiness: {
         ready: 1.5,
         needsApproval: 0.5,
-        lowBudget: 0.2
-      }
-    }
+        lowBudget: 0.2,
+      },
+    },
   };
 
   calculateScore(leadData: LeadScoring, factors?: Partial<ScoringFactors>): ScoringResult {
@@ -226,16 +245,18 @@ export class LeadScorer {
       breakdown,
       recommendations,
       redFlags,
-      idealCustomerProfile: idealProfile
+      idealCustomerProfile: idealProfile,
     };
   }
 
   private calculateBreakdown(leadData: LeadScoring, factors?: Partial<ScoringFactors>) {
     const f = { ...this.factors, ...factors };
-    
-    const industryScore = f.industry.scoreMultipliers[leadData.businessInfo.industry] * f.industry.weight;
 
-    const yearlyRevenue = leadData.businessInfo.revenue.yearly || leadData.businessInfo.revenue.monthly * 12;
+    const industryScore =
+      f.industry.scoreMultipliers[leadData.businessInfo.industry] * f.industry.weight;
+
+    const yearlyRevenue =
+      leadData.businessInfo.revenue.yearly || leadData.businessInfo.revenue.monthly * 12;
     let revenueScore = 0;
     if (yearlyRevenue >= f.revenue.thresholds.high) {
       revenueScore = f.revenue.weight;
@@ -246,23 +267,25 @@ export class LeadScorer {
     }
 
     let techStackScore = 0;
-    leadData.businessInfo.techStack.platforms.forEach(platform => {
+    leadData.businessInfo.techStack.platforms.forEach((platform) => {
       techStackScore += f.techStack.platformScoreMultipliers[platform] || 0.5;
     });
-    
+
     let compatibilityScore = 0;
-    leadData.businessInfo.techStack.analytics.forEach(analytic => {
+    leadData.businessInfo.techStack.analytics.forEach((analytic) => {
       compatibilityScore += f.techStack.compatibilityScoreMultipliers[analytic] || 0.5;
     });
-    
+
     const totalTechScore = (techStackScore + compatibilityScore) * 0.5;
 
     let painPointsScore = 0;
-    leadData.businessInfo.painPoints.forEach(painPoint => {
+    leadData.businessInfo.painPoints.forEach((painPoint) => {
       painPointsScore += f.painPoints.painScoreMultipliers[painPoint] || 0.5;
     });
 
-    const marketPositionScore = f.marketPosition.scoreMultipliers[leadData.businessInfo.marketPosition] * f.marketPosition.weight;
+    const marketPositionScore =
+      f.marketPosition.scoreMultipliers[leadData.businessInfo.marketPosition] *
+      f.marketPosition.weight;
 
     let budgetReadinessScore = 0;
     if (leadData.budgetInfo.decisionMaker && leadData.budgetInfo.budgetApproval) {
@@ -273,12 +296,12 @@ export class LeadScorer {
       budgetReadinessScore = f.budgetInfo.weight * f.budgetInfo.budgetReadiness.lowBudget;
     }
 
-    const totalPossible = 
-      f.industry.weight + 
-      f.revenue.weight + 
-      f.techStack.weight + 
-      f.painPoints.weight + 
-      f.marketPosition.weight + 
+    const totalPossible =
+      f.industry.weight +
+      f.revenue.weight +
+      f.techStack.weight +
+      f.painPoints.weight +
+      f.marketPosition.weight +
       f.budgetInfo.weight;
 
     return {
@@ -288,7 +311,7 @@ export class LeadScorer {
       painPoints: Math.min(painPointsScore, f.painPoints.weight),
       marketPosition: marketPositionScore,
       budgetReadiness: budgetReadinessScore,
-      totalPossible
+      totalPossible,
     };
   }
 
@@ -328,14 +351,18 @@ export class LeadScorer {
   private identifyRedFlags(leadData: LeadScoring, breakdown: any): string[] {
     const redFlags: string[] = [];
 
-    const yearlyRevenue = leadData.businessInfo.revenue.yearly || leadData.businessInfo.revenue.monthly * 12;
+    const yearlyRevenue =
+      leadData.businessInfo.revenue.yearly || leadData.businessInfo.revenue.monthly * 12;
     const monthlyAdSpend = leadData.budgetInfo.monthlyAdSpend;
 
     if (monthlyAdSpend > yearlyRevenue * 0.2) {
       redFlags.push('High ad spend relative to revenue');
     }
 
-    if (leadData.businessInfo.techStack.platforms.includes('custom') && leadData.businessInfo.employeeCount.total < 20) {
+    if (
+      leadData.businessInfo.techStack.platforms.includes('custom') &&
+      leadData.businessInfo.employeeCount.total < 20
+    ) {
       redFlags.push('Custom platform with limited team resources');
     }
 
@@ -386,7 +413,7 @@ export class LeadScorer {
     return {
       characteristics,
       messaging,
-      approach
+      approach,
     };
   }
 

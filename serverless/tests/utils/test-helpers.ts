@@ -1,5 +1,5 @@
-import { test, expect, describe, beforeAll, afterAll } from 'vitest';
 import { faker } from '@faker-js/faker';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 // Test utilities for generating test data
 export class TestDataGenerator {

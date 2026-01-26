@@ -62,7 +62,7 @@ async function hashSHA256(input: string): Promise<string> {
   const data = encoder.encode(input);
   const hash = await crypto.subtle.digest('SHA-256', data);
   return Array.from(new Uint8Array(hash))
-    .map(b => b.toString(16).padStart(2, '0'))
+    .map((b) => b.toString(16).padStart(2, '0'))
     .join('');
 }
 
@@ -97,9 +97,7 @@ export class SGTMForwarder {
     }
 
     if (event.user_data?.email_address) {
-      const hashedEmail = await hashSHA256(
-        event.user_data.email_address.toLowerCase().trim()
-      );
+      const hashedEmail = await hashSHA256(event.user_data.email_address.toLowerCase().trim());
       params.append('ep.user_data.sha256_email_address', hashedEmail);
     }
     if (event.user_data?.phone_number) {
@@ -166,7 +164,7 @@ export class SGTMForwarder {
       },
       ip_override: purchase.customer_ip,
       user_agent: purchase.user_agent,
-      items: purchase.items.map(item => ({
+      items: purchase.items.map((item) => ({
         item_id: item.id,
         item_name: item.name,
         price: item.price,
@@ -218,7 +216,7 @@ export class SGTMForwarder {
       currency: data.currency,
       ip_override: data.customer_ip,
       user_agent: data.user_agent,
-      items: data.items.map(item => ({
+      items: data.items.map((item) => ({
         item_id: item.id,
         item_name: item.name,
         price: item.price,

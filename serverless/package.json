@@ -40,6 +40,7 @@
     "@hono/zod-openapi": "^0.18.4",
     "@noble/hashes": "^1.4.0",
     "@paralleldrive/cuid2": "^3.0.6",
+    "fflate": "^0.8.2",
     "google-ads-api": "^21.0.1",
     "hono": "^4.11.3",
     "stripe": "^14.25.0",

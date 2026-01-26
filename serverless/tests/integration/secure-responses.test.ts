@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
 import { Hono } from 'hono';
 import { createMiddleware } from 'hono/factory';
+import { describe, expect, it } from 'vitest';
 import type { AppEnv } from '../../src/types';
 
 // Create a test app to verify secure error responses

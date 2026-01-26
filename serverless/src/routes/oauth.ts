@@ -1,5 +1,5 @@
-import { Hono } from 'hono';
 import type { Context } from 'hono';
+import { Hono } from 'hono';
 import { OAuthStorageService } from '../services/oauth-storage';
 
 const oauthRoutes = new Hono();
@@ -10,10 +10,11 @@ oauthRoutes.get('/google-ads/init', async (c) => {
 
   const scopes = [
     'https://www.googleapis.com/auth/adwords',
-    'https://www.googleapis.com/auth/userinfo.email'
+    'https://www.googleapis.com/auth/userinfo.email',
   ];
 
-  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+  const authUrl =
+    `https://accounts.google.com/o/oauth2/v2/auth?` +
     new URLSearchParams({
       client_id: c.env.GOOGLE_ADS_CLIENT_ID!,
       redirect_uri: `${c.env.BASE_URL}/api/v1/oauth/google-ads/callback`,
@@ -21,7 +22,7 @@ oauthRoutes.get('/google-ads/init', async (c) => {
       response_type: 'code',
       access_type: 'offline',
       prompt: 'consent',
-      state: agencyId
+      state: agencyId,
     });
 
   return c.redirect(authUrl);
@@ -46,8 +47,8 @@ oauthRoutes.get('/google-ads/callback', async (c) => {
         client_secret: c.env.GOOGLE_ADS_CLIENT_SECRET!,
         code: code,
         grant_type: 'authorization_code',
-        redirect_uri: `${c.env.BASE_URL}/api/v1/oauth/google-ads/callback`
-      })
+        redirect_uri: `${c.env.BASE_URL}/api/v1/oauth/google-ads/callback`,
+      }),
     });
 
     const tokens = await tokenResponse.json();
@@ -64,7 +65,6 @@ oauthRoutes.get('/google-ads/callback', async (c) => {
     // Redirect to success page with state
     const successUrl = `${c.env.BASE_URL}/oauth/success?platform=google_ads&agency=${agencyId}`;
     return c.redirect(successUrl);
-
   } catch (error) {
     console.error('OAuth callback error:', error);
     return c.json({ error: 'OAuth callback failed' }, 500);
@@ -76,13 +76,14 @@ oauthRoutes.get('/meta/init', async (c) => {
   const agencyId = c.req.query('state') || 'default';
 
   const scopes = ['ads_read', 'ads_management'];
-  const authUrl = `https://www.facebook.com/v18.0/dialog/oauth?` +
+  const authUrl =
+    `https://www.facebook.com/v18.0/dialog/oauth?` +
     new URLSearchParams({
       client_id: c.env.META_APP_ID!,
       redirect_uri: `${c.env.BASE_URL}/api/v1/oauth/meta/callback`,
       scope: scopes.join(','),
       response_type: 'code',
-      state: agencyId
+      state: agencyId,
     });
 
   return c.redirect(authUrl);
@@ -105,8 +106,8 @@ oauthRoutes.get('/meta/callback', async (c) => {
         client_id: c.env.META_APP_ID!,
         client_secret: c.env.META_APP_SECRET!,
         redirect_uri: `${c.env.BASE_URL}/api/v1/oauth/meta/callback`,
-        code: code
-      })
+        code: code,
+      }),
     });
 
     const tokens = await tokenResponse.json();
@@ -122,7 +123,6 @@ oauthRoutes.get('/meta/callback', async (c) => {
 
     const successUrl = `${c.env.BASE_URL}/oauth/success?platform=meta&agency=${agencyId}`;
     return c.redirect(successUrl);
-
   } catch (error) {
     console.error('Meta OAuth callback error:', error);
     return c.json({ error: 'Meta OAuth callback failed' }, 500);
@@ -138,9 +138,9 @@ oauthRoutes.get('/status/:agencyId', async (c) => {
 
   return c.json({
     agency_id: agencyId,
-    google_ads_connected: !!(tokens?.google_ads?.refresh_token),
-    meta_connected: !!(tokens?.meta?.access_token),
-    last_updated: tokens?.updated_at
+    google_ads_connected: !!tokens?.google_ads?.refresh_token,
+    meta_connected: !!tokens?.meta?.access_token,
+    last_updated: tokens?.updated_at,
   });
 });
 

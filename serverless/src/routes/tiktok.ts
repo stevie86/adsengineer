@@ -33,14 +33,17 @@ export interface TikTokWebhookValidation {
 }
 
 export class TikTokWebhookService {
-  constructor(private db: D1Database, private appSecret: string) {}
+  constructor(
+    private db: D1Database,
+    private appSecret: string
+  ) {}
 
   async validateWebhook(eventData: any, signature: string): Promise<boolean> {
     if (!this.appSecret || !signature) return false;
 
     const sortedKeys = Object.keys(eventData).sort();
     const queryString = sortedKeys
-      .map(key => `${key}=${encodeURIComponent(eventData[key])}`)
+      .map((key) => `${key}=${encodeURIComponent(eventData[key])}`)
       .join('&');
 
     const expectedSignature = crypto
@@ -86,15 +89,12 @@ export class TikTokWebhookService {
         .run();
 
       await this.db
-        .prepare(
-          'UPDATE webhooks SET last_webhook_processed = ? WHERE id = ?'
-        )
+        .prepare('UPDATE webhooks SET last_webhook_processed = ? WHERE id = ?')
         .bind('tiktok', Date.now().toString())
         .run();
 
       console.log('TikTok webhook processed successfully');
       return { code: 200, message: 'Webhook processed successfully' };
-
     } catch (error) {
       console.error('TikTok webhook error:', error);
       return { code: 500, message: 'Webhook processing failed' };
@@ -116,18 +116,17 @@ tiktokRouter.post('/webhooks/tiktok', async (c) => {
   }
 
   const body = await c.req.text();
-  
+
   try {
     const eventData = JSON.parse(body);
     const isValid = await tiktokWebhookService.validateWebhook(eventData, signature);
-    
+
     if (!isValid) {
       return c.json({ error: 'Invalid webhook signature' }, 401);
     }
 
     const result = await tiktokWebhookService.handleTikTokWebhook(eventData);
     return c.json(result);
-
   } catch (error) {
     console.error('TikTok webhook processing error:', error);
     return c.json({ error: 'Webhook processing failed' }, 500);
@@ -137,7 +136,7 @@ tiktokRouter.post('/webhooks/tiktok', async (c) => {
 // TikTok webhook verification endpoint
 tiktokRouter.get('/webhooks/tiktok/verify', async (c) => {
   const partner_id = c.req.query('partner_id');
-  
+
   if (!partner_id) {
     return c.json({ error: 'Partner ID required' }, 400);
   }
@@ -145,13 +144,13 @@ tiktokRouter.get('/webhooks/tiktok/verify', async (c) => {
   const verification: TikTokWebhookValidation = {
     timestamp: new Date().toISOString(),
     nonce: crypto.randomUUID(),
-    partner_id: partner_id!
+    partner_id: partner_id!,
   };
 
   return c.json({
     code: 200,
     message: 'Webhook verification endpoint',
-    data: verification
+    data: verification,
   });
 });
 
@@ -166,7 +165,7 @@ tiktokRouter.get('/webhooks/tiktok/status', async (c) => {
     status: 'healthy',
     tiktok_webhooks_configured: !!lastProcessed,
     last_webhook_processed: lastProcessed || null,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 

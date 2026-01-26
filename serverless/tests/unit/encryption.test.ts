@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  decryptCredential,
   EncryptionService,
   encryptCredential,
-  decryptCredential,
   initializeEncryption,
 } from '../../src/services/encryption';
 

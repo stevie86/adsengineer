@@ -26,18 +26,21 @@ export const rateLimitMiddleware = (config: RateLimitConfig) => {
     const windowStart = now - config.windowMs;
 
     try {
-    // Get existing rate limit data from KV
-    const kv = c.env.RATE_LIMIT_KV;
+      // Get existing rate limit data from KV
+      const kv = c.env.RATE_LIMIT_KV;
 
-    // FAIL CLOSED - Security first (SEC-003 requirement)
-    if (!kv) {
-      console.error('[SECURITY] Rate limiting KV not bound - failing closed');
-      
-      return c.json({
-        error: 'rate_limit_config_error',
-        message: 'Service temporarily unavailable',
-      }, 503);
-    }
+      // FAIL CLOSED - Security first (SEC-003 requirement)
+      if (!kv) {
+        console.error('[SECURITY] Rate limiting KV not bound - failing closed');
+
+        return c.json(
+          {
+            error: 'rate_limit_config_error',
+            message: 'Service temporarily unavailable',
+          },
+          503
+        );
+      }
 
       const rateLimitKey = `rate_limit:${key}`;
       const existingData = await kv.get(rateLimitKey);

@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Hono } from 'hono';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { tracking } from '../../src/routes/tracking';
 
 describe('Tracking Routes', () => {
@@ -16,7 +16,8 @@ describe('Tracking Routes', () => {
       const siteId = 'site-123';
 
       vi.mock('../../src/services/tracking', () => ({
-        generateTrackingSnippet: vi.fn().mockReturnValue(`
+        generateTrackingSnippet: vi.fn().mockReturnValue(
+          `
 (function(window, document) {
   window.AdsEngineer = {
     track: function(eventName, value, metadata) {
@@ -37,12 +38,13 @@ describe('Tracking Routes', () => {
     }
   };
 })(window, document);
-        `.trim())
+        `.trim()
+        ),
       }));
 
       const response = await app.request(`/tracking/snippet.js?siteId=${siteId}`, {
         method: 'GET',
-        headers: { 'Accept': 'application/javascript' }
+        headers: { Accept: 'application/javascript' },
       });
 
       expect(response.status).toBe(200);
@@ -57,7 +59,7 @@ describe('Tracking Routes', () => {
     it('should require site ID parameter', async () => {
       const response = await app.request('/tracking/snippet.js', {
         method: 'GET',
-        headers: { 'Accept': 'application/javascript' }
+        headers: { Accept: 'application/javascript' },
       });
 
       expect(response.status).toBe(400);
@@ -75,12 +77,12 @@ describe('Tracking Routes', () => {
             throw new Error('Site not found');
           }
           return 'valid snippet';
-        })
+        }),
       }));
 
       const response = await app.request(`/tracking/snippet.js?siteId=${invalidSiteId}`, {
         method: 'GET',
-        headers: { 'Accept': 'application/javascript' }
+        headers: { Accept: 'application/javascript' },
       });
 
       expect(response.status).toBe(404);
@@ -104,15 +106,15 @@ describe('Tracking Routes', () => {
           userId,
           userAgent: 'Email Client',
           ip: '192.168.1.1',
-          timestamp: '2026-01-12T15:30:00Z'
-        })
+          timestamp: '2026-01-12T15:30:00Z',
+        }),
       }));
 
       const response = await app.request(
         `/tracking/pixel.png?siteId=${siteId}&event=${eventName}&userId=${userId}`,
         {
           method: 'GET',
-          headers: { 'User-Agent': 'Email Client' }
+          headers: { 'User-Agent': 'Email Client' },
         }
       );
 
@@ -124,7 +126,7 @@ describe('Tracking Routes', () => {
     it('should validate pixel tracking parameters', async () => {
       const response = await app.request('/tracking/pixel.png?siteId=invalid', {
         method: 'GET',
-        headers: { 'User-Agent': 'Test Client' }
+        headers: { 'User-Agent': 'Test Client' },
       });
 
       expect(response.status).toBe(400);
@@ -148,29 +150,29 @@ describe('Tracking Routes', () => {
             {
               productId: 'prod-789',
               quantity: 2,
-              price: 7500
-            }
-          ]
+              price: 7500,
+            },
+          ],
         },
         timestamp: '2026-01-12T15:30:00Z',
-        signature: 'webhook-signature-123'
+        signature: 'webhook-signature-123',
       };
 
       vi.mock('../../src/services/webhook', () => ({
         verifyWebhookSignature: vi.fn().mockResolvedValue(true),
         processWebhookEvent: vi.fn().mockResolvedValue({
           processed: true,
-          eventId: 'event-456'
-        })
+          eventId: 'event-456',
+        }),
       }));
 
       const response = await app.request('/tracking/webhook', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Webhook-Signature': 'webhook-signature-123'
+          'X-Webhook-Signature': 'webhook-signature-123',
         },
-        body: JSON.stringify(webhookData)
+        body: JSON.stringify(webhookData),
       });
 
       expect(response.status).toBe(200);
@@ -182,20 +184,20 @@ describe('Tracking Routes', () => {
     it('should verify webhook signature', async () => {
       const webhookData = {
         source: 'shopify',
-        event: 'order_created'
+        event: 'order_created',
       };
 
       vi.mock('../../src/services/webhook', () => ({
-        verifyWebhookSignature: vi.fn().mockResolvedValue(false)
+        verifyWebhookSignature: vi.fn().mockResolvedValue(false),
       }));
 
       const response = await app.request('/tracking/webhook', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Webhook-Signature': 'invalid-signature'
+          'X-Webhook-Signature': 'invalid-signature',
         },
-        body: JSON.stringify(webhookData)
+        body: JSON.stringify(webhookData),
       });
 
       expect(response.status).toBe(401);
@@ -213,26 +215,26 @@ describe('Tracking Routes', () => {
           email: 'user@example.com',
           metadata: {
             source: 'landing-page',
-            campaign: 'summer-sale'
-          }
-        }
+            campaign: 'summer-sale',
+          },
+        },
       };
 
       vi.mock('../../src/services/webhook', () => ({
         verifyWebhookSignature: vi.fn().mockResolvedValue(true),
         processWebhookEvent: vi.fn().mockResolvedValue({
           processed: true,
-          eventId: 'event-456'
-        })
+          eventId: 'event-456',
+        }),
       }));
 
       const response = await app.request('/tracking/webhook', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Webhook-Signature': 'valid-signature'
+          'X-Webhook-Signature': 'valid-signature',
         },
-        body: JSON.stringify(webhookData)
+        body: JSON.stringify(webhookData),
       });
 
       expect(response.status).toBe(200);
@@ -250,31 +252,31 @@ describe('Tracking Routes', () => {
         metadata: {
           buttonId: 'cta-button',
           page: '/pricing',
-          sessionId: 'session-456'
+          sessionId: 'session-456',
         },
         userAgent: 'Mozilla/5.0...',
         ip: '192.168.1.1',
-        timestamp: '2026-01-12T15:30:00Z'
+        timestamp: '2026-01-12T15:30:00Z',
       };
 
       vi.mock('../../src/services/tracking', () => ({
         createTrackingEvent: vi.fn().mockResolvedValue({
           id: 'event-789',
-          processed: true
-        })
+          processed: true,
+        }),
       }));
 
       vi.mock('../../src/services/rate-limit', () => ({
-        checkRateLimit: vi.fn().mockResolvedValue({ allowed: true })
+        checkRateLimit: vi.fn().mockResolvedValue({ allowed: true }),
       }));
 
       const response = await app.request('/tracking/events', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer site-token-123'
+          Authorization: 'Bearer site-token-123',
         },
-        body: JSON.stringify(eventData)
+        body: JSON.stringify(eventData),
       });
 
       expect(response.status).toBe(201);
@@ -286,16 +288,16 @@ describe('Tracking Routes', () => {
     it('should validate site token', async () => {
       const eventData = {
         siteId: 'site-123',
-        eventName: 'test-event'
+        eventName: 'test-event',
       };
 
       const response = await app.request('/tracking/events', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer invalid-token'
+          Authorization: 'Bearer invalid-token',
         },
-        body: JSON.stringify(eventData)
+        body: JSON.stringify(eventData),
       });
 
       expect(response.status).toBe(401);
@@ -307,24 +309,24 @@ describe('Tracking Routes', () => {
     it('should apply rate limiting to event endpoints', async () => {
       const eventData = {
         siteId: 'site-123',
-        eventName: 'test-event'
+        eventName: 'test-event',
       };
 
       vi.mock('../../src/services/rate-limit', () => ({
-        checkRateLimit: vi.fn().mockResolvedValue({ 
+        checkRateLimit: vi.fn().mockResolvedValue({
           allowed: false,
           limit: 1000,
-          resetTime: '2026-01-12T16:00:00Z'
-        })
+          resetTime: '2026-01-12T16:00:00Z',
+        }),
       }));
 
       const response = await app.request('/tracking/events', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer site-token-123'
+          Authorization: 'Bearer site-token-123',
         },
-        body: JSON.stringify(eventData)
+        body: JSON.stringify(eventData),
       });
 
       expect(response.status).toBe(429);
