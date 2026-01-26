@@ -1,0 +1,252 @@
+# Landing Page - Layout
+
+**Source:** `landing-page/src/layouts/Layout.astro`
+
+---
+
+## Layout.astro (Main Layout Template)
+
+**Purpose:** Base HTML template with head, tracking scripts, particle background
+
+```astro
+---
+import '../styles/global.css';
+import CookieConsent from '../components/CookieConsent.astro';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="AdsEngineer - Server-side Attribution for GoHighLevel Agencies. Bridge the gap between Google Ads and GoHighLevel with server-side attribution." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>AdsEngineer - Stop Losing Google Ads Attribution</title>
+    <CookieConsent />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js" is:inline></script>
+    
+    <!-- Cal.com Booking Widget -->
+    <script is:inline>
+      (function (C, A, L) {
+        let p = function (a, ar) { a.q.push(ar); };
+        let d = C.document;
+        C.Cal = C.Cal || function () {
+          let cal = C.Cal;
+          let ar = arguments;
+          if (!cal.loaded) {
+            cal.q = cal.q || [];
+            cal.loaded = true;
+          }
+          if (ar[0] === "init") {
+            let api = d.createElement("script");
+            api.src = A;
+            api.async = true;
+            d.head.appendChild(api);
+            return;
+          }
+          p(cal, ar);
+        };
+      })(window, "https://app.cal.com/embed/embed.js", "Cal");
+
+      Cal("init", { origin: "https://app.cal.com" });
+      Cal("ui", { styles: { branding: { brandColor: "#000000" } }, hideEventTypeDetails: false, layout: "month_view" });
+      Cal("floatingButton", {
+        calLink: "stefan-pirker-nmurov/30min",
+        buttonText: "Book a Call",
+        buttonColor: "#9333ea",
+        buttonTextColor: "#ffffff",
+        buttonPosition: "bottom-left"
+      });
+    </script>
+    
+    <!-- i18n (Internationalization) -->
+    <script src="/js/i18n.js" defer></script>
+    
+    <!-- AdsEngineer Page Visit Tracking -->
+    <script is:inline>
+      // AdsEngineer Page Visit Tracking
+      (function() {
+        'use strict';
+
+        const API_BASE = 'https://adsengineer-cloud.adsengineer.workers.dev/api/v1/tracking';
+
+        // Generate anonymous user ID
+        function getUserId() {
+          let userId = localStorage.getItem('adsengineer_user_id');
+          if (!userId) {
+            userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('adsengineer_user_id', userId);
+          }
+          return userId;
+        }
+
+        // Generate or get session ID
+        function getSessionId() {
+          let sessionId = sessionStorage.getItem('adsengineer_session_id');
+          if (!sessionId) {
+            sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            sessionStorage.setItem('adsengineer_session_id', sessionId);
+          }
+          return sessionId;
+        }
+
+        // Get UTM parameters from URL
+        function getUtmParams() {
+          const urlParams = new URLSearchParams(window.location.search);
+          return {
+            utmSource: urlParams.get('utm_source'),
+            utmMedium: urlParams.get('utm_medium'),
+            utmCampaign: urlParams.get('utm_campaign'),
+            utmContent: urlParams.get('utm_content'),
+            utmTerm: urlParams.get('utm_term'),
+            gclid: urlParams.get('gclid'),
+            fbclid: urlParams.get('fbclid')
+          };
+        }
+
+        // Track page visit
+        function trackPageVisit() {
+          const data = {
+            sessionId: getSessionId(),
+            userId: getUserId(),
+            pageUrl: window.location.href,
+            pageTitle: document.title,
+            referrer: document.referrer,
+            userAgent: navigator.userAgent,
+            screenResolution: `${screen.width}x${screen.height}`,
+            viewportSize: `${window.innerWidth}x${window.innerHeight}`,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            language: navigator.language,
+            isEntryPage: !sessionStorage.getItem('adsengineer_page_tracked'),
+            ...getUtmParams()
+          };
+
+          // Mark that we've tracked this page in this session
+          sessionStorage.setItem('adsengineer_page_tracked', 'true');
+
+          fetch(`${API_BASE}/page-visit`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+          }).catch(err => console.log('Tracking error:', err));
+        }
+
+        // Track time on page and interactions
+        let startTime = Date.now();
+        let interactions = 0;
+        let scrollDepth = 0;
+
+        function trackInteraction() {
+          interactions++;
+        }
+
+        function trackScroll() {
+          const scrolled = (window.scrollY + window.innerHeight) / document.body.scrollHeight * 100;
+          scrollDepth = Math.max(scrollDepth, scrolled);
+        }
+
+        // Track beforeunload to capture exit data
+        window.addEventListener('beforeunload', function() {
+          const timeOnPage = Math.round((Date.now() - startTime) / 1000);
+
+          fetch(`${API_BASE}/page-visit`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              sessionId: getSessionId(),
+              userId: getUserId(),
+              pageUrl: window.location.href,
+              pageTitle: document.title,
+              timeOnPage: timeOnPage,
+              scrollDepth: Math.round(scrollDepth),
+              interactions: interactions,
+              isExitPage: true
+            }),
+            keepalive: true // Send even after page unload
+          }).catch(err => console.log('Exit tracking error:', err));
+        });
+
+        // Set up event listeners
+        document.addEventListener('click', trackInteraction);
+        document.addEventListener('scroll', trackScroll);
+        document.addEventListener('keydown', trackInteraction);
+
+        // Track initial page visit
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', trackPageVisit);
+        } else {
+          trackPageVisit();
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-[#0B0B15] text-white">
+    <div id="particles-js"></div>
+    <div class="bg-gradient-overlay"></div>
+    <slot />
+
+    <!-- Particles.js Configuration -->
+    <script is:inline>
+      /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
+      if (typeof particlesJS !== 'undefined') {
+        particlesJS('particles-js', {
+          "particles": {
+            "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+            "color": { "value": "#ffffff" },
+            "shape": { "type": "circle" },
+            "opacity": { "value": 0.5, "random": false },
+            "size": { "value": 3, "random": true },
+            "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
+            "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+          },
+          "interactivity": {
+            "detect_on": "canvas",
+            "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+            "modes": { "grab": { "distance": 400, "line_linked": { "opacity": 1 } }, "bubble": { "distance": 400, "size": 40, "duration": 2, "opacity": 8, "speed": 3 }, "repulse": { "distance": 200, "duration": 0.4 }, "push": { "particles_nb": 4 }, "remove": { "particles_nb": 2 } }
+          },
+          "retina_detect": true
+        });
+      }
+    </script>
+  </body>
+</html>
+```
+
+## Key Features
+
+### 1. External Scripts
+- **Particles.js** - Animated background particles
+- **Cal.com** - Booking widget (floating button, bottom-left)
+- **i18n.js** - Internationalization support
+
+### 2. Tracking Data Collected
+- Session ID (per browser session)
+- User ID (persistent, anonymous)
+- Page URL and title
+- Referrer
+- UTM parameters (source, medium, campaign, content, term)
+- GCLID and FBCLID
+- Screen/viewport resolution
+- Timezone and language
+- Scroll depth
+- Time on page
+- Interaction count
+
+### 3. Cal.com Configuration
+```javascript
+calLink: "stefan-pirker-nmurov/30min"
+buttonColor: "#9333ea"  // Purple
+buttonPosition: "bottom-left"
+layout: "month_view"
+```
+
+### 4. Tracking API Endpoint
+```
+POST https://adsengineer-cloud.adsengineer.workers.dev/api/v1/tracking/page-visit
+```
