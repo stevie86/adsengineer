@@ -6,39 +6,35 @@ import Footer from '../components/Footer.astro';
 
 ---
 
-<Layout>
+<Layout title="About AdsEngineer - High Performance Tracking Infrastructure">
   <Header />
   <main class="min-h-screen bg-[#0B0B15] text-white">
-    <!-- Stats/Counter Section -->
+    <!-- Stats Section -->
     <section class="py-20 bg-gradient-to-r from-purple-900/20 to-cyan-900/20">
       <div class="container mx-auto px-6">
         <div class="grid md:grid-cols-4 gap-8 text-center">
-          <!-- Happy Clients Counter -->
           <div class="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
-            <div class="text-4xl font-bold text-cyan-400 mb-2" id="clients-count">0</div>
-            <p class="text-gray-300" data-i18n="about.stats.clients">Happy Clients</p>
-            <p class="text-sm text-gray-400 mt-2" data-i18n="about.stats.clientsDesc">Growing every day</p>
+            <div class="text-4xl font-bold text-cyan-400 mb-2">0ms</div>
+            <p class="text-gray-300">Cold Starts</p>
+            <p class="text-sm text-gray-400 mt-2">V8 Isolate Performance</p>
           </div>
 
-          <!-- Attribution Accuracy -->
           <div class="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
-            <div class="text-4xl font-bold text-green-400 mb-2">95%</div>
-            <p class="text-gray-300" data-i18n="about.stats.accuracy">Attribution Accuracy</p>
-            <p class="text-sm text-gray-400 mt-2" data-i18n="about.stats.accuracyDesc">Server-side precision</p>
+            <div class="text-4xl font-bold text-green-400 mb-2">99.9%</div>
+            <p class="text-gray-300">Edge Reliability</p>
+            <p class="text-sm text-gray-400 mt-2">Global distribution</p>
           </div>
 
-          <!-- Data Processed -->
           <div class="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
-            <div class="text-4xl font-bold text-purple-400 mb-2" id="conversions-count">0</div>
-            <p class="text-gray-300" data-i18n="about.stats.conversions">Conversions Tracked</p>
-            <p class="text-sm text-gray-400 mt-2" data-i18n="about.stats.conversionsDesc">And counting...</p>
+            <div class="text-4xl font-bold text-purple-400 mb-2">EU-Native</div>
+            <p class="text-gray-300">Data Sovereignty</p>
+            <p class="text-sm text-gray-400 mt-2">GDPR-Compliant Nodes</p>
           </div>
 
-          <!-- Uptime -->
           <div class="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
-            <div class="text-4xl font-bold text-yellow-400 mb-2">99.9%</div>
-            <p class="text-gray-300" data-i18n="about.stats.uptime">Uptime</p>
-            <p class="text-sm text-gray-400 mt-2" data-i18n="about.stats.uptimeDesc">Cloudflare powered</p>
+            <div class="text-4xl font-bold text-yellow-400 mb-2">~0€</div>
+            <p class="text-gray-300">Infra Spend</p>
+            <p class="text-sm text-gray-400 mt-2">Serverless Efficiency</p>
           </div>
         </div>
       </div>
@@ -48,131 +44,57 @@ import Footer from '../components/Footer.astro';
     <section class="py-20">
       <div class="container mx-auto px-6 max-w-4xl">
         <div class="text-center mb-12">
-          <h1 class="text-4xl font-bold mb-6" data-i18n="about.title">About AdsEngineer</h1>
-          <p class="text-xl text-gray-300" data-i18n="about.subtitle">
-            Building the future of attribution tracking in the cookie apocalypse era.
+          <h1 class="text-4xl font-bold mb-6">Our Mission: Digital Sovereignty</h1>
+          <p class="text-xl text-gray-300 leading-relaxed">
+            We are building an independent infrastructure layer between European businesses and US Ad-Giants. 
+            We don't just fix tracking; we architect digital sovereignty.
           </p>
         </div>
 
         <div class="prose prose-lg prose-invert mx-auto">
-          <h2 data-i18n="about.founder">The Founder</h2>
+          <h2>The Engineering Philosophy</h2>
           <p>
-            I am a passionate software engineer and entrepreneur specializing in solving complex problems in digital advertising. With years of experience developing SaaS solutions and deep understanding of digital marketing challenges, I founded AdsEngineer – a revolutionary platform that transforms how businesses measure and optimize their advertising performance.
+            In a world where traditional tracking methods are failing, we realized that the solution wasn't just better marketing—it was better engineering.
+            For too long, businesses have relied on heavy, inefficient Docker containers and US-based cloud giants for tracking. These systems were never built for the high-precision requirements of 2026.
           </p>
 
-          <h2 data-i18n="about.mission">Our Mission</h2>
           <p>
-            In a world where traditional tracking methods are increasingly failing – Chrome introduces user control, Safari and Firefox block cookies, and privacy laws become stricter – our mission is clear: <strong>Give businesses the ability to measure their ad ROI precisely, independent of browser restrictions.</strong>
+            We founded AdsEngineer with a simple belief: <strong>Infrastructure should be invisible, unblockable, and independent.</strong> By moving away from legacy cloud stacks to edge-native V8 Isolates, we've achieved performance that standard Google Cloud solutions simply cannot match.
           </p>
 
-          <h2 data-i18n="about.offer">What We Build</h2>
-          <p>
-            <strong>AdsEngineer</strong> is an enterprise-grade SaaS platform that seamlessly integrates Google Ads with GoHighLevel and other marketing automation tools. Unlike traditional pixel-based solutions, we work server-side – our technology is invisible to browsers and unaffected by ad blockers.
-          </p>
-
-          <h3>Key Features:</h3>
-          <ul>
-            <li><strong>Server-Side GCLID Capture:</strong> Securely capture and store Google Click IDs on your server</li>
-            <li><strong>Automated Offline Conversions:</strong> Send conversion data back to Google Ads for precise attribution</li>
-            <li><strong>GoHighLevel Integration:</strong> Seamless connection with your CRM and marketing automation platform</li>
-            <li><strong>Real-Time Dashboards:</strong> Track your advertising performance with unparalleled accuracy</li>
-            <li><strong>Enterprise Security:</strong> AES-256 encryption, SOC 2 compliance, GDPR-compliant</li>
-          </ul>
-
-          <h2 data-i18n="about.audience">Who We Serve</h2>
-          <ul>
-            <li><strong>Marketing Agencies:</strong> Scale client performance without manual reporting</li>
-            <li><strong>Local Businesses:</strong> Dental practices, law firms, service businesses – anyone using Google Ads</li>
-            <li><strong>E-Commerce Companies:</strong> Shopify and WooCommerce stores with complex conversion funnels</li>
-            <li><strong>Enterprise Customers:</strong> Large organizations with high privacy and compliance requirements</li>
-          </ul>
-
-          <h2 data-i18n="about.philosophy">Our Philosophy</h2>
-          <p>
-            We believe technology should not only solve problems, but transform industries. Every AdsEngineer feature is derived from real customer problems. We listen, we learn, we iterate – always with the goal of improving user experience and delivering real business results.
-          </p>
-
-          <h2 data-i18n="about.roadmap">Product Roadmap</h2>
-          <div class="mb-8">
-            <p class="text-lg text-gray-300 mb-6">
-              We're building the complete attribution solution. Here's what's coming:
-            </p>
-
-            <div class="space-y-6">
-              <!-- Phase 1: Current -->
-              <div class="bg-gradient-to-r from-green-900/20 to-green-800/20 border border-green-500/30 rounded-lg p-6">
-                <div class="flex items-center mb-3">
-                  <div class="bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3">✓</div>
-                  <h3 class="text-xl font-bold text-green-400">Phase 1: Google Ads Attribution</h3>
-                </div>
-                <p class="text-gray-300 mb-3">Server-side GCLID capture and offline conversions.</p>
-                <div class="flex flex-wrap gap-2">
-                  <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-sm">Live Now</span>
-                  <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-sm">GoHighLevel Ready</span>
-                </div>
-              </div>
-
-              <!-- Phase 2: GA4 -->
-              <div class="bg-gradient-to-r from-blue-900/20 to-blue-800/20 border border-blue-500/30 rounded-lg p-6">
-                <div class="flex items-center mb-3">
-                  <div class="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3">2</div>
-                  <h3 class="text-xl font-bold text-blue-400">Phase 2: GA4 Enhancement (Q1 2026)</h3>
-                </div>
-                <p class="text-gray-300 mb-3">Server-side GA4 events and enhanced attribution modeling.</p>
-                <div class="flex flex-wrap gap-2">
-                  <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm">Coming Soon</span>
-                  <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm">Privacy Compliant</span>
-                </div>
-              </div>
-
-              <!-- Phase 3: Meta -->
-              <div class="bg-gradient-to-r from-purple-900/20 to-purple-800/20 border border-purple-500/30 rounded-lg p-6">
-                <div class="flex items-center mb-3">
-                  <div class="bg-purple-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3">3</div>
-                  <h3 class="text-xl font-bold text-purple-400">Phase 3: Meta Ads Integration (Q2 2026)</h3>
-                </div>
-                <p class="text-gray-300 mb-3">Facebook & Instagram attribution with Conversions API.</p>
-                <div class="flex flex-wrap gap-2">
-                  <span class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-sm">iOS 14.5 Ready</span>
-                  <span class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-sm">Event Matching</span>
-                </div>
-              </div>
-
-              <!-- Phase 4: Social -->
-              <div class="bg-gradient-to-r from-pink-900/20 to-pink-800/20 border border-pink-500/30 rounded-lg p-6">
-                <div class="flex items-center mb-3">
-                  <div class="bg-pink-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3">4</div>
-                  <h3 class="text-xl font-bold text-pink-400">Phase 4: Social Media Suite (Q3 2026)</h3>
-                </div>
-                <p class="text-gray-300 mb-3">TikTok, LinkedIn, and Pinterest attribution tracking.</p>
-                <div class="flex flex-wrap gap-2">
-                  <span class="bg-pink-500/20 text-pink-300 px-3 py-1 rounded-full text-sm">Multi-Platform</span>
-                  <span class="bg-pink-500/20 text-pink-300 px-3 py-1 rounded-full text-sm">Unified Dashboard</span>
-                </div>
-              </div>
-
-              <!-- Phase 5: Ecosystem -->
-              <div class="bg-gradient-to-r from-cyan-900/20 to-cyan-800/20 border border-cyan-500/30 rounded-lg p-6">
-                <div class="flex items-center mb-3">
-                  <div class="bg-cyan-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3">5</div>
-                  <h3 class="text-xl font-bold text-cyan-400">Phase 5: CRM Ecosystem (Q4 2026)</h3>
-                </div>
-                <p class="text-gray-300 mb-3">Native integrations with HubSpot, Pipedrive, and Zapier.</p>
-                <div class="flex flex-wrap gap-2">
-                  <span class="bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full text-sm">API-First</span>
-                  <span class="bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full text-sm">No-Code Ready</span>
-                </div>
-              </div>
+          <h2>Meet the Architect</h2>
+          <div class="flex flex-col md:flex-row gap-8 items-center py-8">
+            <div class="flex-1">
+              <p>
+                AdsEngineer was founded by a systems engineer who saw the inherent flaws in "Marketing Tech". While marketers were trying to hack pixels, we were studying V8 engine internals and global edge networking.
+              </p>
+              <p>
+                "I realized that running tracking in Docker containers (Google Cloud Run) was like using a truck to deliver a letter. It's slow, expensive, and prone to cold-start failures. Edge-native V8 Isolates are the surgical instrument needed for modern attribution."
+              </p>
             </div>
           </div>
 
-          <h2 data-i18n="about.contact">Contact Us</h2>
-          <p data-i18n="about.cta">
-            Ready to revolutionize your attribution tracking? Let's talk.
-          </p>
-          <div class="text-center mt-8">
-            <a href="https://cal.com/stefan-pirker-nmurov/30min" class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-8 py-4 rounded-lg text-lg font-semibold text-white transition-all duration-300 shadow-lg hover:shadow-xl" data-i18n="about.demoBtn">
-              Book a Demo
+          <h2>Our Technical Roadmap</h2>
+          <div class="space-y-6 my-12">
+            <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+              <h3 class="text-cyan-400 mt-0">Phase 1: Edge-Native GCLID Preservation</h3>
+              <p class="text-gray-300">Hardening the foundation with 0ms cold starts and unblockable data persistence on the edge.</p>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+              <h3 class="text-purple-400 mt-0">Phase 2: GTM-to-Edge Compiler Expansion</h3>
+              <p class="text-gray-300">Supporting complex GTM triggers and custom variables through native Rust-powered compilation.</p>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+              <h3 class="text-green-400 mt-0">Phase 3: Multi-Edge Redundancy</h3>
+              <p class="text-gray-300">Cross-network edge synchronization between Cloudflare, Fastly, and Vercel for zero-failure infrastructure.</p>
+            </div>
+          </div>
+
+          <div class="text-center mt-12 bg-gradient-to-r from-purple-900/40 to-cyan-900/40 border border-white/10 p-12 rounded-2xl">
+            <h2 class="mt-0">Ready for a Stack Audit?</h2>
+            <p class="mb-8">Stop guessing. Let's look at your infrastructure together.</p>
+            <a href="https://cal.com/stefan-pirker-nmurov/30min" class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-8 py-4 rounded-lg text-lg font-semibold text-white transition-all duration-300 shadow-lg hover:shadow-xl inline-block">
+              Audit My Stack
             </a>
           </div>
         </div>
@@ -180,41 +102,4 @@ import Footer from '../components/Footer.astro';
     </section>
   </main>
   <Footer />
-
-  <script>
-    // Animated Counters
-    function animateCounter(elementId, target, duration = 2000) {
-      const element = document.getElementById(elementId);
-      if (!element) return;
-
-      const start = 0;
-      const startTime = performance.now();
-
-      function update(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-
-        // Easing function for smooth animation
-        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
-        const current = Math.floor(start + (target - start) * easeOutCubic);
-
-        element.textContent = current.toLocaleString();
-
-        if (progress < 1) {
-          requestAnimationFrame(update);
-        }
-      }
-
-      requestAnimationFrame(update);
-    }
-
-    // Start counters when page loads
-    document.addEventListener('DOMContentLoaded', () => {
-      // Trigger counters with a delay
-      setTimeout(() => {
-        animateCounter('clients-count', 0); // Currently 0, will update as we get clients
-        animateCounter('conversions-count', 0); // Currently 0, will update with real data
-      }, 500);
-    });
-  </script>
 </Layout>

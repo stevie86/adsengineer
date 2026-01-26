@@ -4,10 +4,6 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
-// import HowItWorks from '../components/HowItWorks.astro';
-// import Audience from '../components/Audience.astro';
-// import Pricing from '../components/Pricing.astro';
-// import Trust from '../components/Trust.astro';
 ---
 
 <Layout>
@@ -18,51 +14,139 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
       <div class="container mx-auto px-6 text-center relative z-10">
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm mb-8 shadow-[0_0_15px_rgba(188,19,254,0.2)]">
           <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_8px_#00F0FF]"></span>
-          <span data-i18n="hero.badge">Launching Q1 2026 - Building in Public</span>
+          <span data-i18n="hero.badge">Private Beta - High Performance Infrastructure</span>
         </div>
         <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight text-white">
-          <span data-i18n="hero.titlePrefix">When Cookies Vanish,</span><br />
-          <span class="gradient-text gradient-animate" data-i18n="hero.titleHighlight">Your Data Survives</span>
+          <span data-i18n="hero.titlePrefix">Stop Renting Slow Servers.</span><br />
+          <span class="gradient-text gradient-animate" data-i18n="hero.titleHighlight">Deploy Edge-Native Tracking.</span>
         </h1>
         <p class="text-xl mb-12 text-gray-300 max-w-4xl mx-auto leading-relaxed" data-i18n="hero.subtitle">
-          The Cookie Apocalypse is coming in Q1 2026. Chrome and Safari are blocking 90% of tracking. 
-          <span class="text-white font-semibold">AdsEngineer</span> preserves your attribution data across 
-          <span class="text-white font-semibold">any platform</span>—from GoHighLevel to Shopify and beyond.
+          Standard Google Cloud setups cost <span class="text-red-400 font-semibold">€50-200/month</span> with 
+          <span class="text-red-400 font-semibold">200-800ms latency</span>. Our solution: 
+          <span class="text-cyan-400 font-semibold">0ms Latency</span>. 
+          <span class="text-cyan-400 font-semibold">~0€ Server Costs</span>. 
+          <span class="text-cyan-400 font-semibold">100% GDPR Control via Cloudflare Workers</span>.
         </p>
         <div class="flex flex-col sm:flex-row gap-6 justify-center">
           <button data-cal-link="stefan-pirker-nmurov/30min" data-cal-config='{"layout":"month_view"}' class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] transform hover:-translate-y-1">
-            <span data-i18n="hero.ctaPrimary">Book a Call →</span>
+            <span data-i18n="hero.ctaPrimary">Get Free Infrastructure Audit</span>
           </button>
-          <a href="https://advocate-cloud.adsengineer.workers.dev/api/v1/ghl/webhook" class="bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300">
-            <span data-i18n="hero.ctaSecondary">View Webhook API</span>
+          <a href="#architecture" class="bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300">
+            <span data-i18n="hero.ctaSecondary">See the Architecture</span>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- Features Section -->
+    <!-- Comparison Section -->
     <section id="how-it-works" class="py-20">
       <div class="container mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm" data-i18n="features.badge">Capabilities</span>
-          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="features.title">Server-Side <span class="gradient-text">Power</span></h2>
-          <p class="text-gray-400 mt-4 max-w-2xl mx-auto italic" data-i18n="features.subtitle">"Built on Cloudflare's edge network for unblockable tracking."</p>
+          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm" data-i18n="comparison.badge">Infrastructure Benchmarks</span>
+          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="comparison.title">The Engineering <span class="gradient-text">Gap</span></h2>
+          <p class="text-gray-400 mt-4 max-w-2xl mx-auto italic" data-i18n="comparison.subtitle">"Don't build your tracking on legacy cloud stacks."</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="glass-card p-8 group hover:border-purple-500/50 transition-all">
-            <div class="text-4xl mb-6">🛡️</div>
-            <h3 class="text-xl font-bold mb-4 text-white" data-i18n="features.list.0.title">GCLID Preservation</h3>
-            <p class="text-gray-300 group-hover:text-white transition-colors" data-i18n="features.list.0.desc">Attribution survives cookie restrictions, ad blockers, and cross-domain tracking failures. Your ROI reports stay accurate.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <!-- Left Column: The Standard Way -->
+          <div class="glass-card p-8 border-red-500/20 bg-red-500/5 transition-all">
+            <h3 class="text-2xl font-bold mb-6 text-red-400">The Standard Way (GCP/AWS)</h3>
+            <ul class="space-y-4">
+              <li class="flex items-center gap-3 text-gray-300">
+                <span class="text-red-500">✕</span>
+                <span>High Costs: €50-200/mo base spend</span>
+              </li>
+              <li class="flex items-center gap-3 text-gray-300">
+                <span class="text-red-500">✕</span>
+                <span>Cold Starts: 800ms+ latency on first hit</span>
+              </li>
+              <li class="flex items-center gap-3 text-gray-300">
+                <span class="text-red-500">✕</span>
+                <span>Manual JSON Coding: Fragile & slow to deploy</span>
+              </li>
+              <li class="flex items-center gap-3 text-gray-300">
+                <span class="text-red-500">✕</span>
+                <span>US-Server Risk: Data residency concerns</span>
+              </li>
+            </ul>
           </div>
-          <div class="glass-card p-8 group hover:border-purple-500/50 transition-all">
-            <div class="text-4xl mb-6">🔌</div>
-            <h3 class="text-xl font-bold mb-4 text-white" data-i18n="features.list.1.title">Universal Integration</h3>
-            <p class="text-gray-300 group-hover:text-white transition-colors" data-i18n="features.list.1.desc">Whether you use GHL webhooks, Shopify, or a custom CMS, we receive lead data the moment it's submitted and bridge it back to your ad platforms.</p>
+
+          <!-- Right Column: Our Way -->
+          <div class="glass-card p-8 border-green-500/20 bg-green-500/5 transition-all shadow-[0_0_30px_rgba(34,197,94,0.1)]">
+            <h3 class="text-2xl font-bold mb-6 text-green-400">The Edge Way (AdsEngineer)</h3>
+            <ul class="space-y-4">
+              <li class="flex items-center gap-3 text-gray-100">
+                <span class="text-green-500">✓</span>
+                <span>Serverless Efficiency: ~0€ base costs</span>
+              </li>
+              <li class="flex items-center gap-3 text-gray-100">
+                <span class="text-green-500">✓</span>
+                <span>Global Edge Network: 0ms cold starts</span>
+              </li>
+              <li class="flex items-center gap-3 text-gray-100">
+                <span class="text-green-500">✓</span>
+                <span>Automated GTM Parser: Instant compilation</span>
+              </li>
+              <li class="flex items-center gap-3 text-gray-100">
+                <span class="text-green-500">✓</span>
+                <span>EU-Data Sovereignty: GDPR-native infrastructure</span>
+              </li>
+            </ul>
           </div>
-          <div class="glass-card p-8 group hover:border-purple-500/50 transition-all">
-            <div class="text-4xl mb-6">⚡</div>
-            <h3 class="text-xl font-bold mb-4 text-white" data-i18n="features.list.2.title">Cloudflare Edge</h3>
-            <p class="text-gray-300 group-hover:text-white transition-colors" data-i18n="features.list.2.desc">Deployed globally on Cloudflare Workers for &lt;50ms latency. Fast, reliable, and unblockable by browsers.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GTM-to-Edge Parser Section -->
+    <section id="architecture" class="py-20 bg-black/20 overflow-hidden">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-col lg:flex-row items-center gap-16">
+          <div class="flex-1">
+            <span class="text-purple-400 font-bold tracking-widest uppercase text-sm">Proprietary Technology</span>
+            <h2 class="text-4xl font-bold mt-4 mb-6 text-white">GTM-to-Edge <span class="gradient-text">Parser</span></h2>
+            <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+              Our core engine compiles GTM JSON definitions directly into hardened Cloudflare Worker code in milliseconds. No more manual tagging or brittle server-side GTM setups.
+            </p>
+            <div class="space-y-4">
+              <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
+                <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">01</div>
+                <span class="text-gray-200">Parse GTM JSON Architecture</span>
+              </div>
+              <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
+                <div class="w-10 h-10 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400">02</div>
+                <span class="text-gray-200">Compile to Rust-powered V8 Isolates</span>
+              </div>
+              <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
+                <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">03</div>
+                <span class="text-gray-200">Deploy globally in &lt;10 seconds</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex-1 relative">
+            <div class="glass-card p-6 bg-[#0B0B15]/90 border-purple-500/30 font-mono text-sm overflow-hidden shadow-2xl">
+              <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-2">
+                <span class="text-gray-500 uppercase text-xs">compiler_output.log</span>
+                <div class="flex gap-1.5">
+                  <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <p class="text-purple-400 italic">// Initializing AdsEngineer Compiler v2.4.0</p>
+                <p class="text-white"><span class="text-cyan-400">DONE</span> Loading GTM-ID: GTM-T7XL2BZ</p>
+                <p class="text-white"><span class="text-cyan-400">DONE</span> Analyzing 42 tags and 18 triggers</p>
+                <p class="text-white"><span class="text-purple-400">START</span> Generating Worker code...</p>
+                <p class="text-gray-400 pl-4">→ Compiling custom_event_purchase.ts</p>
+                <p class="text-gray-400 pl-4">→ Injecting GCLID persistence layer</p>
+                <p class="text-gray-400 pl-4">→ Optimizing V8 memory allocation</p>
+                <p class="text-white font-bold mt-4"><span class="text-green-400">SUCCESS</span> Build completed in 142ms</p>
+                <p class="text-white"><span class="text-cyan-400">READY</span> Global edge deployment initiated</p>
+              </div>
+            </div>
+            <!-- Decorative Glow -->
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-purple-500/20 blur-[80px]"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-cyan-500/20 blur-[80px]"></div>
           </div>
         </div>
       </div>
@@ -72,16 +156,16 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
     <section id="pricing" class="py-20 bg-black/20">
       <div class="container mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm" data-i18n="pricing.badge">Pricing Reality Check</span>
-          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="pricing.title">Pricing for <span class="gradient-text">SMB Agencies</span></h2>
-          <p class="text-gray-400 mt-4" data-i18n="pricing.subtitle">Realistic SaaS pricing. Not €2,000 - that's for Fortune 500s.</p>
+          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm" data-i18n="pricing.badge">Infrastructure Costs</span>
+          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="pricing.title">Transparent <span class="gradient-text">Pricing</span></h2>
+          <p class="text-gray-400 mt-4" data-i18n="pricing.subtitle">High-performance engineering shouldn't break the bank.</p>
         </div>
         <div class="max-w-4xl mx-auto text-center">
           <div class="glass-card p-12 border-purple-500/30 shadow-[0_0_30px_rgba(188,19,254,0.2)]">
-            <h3 class="text-3xl font-bold mb-6 text-white" data-i18n="quote.title">Get Your Custom Quote</h3>
-            <p class="text-xl mb-8 text-gray-300" data-i18n="quote.subtitle">Every business is unique. Let's discuss your specific needs and create a tailored solution that maximizes your ROI.</p>
+            <h3 class="text-3xl font-bold mb-6 text-white" data-i18n="quote.title">Request Your Infra Audit</h3>
+            <p class="text-xl mb-8 text-gray-300" data-i18n="quote.subtitle">We'll analyze your current tracking stack and show you exactly where you're losing data and paying unnecessary cloud fees.</p>
             <button data-cal-link="stefan-pirker-nmurov/30min" data-cal-config='{"layout":"month_view"}' class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-12 py-5 rounded-xl text-xl font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] inline-block transform hover:-translate-y-1">
-              <span data-i18n="quote.btn">Get Quote Now →</span>
+              <span data-i18n="quote.btn">Audit My Stack →</span>
             </button>
           </div>
          </div>
@@ -93,10 +177,10 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
     <section class="bg-gray-900/50 text-white py-20 relative overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-900/20 pointer-events-none"></div>
       <div class="container mx-auto px-6 text-center relative z-10">
-        <h2 class="text-4xl font-bold mb-6 text-white" data-i18n="cta.title">Ready to Fix Your Attribution?</h2>
-        <p class="text-xl mb-12 text-gray-300 max-w-2xl mx-auto" data-i18n="cta.subtitle">Join the agencies transforming their performance. Because your conversions deserve to be counted.</p>
+        <h2 class="text-4xl font-bold mb-6 text-white" data-i18n="cta.title">Reclaim Your Digital Sovereignty</h2>
+        <p class="text-xl mb-12 text-gray-300 max-w-2xl mx-auto" data-i18n="cta.subtitle">Own your data. Control your infrastructure. Stop the attribution leak.</p>
         <button data-cal-link="stefan-pirker-nmurov/30min" data-cal-config='{"layout":"month_view"}' class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-12 py-5 rounded-xl text-xl font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] inline-block transform hover:-translate-y-1">
-          <span data-i18n="cta.btn">Book a Free Call</span>
+          <span data-i18n="cta.btn">Get Free Infrastructure Audit</span>
         </button>
       </div>
     </section>
