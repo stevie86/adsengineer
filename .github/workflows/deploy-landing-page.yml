@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'pnpm'
-          cache-dependency-path: landing-page/pnpm-lock.json
+          cache-dependency-path: landing-page/pnpm-lock.yaml
 
       - name: Install dependencies
         run: |
@@ -42,7 +42,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: adsengineer-landing
+          projectName: adsengineer
           directory: landing-page/dist
           # Optional: gitHubToken for automatic branch detection
           # gitHubToken: ${{ secrets.GITHUB_TOKEN }}
