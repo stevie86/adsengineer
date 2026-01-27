@@ -1,174 +1,140 @@
 # External Integrations
 
-**Analysis Date:** 2026-01-27
+**Generated:** 2026-01-27
+**Project:** AdsEngineer - Enterprise Conversion Tracking SaaS
 
-## APIs & External Services
+## Ad Platforms
 
-**Payment Processing (Stripe):**
-- Billing and subscription management
-- SDK/Client: `stripe` package (v14.25.0)
-- Auth: API key (`STRIPE_SECRET_KEY`), webhook secret (`STRIPE_WEBHOOK_SECRET`)
-- Implementation: `src/routes/billing.ts`, `src/services/billing.ts`
-- Price tiers configured via `STRIPE_STARTER_PRICE_ID`, `STRIPE_PROFESSIONAL_PRICE_ID`, `STRIPE_ENTERPRISE_PRICE_ID`
+### Google Ads
+- **Purpose:** Conversion upload, audience building
+- **Integration:** REST API v17 via `google-ads-api` SDK
+- **Auth:** OAuth2 with refresh token (stored per-agency)
+- **Files:**
+  - `serverless/src/services/google-ads.ts` - Conversion upload logic
+  - `serverless/src/routes/oauth.ts` - OAuth flow handling
+- **Key Operations:**
+  - Upload click conversions (GCLID-based)
+  - Create offline conversion actions
+  - Build customer match audiences
 
-**Google Ads:**
-- Offline conversion uploads via REST API v17+
-- SDK/Client: `google-ads-api` package (v21.0.1)
-- Auth: OAuth2 with refresh token flow
-- Implementation: `src/services/google-ads.ts`, `src/routes/oauth.ts`
-- Env vars: `GOOGLE_ADS_CLIENT_ID`, `GOOGLE_ADS_CLIENT_SECRET`, `GOOGLE_ADS_DEVELOPER_TOKEN`
-- Config stored per-agency in D1 `agencies.google_ads_config`
+### Meta (Facebook) Conversions API
+- **Purpose:** Server-side event tracking
+- **Integration:** Meta CAPI (planned)
+- **Files:**
+  - `serverless/migrations/0005_meta_tracking.sql` - Schema
+- **Status:** Schema defined, implementation pending
 
-**Meta/Facebook Conversions API:**
-- Conversion tracking via CAPI
-- SDK/Client: Custom implementation using fetch
-- Auth: OAuth2 access token
-- Implementation: `src/services/meta-conversions.ts`, `src/routes/oauth.ts`
-- Env vars: `META_APP_ID`, `META_APP_SECRET`
-- Config stored in D1 `agencies.meta_config`
+### TikTok Events API
+- **Purpose:** Server-side conversion tracking
+- **Integration:** TikTok Events API
+- **Files:**
+  - `serverless/src/routes/tiktok.ts` - Event handling
+- **Auth:** Access token per-agency
 
-**TikTok Events API:**
-- Conversion tracking
-- SDK/Client: Custom implementation
-- Auth: OAuth2
-- Implementation: `src/routes/oauth.ts`
+## E-commerce Platforms
 
-## Data Storage
+### Shopify
+- **Purpose:** Webhook receiver for order/checkout events
+- **Integration:** Shopify Webhooks + dedicated plugin
+- **Auth:** HMAC signature verification
+- **Files:**
+  - `serverless/src/routes/shopify.ts` - Webhook handler
+  - `shopify-plugin/` - Dedicated Express proxy app
+- **Events:** `orders/create`, `checkouts/create`, customer events
 
-**Databases:**
-- Cloudflare D1 (SQLite via Cloudflare)
-  - Connection: D1 binding via `wrangler.jsonc`
-  - Client: Native D1 API (`c.env.DB`)
-  - Migrations: Numbered SQL files in `serverless/migrations/`
+### WooCommerce
+- **Purpose:** Order event tracking
+- **Integration:** Custom webhook receiver
+- **Files:**
+  - `serverless/src/routes/woocommerce.ts` - Webhook handler
+- **Auth:** Signature verification
 
-**File Storage:**
-- Cloudflare R2 (planned) or external CDN
+## CRM / Marketing
 
-**Caching:**
-- Cloudflare KV (planned for rate limiting)
-  - Connection: KV binding `RATE_LIMIT_KV`
-  - Current: Disabled in `wrangler.jsonc` (commented out)
+### GoHighLevel (GHL)
+- **Purpose:** Lead/contact event tracking
+- **Integration:** GHL Webhooks
+- **Auth:** Webhook signature verification
+- **Files:**
+  - `serverless/src/routes/ghl.ts` - Webhook handler
+- **Events:** Contact created, contact updated, opportunity events
 
-## Authentication & Identity
+## Payment Processing
 
-**Auth Providers:**
-- Custom JWT implementation for API authentication
-  - Secret: `JWT_SECRET`
-  - Implementation: `src/middleware/auth.ts`, `src/services/jwt.ts`
+### Stripe
+- **Purpose:** Subscription billing, payment processing
+- **Integration:** Stripe SDK + Webhooks
+- **Files:**
+  - `serverless/src/routes/billing.ts` - Billing endpoints
+  - `serverless/src/services/billing*.ts` - Business logic
+- **Features:**
+  - Subscription management (Starter/Professional/Enterprise tiers)
+  - Customer portal
+  - Webhook event handling
+- **Environment Variables:**
+  - `STRIPE_SECRET_KEY`
+  - `STRIPE_WEBHOOK_SECRET`
+  - `STRIPE_*_PRICE_ID` (per tier)
 
-- HMAC signature verification for webhooks (Shopify, GoHighLevel)
-  - Shopify: `src/routes/shopify.ts`
-  - GoHighLevel: `src/routes/ghl.ts` (`GHL_WEBHOOK_SECRET`)
-  - Utility: `src/services/crypto.ts`
+## Analytics / Tracking
 
-- OAuth2 flows for platform connections
-  - Google Ads: `src/routes/oauth.ts` (callback: `/api/v1/oauth/google-ads/callback`)
-  - Meta: `src/routes/oauth.ts` (callback: `/api/v1/oauth/meta/callback`)
-  - TikTok: `src/routes/oauth.ts`
+### Google Analytics 4 (GA4)
+- **Purpose:** Measurement Protocol integration
+- **Integration:** GA4 Measurement Protocol
+- **Files:**
+  - `serverless/src/services/ga4-measurement.ts` - Event sending
 
-## Monitoring & Observability
+### Server-Side GTM (Proposed)
+- **Purpose:** Unified integration hub
+- **Integration:** Measurement Protocol to sGTM
+- **Files:**
+  - `serverless/src/routes/gtm.ts` - GTM endpoint
+  - `serverless/migrations/0020_sgtm_config.sql` - Config schema
+- **Status:** Proposed architecture pivot
 
-**Error Tracking:**
- - Sentry (configured but optional)
-  - Env var: `SENTRY_DSN`
-  - Status: Configurable via Doppler
+## Database
 
-**Logs:**
-- Console-based structured logging
-- Implementation: `src/services/logging.ts`
-- Env var: `LOG_LEVEL`
-- No centralized log aggregation (console only)
+### Cloudflare D1
+- **Type:** SQLite-compatible
+- **Binding:** `DB` in worker environment
+- **Migrations:** `serverless/migrations/` (numbered SQL files)
+- **Access Pattern:** Prepared statements only (no raw interpolation)
 
-**Health Checks:**
-- `/health` endpoint
-- API health check scripts: `scripts/api-health-check.js`
-- API version monitoring: `scripts/api-version-check.js`
+### Cloudflare KV
+- **Binding:** `RATE_LIMIT_KV`
+- **Purpose:** Rate limiting, session storage
 
-## CI/CD & Deployment
+## Authentication
 
-**Hosting:**
-- Cloudflare Workers (production, staging, development environments)
-- Custom domain: `api.adsengineer.cloud`
-- Deployment: `wrangler deploy`
+### JWT (Dashboard)
+- **Purpose:** User authentication for dashboard/API
+- **Secret:** `JWT_SECRET` environment variable
+- **Files:**
+  - `serverless/src/middleware/auth.ts` - JWT validation
 
-**CI Pipeline:**
-- Manual deployment via Doppler + Wrangler
-- Infrastructure provisioning via OpenTofu
-- No GitHub Actions or other automated CI (manual workflow)
+### HMAC (Webhooks)
+- **Purpose:** Verify webhook authenticity
+- **Implementation:** `@noble/hashes` for cryptographic operations
+- **Files:**
+  - `serverless/src/middleware/` - Signature verification
 
-## Environment Configuration
+## Secrets Management
 
-**Required env vars:**
-**Auth:**
-- `JWT_SECRET`, `ADMIN_TOKEN`, `GHL_WEBHOOK_SECRET`
+### Doppler
+- **Purpose:** Runtime secrets injection
+- **Usage:** `doppler run -- pnpm dev`
+- **Environments:** development, staging, production
 
-**Stripe:**
-- `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_STARTER_PRICE_ID`, `STRIPE_PROFESSIONAL_PRICE_ID`, `STRIPE_ENTERPRISE_PRICE_ID`
+## Infrastructure
 
-**Google Ads:**
-- `GOOGLE_ADS_CLIENT_ID`, `GOOGLE_ADS_CLIENT_SECRET`, `GOOGLE_ADS_DEVELOPER_TOKEN`
+### Cloudflare
+- **Workers:** API runtime
+- **D1:** Database
+- **KV:** Key-value storage
+- **Pages:** Static site hosting
+- **DNS:** Domain management
 
-**Meta:**
-- `META_APP_ID`, `META_APP_SECRET`
-
-**Cloudflare:**
-- `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ZONE_ID`
-
-**Security:**
-- `ENCRYPTION_KEY` (AES-256 for credential storage)
-
-**AI Services (optional):**
-- `OPENAI_API_KEY`, `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`
-
-**Secrets location:**
-- Doppler (primary)
-- Cloudflare Dashboard (secondary)
-- No `.env` files committed to git
-
-## Webhooks & Callbacks
-
-**Incoming Webhooks:**
-- Shopify orders/customers - `POST /api/v1/shopify/webhook` (HMAC validated)
-- GoHighLevel contacts - `POST /api/v1/ghl/webhook` (signature validated)
-- Stripe billing events - `POST /api/v1/billing/webhook` (signature validated)
-
-**Outgoing Webhooks:**
-- Notification hooks for system alerts
-- Implementation: `src/services/api-monitor.ts`
-- Configurable via notification hook API
-
-## Platform Webhooks
-
-**Shopify:**
-- Routes: `src/routes/shopify.ts`
-- Events: Orders, customers
-- Auth: HMAC signature verification
-
-**GoHighLevel:**
-- Routes: `src/routes/ghl.ts`
-- Events: Contact creation/updates
-- Auth: Signature verification with `GHL_WEBHOOK_SECRET`
-
-**Stripe:**
-- Routes: `src/routes/billing.ts`
-- Events: Payment, subscription changes
-- Auth: Webhook signature verification
-
-## Additional Integrations
-
-**Shopify Plugin:**
-- Location: `shopify-plugin/`
-- Tech: Node.js + Express
-- Purpose: Shopify webhook proxy server
-
-**SEO Auditor:**
-- Location: `seo-auditor/`
-- Tech: Node.js + Puppeteer + Cheerio
-- Purpose: Store SEO analysis
-
-**E-commerce Platforms:**
-- Shopify, WooCommerce, Magento, BigCommerce (integration configurations in `src/services/adsengineer-onboarding.ts`)
-
----
-
-*Integration audit: 2026-01-27*
+### OpenTofu
+- **Purpose:** Infrastructure as Code
+- **Files:** `infrastructure/*.tf`
+- **Provider:** Cloudflare

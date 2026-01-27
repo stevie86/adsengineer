@@ -1,101 +1,101 @@
 # Technology Stack
 
-**Analysis Date:** 2026-01-27
+**Generated:** 2026-01-27
+**Project:** AdsEngineer - Enterprise Conversion Tracking SaaS
 
-## Languages
+## Languages & Runtime
 
-**Primary:**
-- TypeScript - Core API, frontend, infrastructure tooling
-- JavaScript - SEO auditor, CLI scripts
-
-**Secondary:**
-- SQL - D1 database migrations
-- Shell - Deployment scripts
-- HCL/Terraform - Infrastructure as code
-
-## Runtime
-
-**Environment:**
-- Cloudflare Workers - Serverless edge compute
-- Node.js - CLI tools, SEO auditor, local development
-
-**Package Manager:**
-- pnpm@10.27.0
-- Lockfile: pnpm-lock.yaml
+| Component | Language | Runtime |
+|-----------|----------|---------|
+| Core API | TypeScript 5.x | Cloudflare Workers |
+| Frontend Dashboard | TypeScript/React 18 | Vite (browser) |
+| Landing Page | TypeScript/Astro 5 | Cloudflare Pages |
+| Shopify Plugin | JavaScript/Express | Node.js |
+| Infrastructure | HCL | OpenTofu |
 
 ## Frameworks
 
-**Core:**
-- Hono v4.11.3 - Web framework (API routes)
-- Astro v5.16.9 - Marketing website framework
-- React 18.3.1 - Frontend dashboard
-- Express (shopify-plugin) - Node.js webhooks
+### Backend (`serverless/`)
+- **Hono v4** - Edge-native web framework
+- **@hono/zod-openapi** - OpenAPI + validation
+- **Zod** - Schema validation
+- **Stripe SDK v14** - Payment processing
+- **google-ads-api v21** - Conversion upload
 
-**Testing:**
-- Vitest v4.0.16 - Unit/integration/e2e testing
-- Playwright v1.40.0 - E2E browser testing
+### Frontend (`frontend/`)
+- **React 18** with TypeScript
+- **React Router v7** - Routing
+- **Tailwind CSS v3** - Styling
+- **Axios** - HTTP client
+- **@stripe/react-stripe-js** - Payment UI
 
-**Build/Dev:**
-- Wrangler v4.59.1 - Cloudflare Workers CLI
-- Vite v5.4.21 - Frontend build tool
-- OpenTofu - Infrastructure provisioning (IaC)
+### Landing Page (`landing-page/`)
+- **Astro 5** - Static site generator
+- **Tailwind CSS** - Styling
+
+## Database & Storage
+
+| Service | Type | Purpose |
+|---------|------|---------|
+| Cloudflare D1 | SQLite | Primary database |
+| Cloudflare KV | Key-Value | Rate limiting, sessions |
+
+## Package Management
+
+- **pnpm v10.27.0** - Package manager (enforced via `packageManager` field)
+- **npm** - Used only in `shopify-plugin/`
+
+## Build & Dev Tools
+
+| Tool | Purpose | Location |
+|------|---------|----------|
+| Wrangler | CF Workers CLI | `serverless/` |
+| Vite | Frontend bundler | `frontend/` |
+| Vitest | Testing framework | All packages |
+| BiomeJS | Linting/formatting | `serverless/` |
+| ESLint + Prettier | Linting/formatting | `frontend/` |
 
 ## Key Dependencies
 
-**Critical:**
-- stripe v14.25.0 - Payment processing and billing
-- google-ads-api v21.0.1 - Google Ads integration
-- @hono/zod-openapi v0.18.4 - API validation and documentation
-- zod v3.25.76 - Schema validation
-- @noble/hashes v1.4.0 - Cryptographic hashing
+### Production
+```
+hono@4.11.3           # Web framework
+stripe@14.25.0        # Payment processing
+google-ads-api@21.0.1 # Google Ads integration
+zod@3.25.76           # Schema validation
+@noble/hashes@1.4.0   # Cryptography (HMAC)
+```
 
-**Infrastructure:**
-- @cloudflare/workers-types - TypeScript definitions
-- @biomejs/biome v2.3.10 - Linting and formatting (backend)
-- ESLint + Prettier - Linting and formatting (frontend legacy)
+### Development
+```
+vitest@4.0.16         # Testing
+typescript@5.9.3      # Type checking
+@biomejs/biome@2.3.10 # Linting (backend)
+wrangler@4.59.1       # CF Workers CLI
+playwright@1.40.0     # E2E testing
+```
 
-**External Services:**
-- axios v1.6.0 - HTTP client
-- fflate v0.8.2 - Compression
+## Configuration Files
 
-## Configuration
+| File | Purpose |
+|------|---------|
+| `serverless/wrangler.jsonc` | CF Workers config, D1 binding |
+| `serverless/biome.json` | Linting rules (strict TS) |
+| `serverless/tsconfig.json` | TypeScript config |
+| `frontend/.eslintrc.json` | ESLint config |
+| `infrastructure/*.tf` | OpenTofu IaC |
 
-**Environment:**
-- Doppler - Secrets management (CLI and dashboard)
-- Cloudflare Dashboard - Additional secrets and configuration
-- Environment-specific configs: development, staging, production
+## Secrets Management
 
-**Configuration Files:**
-- `wrangler.jsonc` - Cloudflare Workers configuration (D1 bindings, environments)
-- `vite.config.ts` - Frontend build configuration
-- `vitest.config.ts` - Testing configuration
-- `terraform.tfvars` - Infrastructure variables
-- `biome.json` - Linting rules
+- **Doppler** - Secrets injection at runtime
+- **Cloudflare Secrets** - Worker environment variables
+- No `.env` files committed
 
-**Required Secrets:**
-- JWT_SECRET, STRIPE_SECRET_KEY, GOOGLE_ADS_CLIENT_ID/SECRET
-- CLOUDFLARE_API_TOKEN, ENCRYPTION_KEY
-- OPENAI_API_KEY, GEMINI_API_KEY, ANTHROPIC_API_KEY
+## Deployment Targets
 
-## Platform Requirements
-
-**Development:**
-- Node.js 20+
-- pnpm package manager
-- Wrangler CLI (Cloudflare)
-- Doppler CLI
-
-**Production:**
-- Cloudflare Workers runtime (edge computing)
-- Cloudflare D1 (database)
-- Cloudflare KV (rate limiting - planned)
-- Custom domain routing via Cloudflare
-
-**CI/CD:**
-- Manual deployments via `pnpm deploy`
-- OpenTofu for infrastructure provisioning
-- Doppler for secret injection
-
----
-
-*Stack analysis: 2026-01-27*
+| Package | Target | URL |
+|---------|--------|-----|
+| `serverless/` | Cloudflare Workers | `adsengineer-cloud.adsengineer.workers.dev` |
+| `frontend/` | Cloudflare Pages | TBD |
+| `landing-page/` | Cloudflare Pages | `adsengineer.com` |
+| `infrastructure/` | Cloudflare (via OpenTofu) | N/A |
