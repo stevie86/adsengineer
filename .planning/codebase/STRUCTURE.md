@@ -1,163 +1,265 @@
 # Codebase Structure
 
-**Analysis Date:** 2026-01-24
+**Analysis Date:** 2026-01-27
 
 ## Directory Layout
 
 ```
-ads-engineer/
-├── serverless/                 # Core API (Hono/Cloudflare Workers)
+ads-engineer/                                 # Monorepo root
+├── serverless/                              # Core API (Hono/Cloudflare Workers) - MAIN SYSTEM
 │   ├── src/
-│   │   ├── routes/            # API endpoints (18 files)
-│   │   ├── services/          # Business logic (29 files)
-│   │   ├── middleware/        # Auth, rate limiting (3 files)
-│   │   ├── database/          # D1 query functions
-│   │   ├── workers/           # Background processing
-│   │   ├── utils/             # Utility functions
-│   │   ├── types.ts           # Shared TypeScript interfaces
-│   │   ├── index.ts           # Hono app entry point
-│   │   ├── snippet.ts         # Client tracking code generator
-│   │   └── openapi.ts         # Auto-generated OpenAPI spec
-│   ├── tests/                 # Vitest test suite
-│   │   ├── unit/              # Unit tests
-│   │   ├── integration/       # API integration tests
-│   │   └── e2e/               # End-to-end tests
-│   ├── migrations/            # D1 database schema (numbered)
-│   ├── scripts/               # Health checks, migration tools
-│   └── wrangler.jsonc         # Cloudflare Worker config
-├── frontend/                   # Dashboard UI (React/TypeScript)
+│   │   ├── routes/                          # HTTP endpoints (18 files)
+│   │   │   ├── shopify.ts                   # Shopify webhook receivers
+│   │   │   ├── ghl.ts                       # GoHighLevel CRM webhooks
+│   │   │   ├── tiktok.ts                    # TikTok Events API
+│   │   │   ├── billing.ts                   # Stripe subscriptions
+│   │   │   ├── custom-events.ts             # Custom event tracking
+│   │   │   ├── custom-event-definitions.ts  # Event type definitions
+│   │   │   ├── oauth.ts                     # Google/Meta/TikTok OAuth flows
+│   │   │   ├── leads.ts                     # Lead CRUD
+│   │   │   ├── admin.ts                     # Agency management
+│   │   │   ├── analytics.ts                 # Reporting/dashboards
+│   │   │   ├── waitlist.ts                  # Landing page signups
+│   │   │   └── ...
+│   │   ├── services/                        # Business logic (29 modules)
+│   │   │   ├── google-ads.ts                # Google Ads Offline Conversions API
+│   │   │   ├── meta-conversions.ts          # Meta/Facebook CAPI
+│   │   │   ├── tiktok-conversions.ts        # TikTok Events API
+│   │   │   ├── conversion-router.ts         # Multi-platform routing
+│   │   │   ├── encryption.ts                # AES-256-GCM credential encryption
+│   │   │   ├── oauth-storage.ts            # Encrypted OAuth token storage
+│   │   │   ├── sgtm-forwarder.ts           # Server-Side GTM Measurement Protocol
+│   │   │   ├── lead-scoring.ts              # Lead qualification scoring
+│   │   │   └── ...
+│   │   ├── middleware/                      # Request processing
+│   │   │   ├── auth.ts                      # JWT/HMAC validation
+│   │   │   ├── rate-limit.ts               # KV-based rate limiting
+│   │   │   └── dev-guard.ts                # Environment-based access control
+│   │   ├── database/                        # D1 query abstractors
+│   │   │   └── index.ts                    # createDb factory
+│   │   ├── workers/                        # Background processing
+│   │   │   ├── offline-conversions.ts       # Google Ads upload worker
+│   │   │   └── queue-consumer.ts           # Queue processing
+│   │   ├── types.ts                        # Cloudflare bindings interface
+│   │   ├── snippet.ts                      # Client-side tracking snippet
+│   │   ├── openapi.ts                      # Auto-generated OpenAPI spec
+│   │   └── index.ts                        # Hono app entry
+│   ├── migrations/                          # D1 database schema (numbered SQL)
+│   │   ├── 0001_init.sql                   # Initial tables (leads, customers, waitlist)
+│   │   ├── 0002_agencies_audit.sql         # Agencies + audit_logs
+│   │   ├── 0003_conversion_logs.sql        # Conversion tracking
+│   │   ├── 0004_technology_tracking.sql   # Technology detection
+│   │   ├── 0005_meta_tracking.sql         # Meta/Facebook tracking
+│   │   ├── 0006_gdpr_compliance.sql        # GDPR compliance tables
+│   │   ├── 0018_custom_events_definitions.sql # Custom events system
+│   │   ├── 0019_billing_system.sql         # Stripe billing
+│   │   ├── 0020_sgtm_config.sql            # Server-Side GTM config
+│   │   └── 0022_add_agencies_config.sql    # Agencies config column
+│   ├── tests/                              # Vitest test suite
+│   │   ├── unit/                           # Unit tests for services
+│   │   ├── integration/                    # API endpoint tests
+│   │   └── e2e/                            # End-to-end flow tests
+│   ├── scripts/                            # Utility scripts
+│   ├── wrangler.jsonc                      # Cloudflare config (JSONC)
+│   ├── package.json                        # Serverless dependencies
+│   └── biome.json                          # Linting rules (strict TS)
+├── frontend/                               # Dashboard UI (React/Vite)
 │   ├── src/
-│   │   ├── components/        # Reusable UI components
-│   │   ├── pages/             # Route-based page components
-│   │   ├── services/          # API service layer
-│   │   ├── utils/             # Frontend utilities
-│   │   ├── types/             # TypeScript definitions
-│   │   ├── App.tsx            # React app root
-│   │   └── main.tsx           # App entry point
-│   ├── public/                # Static assets
-│   └── dist/                  # Build output
-├── infrastructure/             # IaC (OpenTofu/Terraform)
-│   ├── main.tf                # Core resource definitions
-│   ├── variables.tf           # Input variables
-│   ├── outputs.tf             # Output values
-│   └── providers.tf           # Cloudflare provider config
-├── landing-page/              # Marketing site (Astro)
-├── shopify-plugin/            # Shopify webhook proxy (Express)
-├── seo-auditor/               # SEO tools and Universal SST
-├── admin-dashboard/           # Internal admin tools (Vite/React)
-├── docs/                      # Architecture, specs, guides
-├── .kittify/specs/            # Feature specifications
-├── tasks/                     # Kanban task tracking
-├── wiki/                      # Project knowledge base
-├── .worktrees/                # Git worktrees for features
-└── .planning/                 # Planning and codebase docs
+│   │   ├── pages/                          # Route-based pages
+│   │   │   ├── Login.tsx                   # Authentication
+│   │   │   ├── Signup.tsx                  # Agency signup
+│   │   │   ├── Dashboard.tsx              # Main dashboard
+│   │   │   └── Admin/                      # Admin pages
+│   │   │       ├── Agencies.tsx            # Agency management
+│   │   │       └── IntegrationView.tsx    # Platform integrations
+│   │   ├── components/                     # Reusable UI components
+│   │   ├── services/                       # API service layer
+│   │   │   ├── api.ts                      # Axios client
+│   │   │   └── agencies.ts                 # Agency-specific API
+│   │   └── main.tsx                        # React entry point
+│   ├── package.json                        # Frontend dependencies
+│   └── vite.config.ts                      # Vite config
+├── infrastructure/                          # IaC (OpenTofu)
+│   ├── main.tf                             # Cloudflare resources
+│   ├── variables.tf                        # Input variables
+│   ├── outputs.tf                          # Deployment outputs
+│   └── providers.tf                        # Cloudflare provider config
+├── shopify-plugin/                          # Shopify webhook proxy (Express)
+│   ├── index.js                            # Express server
+│   └── package.json
+├── landing-page/                           # Marketing site (Astro)
+│   ├── astro.config.mjs                    # Astro config
+│   └── package.json
+├── seo-auditor/                            # SEO tools + Universal SST
+│   └── types.ts
+├── admin-dashboard/                         # Internal admin UI (WIP)
+│   └── src/
+├── docs/                                   # Architecture & documentation
+│   ├── opentofu-doppler-guide.md          # IaC and secrets management
+│   ├── architecture-*.md                  # Architecture docs
+│   └── sgtm-*.md                          # sGTM implementation docs
+├── .kittify/specs/                         # Feature specifications
+│   └── custom-events-database-system/      # Custom events spec
+├── tasks/                                  # Kanban task tracking
+│   ├── planned/                            # Planned tasks
+│   ├── doing/                              # In progress
+│   ├── done/                               # Completed
+│   └── for_review/                         # Pending review
+├── .opencode/                              # OpenCode agent skills
+│   └── skill/                              # Platform integration guides
+├── .sisyphus/                              # Workflow execution
+├── .planning/                              # Planning artifacts (THIS FOLDER)
+├── wiki/                                   # Project wiki
+└── scripts/                                # Root-level utility scripts
 ```
 
 ## Directory Purposes
 
-**serverless/:**
-- Purpose: Core API backend and business logic
-- Contains: Hono REST API, platform integrations, database operations
-- Key files: `src/index.ts` (API entry), `src/types.ts` (shared interfaces), `wrangler.jsonc` (Worker config)
+**serverless/** - Core API system (primary development target)
+- Purpose: Hono/Cloudflare Workers API handling all tracking, webhooks, billing
+- Contains: API endpoints, business logic, database layer, tests
+- Key files: `src/index.ts` (Hono app), `wrangler.jsonc` (Worker config), `package.json` (dependencies)
 
-**frontend/:**
-- Purpose: User-facing dashboard for agencies
-- Contains: React components, routing, API integration
-- Key files: `src/App.tsx` (app root), `src/main.tsx` (entry point)
+**frontend/** - Agency dashboard UI
+- Purpose: React-based customer-facing dashboard for managing integrations
+- Contains: Page components, service layer, authentication flow
+- Key files: `src/main.tsx` (React entry), `src/pages/Dashboard.tsx` (main dashboard)
 
-**infrastructure/:**
-- Purpose: Cloud resource provisioning via IaC
-- Contains: OpenTofu configuration for Cloudflare Workers, D1, KV
+**infrastructure/** - IaC configuration
+- Purpose: OpenTofu for provisioning Cloudflare Workers, D1, KV namespaces
+- Contains: Worker definitions, database resources, secrets management integration
 - Key files: `main.tf` (resources), `variables.tf` (configuration)
 
-**migrations/:**
-- Purpose: Database schema versioning
-- Contains: Numbered SQL migration files for D1
-- Key files: `0001_init.sql` (base schema), `0018_custom_events_definitions.sql` (events system)
+**docs/** - Architecture and documentation
+- Purpose: Technical specifications, deployment guides, architecture docs
+- Contains: Architecture overviews, implementation guides, sGTM proposals
+- Key files: `README.md`, `opentofu-doppler-guide.md`
+
+**shopify-plugin/** - Shopify webhook proxy
+- Purpose: Express server for Shopify webhook handling (separate from main API)
+- Contains: Express app, Shopify auth logic
+- Key files: `index.js`
+
+**landing-page/** - Marketing site
+- Purpose: Astro-based marketing landing page for waitlist and information
+- Contains: Astro components, pages, layouts
+- Key files: `astro.config.mjs`
 
 ## Key File Locations
 
 **Entry Points:**
-- `serverless/src/index.ts`: Hono API application entry point
-- `frontend/src/main.tsx`: React application entry point
-- `infrastructure/main.tf`: Infrastructure provisioning entry point
+- `serverless/src/index.ts` - Hono app entry point, route registration
+- `frontend/src/main.tsx` - React app entry point
+- `serverless/src/snippet.ts` - Client-side tracking snippet generator
+- `infrastructure/main.tf` - OpenTofu infrastructure definition
 
 **Configuration:**
-- `serverless/wrangler.jsonc`: Cloudflare Worker configuration
-- `infrastructure/variables.tf`: Infrastructure variables
-- `serverless/src/types.ts`: Global TypeScript interfaces
+- `serverless/wrangler.jsonc` - Cloudflare Worker configuration (D1 binding, secrets)
+- `serverless/biome.json` - BiomeJS linting rules
+- `frontend/vite.config.ts` - Vite build configuration
+- `frontend/package.json` - Frontend dependencies
+- `serverless/package.json` - Serverless dependencies
 
 **Core Logic:**
-- `serverless/src/routes/`: HTTP endpoint handlers
-- `serverless/src/services/`: Business logic and platform integrations
-- `serverless/src/database/`: Database query functions
+- `serverless/src/routes/*.ts` - API endpoints per domain (18 files)
+- `serverless/src/services/*.ts` - Business logic per platform (29 files)
+- `serverless/src/middleware/*.ts` - Auth, rate limiting, dev guard
+- `serverless/src/database/index.ts` - D1 query factory (type-safe queries)
 
 **Testing:**
-- `serverless/tests/`: Backend test suite (unit, integration, e2e)
-- `frontend/src/tests/`: Frontend test suite
+- `serverless/tests/unit/` - Service-level unit tests
+- `serverless/tests/integration/` - API endpoint integration tests
+- `serverless/tests/e2e/` - End-to-end flow tests
+- `frontend/src/tests/` - Frontend component tests
+
+**Database:**
+- `serverless/migrations/*.sql` - D1 schema definitions (numbered sequentially)
 
 ## Naming Conventions
 
 **Files:**
-- Route files: `platform.ts` (e.g., `shopify.ts`, `ghl.ts`)
-- Service files: `functionality.ts` or `platform-conversions.ts`
-- Migration files: `NNNN_description.sql` (4-digit padded numbers)
-- Test files: `*.test.ts` or `*.test.tsx`
+- Route files: kebab-case with domain name: `shopify.ts`, `custom-events.ts`, `billing.ts`
+- Service files: kebab-case with platform name: `google-ads.ts`, `meta-conversions.ts`, `tiktok-conversions.ts`
+- Middleware files: Purpose-based: `auth.ts`, `rate-limit.ts`, `dev-guard.ts`
+- Migration files: Numbered prefix with description: `0001_init.sql`, `0002_agencies_audit.sql`
 
 **Directories:**
-- Plural names for collections (`routes/`, `services/`, `components/`)
-- Lowercase with hyphens for multi-word (`landing-page/`, `seo-auditor/`)
-- Hidden directories for tools (`.worktrees/`, `.kittify/`)
+- Lowercase, hyphen-separated: `serverless`, `frontend`, `infrastructure`, `shopify-plugin`
 
 ## Where to Add New Code
 
-**New Feature:**
-- Primary code: `serverless/src/services/[feature].ts`
-- API endpoints: `serverless/src/routes/[feature].ts`
-- Tests: `serverless/tests/unit/[feature].test.ts`, `serverless/tests/integration/[feature].test.ts`
-- Frontend: `frontend/src/pages/[Feature]/`, `frontend/src/components/[Component]/`
+**New API Endpoint:**
+- Primary code: `serverless/src/routes/{domain}.ts` (create new router file if domain doesn't exist)
+- Business logic: `serverless/src/services/{platform}.ts`
+- Tests: `serverless/tests/integration/{domain}.test.ts`
 
-**New Platform Integration:**
-- Service module: `serverless/src/services/[platform]-conversions.ts`
-- Webhook handler: `serverless/src/routes/[platform].ts`
-- OAuth flow: `serverless/src/routes/oauth.ts` (add to existing)
-- Database: `serverless/migrations/NNNN_[platform]_config.sql`
+**New Ad Platform Integration:**
+- Service module: `serverless/src/services/{platform}-conversions.ts` (follow interface pattern)
+- Routes: Add to `serverless/src/routes/oauth.ts` for OAuth flows
+- Migrations: New migration for config column in agencies table
+- Tests: `serverless/tests/unit/{platform}.test.ts`
 
-**New UI Component:**
-- Implementation: `frontend/src/components/[Component]/`
-- Stories/Tests: `frontend/src/components/[Component]/[Component].test.tsx`
+**Database Schema Change:**
+- Migration: `serverless/migrations/XXXX_name.sql` (next available number)
+- Queries: Add methods to `serverless/src/database/index.ts` (createDb factory)
+- Types: Update `serverless/src/types.ts` if bindings change
 
-**Utilities:**
-- Backend helpers: `serverless/src/utils/[functionality].ts`
-- Frontend helpers: `frontend/src/utils/[functionality].ts`
+**Frontend Page/Component:**
+- Implementation: `frontend/src/pages/{Component}.tsx` (page) or `frontend/src/components/{Component}.tsx` (reusable)
+- Service layer: `frontend/src/services/{domain}.ts` for API calls
+- Tests: `frontend/src/tests/{component}.test.tsx`
+
+**New Feature (Spec → Plan → Implementation):**
+- Specification: `.kittify/specs/{feature-name}/spec.md`
+- Implementation plan: `.kittify/specs/{feature-name}/plan.md`
+- Tasks: `.kittify/specs/{feature-name}/tasks.md`
+
+**Utility/Helper Functions:**
+- Backend: `serverless/src/utils/{purpose}.ts`
+- Frontend: `frontend/src/utils/{purpose}.ts`
 
 ## Special Directories
 
-**migrations/:**
-- Purpose: Database schema versioning
-- Generated: No (manually created SQL)
+**migrations/** - D1 database schema
+- Purpose: SQL schema definitions for Cloudflare D1
+- Generated: No (manual creation, numbered sequentially)
 - Committed: Yes (tracked in git)
 
-**tests/:**
-- Purpose: Comprehensive test coverage
-- Generated: No (manually written tests)
-- Committed: Yes (all test files)
+**tests/** - Test suites
+- Purpose: Vitest tests for serverless code (unit, integration, e2e)
+- Generated: No (manual creation)
+- Committed: Yes
 
-**.worktrees/:**
-- Purpose: Git worktrees for parallel feature development
-- Generated: Yes (via git worktree commands)
-- Committed: No (git worktree metadata)
+**.opencode/skill/** - OpenCode agent skills
+- Purpose: AI agent guides for platform integrations
+- Generated: No (manual documentation)
+- Committed: Yes
 
-**dist/ (frontend):**
-- Purpose: Build output for deployment
-- Generated: Yes (via `npm run build`)
-- Committed: No (in .gitignore)
+**.sisyphus/** - Workflow execution
+- Purpose: Workflow orchestration state
+- Generated: Yes (by Sisyphus workflow system)
+- Committed: Yes
 
-**node_modules/:**
-- Purpose: Package dependencies
-- Generated: Yes (via package manager)
-- Committed: No (in .gitignore)
+**.planning/** - Planning artifacts
+- Purpose: GSD planning documents (structure, architecture, conventions, concerns)
+- Generated: No (manual creation by GSD commands)
+- Committed: Yes
+
+**tasks/** - Kanban tracking
+- Purpose: Task tracking (planned/doing/done/for_review)
+- Generated: No (manual creation, automated sync)
+- Committed: Yes
+
+**.worktrees/** - Git worktrees
+- Purpose: Feature branch worktrees
+- Generated: Yes (by git worktree command)
+- Committed: No (separate git workspaces)
+
+**customers/** - Customer-specific files
+- Purpose: Per-customer configurations and data
+- Generated: No (customer-specific)
+- Committed: No (customer-specific, not tracked)
 
 ---
 
-*Structure analysis: 2026-01-24*
+*Structure analysis: 2026-01-27*

@@ -1,318 +1,433 @@
 # Testing Patterns
 
-**Analysis Date:** 2026-01-24
+**Analysis Date:** 2026-01-27
 
 ## Test Framework
 
 **Runner:**
-- Vitest 4.0.16 for all packages (serverless, frontend, admin-dashboard)
-- Jest-compatible syntax with `expect()` assertions
-- Config files: `vitest.config.ts` (unit), `vitest.integration.config.ts`, `vitest.e2e.config.ts`
+- Vitest 4.0.16
+- Config: `serverless/vitest.config.ts`
 
-**Assertion Library:**
-- Built-in Vitest assertions (`expect()`)
-- Testing Library for React components in frontend
+**Setup (minimal):**
+```typescript
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'node',
+    coverage: {
+      reporter: ['text', 'json', 'html'],
+      exclude: ['node_modules/', 'tests/', '**/*.d.ts'],
+    },
+  },
+});
+```
 
 **Run Commands:**
 ```bash
-# Serverless testing
 cd serverless
-pnpm test                    # Run all tests
+pnpm test                    # Run unit tests
+pnpm test:coverage           # Generate coverage report
+pnpm test:integration        # Run integration tests
+pnpm test:all                # Run all unit + integration
 pnpm test:watch              # Watch mode
-pnpm test:coverage           # Coverage report
-pnpm test:integration        # Integration tests only
-pnpm test:e2e               # E2E tests only
-pnpm test:all               # Biome check + tests
-
-# Frontend testing
-cd frontend
-pnpm test                    # Run React tests
-pnpm test:ui                 # Vitest UI
+pnpm test:ui                 # UI mode (coverage + visual)
 ```
+
+**Coverage:**
+- Framework: Vitest Coverage (v8)
+- Reporters: text, JSON, HTML
+- Exclusion: node_modules/, tests/, *.d.ts
+- Target: Aim for >80% on Services
 
 ## Test File Organization
 
 **Location:**
-- **Serverless:** Separate test directories by scope
-  - `tests/unit/` - Service/utility tests (fast, fully mocked)
-  - `tests/integration/` - API endpoint tests (slower, real/local D1)
-  - `tests/e2e/` - Full system flows (slowest, multiple systems)
-- **Frontend:** Co-located with source code
-  - `src/tests/` - Component tests
-  - `src/tests/unit/` - Unit component tests
-  - `src/tests/integration/` - Component integration tests
-  - `src/tests/e2e/` - Full app flow tests
+```
+serverless/tests/
+├── unit/               # Service/utility tests (fast, full mocking)
+├── integration/        # API endpoint tests (slower, Miniflare/D1)
+└── e2e/                # End-to-end flows (slowest, real/local envs)
+```
 
 **Naming:**
-- Test files end with `.test.ts` (serverless) or `.test.tsx` (frontend)
-- Integration tests follow same naming pattern in their directories
-- No `.spec.*` files used
+- All: `{module}.test.ts` (`tracking.test.ts`, `encryption.test.ts`)
+- Integration: `tests/integration/{suite}.test.ts`
+- E2E: `tests/e2e/{scenario}-e2e.test.ts`
 
-**Structure:**
-```
-serverless/
-├── tests/
-│   ├── unit/                 # Service layer tests (33 files)
-│   │   ├── auth-middleware.test.ts
-│   │   ├── encryption.test.ts
-│   │   └── ...
-│   ├── integration/          # API endpoint tests
-│   │   ├── api-integration.test.ts
-│   │   ├── webhook-workflow.test.ts
-│   │   └── ...
-│   ├── e2e/                 # End-to-end flows
-│   │   ├── onboarding.test.ts
-│   │   └── user-journey-e2e.test.ts
-│   └── run-tests.sh          # Test runner script
+**Structure by Type:**
 
-frontend/
-├── src/
-│   └── tests/
-│       ├── unit/
-│       │   └── signup-comprehensive.test.tsx
-│       ├── integration/
-│       │   └── components.test.tsx
-│       ├── e2e/
-│       │   └── app-flow.test.tsx
-│       └── App.test.tsx
-```
+**Unit Tests:**
+- Test single functions/classes in isolation
+- Full mocking (no DB, no network)
+- Located: `tests/unit/*.test.ts`
+- Examples: `tests/unit/tracking.test.ts`, `tests/unit/encryption.test.ts`
+
+**Integration Tests:**
+- Test API contracts (endpoints, request/response)
+- Use Vitest environment with Miniflare
+- Mock external APIs, real D1/local DB
+- Located: `tests/integration/*.test.ts`
+- Examples: `tests/integration/api-integration.test.ts`, `tests/integration/webhook-workflow.test.ts`
+
+**E2E Tests:**
+- Test complete user flows (signup → dashboard → payment)
+- Playwright for browser automation
+- Full system testing
+- Located: `tests/e2e/*.test.ts`
+- Examples: `tests/e2e/user-journey-e2e.test.ts`
 
 ## Test Structure
 
 **Suite Organization:**
 ```typescript
-// Serverless test pattern
-import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { myFunction, myClass } from '../../src/services/my-service';
 
-describe('Auth Middleware', () => {
-  let app: Hono;
-  const testSecret = 'test-jwt-secret-key';
+describe('My Service Tests', () => {
+  let service: MyClass;
 
   beforeEach(() => {
-    app = new Hono();
-    // Setup test environment
-    app.use('*', (c, next) => {
-      c.env = { ...c.env, JWT_SECRET: testSecret };
-      return next();
-    });
-  });
-
-  afterEach(() => {
+    // Setup before each test
+    service = new MyClass();
     vi.clearAllMocks();
   });
 
-  describe('Valid JWT', () => {
-    test('allows access with valid token', async () => {
-      const token = await createValidJWT();
-      const res = await requestWithEnv('/protected', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      expect(res.status).toBe(200);
-      const data = await res.json();
-      expect(data.user_id).toBe('user123');
+  describe('Feature X', () => {
+    it('should do something when condition is met', async () => {
+      // Arrange
+      const input = { value: 42 };
+
+      // Act
+      const result = await myFunction(input);
+
+      // Assert
+      expect(result.success).toBe(true);
+    });
+
+    it('should handle error case', async () => {
+      // Arrange
+      vi.mock('../../src/services/dependency', () => ({
+        dependencyFunction: vi.fn().mockRejectedValue(new Error('Failed')),
+      }));
+
+      // Act & Assert
+      await expect(myFunction()).rejects.toThrow('Failed');
     });
   });
 });
 ```
 
-**Frontend Component Pattern:**
+**Setup/Teardown Patterns:**
+- `beforeEach`: Reset mocks, create fresh instances
+- `afterEach`: Clean up (if needed)
+- `vi.clearAllMocks()`: Standard after each test
+- `vi.resetAllMocks()`: Full reset when needed
+
+**Assertion Patterns:**
 ```typescript
-import { test, expect, describe, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+// Success
+expect(response.status).toBe(200);
+expect(result.success).toBe(true);
 
-describe('Signup Component', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+// Error expected
+await expect(asyncOperation()).rejects.toThrow('Expected error');
 
-  test('renders signup form', () => {
-    render(<Signup />);
-    expect(screen.getByText('Join AdsEngineer')).toBeInTheDocument();
-    expect(screen.getByText('Agency Name')).toBeInTheDocument();
-  });
+// Nested properties
+expect(data).toHaveProperty('error');
+expect(data.error).toContain('required');
 
-  test('validates required fields', async () => {
-    render(<Signup />);
-    const nextButton = screen.getByText('Next: Platforms & Experience');
-    fireEvent.click(nextButton);
-    expect(screen.getByText('Agency Name')).toBeInTheDocument();
-  });
-});
+// Array length/content
+expect(responses).toHaveLength(10);
+responses.forEach((r) => expect(r).toBeDefined());
+
+// Async timeout
+await expect(page.waitForSelector('text=Some Text', { timeout: 10000 })).resolves.toBeVisible();
 ```
-
-**Patterns:**
-- **Setup:** `beforeEach()` for test isolation, `beforeAll()` for expensive setup
-- **Teardown:** `afterEach()` with `vi.clearAllMocks()` for mock cleanup
-- **Assertion:** `expect().toBe()`, `expect().toBeInTheDocument()`, `expect().resolves`
-- **Async:** Use `await` for async operations, `waitFor()` for UI updates
 
 ## Mocking
 
-**Framework:** Vitest built-in mocking (`vi.fn()`, `vi.mock()`)
+**Framework:** Vitest's built-in `vi` mock functions
 
 **Patterns:**
-```typescript
-// Mock fetch for API calls
-global.fetch = vi.fn();
 
-// Mock external modules
-vi.mock('@stripe/react-stripe-js', () => ({
-  useStripe: () => mockStripe,
-  useElements: () => mockElements,
-  Elements: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+**Mock external dependencies:**
+```typescript
+// Service import replacement
+vi.mock('../../src/services/tracking', () => ({
+  generateTrackingSnippet: vi.fn().mockReturnValue('mock snippet'),
 }));
 
-// Mock service methods
-const mockEncrypt = vi.fn().mockResolvedValue({
-  encrypted: 'encrypted-data',
-  iv: 'iv-data',
-  tag: 'tag-data',
-  algorithm: 'AES-GCM',
-  timestamp: '2024-01-01T00:00:00Z',
+// Fetch global mock
+global.fetch = vi.fn();
+
+// Mock implementation
+(global.fetch as any).mockResolvedValueOnce({
+  ok: true,
+  json: () => Promise.resolve({ success: true }),
+});
+```
+
+**Mock Web Crypto API (encryption tests):**
+```typescript
+const mockCrypto = {
+  subtle: {
+    importKey: vi.fn(),
+    encrypt: vi.fn(),
+    decrypt: vi.fn(),
+  },
+  getRandomValues: vi.fn(),
+};
+
+Object.defineProperty(global, 'crypto', {
+  value: mockCrypto,
+  writable: true,
 });
 
-// Mock Cloudflare Workers environment
-const mockEnv = {
-  JWT_SECRET: 'test-secret',
-  DB: mockD1Database,
-  ENCRYPTION_MASTER_KEY: 'test-key',
-};
+// Setup default mock behaviors
+mockCrypto.subtle.importKey.mockResolvedValue(mockCryptoKey);
+mockCrypto.subtle.encrypt.mockResolvedValue(encryptedData);
 ```
 
 **What to Mock:**
-- External API calls (Stripe, Google Ads, Meta)
-- Database operations in unit tests
-- Cloudflare Workers globals (crypto, fetch)
-- React components in isolation tests
+- External API calls (Google Ads, Stripe, etc.)
+- Database in unit tests
+- File system operations
+- Network requests
+- Date/time for deterministic tests (`vi.useFakeTimers()`)
 
 **What NOT to Mock:**
-- Business logic in integration tests
-- Authentication middleware behavior
-- Error handling flow
-- Data transformation logic
+- Your own business logic unless testing integration
+- Simple utility functions
+- Pure functions (test them instead)
+
+**Test Exports (Accessing internals):**
+```typescript
+// In service file
+export const __test__ = {
+  someInternalHelper,
+};
+
+// In test file
+import { __test__ } from '../../src/services/my-service';
+```
 
 ## Fixtures and Factories
 
-**Test Data:**
+**Test Data Pattern:**
 ```typescript
-// JWT creation helper for auth tests
-async function createValidJWT(payload: Partial<JWTPayload> = {}): Promise<string> {
-  const now = Math.floor(Date.now() / 1000);
-  const fullPayload: JWTPayload = {
-    sub: 'user123',
-    iss: 'adsengineer',
-    aud: 'adsengineer-api',
-    iat: now,
-    exp: now + 3600,
-    ...payload,
-  };
-  // ... JWT creation logic
-}
-
-// Database state seeding for integration tests
-async function seedTestData(db: D1Database) {
-  await db.prepare('INSERT INTO customers (id, email, plan) VALUES (?, ?, ?)')
-    .bind('cust-123', 'test@example.com', 'free')
-    .run();
-}
+// Inline for simplicity (small fixtures)
+const mockResponse = {
+  status: 'healthy',
+  version: '1.0.0',
+  timestamp: '2024-01-01T12:00:00Z',
+  environment: 'test',
+};
 ```
 
 **Location:**
-- Test helpers defined within test files for specific contexts
-- No shared fixture files - keep tests self-contained
-- Mock data created inline or via helper functions
+- Inline in test files (current pattern)
+- No dedicated fixtures directory (as of analysis)
+
+**Generator Data:**
+```typescript
+import { faker } from '@faker-js/faker';
+
+// Use for varied test data
+const mockLead = {
+  email: faker.internet.email(),
+  name: faker.person.fullName(),
+  phone: faker.phone.number(),
+};
+```
 
 ## Coverage
 
-**Requirements:**
-- No enforced coverage target, but aim for >80% on services
-- Coverage reports generated in JSON and HTML formats
-- Excludes: `node_modules/`, `tests/`, `**/*.d.ts`
+**Requirements:** Aim for >80% on Services. Not strictly enforced but encouraged.
 
 **View Coverage:**
 ```bash
-cd serverless
 pnpm test:coverage
-# View HTML report at coverage/index.html
+
+# Reports generated in:
+# - coverage/ (HTML)
+# - coverage/lcov-report/index.html (Visual browser report)
 ```
 
-**Coverage Config:**
+**Coverage Exclusions:**
 ```typescript
-// vitest.config.ts
+// In vitest.config.ts
 coverage: {
-  reporter: ['text', 'json', 'html'],
   exclude: ['node_modules/', 'tests/', '**/*.d.ts'],
-},
+}
 ```
 
 ## Test Types
 
 **Unit Tests:**
-- **Scope:** Individual functions and classes
-- **Approach:** Full mocking of external dependencies
-- **Speed:** Fast (< 1s per test)
-- **Examples:** `encryption.test.ts`, `auth-middleware.test.ts`
+- Scope: Single functions/class methods in isolation
+- Approach: Mock all dependencies
+- Speed: Fast (<100ms per test)
+- Examples: `tests/unit/encryption.test.ts`, `tests/unit/tracking.test.ts`
 
 **Integration Tests:**
-- **Scope:** API endpoints with real database
-- **Approach:** Use local D1 database, mock external APIs
-- **Speed:** Medium (1-5s per test)
-- **Examples:** `api-integration.test.ts`, `webhook-workflow.test.ts`
+- Scope: API endpoints (routes → services → response)
+- Approach: Real route handling, mocked DB/external APIs
+- Speed: Medium (500ms-2s per test)
+- Examples: `tests/integration/api-integration.test.ts`
 
 **E2E Tests:**
-- **Scope:** Complete user workflows
-- **Approach:** Real services, real database, end-to-end flows
-- **Speed:** Slow (5-30s per test)
-- **Examples:** `onboarding.test.ts`, `user-journey-e2e.test.ts`
+- Scope: Complete user flows (signup → payment → dashboard)
+- Approach: Playwright browser automation
+- Speed: Slow (5-30s per test)
+- Examples: `tests/e2e/user-journey-e2e.test.ts`
 
 ## Common Patterns
 
 **Async Testing:**
 ```typescript
-test('handles async operations', async () => {
-  const promise = Promise.resolve({ success: true });
-  await expect(promise).resolves.toEqual({ success: true });
-  
-  const result = await myService(db, testData);
-  expect(result).toBeDefined();
-});
+// Await async functions
+const result = await myAsyncFunction();
+
+// Promise rejection testing
+await expect(asyncOperation()).rejects.toThrow('Error message');
+
+// Async timeout
+await expect(promise).resolves.toBe(value);
 ```
 
 **Error Testing:**
 ```typescript
-test('handles database errors gracefully', async () => {
-  const mockDb = {
-    prepare: vi.fn().mockReturnValue({
-      bind: vi.fn().mockReturnValue({
-        run: vi.fn().mockRejectedValue(new Error('Database connection failed')),
-      }),
-    }),
-  };
-  
-  await expect(myService(mockDb, testData)).rejects.toThrow('Database connection failed');
+// Service throws error
+const error = new Error('Test error');
+vi.mock('../../src/service', () => ({
+  myFunction: vi.fn().mockRejectedValue(error),
+}));
+
+await expect(myFunction()).rejects.toThrow('Test error');
+
+// Route returns error response
+const response = await app.request('/endpoint', {
+  method: 'POST',
+  body: JSON.stringify({ invalid: 'data' }),
 });
+
+expect(response.status).toBe(400);
+expect(await response.json()).toHaveProperty('error');
 ```
 
-**Mock API Responses:**
+**Test Data Validation:**
 ```typescript
-test('handles external API failures', async () => {
-  (global.fetch as any).mockRejectedValueOnce(new Error('Network error'));
-  
-  const result = await externalApiCall();
-  expect(result.error).toBe('Network error');
+// Zod schema validation
+import { z } from 'zod';
+
+const Schema = z.object({
+  email: z.string().email(),
+  name: z.string().min(1),
 });
 
-test('handles external API success', async () => {
-  (global.fetch as any).mockResolvedValueOnce({
-    ok: true,
-    json: () => Promise.resolve({ data: 'success' }),
-  });
-  
-  const result = await externalApiCall();
-  expect(result.data).toBe('success');
+const validData = { email: 'test@example.com', name: 'Test' };
+expect(() => Schema.parse(validData)).not.toThrow();
+
+const invalidData = { email: 'not-an-email' };
+expect(() => Schema.parse(invalidData)).toThrow();
+```
+
+**Mock Reset Pattern:**
+```typescript
+beforeEach(() => {
+  vi.clearAllMocks();  // Clears all mock calls
+  vi.restoreAllMocks(); // Restores original implementations
+
+  // Reset mocks to return values
+  myFunction.mockReturnValue('default');
+});
+
+// If tests rely on fresh instances (singletons)
+EncryptionService.resetForTesting();
+```
+
+## Test Database
+
+**Local D1 for Integration Tests:**
+```bash
+# Setup local D1
+wrangler d1 migrations apply adsengineer-db --local
+
+# Tests reference local DB via environment variable
+USE_LOCAL=true pnpm test:integration
+```
+
+**Seeding Pattern:**
+```typescript
+beforeAll(async () => {
+  // Seed test data once for suite
+  await seedTestData(testDb);
+});
+
+afterAll(async () => {
+  // Clean up after suite
+  await cleanupTestData(testDb);
 });
 ```
+
+## Performance Testing
+
+**Load Testing in Tests:**
+```typescript
+test('handles concurrent request simulation', async () => {
+  const concurrentRequests = 10;
+  const promises = [];
+
+  for (let i = 0; i < concurrentRequests; i++) {
+    promises.push(Promise.resolve({ status: 200 }));
+  }
+
+  const responses = await Promise.all(promises);
+  expect(responses).toHaveLength(10);
+  responses.forEach((res) => expect(res.status).toBe(200));
+});
+
+test('maintains response times under load', async () => {
+  const startTime = Date.now();
+  await performOperation();
+  const endTime = Date.now();
+
+  expect(endTime - startTime).toBeLessThan(5000); // <5 seconds
+});
+```
+
+## Playwright E2E
+
+**Setup Files:**
+- `tests/setup/e2e-setup.ts` (E2E configuration)
+- Browser: Chrome (default), can configure others
+
+**Patterns:**
+```typescript
+import { test, expect } from '@playwright/test';
+
+test.describe('User Flow', () => {
+  test('should complete signup', async ({ page }) => {
+    await page.goto('http://localhost:3000');
+    await page.fill('input[name="email"]', 'test@example.com');
+    await page.click('button:has-text("Submit")');
+    await expect(page.locator('text=Success')).toBeVisible();
+  });
+});
+```
+
+## Anti-Patterns to Avoid
+
+- Testing implementation details (test public behaviors instead)
+- Shared state between tests (use `beforeEach` cleanup)
+- Network calls in unit tests (always mock external APIs)
+- Ignoring types in tests (avoid `as any` abuse)
+- Time-dependent tests without fake timers
+- Overspecified tests (test one thing at a time)
+- Hard-to-read tests (use descriptive names: `should do X when Y`)
 
 ---
 
-*Testing analysis: 2026-01-24*
+*Testing analysis: 2026-01-27*

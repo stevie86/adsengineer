@@ -1,86 +1,101 @@
 # Technology Stack
 
-**Analysis Date:** 2026-01-24
+**Analysis Date:** 2026-01-27
 
 ## Languages
 
 **Primary:**
-- TypeScript 5.9.3 - Serverless API, Frontend, Admin Dashboard
-- JavaScript 18+ - Shopify plugin runtime requirement
+- TypeScript - Core API, frontend, infrastructure tooling
+- JavaScript - SEO auditor, CLI scripts
 
 **Secondary:**
-- SQL - D1 database schema and migrations
+- SQL - D1 database migrations
+- Shell - Deployment scripts
+- HCL/Terraform - Infrastructure as code
 
 ## Runtime
 
 **Environment:**
-- Cloudflare Workers - Serverless API runtime
-- Node.js 18+ - Shopify plugin development requirement
+- Cloudflare Workers - Serverless edge compute
+- Node.js - CLI tools, SEO auditor, local development
 
 **Package Manager:**
-- pnpm 10.27.0 - Primary package manager for all packages
-- Lockfile: Present across all packages
+- pnpm@10.27.0
+- Lockfile: pnpm-lock.yaml
 
 ## Frameworks
 
 **Core:**
-- Hono 4.11.3 - API framework for Cloudflare Workers
-- React 18.3.1 - Frontend dashboard and admin UI
-- Astro 5.16.9 - Landing page static site generator
-- Express 4.18.0 - Shopify plugin web server
+- Hono v4.11.3 - Web framework (API routes)
+- Astro v5.16.9 - Marketing website framework
+- React 18.3.1 - Frontend dashboard
+- Express (shopify-plugin) - Node.js webhooks
 
 **Testing:**
-- Vitest 4.0.16 - Unit, integration, and E2E testing framework
-- Playwright 1.40.0 - E2E browser testing
+- Vitest v4.0.16 - Unit/integration/e2e testing
+- Playwright v1.40.0 - E2E browser testing
 
 **Build/Dev:**
-- Vite 5.4.21 - Frontend build tool
-- Wrangler 4.59.1 - Cloudflare Workers CLI
-- TypeScript 5.9.3 - Type checking and compilation
+- Wrangler v4.59.1 - Cloudflare Workers CLI
+- Vite v5.4.21 - Frontend build tool
+- OpenTofu - Infrastructure provisioning (IaC)
 
 ## Key Dependencies
 
 **Critical:**
-- Stripe 14.25.0 - Payment processing and billing
-- google-ads-api 21.0.1 - Google Ads integration
-- @hono/zod-openapi 0.18.4 - API validation and documentation
-- zod 3.25.76 - Schema validation
+- stripe v14.25.0 - Payment processing and billing
+- google-ads-api v21.0.1 - Google Ads integration
+- @hono/zod-openapi v0.18.4 - API validation and documentation
+- zod v3.25.76 - Schema validation
+- @noble/hashes v1.4.0 - Cryptographic hashing
 
 **Infrastructure:**
-- @cloudflare/workers-types 4.20260101.0 - Cloudflare Workers type definitions
-- @noble/hashes 1.4.0 - Cryptographic functions
-- @paralleldrive/cuid2 3.0.6 - Unique ID generation
-- fflate 0.8.2 - Compression utilities
+- @cloudflare/workers-types - TypeScript definitions
+- @biomejs/biome v2.3.10 - Linting and formatting (backend)
+- ESLint + Prettier - Linting and formatting (frontend legacy)
+
+**External Services:**
+- axios v1.6.0 - HTTP client
+- fflate v0.8.2 - Compression
 
 ## Configuration
 
 **Environment:**
-- Cloudflare Workers runtime environment
-- Doppler for secrets management (no .env files in git)
-- Multi-environment support (development, staging, production)
+- Doppler - Secrets management (CLI and dashboard)
+- Cloudflare Dashboard - Additional secrets and configuration
+- Environment-specific configs: development, staging, production
 
-**Build:**
-- wrangler.jsonc for Workers configuration
-- vite.config.ts for frontend builds
-- biome.json for backend linting/formatting
-- eslint.config.js for frontend linting
-- tailwind.config.js for CSS framework
+**Configuration Files:**
+- `wrangler.jsonc` - Cloudflare Workers configuration (D1 bindings, environments)
+- `vite.config.ts` - Frontend build configuration
+- `vitest.config.ts` - Testing configuration
+- `terraform.tfvars` - Infrastructure variables
+- `biome.json` - Linting rules
+
+**Required Secrets:**
+- JWT_SECRET, STRIPE_SECRET_KEY, GOOGLE_ADS_CLIENT_ID/SECRET
+- CLOUDFLARE_API_TOKEN, ENCRYPTION_KEY
+- OPENAI_API_KEY, GEMINI_API_KEY, ANTHROPIC_API_KEY
 
 ## Platform Requirements
 
 **Development:**
-- Node.js 18+ runtime
+- Node.js 20+
 - pnpm package manager
-- Wrangler CLI for Workers development
-- Doppler CLI for secrets management
-- OpenTofu for infrastructure provisioning
+- Wrangler CLI (Cloudflare)
+- Doppler CLI
 
 **Production:**
-- Cloudflare Workers for API hosting
-- Cloudflare D1 for database
-- Cloudflare Pages for landing page
-- Custom domains via Cloudflare DNS
+- Cloudflare Workers runtime (edge computing)
+- Cloudflare D1 (database)
+- Cloudflare KV (rate limiting - planned)
+- Custom domain routing via Cloudflare
+
+**CI/CD:**
+- Manual deployments via `pnpm deploy`
+- OpenTofu for infrastructure provisioning
+- Doppler for secret injection
 
 ---
 
-*Stack analysis: 2026-01-24*
+*Stack analysis: 2026-01-27*

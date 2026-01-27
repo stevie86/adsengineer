@@ -1,223 +1,298 @@
 # Coding Conventions
 
-**Analysis Date:** 2026-01-24
+**Analysis Date:** 2026-01-27
 
 ## Naming Patterns
 
 **Files:**
-- Kebab-case for all files: `auth-middleware.ts`, `conversion-router.ts`, `custom-events.ts`
-- Test files: `{name}.test.ts` (unit), same pattern for integration/e2e
-- Config files: kebab-case or camelCase depending on tool (`.prettierrc`, `biome.json`)
+- kebab-case for filenames: `google-ads.ts`, `tracking.test.ts`, `encryption.test.ts`
+- Test files: `{module}.test.ts` (Vitest convention)
+- Migration files: Numbered prefix: `0001_`, `0002_`
 
-**Functions:**
-- camelCase for functions: `encryptCredential()`, `decryptCredential()`, `validateEncryptedData()`
-- Async functions prefixed with `async`: `async function encrypt()`
-- Handler functions: descriptive names `onboardingRoutes.get()`, `shopifyRoutes.post()`
+**Functions/Methods:**
+- camelCase: `uploadConversion()`, `getAccessToken()`, `initializeEncryption()`
+- Async functions suffix with `Async` when explicit clarity needed: `readUserAsync()`
 
 **Variables:**
-- camelCase: `masterKeySecret`, `encryptedData`, `attributionMode`
-- Constants: UPPER_SNAKE_CASE for static values: `AGREEMENT_VERSIONS`, `AGREEMENT_TEXTS`
-- Interface names: PascalCase with descriptive suffixes: `EncryptionConfig`, `EncryptedData`, `EncryptionKey`
+- camelCase: `accessToken`, `conversionData`, `encryptionService`
+- Constants: UPPER_SNAKE_CASE at module level: `const GCLID_REGEX = ...`
+- Private class properties: prefixed with underscore: `private masterKey: CryptoKey`
 
-**Types:**
-- Interface PascalCase: `JWTPayload`, `AppEnv`, `ConversionData`
-- Type aliases PascalCase: `ConversionResult`, `AuthContext`
-- Generic types: `<T>` suffix for type parameters
+**Types/Interfaces:**
+- PascalCase for all types: `GoogleAdsCredentials`, `ConversionData`, `UploadResult`
+- Discriminated unions variant: `const status: 'granted' | 'denied' | 'pending'`
+
+**Classes:**
+- PascalCase: `EncryptionService`, `Logger`, `GoogleAdsError`
+- Singleton pattern for services: `static getInstance()` method
 
 ## Code Style
 
-**Formatting:**
-- **Serverless:** BiomeJS with 2 spaces, 100 char line width, single quotes, trailing commas (es5)
-- **Frontend:** ESLint + Prettier with same settings (2 spaces, 100 char width, single quotes)
-- **Semicolons:** Always required
-- **Line endings:** LF only
+**Formatting (Backend - serverless):**
+- Tool: BiomeJS (strict)
+- Indent: 2 spaces
+- Quotes: Single quotes for strings, double for JSX
+- Semicolons: Always
+- Trailing commas: es5 (trailing comma in objects/arrays)
+- Line width: 100 characters
+- Line ending: LF
+
+**Formatting (Frontend - frontend):**
+- Tool: Prettier
+- Indent: 2 spaces
+- Quotes: Single quotes with `jsxSingleQuote: true`
+- Semicolons: Always (`semi: true`)
+- Trailing commas: es5
+- Line width: 100 characters
+- Tabs: Always spaces (`useTabs: false`)
 
 **Linting:**
-- **Serverless:** BiomeJS with strict rules - noVar: error, useConst: error, noExplicitAny: warn
-- **Frontend:** ESLint with TypeScript plugin - same rules as serverless
-- **Global ignore:** node_modules/, .wrangler/, dist/
+- Backend: BiomeJS with strict rules
+- Frontend: ESLint + Prettier (legacy setup)
+- TypeScript: Strict mode enabled
+- Type safety: `noExplicitAny` set to `warn`, `noVar` set to `error`
+- No console statements in production code (debugger keyword flagged as error)
+
+**Run commands:**
+```bash
+# Backend
+cd serverless && pnpm check           # Comprehensive check (lint + format)
+pnpm lint:fix                         # Auto-fix lint issues
+pnpm format                           # Format with Biome
+
+# Frontend
+cd frontend && npm run lint -- --fix  # Auto-fix ESLint issues
+npm run format                        # Format with Prettier
+```
 
 ## Import Organization
 
 **Order:**
-1. External libraries (hono, zod, stripe, etc.)
-2. Internal imports (relative paths starting with `../`)
-3. Type imports (import type)
-
-**Path Aliases:**
-- No path aliases configured - use relative imports
-- Serverless: `import type { AppEnv } from '../types'`
-- Frontend: `import { Signup } from '../pages/Signup'`
+1. External library imports (third-party npm packages)
+2. Internal imports (relative paths within src/)
+3. Type imports grouped together
 
 **Examples:**
 ```typescript
-// External first
+// External
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
-import { z } from 'zod';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-// Internal types
+// Internal
+import { uploadConversion } from '../services/google-ads';
+import { EncryptionService } from './encryption';
+
+// Type imports
+import type { Context, Next } from 'hono';
 import type { AppEnv } from '../types';
-
-// Internal modules
-import { encryptCredential } from '../services/encryption';
 ```
+
+**Path Aliases:** Not used (relative paths preferred: `../services/x`)
+
+**Import style:** Named exports preferred over default exports
 
 ## Error Handling
 
 **Patterns:**
-- Always validate inputs with Zod schemas
-- Return consistent error responses: `{ success: false, error: "message" }`
-- Throw typed errors from services, catch in routes
-- Use try-catch blocks for external API calls
+- Service layer: Throw typed errors for service-level failures
+  ```typescript
+  throw new GoogleAdsError('Failed to get access token', 'AUTH_ERROR', errorData);
+  ```
 
-**Service Layer:**
-```typescript
-export async function myService(db: D1Database, data: Input): Promise<Output> {
+- Route layer: Catch errors and return structured responses
+  ```typescript
   try {
-    const result = await db.prepare('SELECT * FROM table WHERE id = ?').bind(data.id).first();
-    if (!result) {
-      throw new Error('Record not found');
-    }
-    return result;
-  } catch (error) {
-    console.error('Service error:', error);
-    throw error; // Let route handler format response
-  }
-}
-```
-
-**Route Layer:**
-```typescript
-router.post('/endpoint', zValidator('json', InputSchema), async (c) => {
-  try {
-    const data = c.req.valid('json');
-    const result = await myService(c.env.DB, data);
+    const result = await myService(db, data);
     return c.json({ success: true, data: result });
   } catch (error) {
-    console.error('Route error:', error);
-    return c.json(
-      { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
-      }, 
-      500
-    );
+    return c.json({ success: false, error: error.message }, 500);
   }
-});
-```
+  ```
+
+- Web layer: Validate with Zod, return early on error
+  ```typescript
+  router.post('/endpoint', zValidator('json', InputSchema), async (c) => {
+    const data = c.req.valid('json');
+    // ...proceed with validated data
+  });
+  ```
+
+**Custom error types:**
+- `GoogleAdsError`: Google Ads API failures
+- Service-specific errors extend Error with additional context (`code`, `details`)
+
+**Never:**
+- Swallow errors silently
+- Return empty arrays/objects on failure without logging
+- Use `// @ts-ignore` or `as any` (use proper types)
 
 ## Logging
 
-**Framework:** Console logging with structured messages
+**Framework:** Custom `Logger` singleton class (`serverless/src/services/logging.ts`)
 
-**Patterns:**
-- Success logs with emojis: `console.log('✅ Encryption service initialized successfully');`
-- Error logs with emojis: `console.error('❌ Failed to initialize encryption service:', error);`
-- Warning logs with emojis: `console.warn('⚠️ ENCRYPTION_MASTER_KEY not found - encryption disabled');`
-- Context-aware logging: `console.log('🔐 Encrypted data with context:', context || 'unknown');`
+**Usage:**
+```typescript
+import { Logger } from '../services/logging';
 
-**Levels:**
-- `console.log()`: Success/info messages
-- `console.error()`: Error conditions
-- `console.warn()`: Warning conditions
+const logger = Logger.getInstance();
+
+// General log
+logger.log('INFO', 'User created', { userId, email });
+
+// Security event
+logger.security({
+  eventType: 'webhook_signature_failure',
+  severity: 'HIGH',
+  source: 'webhook',
+  message: 'Invalid HMAC signature for Shopify webhook',
+  details: { attemptedValue: signature, shopDomain: domain },
+});
+```
+
+**Structured logging:** Always use structured context objects, not interpolated strings
+
+**Security events:** Always use `logger.security()` with required eventType and severity
+
+**Console usage:** Allowed in development, but Biome flags `console.log` in production builds
 
 ## Comments
 
 **When to Comment:**
-- Complex business logic explanation
-- Security-critical operations
-- Public API documentation
-- TODO/FIXME for temporary workarounds
+- Public API methods: Always include JSDoc/TSDoc
+- Complex algorithms or business logic
+- Non-obvious decisions or workarounds
+- Security-sensitive operations (HMAC, encryption)
 
 **JSDoc/TSDoc:**
-- Required for exported functions and classes
-- Include parameter types and return types
-- Document complex algorithms
-
-**Example:**
 ```typescript
 /**
- * Enterprise-grade encryption service for API credentials
- * Uses AES-256-GCM for authenticated encryption
+ * Upload offline conversion to Google Ads
+ * @param credentials Google Ads API credentials
+ * @param conversionData Conversion details
+ * @returns Promise<UploadResult>
  */
-export class EncryptionService {
-  /**
-   * Encrypt sensitive data using authenticated encryption
-   * @param plainText - Data to encrypt
-   * @param context - Optional context for logging
-   * @returns Encrypted data with IV and authentication tag
-   */
-  async encrypt(plainText: string, context?: string): Promise<EncryptedData> {
-    // Implementation
-  }
-}
+export async function uploadConversion(
+  credentials: GoogleAdsCredentials,
+  conversionData: ConversionData
+): Promise<UploadResult>
 ```
+
+**Inline comments:** Use sparingly. Prefer self-documenting code:
+
+```typescript
+// Good
+const isAuthorized = isAuthenticated && hasPermission('admin');
+
+// Avoid (comment redundant)
+// Check if user is authenticated and has admin permission
+const isAuthorized = isAuthenticated && hasPermission('admin');
+```
+
+**TODO/FIXME:** Use sparingly. Prefer proper issue tracking
 
 ## Function Design
 
-**Size:** Keep functions under 50 lines when possible
-**Parameters:** Maximum 5 parameters, use objects for complex parameter sets
-**Return Values:** Always return typed values, avoid `any` type
+**Size:** Aim for functions under 50 lines. Break larger functions into smaller helpers
 
-**Parameter Pattern:**
-```typescript
-// Good: Object parameters for complex data
-interface SiteSetupInput {
-  customer_id: string;
-  website: string;
-  attribution_mode?: 'sgtm' | 'direct';
-  sgtm_container_url?: string;
-}
+**Parameters:**
+- Prefer named parameters via objects for calls with >3 args
+- Destructure for clarity:
+  ```typescript
+  async function uploadConversion(
+    credentials: GoogleAdsCredentials,
+    { gclid, conversionValue, currencyCode }: ConversionData
+  ): Promise<UploadResult>
+  ```
 
-async function setupSite(input: SiteSetupInput): Promise<SetupResult> {
-  // Implementation
-}
+**Return Values:**
+- Always return typed values (not `void` unless no return)
+- Structured responses via interfaces:
+  ```typescript
+  interface UploadResult {
+    success: boolean;
+    conversionAction?: string;
+    uploadDateTime?: string;
+    errors?: string[];
+  }
+  ```
 
-// Avoid: Too many parameters
-async function setupSite(
-  customerId: string,
-  website: string,
-  attributionMode?: string,
-  sgtmUrl?: string,
-  measurementId?: string
-): Promise<SetupResult> {
-  // Hard to maintain
-}
-```
+**Async functions:** Always return Promise with typed result
 
 ## Module Design
 
 **Exports:**
-- Named exports for functions: `export { router as onboardingRoutes };`
-- Default exports for classes: `export default class EncryptionService`
-- Type exports separate: `export type { AppEnv, JWTPayload };`
+- Named exports preferred: `export { router as myRouter }`
+- Classes as named exports: `export class EncryptionService { }`
+- Default exports avoided (except for entry points)
 
-**Barrel Files:**
-- Routes index: `src/routes/index.ts` imports and re-exports all routers
-- No barrel files in services - import directly from service files
+**Barrel files:** Not extensively used; prefer direct imports
 
-**Dependency Direction:**
-- Routes → Services → Database (unidirectional)
-- Services can import other services
-- Routes never import other routes directly
+**Cyclical dependencies:** Avoid through careful layering (Routes → Services → Database)
 
-**Example Structure:**
+**Testing imports:**
 ```typescript
-// src/routes/onboarding.ts
-export { router as onboardingRoutes };
+// Use vi.mock() for external dependencies
+vi.mock('../../src/services/tracking', () => ({
+  generateTrackingSnippet: vi.fn().mockReturnValue('mock snippet'),
+}));
 
-// src/routes/index.ts
-import { onboardingRoutes } from './onboarding';
-import { shopifyRoutes } from './shopify';
-
-export { onboardingRoutes, shopifyRoutes };
-
-// src/index.ts
-import { onboardingRoutes } from './routes';
-app.route('/api/v1/onboarding', onboardingRoutes);
+// Access internals for testing via test exports (noted in code)
+export const __test__ = {
+  someInternalHelper,
+};
 ```
+
+## Authentication & Security
+
+**JWT Authentication:**
+- Middleware: `serverless/src/middleware/auth.ts` provides `jwtAuth()`
+- Usage in routes: `app.use('/api/v1/*', jwtAuth())`
+- Access user context: `const auth = c.get('auth')` (returns `AuthContext` with `user_id`, `org_id`, `role`)
+
+**HMAC Webhooks:**
+- Middleware: HMAC validation in `serverless/src/middleware/auth.ts`
+- Platforms: Shopify, GoHighLevel, TikTok (each has secret env var)
+- Usage: `app.post('/webhook', hmacAuth('X-Signature'), handler)`
+
+**Rate Limiting:**
+- Middleware: `serverless/src/middleware/rate-limit.ts`
+- Stores limits in Cloudflare KV
+- Tiers: standard, premium, enterprise (configurable)
+
+**Dev Guard:**
+- Middleware: `serverless/src/middleware/dev-guard.ts`
+- Blocks unauthenticated requests in dev/staging env
+- Production passes-through (route-level auth handles it)
+
+## Database Access
+
+**Pattern:** Never query DB from routes. Always use services layer.
+
+**Prepared statements:** Required. Never interpolate raw SQL.
+
+```typescript
+// Good
+const stmt = db.prepare('SELECT * FROM leads WHERE id = ?').bind(leadId);
+const lead = await stmt.first();
+
+// Never
+const lead = await db.prepare(`SELECT * FROM leads WHERE id = '${id}'`).first();
+```
+
+**Service layer API:**
+```typescript
+export async function myService(
+  db: D1Database,
+  data: Input
+): Promise<Output> {
+  const stmt = db.prepare('...').bind(...);
+  return stmt.first();
+}
+```
+
+**D1 binding:** Access via `c.env.DB` in routes, passed to services
 
 ---
 
-*Convention analysis: 2026-01-24*
+*Convention analysis: 2026-01-27*

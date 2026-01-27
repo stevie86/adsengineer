@@ -1,141 +1,180 @@
 # Architecture
 
-**Analysis Date:** 2026-01-24
+**Analysis Date:** 2026-01-27
 
 ## Pattern Overview
 
-**Overall:** Modular Platform Architecture with Service Layer Separation
+**Overall:** Layered Serverless Microservices
 
 **Key Characteristics:**
-- **Layered Architecture**: Routes → Services → Database pattern
-- **Microservices-style**: Platform-specific modules (Google Ads, Meta, TikTok)
-- **Serverless-first**: Cloudflare Workers with D1 database
-- **Multi-tenant**: Organization-based isolation
-- **API-first**: RESTful API with JWT/HMAC authentication
+- **Edge-first deployment** - Cloudflare Workers at CDN edge for global low latency
+- **Horizontal platform modularity** - Each ad platform (Google, Meta, TikTok) as independent service module
+- **Strict layer separation** - Routes (endpoints), Services (business logic), Database (queries), never mixed
+- **HMAC + JWT dual auth** - Webhooks use HMAC signatures, dashboard uses JWT tokens
+- **Encrypted credential storage** - All platform credentials encrypted at rest (AES-256-GCM)
+- **Multi-tenant data isolation** - Organization-scoped queries via `org_id` tenant column
 
 ## Layers
 
-**API Layer (Routes):**
-- Purpose: HTTP request handling, validation, authentication
+**Routes Layer:**
+- Purpose: HTTP endpoint definitions, request validation, response formatting
 - Location: `serverless/src/routes/`
-- Contains: 18 route files for different domains
-- Depends on: Services layer, middleware
-- Used by: External clients, frontend, webhooks
+- Contains: 18 domain-specific router files (shopify.ts, ghl.ts, billing.ts, custom-events.ts, etc.)
+- Depends on: Services layer, middleware/auth layer
+- Used by: Hono app router registration
 
-**Service Layer:**
-- Purpose: Business logic, external API integration, data processing
+**Services Layer:**
+- Purpose: Business logic, external API communication, data transformation
 - Location: `serverless/src/services/`
-- Contains: 29 service files organized by platform/function
-- Depends on: Database layer, external APIs
-- Used by: Routes layer, background workers
+- Contains: 29 service modules (google-ads.ts, meta-conversions.ts, tiktok-conversions.ts, conversion-router.ts, encryption.ts)
+- Depends on: Database layer, Cloudflare bindings (D1, KV, secrets)
+- Used by: Routes layer, Workers layer
 
 **Database Layer:**
-- Purpose: Data persistence and retrieval
-- Location: `serverless/src/database/`, `serverless/migrations/`
-- Contains: D1 query functions, SQL schema
-- Depends on: Cloudflare D1
+- Purpose: D1 query abstractors, prepared statements, data persistence
+- Location: `serverless/src/database/` (createDb factory)
+- Contains: Query functions for all tables (leads, agencies, custom_events, audit_logs)
+- Depends on: Cloudflare D1 binding (c.env.DB)
 - Used by: Services layer
 
 **Middleware Layer:**
-- Purpose: Authentication, rate limiting, request processing
+- Purpose: Request processing, authentication, rate limiting, environment guards
 - Location: `serverless/src/middleware/`
-- Contains: JWT validation, HMAC verification, rate limiting
-- Depends on: Cloudflare KV, secrets
-- Used by: Routes layer
+- Contains: auth.ts (JWT/HMAC validation), rate-limit.ts (KV-based throttling), dev-guard.ts (non-prod access control)
+- Depends on: Cloudflare bindings (KV, secrets)
+- Used by: Routes layer (Hono middleware chain)
 
-**Infrastructure Layer:**
-- Purpose: Cloud resource provisioning and configuration
-- Location: `infrastructure/`
-- Contains: OpenTofu IaC, Cloudflare resources
-- Depends on: Cloudflare API
-- Used by: Deployment pipelines
+**Workers Layer:**
+- Purpose: Background processing, offline conversion uploads, async operations
+- Location: `serverless/src/workers/`
+- Contains: offline-conversions.ts (Google Ads upload worker), queue-consumer.ts (queue processing)
+- Depends on: Services layer, Database layer
+- Used by: Scheduled events, external triggers
 
 ## Data Flow
 
-**Platform Integration Flow:**
+**HTTP Request Flow:**
 
-1. External platform (Shopify/GHL/TikTok) sends webhook to `serverless/src/routes/[platform].ts`
-2. Middleware validates HMAC signature in `serverless/src/middleware/auth.ts`
-3. Route calls platform service in `serverless/src/services/[platform]-conversions.ts`
-4. Service processes data and stores in D1 via `serverless/src/database/`
-5. Service forwards to ad platforms via `serverless/src/services/conversion-router.ts`
+1. **Receive Request** - Cloudflare Worker receives HTTP request at edge location
+2. **CORS Middleware** - Cross-origin headers applied via `cors()` middleware
+3. **Dev Guard** - Development environment access control (dev-guard.ts)
+4. **Auth Middleware** - JWT validation (dashboard) or HMAC signature validation (webhooks)
+5. **Route Handler** - Domain-specific endpoint in `routes/*.ts`
+6. **Input Validation** - Zod schema validation on request body/params
+7. **Service Call** - Route calls appropriate service function (e.g., `google-ads.ts uploadConversion()`)
+8. **Database Query** - Service calls prepared statement via `createDb()`
+9. **External API** - Service calls Google/Meta/TikTok APIs (with encrypted credentials)
+10. **Response** - Service returns data to route, route formats JSON response
 
-**Client Dashboard Flow:**
+**Webhook Flow (Shopify/GHL):**
 
-1. Frontend (`frontend/src/`) makes API call to `serverless/src/routes/`
-2. JWT middleware authenticates in `serverless/src/middleware/auth.ts`
-3. Route calls business logic service in `serverless/src/services/`
-4. Service queries/updates D1 database
-5. Response returns through route to frontend
+1. Platform webhook POST to `/api/v1/shopify/webhook` or `/api/v1/ghl/webhook`
+2. HMAC validation (X-Shopify-Hmac-Signature or platform-specific header)
+3. Route extracts payload
+4. Service normalizes event data (event-normalizer.ts)
+5. Service stores lead/custom event in D1
+6. Service queues conversion upload (conversion_queue table)
+7. Worker processes offline conversion to Google Ads platform API
+8. Audit log created for tracking
 
-**State Management:**
-- **Database**: Cloudflare D1 for persistent data
-- **Cache**: Cloudflare KV for rate limiting, temporary state
-- **Session**: JWT tokens for authentication
-- **Webhooks**: HMAC signatures for request integrity
+**Custom Event Tracking Flow:**
+
+1. Frontend tracking snippet sends POST to `/api/v1/custom-events`
+2. JWT auth via Authorization header
+3. Route validates event schema (Zod)
+4. Service stores custom event in `custom_events` table
+5. Service routes conversion to configured platforms (conversion-router.ts):
+   - Google Ads via google-ads.ts
+   - Meta/Facebook via meta-conversions.ts
+   - TikTok via tiktok-conversions.ts
+   - sGTM via sgtm-forwarder.ts (Measurment Protocol)
 
 ## Key Abstractions
 
-**Platform Module:**
-- Purpose: Isolate platform-specific integration logic
-- Examples: `serverless/src/services/google-ads.ts`, `serverless/src/services/meta-conversions.ts`
-- Pattern: Stateless class with `uploadConversions()` method, OAuth credential management
+**Platform Module Interface:**
+- Purpose: Unified abstraction for ad platform conversion APIs
+- Examples: `serverless/src/services/google-ads.ts`, `meta-conversions.ts`, `tiktok-conversions.ts`
+- Pattern: Stateless class with async methods (uploadConversions, validateCredentials)
+- Key Methods:
+  - `uploadConversion(credentials, data) -> Result`
+  - `validateCredentials() -> boolean`
+  - `formatConversionTime(date) -> string`
+
+**Encryption Service:**
+- Purpose: AES-256-GCM encryption for platform credentials at rest
+- Examples: `serverless/src/services/encryption.ts`, `crypto.ts`
+- Pattern: Web Crypto API (native to Cloudflare Workers)
+- Key Functions:
+  - `encryptCredential(data, keyId) -> encryptedData`
+  - `decryptCredential(encryptedData, keyId) -> plainData`
+  - Derives per-agency encryption keys from master key
+
+**Database Factory:**
+- Purpose: Type-safe D1 query interface with prepared statements
+- Examples: `serverless/src/database/index.ts`
+- Pattern: Factory function returning query methods object
+- Key Methods:
+  - `insertLead(data) -> {id}`
+  - `getAgencyById(id) -> Agency|null`
+  - `getAgencyCredentials(agencyId) -> Credentials|null`
+  - `updateAgencyCredentials(agencyId, credentials) -> boolean`
 
 **Conversion Router:**
-- Purpose: Route conversions to correct ad platform based on click ID
+- Purpose: Multi-platform conversion routing based on click ID type
 - Examples: `serverless/src/services/conversion-router.ts`
-- Pattern: Analyzes click IDs (gclid, fbclid, ttclid) and forwards to appropriate platform module
-
-**Customer Site:**
-- Purpose: Represent customer tracking configuration
-- Examples: Sites table in `serverless/migrations/0001_init.sql`
-- Pattern: Multi-assignment support (same event with different configs across sites)
-
-**Custom Event System:**
-- Purpose: Flexible business event tracking
-- Examples: `serverless/src/services/custom-events.ts`, `serverless/migrations/0018_custom_events_definitions.sql`
-- Pattern: Event definitions stored in database, assigned per site
+- Pattern: Factory that detects click ID (gclid, fbclid, ttclid) and dispatches to platform module
+- Routing Logic:
+  - `gclid` → Google Ads (google-ads.ts)
+  - `fbclid` → Meta CAPI (meta-conversions.ts)
+  - `ttclid` → TikTok (tiktok-conversions.ts)
+  - None → sGTM (sgtm-forwarder.ts)
 
 ## Entry Points
 
-**API Entry Point:**
+**Hono App Entry:**
 - Location: `serverless/src/index.ts`
-- Triggers: HTTP requests to Cloudflare Worker
-- Responsibilities: Route registration, CORS configuration, middleware setup
+- Triggers: All HTTP requests to Cloudflare Worker
+- Responsibilities:
+  - Route registration (18 domain routers)
+  - CORS middleware configuration
+  - Dev guard middleware application
+  - Health check endpoint (`/health`)
 
-**Frontend Entry Point:**
+**Vite Frontend Entry:**
 - Location: `frontend/src/main.tsx`
-- Triggers: Browser access to dashboard
-- Responsibilities: React app initialization, routing setup
+- Triggers: Browser hits frontend URL
+- Responsibilities: React root rendering, API client initialization
 
-**Infrastructure Entry Point:**
-- Location: `infrastructure/main.tf`
-- Triggers: `tofu apply` command
-- Responsibilities: Cloudflare resource provisioning
+**OpenTofu Infrastructure:**
+- Location: `infrastructure/main.tf`, `variables.tf`, `outputs.tf`
+- Triggers: Manual `tofu apply` or CI/CD pipeline
+- Responsibilities: Provision Cloudflare Worker, D1 database, KV namespaces
 
-**Webhook Entry Points:**
-- Location: `serverless/src/routes/shopify.ts`, `ghl.ts`, `tiktok.ts`
-- Triggers: External platform webhook events
-- Responsibilities: Event ingestion, validation, processing
+**Worker Scripts:**
+- Location: `serverless/scripts/`, `serverless/src/workers/`
+- Triggers: Scheduled cron jobs, manual execution
+- Responsibilities: Health checks, migration tools, async conversion processing
 
 ## Error Handling
 
-**Strategy:** Hierarchical error handling with typed exceptions
+**Strategy:** Typed errors with user-friendly messages, audit logging on failures
 
 **Patterns:**
-- **Service Layer**: Throw typed errors (`GoogleAdsError`, `ValidationError`)
-- **Route Layer**: Catch service errors, return standardized JSON responses
-- **Global**: Error logging via `serverless/src/services/logging.ts`
-- **Client**: Frontend error boundaries and user-friendly messages
+- Custom error classes: `GoogleAdsError(message, code?, details?)` (google-ads.ts)
+- Consistent error response: `{ success: false, error: "message" }` with HTTP status codes
+- Audit logs on failure: `createAuditLog({ agency_id, action, result: 'failed', error, details })`
+- Platform-specific mapping: Google API error codes → user-friendly messages
+- Partial failure handling: Google Ads API `partial_failure: true` mode
 
 ## Cross-Cutting Concerns
 
-**Logging:** Structured logging via `serverless/src/services/logging.ts`
-**Validation:** Zod schemas in all route handlers
-**Authentication:** JWT for dashboard, HMAC for webhooks, API keys for admin
-**Rate Limiting:** Multi-tier limits in `serverless/src/middleware/rate-limit.ts`
-**Encryption:** AES-256-GCM for credentials in `serverless/src/services/encryption.ts`
+**Logging:** Structured console logging with context (service/logger.ts), audit logs in D1 (audit_logs table)
+**Validation:** Zod schemas on all route inputs (zValidator from @hono/zod-openapi)
+**Authentication:** JWT (HMAC-SHA256) for dashboard, HMAC signatures for webhooks (constant-time comparison)
+**Secrets Management:** Cloudflare secrets (c.env.SECRET_NAME), all handled via Wrangler config (wrangler.jsonc)
+**Rate Limiting:** KV namespace per-IP/per-shop limits (rate-limit.ts middleware)
+**Multi-tenancy:** All queries scoped to `org_id` via tenant isolation pattern
 
 ---
 
-*Architecture analysis: 2026-01-24*
+*Architecture analysis: 2026-01-27*
