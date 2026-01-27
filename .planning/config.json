@@ -13,9 +13,9 @@
         "verification": "opencode/glm-4.7-free"
       },
       "balanced": {
-        "planning": "opencode/glm-4.7-free",
+        "planning": "opencode/minimax-m2.1-free",
         "execution": "opencode/minimax-m2.1-free",
-        "verification": "opencode/glm-4.7-free"
+        "verification": "opencode/minimax-m2.1-free"
       },
       "budget": {
         "planning": "opencode/minimax-m2.1-free",
