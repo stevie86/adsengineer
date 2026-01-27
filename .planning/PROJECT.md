@@ -1,81 +1,77 @@
-# AdsEngineer
+# WooCommerce Plugin for AdsEngineer
 
 ## What This Is
 
-Enterprise conversion tracking SaaS platform that provides server-side attribution for e-commerce businesses. The platform handles multi-platform webhooks (Shopify, WooCommerce, custom sites), Google Ads conversion upload, custom event tracking, and real-time monitoring through a unified API.
+A WordPress/WooCommerce plugin that enables one-click onboarding of WooCommerce stores to AdsEngineer. The plugin installs the universal tracking snippet (SST), captures GCLID from URL parameters, stores it with orders, and sends complete conversion data (order + customer enhanced data) to AdsEngineer API for Google Ads attribution.
 
 ## Core Value
 
-CTOs own their data infrastructure with a self-hosted control plane while leveraging global edge deployment for optimal performance and reliability.
+**GCLID capture and forwarding must work reliably** — every order from a Google Ad click must be attributed correctly. If nothing else works, this must.
 
 ## Requirements
 
 ### Validated
 
-- ✓ Multi-platform webhook processing (Shopify, WooCommerce, custom sites) — v0.1
-- ✓ Google Ads conversion upload with proper attribution — v0.2  
-- ✓ Stripe billing integration with subscription management — v0.3
-- ✓ Real-time API health monitoring and status endpoints — v0.4
-- ✓ Comprehensive test coverage with unit, integration, and E2E tests — v0.5
-- ✓ Infrastructure as Code with OpenTofu for Cloudflare deployment — v0.6
-- ✓ Agency dashboard with React frontend and Stripe integration — v0.7
-- ✓ Shopify plugin for webhook proxy and app management — v0.8
+(From existing AdsEngineer codebase)
+
+- ✓ Google Ads conversion upload API — existing
+- ✓ WooCommerce webhook receiver route — existing (`serverless/src/routes/woocommerce.ts`)
+- ✓ Multi-tenant agency model — existing
+- ✓ JWT authentication for dashboard — existing
+- ✓ Encryption for stored credentials — existing
 
 ### Active
 
-- [ ] Hybrid Architecture: Central Brain (self-hosted) + Global Edge (Cloudflare Workers)
-- [ ] Clawdbot orchestrator skill for VPS deployment
-- [ ] Architecture page showcasing decentralised infrastructure
-- [ ] VPS setup script for easy deployment
+- [ ] WordPress plugin that installs on WooCommerce sites
+- [ ] Universal tracking snippet (SST) auto-installation on all pages
+- [ ] GCLID capture from URL parameters on landing page
+- [ ] GCLID storage in session/cookie (survives checkout flow)
+- [ ] GCLID attachment to WooCommerce order metadata
+- [ ] Customer enhanced data capture (email, phone, address)
+- [ ] Conversion data sent to AdsEngineer API on order completion
+- [ ] Plugin settings page (API key configuration)
+- [ ] One-click setup experience
 
 ### Out of Scope
 
-- Full mobile app development — Web-first approach with responsive design
-- Direct database access for customers — All access through API only
-- Real-time chat support — Focus on async communication via notifications
+- Native WordPress admin dashboard analytics — AdsEngineer dashboard handles this
+- Direct Google Ads API calls from plugin — plugin only sends to AdsEngineer
+- Shopify support — separate plugin exists
+- Meta/TikTok pixel installation — future enhancement
+- WooCommerce Blocks checkout support — classic checkout first
 
 ## Context
 
-AdsEngineer is a mature enterprise SaaS platform with established architecture patterns:
+**Existing Infrastructure:**
+- AdsEngineer API runs on Cloudflare Workers (Hono framework)
+- WooCommerce webhook route exists at `serverless/src/routes/woocommerce.ts`
+- Universal tracking snippet (SST) exists at `seo-auditor/` directory
+- Shopify plugin pattern exists at `shopify-plugin/` for reference
 
-**Technical Environment:**
-- Runtime: Cloudflare Workers (edge computing)
-- Database: Cloudflare D1 (SQLite-compatible)
-- API Framework: Hono with TypeScript
-- Infrastructure as Code: OpenTofu
-- Secret Management: Doppler
+**Test Environment:**
+- Test WooCommerce site: `stefan.mastersmarket.eu`
+- Can test full flow: Ad click → Landing → Checkout → Order → Conversion
 
-**Current Capabilities:**
-- Handles unlimited stores with webhook-based data ingestion
-- Processes Google Ads conversions with attribution windows
-- Manages Stripe subscriptions and billing cycles
-- Provides real-time analytics and monitoring
-- Supports custom event definitions for flexible tracking
-- Enterprise-grade security with HMAC webhook validation
-
-**Architecture Decisions:**
-- Serverless-first approach for scalability and cost efficiency
-- Separation of concerns: API layer, services layer, database layer
-- Type safety throughout with comprehensive TypeScript usage
-- Comprehensive testing strategy with multiple test types
+**Problem Being Solved:**
+- Manual GCLID capture is failing/unreliable
+- No automated way to onboard WooCommerce sites
+- Losing time debugging instead of testing
 
 ## Constraints
 
-- **Tech Stack**: TypeScript, Hono, Cloudflare Workers/D1, React, Stripe - established ecosystem with existing patterns
-- **Security**: Enterprise requirements demand HMAC webhook validation and encrypted credential storage
-- **Performance**: Global edge distribution requires efficient data processing and minimal cold starts
-- **Integration**: Must support existing webhook formats (Shopify, GHL, custom) without breaking changes
+- **Tech Stack**: WordPress/PHP plugin (standard WooCommerce patterns)
+- **Compatibility**: WooCommerce 7.0+, WordPress 6.0+, PHP 7.4+
+- **No JS Frameworks**: Vanilla JS for tracking snippet, PHP for plugin
+- **GDPR**: Must work with cookie consent managers
+- **Performance**: Tracking snippet must not block page load
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Cloudflare Workers + D1 | Serverless scalability, global edge distribution, cost efficiency | ✓ Good |
-| Hono Framework | Lightweight, TypeScript-first, excellent OpenAPI support | ✓ Good |
-| TypeScript Strict Mode | Type safety across entire codebase, better developer experience | ✓ Good |
-| Doppler for Secrets | Centralized secret management, environment-specific configurations | ✓ Good |
-| Stripe Integration | Established payment provider with webhook-based billing | ✓ Good |
-| React + Tailwind | Proven frontend stack with rapid development | ✓ Good |
+| WordPress plugin (not external service) | Simplest install, full WooCommerce integration | — Pending |
+| GCLID stored in cookie + order meta | Survives multi-page checkout, persists with order | — Pending |
+| Enhanced conversions data included | Better match rates, Google Ads best practice | — Pending |
 
 ---
-*Last updated: 2025-01-26 after milestone v0.8 completion*
+*Last updated: 2026-01-27 after initialization*
