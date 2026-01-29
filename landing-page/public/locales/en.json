@@ -125,6 +125,28 @@
     "managePreferences": "Manage Preferences",
     "savePreferences": "Save Preferences"
   },
+  "footer": {
+    "privacyPolicy": "Privacy Policy",
+    "cookieSettings": "Cookie Settings"
+  },
+  "architecture": {
+    "badge": "Proprietary Technology",
+    "title": "GTM-to-Edge <span class=\"gradient-text\">Parser</span>",
+    "description": "Our core engine compiles GTM JSON definitions directly into hardened Cloudflare Worker code in milliseconds. No more manual tagging or brittle server-side GTM setups.",
+    "step1": "Parse GTM JSON Architecture",
+    "step2": "Compile to Rust-powered V8 Isolates",
+    "step3": "Deploy globally in &lt;10 seconds",
+    "logTitle": "compiler_output.log",
+    "logInit": "// Initializing AdsEngineer Compiler v2.4.0",
+    "logLine1": "<span class=\"text-cyan-400\">DONE</span> Loading GTM-ID: GTM-N7XL2BZ",
+    "logLine2": "<span class=\"text-cyan-400\">DONE</span> Analyzing 42 tags and 18 triggers",
+    "logLine3": "<span class=\"text-purple-400\">START</span> Generating Worker code...",
+    "logLine4": "→ Compiling custom_event_purchase.ts",
+    "logLine5": "→ Injecting GCLID persistence layer",
+    "logLine6": "→ Optimizing V8 memory allocation",
+    "logLine7": "<span class=\"text-green-400\">SUCCESS</span> Build completed in 142ms",
+    "logLine8": "<span class=\"text-cyan-400\">READY</span> Global edge deployment initiated"
+  },
   "comparison": {
     "badge": "Infrastructure Benchmarks",
     "title": "The Engineering <span class=\"gradient-text\">Gap</span>",

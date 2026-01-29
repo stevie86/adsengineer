@@ -98,34 +98,34 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
     </section>
 
     <!-- GTM-to-Edge Parser Section -->
-    <section id="architecture" class="py-20 bg-black/20 overflow-hidden">
+<section id="architecture" class="py-20 bg-black/20 overflow-hidden">
       <div class="container mx-auto px-6">
         <div class="flex flex-col lg:flex-row items-center gap-16">
           <div class="flex-1">
-            <span class="text-purple-400 font-bold tracking-widest uppercase text-sm">Proprietary Technology</span>
-            <h2 class="text-4xl font-bold mt-4 mb-6 text-white">GTM-to-Edge <span class="gradient-text">Parser</span></h2>
-            <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+            <span class="text-purple-400 font-bold tracking-widest uppercase text-sm" data-i18n="architecture.badge">Proprietary Technology</span>
+            <h2 class="text-4xl font-bold mt-4 mb-6 text-white" data-i18n="architecture.title">GTM-to-Edge <span class="gradient-text">Parser</span></h2>
+            <p class="text-gray-300 text-lg mb-8 leading-relaxed" data-i18n="architecture.description">
               Our core engine compiles GTM JSON definitions directly into hardened Cloudflare Worker code in milliseconds. No more manual tagging or brittle server-side GTM setups.
             </p>
             <div class="space-y-4">
               <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
                 <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">01</div>
-                <span class="text-gray-200">Parse GTM JSON Architecture</span>
+                <span class="text-gray-200" data-i18n="architecture.step1">Parse GTM JSON Architecture</span>
               </div>
               <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
                 <div class="w-10 h-10 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400">02</div>
-                <span class="text-gray-200">Compile to Rust-powered V8 Isolates</span>
+                <span class="text-gray-200" data-i18n="architecture.step2">Compile to Rust-powered V8 Isolates</span>
               </div>
               <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
                 <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">03</div>
-                <span class="text-gray-200">Deploy globally in &lt;10 seconds</span>
+                <span class="text-gray-200" data-i18n="architecture.step3">Deploy globally in &lt;10 seconds</span>
               </div>
             </div>
           </div>
           <div class="flex-1 relative">
             <div class="glass-card p-6 bg-[#0B0B15]/90 border-purple-500/30 font-mono text-sm overflow-hidden shadow-2xl">
               <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-2">
-                <span class="text-gray-500 uppercase text-xs">compiler_output.log</span>
+                <span class="text-gray-500 uppercase text-xs" data-i18n="architecture.logTitle">compiler_output.log</span>
                 <div class="flex gap-1.5">
                   <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
                   <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
@@ -133,15 +133,15 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
                 </div>
               </div>
               <div class="space-y-2">
-                <p class="text-purple-400 italic">// Initializing AdsEngineer Compiler v2.4.0</p>
-                <p class="text-white"><span class="text-cyan-400">DONE</span> Loading GTM-ID: GTM-T7XL2BZ</p>
-                <p class="text-white"><span class="text-cyan-400">DONE</span> Analyzing 42 tags and 18 triggers</p>
-                <p class="text-white"><span class="text-purple-400">START</span> Generating Worker code...</p>
-                <p class="text-gray-400 pl-4">→ Compiling custom_event_purchase.ts</p>
-                <p class="text-gray-400 pl-4">→ Injecting GCLID persistence layer</p>
-                <p class="text-gray-400 pl-4">→ Optimizing V8 memory allocation</p>
-                <p class="text-white font-bold mt-4"><span class="text-green-400">SUCCESS</span> Build completed in 142ms</p>
-                <p class="text-white"><span class="text-cyan-400">READY</span> Global edge deployment initiated</p>
+                <p class="text-purple-400 italic" data-i18n="architecture.logInit">// Initializing AdsEngineer Compiler v2.4.0</p>
+                <p class="text-white" data-i18n="architecture.logLine1"><span class="text-cyan-400">DONE</span> Loading GTM-ID: GTM-T7XL2BZ</p>
+                <p class="text-white" data-i18n="architecture.logLine2"><span class="text-cyan-400">DONE</span> Analyzing 42 tags and 18 triggers</p>
+                <p class="text-white" data-i18n="architecture.logLine3"><span class="text-purple-400">START</span> Generating Worker code...</p>
+                <p class="text-gray-400 pl-4" data-i18n="architecture.logLine4">→ Compiling custom_event_purchase.ts</p>
+                <p class="text-gray-400 pl-4" data-i18n="architecture.logLine5">→ Injecting GCLID persistence layer</p>
+                <p class="text-gray-400 pl-4" data-i18n="architecture.logLine6">→ Optimizing V8 memory allocation</p>
+                <p class="text-white font-bold mt-4" data-i18n="architecture.logLine7"><span class="text-green-400">SUCCESS</span> Build completed in 142ms</p>
+                <p class="text-white" data-i18n="architecture.logLine8"><span class="text-cyan-400">READY</span> Global edge deployment initiated</p>
               </div>
             </div>
             <!-- Decorative Glow -->
