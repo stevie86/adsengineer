@@ -44,8 +44,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: adsengineer
           directory: landing-page/dist
-          # Optional: gitHubToken for automatic branch detection
-          # gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           # Optional: wrangler config path
           # wranglerConfig: wrangler.toml
           # Optional: deployed site url
