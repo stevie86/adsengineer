@@ -6,6 +6,7 @@ import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { AgenciesPage } from './pages/Admin/Agencies';
 import { IntegrationView } from './pages/Admin/IntegrationView';
+import { GTMCompilerPage } from './pages/GTMCompiler';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const token = localStorage.getItem('auth_token');
@@ -28,6 +29,7 @@ function App() {
           </ProtectedRoute>
         }>
           <Route index element={<Dashboard />} />
+          <Route path="gtm-compiler" element={<GTMCompilerPage />} />
           <Route path="admin/agencies" element={<AgenciesPage />} />
           <Route path="admin/agencies/:id" element={<IntegrationView />} />
         </Route>

@@ -10,6 +10,7 @@ import { shopifyRoutes } from './routes/shopify';
 // import { evaluationRouter } from './routes/evaluate';
 import { tiktokRouter } from './routes/tiktok';
 import { woocommerceRoutes } from './routes/woocommerce';
+import { gtmRoutes } from './routes/gtm';
 
 const app = new Hono();
 
@@ -48,5 +49,6 @@ app.route('/api/v1/tiktok', tiktokRouter);
 app.route('/api/v1/shopify', shopifyRoutes);
 app.route('/api/v1/woocommerce', woocommerceRoutes);
 app.route('/api/v1/ghl', ghlRoutes);
+app.route('/api/v1/gtm', gtmRoutes);
 
 export default app;

@@ -1,8 +1,9 @@
 {
-  "name": "adsengineer-cloud",
-  "compatibility_date": "2026-01-13",
+  "name": "adsengineer-landing",
+  "compatibility_date": "2024-01-01",
   "main": "src/index.ts",
   "assets": {
     "directory": "./dist"
-  }
+  },
+  "pages_build_output_dir": "dist"
 }

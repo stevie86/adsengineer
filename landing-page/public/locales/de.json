@@ -112,5 +112,22 @@
     "contact": "Kontakt",
     "cta": "Bereit, deine Attributionsverfolgung zu revolutionieren? Lass uns reden.",
     "demoBtn": "Demo buchen"
+  },
+  "cookies": {
+    "title": "🍪 Cookie-Einstellungen",
+    "description": "Wir verwenden Cookies, um Ihre Erfahrung zu verbessern. Datenschutzrichtlinie",
+    "privacyPolicy": "Datenschutzrichtlinie",
+    "necessary": "Notwendig (immer aktiv)",
+    "analytics": "Analytik - Hilf uns zu verbessern",
+    "marketing": "Marketing - Personalisierter Inhalt",
+    "acceptAll": "Alle akzeptieren",
+    "rejectAll": "Alle ablehnen",
+    "managePreferences": "Einstellungen verwalten",
+    "savePreferences": "Einstellungen speichern"
+  },
+  "comparison": {
+    "badge": "Infrastruktur-Benchmarks",
+    "title": "Der technische <span class=\"gradient-text\">Unterschied</span>",
+    "subtitle": "\"Bauen Sie Ihr Tracking nicht auf veralteten Cloud-Stacks.\""
   }
 }

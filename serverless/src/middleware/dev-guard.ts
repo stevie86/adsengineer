@@ -12,6 +12,7 @@ const PUBLIC_PATHS = [
   '/api/v1/woocommerce/download',
   '/api/v1/woocommerce/zip',
   '/api/v1/shopify/info',
+  '/api/v1/gtm/analyze',
 ] as const;
 
 // SECURITY: Webhook paths use HMAC signature auth, not JWT

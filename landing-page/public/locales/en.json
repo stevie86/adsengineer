@@ -112,5 +112,22 @@
     "contact": "Contact Us",
     "cta": "Ready to revolutionize your attribution tracking? Let's talk.",
     "demoBtn": "Book a Demo"
+  },
+  "cookies": {
+    "title": "🍪 Cookie Preferences",
+    "description": "We use cookies to improve your experience. Privacy Policy",
+    "privacyPolicy": "Privacy Policy",
+    "necessary": "Necessary (always active)",
+    "analytics": "Analytics - Help us improve",
+    "marketing": "Marketing - Personalised content",
+    "acceptAll": "Accept All",
+    "rejectAll": "Reject All",
+    "managePreferences": "Manage Preferences",
+    "savePreferences": "Save Preferences"
+  },
+  "comparison": {
+    "badge": "Infrastructure Benchmarks",
+    "title": "The Engineering <span class=\"gradient-text\">Gap</span>",
+    "subtitle": "\"Don't build your tracking on legacy cloud stacks.\""
   }
 }
