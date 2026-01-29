@@ -1,111 +1,116 @@
 {
-    "nav": {
-        "features": "Features",
-        "pricing": "Pricing",
-        "getStarted": "Book Call"
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "getStarted": "Book a Call"
+  },
+  "hero": {
+    "badge": "Launching Q1 2026 - Building in Public",
+    "titlePrefix": "When Cookies Vanish,",
+    "titleHighlight": "Your Data Survives",
+    "subtitle": "The Cookie Apocalypse is coming in Q1 2026. Chrome and Safari are blocking 90% of tracking. <span class=\"text-white font-semibold\">AdsEngineer</span> preserves your attribution data across <span class=\"text-white font-semibold\">any platform</span>—from GoHighLevel to Shopify and beyond.",
+    "ctaPrimary": "Book a Call →",
+    "ctaSecondary": "View Webhook API"
+  },
+  "features": {
+    "badge": "Capabilities",
+    "title": "Server-Side <span class=\"gradient-text\">Power</span>",
+    "subtitle": "\"Built on Cloudflare's edge network for unblockable tracking.\"",
+    "list": [
+      {
+        "title": "GCLID Preservation",
+        "desc": "Attribution survives cookie restrictions, ad blockers, and cross-domain tracking failures. Your ROI reports stay accurate."
+      },
+      {
+        "title": "Universal Integration",
+        "desc": "Whether you use GHL webhooks, Shopify, or a custom CMS, we receive lead data the moment it's submitted and bridge it back to your ad platforms."
+      },
+      {
+        "title": "Cloudflare Edge",
+        "desc": "Deployed globally on Cloudflare Workers for <50ms latency. Fast, reliable, and unblockable by browsers."
+      }
+    ]
+  },
+  "comparison": {
+    "badge": "Infrastructure Benchmarks",
+    "title": "The Engineering <span class=\"gradient-text\">Gap</span>",
+    "subtitle": "\"Don't build your tracking on legacy cloud stacks.\""
+  },
+  "pricing": {
+    "badge": "Pricing Reality Check",
+    "title": "Pricing for <span class=\"gradient-text\">SMB Agencies</span>",
+    "subtitle": "Realistic SaaS pricing. Not €2,000 - that's for Fortune 500s.",
+    "beta": {
+      "name": "Beta Access",
+      "price": "49",
+      "period": "/mo",
+      "features": [
+        "Up to $50k Ad Spend",
+        "Google Ads Integration",
+        "Server-Side Tracking",
+        "€0 Setup Fee (Beta exclusive)"
+      ],
+      "btn": "Join Beta"
     },
-    "hero": {
-        "badge": "Launching Q1 2026 - Building in Public",
-        "titlePrefix": "When Cookies Vanish,",
-        "titleHighlight": "Your Data Survives",
-        "subtitle": "While Chrome shifts to user-choice, Safari and Firefox have already blocked most tracking. The real 'apocalypse' is the loss of 90% of your attribution data. <span class=\"text-white font-semibold\">AdsEngineer</span> preserves your data at the server level, ensuring your tracking stays bulletproof across <span class=\"text-white font-semibold\">any platform</span>.",
-        "ctaPrimary": "Book a Call →",
-        "ctaSecondary": "View Webhook API"
+    "standard": {
+      "name": "Standard",
+      "price": "99",
+      "period": "/mo",
+      "popular": "Recommended",
+      "features": [
+        "Up to $250k Ad Spend",
+        "Google Ads + Meta CAPI",
+        "Priority Support",
+        "€199 One-time Setup"
+      ],
+      "btn": "Get Started"
     },
-    "features": {
-        "badge": "Capabilities",
-        "title": "Server-Side <span class=\"gradient-text\">Power</span>",
-        "subtitle": "\"Built on Cloudflare's edge network for unblockable tracking.\"",
-        "list": [
-            {
-                "title": "GCLID Preservation",
-                "desc": "Attribution survives cookie restrictions, ad blockers, and cross-domain tracking failures. Your ROI reports stay accurate."
-            },
-            {
-                "title": "Universal Integration",
-                "desc": "Whether you use GHL webhooks, Shopify, or a custom CMS, we receive lead data the moment it's submitted and bridge it back to your ad platforms."
-            },
-            {
-                "title": "Cloudflare Edge",
-                "desc": "Deployed globally on Cloudflare Workers for <50ms latency. Fast, reliable, and unblockable by browsers."
-            }
-        ]
-    },
-    "pricing": {
-        "badge": "Pricing Reality Check",
-        "title": "Pricing for <span class=\"gradient-text\">SMB Agencies</span>",
-        "subtitle": "Realistic SaaS pricing. Not €2,000 - that's for Fortune 500s.",
-        "beta": {
-            "name": "Beta Access",
-            "price": "49",
-            "period": "/mo",
-            "features": [
-                "Up to $50k Ad Spend",
-                "Google Ads Integration",
-                "Server-Side Tracking",
-                "€0 Setup Fee (Beta exclusive)"
-            ],
-            "btn": "Join Beta"
-        },
-        "standard": {
-            "name": "Standard",
-            "price": "99",
-            "period": "/mo",
-            "popular": "Recommended",
-            "features": [
-                "Up to $250k Ad Spend",
-                "Google Ads + Meta CAPI",
-                "Priority Support",
-                "€199 One-time Setup"
-            ],
-            "btn": "Get Started"
-        },
-        "enterprise": {
-            "name": "Premium",
-            "price": "149",
-            "period": "/mo",
-            "features": [
-                "Unlimited Ad Spend",
-                "Custom Integrations",
-                "Dedicated Manager"
-            ],
-            "btn": "Contact Sales"
-        }
-    },
-    "quote": {
-        "title": "Get Your Custom Quote",
-        "subtitle": "Every business is unique. Let's discuss your specific needs and create a tailored solution that maximizes your ROI.",
-        "btn": "Get Quote Now →"
-    },
-    "cta": {
-        "title": "Ready to Fix Your Attribution?",
-        "subtitle": "Join the agencies transforming their performance. Because your conversions deserve to be counted.",
-        "btn": "Book a Free Call"
-    },
-    "footer": {
-        "copyright": "© 2026 AdsEngineer.cloud. All rights reserved."
-    },
-    "about": {
-        "title": "About AdsEngineer",
-        "subtitle": "Building the future of attribution tracking in the cookie apocalypse era.",
-        "stats": {
-            "clients": "Happy Clients",
-            "clientsDesc": "Growing every day",
-            "accuracy": "Attribution Accuracy",
-            "accuracyDesc": "Server-side precision",
-            "conversions": "Conversions Tracked",
-            "conversionsDesc": "And counting...",
-            "uptime": "Uptime",
-            "uptimeDesc": "Cloudflare powered"
-        },
-        "founder": "The Founder",
-        "mission": "Our Mission",
-        "offer": "What We Build",
-        "audience": "Who We Serve",
-        "philosophy": "Our Philosophy",
-        "roadmap": "Product Roadmap",
-        "contact": "Contact Us",
-        "cta": "Ready to revolutionize your attribution tracking? Let's talk.",
-        "demoBtn": "Book a Demo"
+    "enterprise": {
+      "name": "Premium",
+      "price": "149",
+      "period": "/mo",
+      "features": [
+        "Unlimited Ad Spend",
+        "Custom Integrations",
+        "Dedicated Manager"
+      ],
+      "btn": "Contact Sales"
     }
+  },
+  "quote": {
+    "title": "Get Your Custom Quote",
+    "subtitle": "Every business is unique. Let's discuss your specific needs and create a tailored solution that maximizes your ROI.",
+    "btn": "Get Quote Now →"
+  },
+  "cta": {
+    "title": "Ready to Fix Your Attribution?",
+    "subtitle": "Join the agencies transforming their performance. Because your conversions deserve to be counted.",
+    "btn": "Book a Free Call"
+  },
+  "footer": {
+    "copyright": "© 2026 AdsEngineer. All rights reserved."
+  },
+  "about": {
+    "title": "About AdsEngineer",
+    "subtitle": "Building the future of attribution tracking in the cookie apocalypse era.",
+    "stats": {
+      "clients": "Happy Clients",
+      "clientsDesc": "Growing every day",
+      "accuracy": "Attribution Accuracy",
+      "accuracyDesc": "Server-side precision",
+      "conversions": "Conversions Tracked",
+      "conversionsDesc": "And counting...",
+      "uptime": "Uptime",
+      "uptimeDesc": "Cloudflare powered"
+    },
+    "founder": "The Founder",
+    "mission": "Our Mission",
+    "offer": "What We Build",
+    "audience": "Who We Serve",
+    "philosophy": "Our Philosophy",
+    "roadmap": "Product Roadmap",
+    "contact": "Contact Us",
+    "cta": "Ready to revolutionize your attribution tracking? Let's talk.",
+    "demoBtn": "Book a Demo"
+  }
 }
