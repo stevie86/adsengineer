@@ -1,6 +1,8 @@
 import { zipSync } from 'fflate';
 
-// Plugin files bundled at build time
+// IMPORTANT: This content must stay in sync with:
+// ../../woocommerce-plugin/adsengineer-woocommerce/adsengineer-woocommerce.php
+// Run: ./scripts/sync-woo-plugin.sh to verify sync status
 const PLUGIN_PHP_CONTENT = `<?php
 /**
  * Plugin Name: AdsEngineer Conversion Tracking for WooCommerce
@@ -64,9 +66,7 @@ class AdsEngineer_WooCommerce {
 
     $webhook_url = get_option('adsengineer_webhook_url');
     if (empty($webhook_url)) {
-      // Try to construct default URL from site domain
-      // This will need to be configured by the user
-      $webhook_url = 'https://adsengineer-cloud.adsengineer.workers.dev/api/v1/woocommerce/webhook';
+$webhook_url = 'https://adsengineer-cloud.adsengineer.workers.dev/api/v1/woocommerce/webhook';
     }
 
     return $webhook_url;
@@ -165,10 +165,10 @@ class AdsEngineer_WooCommerce {
           <tr>
             <th scope="row">Webhook URL</th>
             <td>
-              <input type="url" name="adsengineer_webhook_url" value="<?php echo esc_attr($webhook_url); ?>" class="regular-text" placeholder="https://your-domain.workers.dev/api/v1/woocommerce/webhook" />
-              <p class="description">
-                Your AdsEngineer webhook URL. Leave empty to use the default.<br>
-                <strong>Default:</strong> https://adsengineer-cloud.adsengineer.workers.dev/api/v1/woocommerce/webhook
+<input type="url" name="adsengineer_webhook_url" value="<?php echo esc_attr($webhook_url); ?>" class="regular-text" placeholder="https://your-domain.workers.dev/api/v1/woocommerce/webhook" />
+               <p class="description">
+                 Your AdsEngineer webhook URL. Leave empty to use the default.<br>
+                 <strong>Default:</strong> https://adsengineer-cloud.adsengineer.workers.dev/api/v1/woocommerce/webhook
               </p>
             </td>
           </tr>
