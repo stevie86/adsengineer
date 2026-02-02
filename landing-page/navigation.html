@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdsEngineer - Complete Navigation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* Navigation Styles */
+        .nav-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem 0; position: sticky; top: 0; z-index: 1000; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .logo { font-size: 1.5rem; font-weight: 700; color: white; text-decoration: none; }
+        .nav-menu { display: flex; gap: 2rem; list-style: none; margin: 0; padding: 0; }
+        .nav-menu a { color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 25px; transition: all 0.3s ease; }
+        .nav-menu a:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+        .cta-nav { background: white; color: #667eea; padding: 0.5rem 1.5rem; border-radius: 25px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; }
+        .cta-nav:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102,126,234,0.3); }
+        
+        /* Mobile Menu */
+        .mobile-toggle { display: none; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle { display: block; }
+            .nav-menu { display: none; position: absolute; top: 100%; left: 0; right: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); flex-direction: column; padding: 1rem; gap: 0.5rem; }
+            .nav-menu.active { display: flex; }
+            .nav-menu a { width: 100%; text-align: center; }
+        }
+        
+        /* Page Content */
+        .page-section { padding: 4rem 0; }
+        .page-section h2 { font-size: 2.5rem; margin-bottom: 2rem; color: #333; }
+        .page-section p { font-size: 1.1rem; margin-bottom: 1.5rem; line-height: 1.6; }
+        .cta-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; padding: 3rem 0; margin: 3rem 0; }
+        .cta-button { background: white; color: #667eea; padding: 1rem 2rem; border: none; border-radius: 50px; font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease; }
+        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+        
+        /* Footer */
+        .footer { background: #333; color: white; text-align: center; padding: 2rem 0; margin-top: 3rem; }
+        .footer a { color: #667eea; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<!-- Professional Navigation Header -->
+<header class="nav-header">
+    <div class="nav-container">
+        <a href="/" class="logo">AdsEngineer</a>
+        
+        <!-- Main Navigation Menu -->
+        <nav class="nav-menu">
+            <a href="/">Home</a>
+            <a href="/what-is-this.html">Was ist das?</a>
+            <a href="/pricing">Preise</a>
+            <a href="/demo">Demo</a>
+            <a href="/about.html">Über uns</a>
+            <a href="/customer-portal.html">Kunden-Login</a>
+        </nav>
+        
+        <!-- CTA Button -->
+        <a href="/checkout.html" class="cta-nav">Kostenlose Analyse</a>
+        
+        <!-- Mobile Toggle -->
+        <button class="mobile-toggle" onclick="toggleMobileMenu()">☰</button>
+    </div>
+</header>
+
+<!-- Main Navigation Page -->
+<main class="container">
+    
+    <section class="page-section">
+        <h2>Complete Site Navigation</h2>
+        <p>Navigate through all sections of AdsEngineer:</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2rem 0;">
+            
+            <!-- Home Page -->
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <h3>🏠 Home</h3>
+                <p>Main landing page with hero section, features, pricing, and testimonials.</p>
+                <a href="/" class="cta-button" style="margin-top: 1rem;">Zur Startseite</a>
+            </div>
+            
+            <!-- What Is This Page -->
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <h3>❓ Was ist das?</h3>
+                <p>Für Leute, die keine Ahnung haben, was Conversion-Attribution ist.</p>
+                <a href="/what-is-this.html" class="cta-button" style="margin-top: 1rem;">Erklärung lesen</a>
+            </div>
+            
+            <!-- Pricing Page -->
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <h3>💰 Preise</h3>
+                <p>Transparente Preise für Conversion-Attribution.</p>
+                <a href="/pricing" class="cta-button" style="margin-top: 1rem;">Preise ansehen</a>
+            </div>
+            
+            <!-- Demo Page -->
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <h3>🎮 Demo</h3>
+                <p>Live-Demo der Conversion-Attribution Dashboard.</p>
+                <a href="/demo" class="cta-button" style="margin-top: 1rem;">Demo ansehen</a>
+            </div>
+            
+            <!-- About Page -->
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <h3>ℹ️ Über uns</h3>
+                <p>Informationen über AdsEngineer und das Team.</p>
+                <a href="/about.html" class="cta-button" style="margin-top: 1rem;">Mehr erfahren</a>
+            </div>
+            
+            <!-- Customer Portal -->
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <h3>🔐 Kunden-Login</h3>
+                <p>Login für bestehende Kunden mit Dashboard-Zugang.</p>
+                <a href="/customer-portal.html" class="cta-button" style="margin-top: 1rem;">Kunden-Login</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Quick Navigation Guide -->
+    <section class="page-section">
+        <h2>Schnell-Navigation</h2>
+        <div style="background: #f8f9fa; padding: 2rem; border-radius: 10px; margin: 2rem 0;">
+            <h3>🎯 Wichtigste Seiten</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin: 1rem 0;"><strong>Home:</strong> Hauptverkaufsargument - "Hören Sie auf, Geld für Google Ads zu verschwenden"</li>
+                <li style="margin: 1rem 0;"><strong>Was ist das:</strong> Für Leute, die keine Ahnung haben - einfache Erklärung</li>
+                <li style="margin: 1rem 0;"><strong>Preise:</strong> €99/€299/€999 pro Monat - transparente Preise</li>
+                <li style="margin: 1rem 0;"><strong>Demo:</strong> Live-Dashboard mit echten Conversion-Daten</li>
+                <li style="margin: 1rem 0;"><strong>Kunden-Login:</strong> Für bestehende Kunden mit Account-Zugang</li>
+            </ul>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Bereit zu starten?</h2>
+        <p>Sehen Sie genau, welche Google Ads Keywords in Ihrem WooCommerce-Shop verkaufen.</p>
+        <a href="/checkout.html" class="cta-button">Kostenlose Analyse starten</a>
+    </section>
+
+</main>
+
+<!-- Professional Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 AdsEngineer. Alle Rechte vorbehalten.</p>
+        <p>
+            <a href="/privacy-policy">Datenschutzerklärung</a> ·
+            <a href="/what-is-this.html">Was ist das?</a> ·
+            <a href="mailto:support@adsengineer.com">Kontakt</a>
+        </p>
+    </div>
+</footer>
+
+<script>
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+        const navMenu = document.querySelector('.nav-menu');
+        navMenu.classList.toggle('active');
+    }
+    
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Auto-close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        const navMenu = document.querySelector('.nav-menu');
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        
+        if (!navMenu.contains(e.target) && !mobileToggle.contains(e.target)) {
+            navMenu.classList.remove('active');
+        }
+    });
+</script>
+
+</body>
+</html>

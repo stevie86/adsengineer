@@ -4,10 +4,11 @@ Automatically tracks WooCommerce orders and captures Google Click IDs for offlin
 
 ## Features
 
-- Automatic order tracking when orders are created or status changes
-- GCLID capture from order metadata (Google Ads click IDs)
-- Real-time webhook processing to AdsEngineer API
-- WordPress admin settings page for configuration
+- **Automatic order tracking** - Orders are sent to AdsEngineer when created or status changes
+- **GCLID capture** - Captures Google Ads click IDs and UTM parameters via snippet.js
+- **No code required** - Everything works automatically, no manual functions.php edits needed
+- **Real-time webhook processing** - Sends order data to AdsEngineer API
+- **WordPress admin settings** - Easy configuration dashboard with status indicators
 
 ## Installation
 
@@ -19,32 +20,23 @@ Automatically tracks WooCommerce orders and captures Google Click IDs for offlin
 ## Configuration
 
 1. Go to **Settings > AdsEngineer** in WordPress admin
-2. Enter your AdsEngineer webhook URL (or leave empty for default)
-3. Save settings
+2. Enter your **Site ID** (get from your AdsEngineer dashboard)
+3. Enter your **Webhook URL** (or leave empty for default)
+4. Click **Save Settings**
 
-## GCLID Capture Setup
+That's it! The plugin will automatically:
+- Inject AdsEngineer tracking snippet on all pages
+- Capture GCLIDs and UTM parameters from visitors
+- Send order data with attribution to AdsEngineer
 
-To capture Google Ads click IDs, add this code to your theme's `functions.php` or use a custom plugin:
+## How It Works
 
-```php
-// Capture GCLID on page load
-function capture_gclid() {
-    if (isset($_GET['gclid'])) {
-        setcookie('gclid', $_GET['gclid'], time() + (86400 * 30), "/"); // 30 days
-    }
-}
-add_action('init', 'capture_gclid');
+The plugin handles everything automatically:
 
-// Save GCLID to order meta
-function save_gclid_to_order($order_id) {
-    if (isset($_COOKIE['gclid'])) {
-        $order = wc_get_order($order_id);
-        $order->update_meta_data('_gclid', $_COOKIE['gclid']);
-        $order->save();
-    }
-}
-add_action('woocommerce_checkout_update_order_meta', 'save_gclid_to_order');
-```
+1. **Tracking Snippet**: Automatically injects `snippet.js` on all pages of your site
+2. **Cookie Capture**: The snippet saves GCLIDs and UTM parameters to cookies
+3. **Order Attribution**: When customers complete orders, GCLIDs are attached to the order
+4. **Webhook Sending**: Order data (including GCLID) is sent to AdsEngineer
 
 ## Requirements
 
@@ -53,6 +45,13 @@ add_action('woocommerce_checkout_update_order_meta', 'save_gclid_to_order');
 - PHP 7.4+
 
 ## Changelog
+
+### 1.1.0
+- Merged tracking functionality into single plugin
+- Automatic GCLID capture via snippet.js (no manual code needed)
+- Added Site ID configuration
+- Added webhook secret support
+- Improved settings page with status indicators
 
 ### 1.0.0
 - Initial release

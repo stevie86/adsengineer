@@ -1,0 +1,163 @@
+# Updated German Translations for AdsEngineer Landing Page
+# This file contains German translations that match the customer-focused English content
+
+Updated German translations for your conversion attribution product:
+
+## Hero Section
+"hero": {
+  "badge": "Beta-Launch Q1 2026 - Wir entwickeln transparent",
+  "titlePrefix": "Hören Sie auf, Geld für Google Ads zu verschwenden.",
+  "titleHighlight": "Sehen Sie, welche Keywords verkaufen.",
+  "subtitle": "Sie geben Tausende für Google Ads aus, aber Sie wissen nicht, welche Keywords tatsächlich verkaufen. Google Analytics zeigt Ihnen Klicks, aber keine Umsatz-Attribution. Sie müssen wissen, welche Kampagnen profitabel sind.",
+  "ctaPrimary": "Kostenlose Infrastruktur-Analyse",
+  "ctaSecondary": "Architektur ansehen"
+}
+
+## Comparison Section  
+"comparison": {
+  "badge": "Attributions-Benchmarks",
+  "title": "Die Tracking-Lücke",
+  "subtitle": "\"Hören Sie auf, Ihr Tracking auf veraltete Cloud-Stacks zu bauen.\""
+}
+
+## Features Section
+"features": {
+  "badge": "Conversion-Attribution",
+  "title": "Server-seitige <span class=\"gradient-text\">Kraft</span>",
+  "subtitle": "\"Gebaut auf dem Edge-Netzwerk von Cloudflare für präzise Attribution.\"",
+  "list": [
+    {
+      "title": "GCLID-Sicherung", 
+      "desc": "Attribution übersteht Cookie-Beschränkungen, Ad-Blocker und Tracking-Fehler. Ihre Verkaufsberichte bleiben präzise."
+    },
+    {
+      "title": "Universelle Integration",
+      "desc": "Egal ob WooCommerce, Shopify oder eigenes CMS – wir verfolgen Conversions sofort und übertragen sie an Ihre Werbeplattformen."
+    },
+    {
+      "title": "Cloudflare Edge-Netzwerk", 
+      "desc": "Global auf Cloudflare Workers deployed für <50ms Latenz. Schnell, zuverlässig und präzise für Conversion-Tracking."
+    }
+  ]
+}
+
+## Pricing Section
+"pricing": {
+  "badge": "Transparente Preise",
+  "title": "Preise für <span class=\"gradient-text\">E-Commerce-Shops</span>",
+  "subtitle": "Transparenter SaaS-Preise. Nicht 2.000 € – das ist, was Fortune-500-Unternehmen zahlen."
+}
+
+## Stats Section  
+"stats": {
+  "clients": "Zufriedene Shop-Betreiber",
+  "clientsDesc": "Wächst jeden Tag",
+  "accuracy": "Attributionsgenauigkeit", 
+  "accuracyDesc": "Server-seitige Präzision",
+  "conversions": "Verfolgte Verkäufe",
+  "conversionsDesc": "Und es werden mehr...",
+  "uptime": "Verfügbarkeit",
+  "uptimeDesc": "Cloudflare-powered"
+}
+
+## CTA Section
+"cta": {
+  "title": "Holen Sie sich Ihre Attribution zurück",
+  "subtitle": "Besitzen Sie Ihre Daten. Kontrollieren Sie Ihre Infrastruktur. Stoppen Sie die Attributions-Lücke.",
+  "btn": "Kostenlose Infrastruktur-Analyse"
+}
+
+## Footer
+"footer": {
+  "privacyPolicy": "Datenschutzerklärung",
+  "cookieSettings": "Cookie-Einstellungen"
+}
+
+## Navigation  
+"nav": {
+  "features": "Funktionen",
+  "pricing": "Preise", 
+  "getStarted": "Analyse starten"
+}
+
+## Quote Section
+"quote": {
+  "title": "Anfrage für Infrastruktur-Analyse",
+  "subtitle": "Wir analysieren Ihren aktuellen Tracking-Stack und zeigen Ihnen genau, wo Sie Daten verlieren und unnötige Cloud-Gebühren zahlen.",
+  "btn": "Meinen Stack analysieren →"
+}
+
+## About Section
+"about": {
+  "title": "Über uns",
+  "subtitle": "Wir helfen E-Commerce-Shops, ihre Google Ads-Attribution zu verstehen und zu optimieren.",
+  "founder": "Der Gründer",
+  "mission": "Unsere Mission",
+  "offer": "Was wir bieten",
+  "audience": "Wen wir bedienen",
+  "philosophy": "Unsere Philosophie",
+  "roadmap": "Produkt-Roadmap",
+  "contact": "Kontakt"
+}
+
+## Testimonials Section
+"testimonials": {
+  "title": "Was unsere Kunden sagen",
+  "subtitle": "Erfolgsgeschichten von Shop-Betreibern, die ihre Attribution optimiert haben."
+}
+
+## FAQ Section  
+"faq": {
+  "title": "Häufig gestellte Fragen",
+  "subtitle": "Antworten auf Ihre Fragen zu Conversion-Attribution und server-seitigem Tracking."
+}
+
+## Mission Section
+"mission": {
+  "title": "Unsere Mission",
+  "subtitle": "Wir glauben, dass jeder Shop-Betreiber wissen sollte, welche Google Ads tatsächlich verkaufen."
+}
+
+## Philosophy Section  
+"philosophy": {
+  "title": "Unsere Philosophie",
+  "subtitle": "Transparenz, Präzision und Kunden-Erfolg stehen bei uns im Mittelpunkt."
+}
+
+## Audience Section
+"audience": {
+  "title": "Wen wir bedienen",
+  "subtitle": "Shop-Betreiber, die ihre Marketing-Ausgaben optimieren wollen."
+}
+
+## Roadmap Section
+"roadmap": {
+  "title": "Produkt-Roadmap",
+  "subtitle": "Unsere Pläne für die Zukunft der Conversion-Attribution."
+}
+
+## Contact Section
+"contact": {
+  "title": "Kontakt",
+  "subtitle": "Haben Sie Fragen zu Conversion-Attribution oder server-seitigem Tracking?"
+}
+
+## WhatsApp Button
+"whatsapp": {
+  "text": "Hallo! Ich brauche Hilfe bei meiner Ad-Attribution und möchte einen unverbindlichen Termin vereinbaren, um zu besprechen, wie AdsEngineer helfen kann."
+}
+
+## Cookie Settings
+"cookie": {
+  "title": "Cookie-Einstellungen",
+  "description": "Wir verwenden Cookies, um Ihre Erfahrung zu verbessern und Conversion-Daten zu verfolgen."
+}
+
+## Deploy ID
+"deployId": "Deploy: {id}"
+
+## Footer
+"footer": {
+  "copyright": "© 2026 AdsEngineer. Alle Rechte vorbehalten.",
+  "cookieSettings": "Cookie-Einstellungen"
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - AdsEngineer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; }
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+        
+        .success-icon { font-size: 4em; color: #28a745; margin-bottom: 20px; }
+        h1 { color: #28a745; margin-bottom: 20px; }
+        .message { font-size: 1.2em; color: #666; margin-bottom: 30px; }
+        
+        .next-steps { background: white; padding: 30px; border-radius: 10px; margin: 30px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .next-steps h3 { color: #667eea; margin-bottom: 15px; }
+        .next-steps ol { text-align: left; max-width: 600px; margin: 0 auto; }
+        .next-steps li { margin: 10px 0; }
+        
+        .cta-button { display: inline-block; background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 1.1em; margin: 10px; transition: background 0.3s ease; }
+        .cta-button:hover { background: #5a6fd8; }
+        
+        .support-info { background: #e8f4fd; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .support-info h4 { color: #667eea; margin-bottom: 10px; }
+        
+        .loading { display: none; }
+        .loading::after { content: "..."; animation: dots 1.5s steps(4, end) infinite; }
+        @keyframes dots { 0%, 20% { content: "."; } 40% { content: ".."; } 60% { content: "..."; } 80%, 100% { content: ""; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="success-icon">✅</div>
+    <h1>Payment Successful!</h1>
+    <p class="message">Your AdsEngineer subscription has been activated. Welcome aboard!</p>
+    
+    <div class="next-steps">
+        <h3>What Happens Next?</h3>
+        <p>Your 14-day free trial has started. Here's what to do next:</p>
+        <ol>
+            <li><strong>Check your email</strong> - We've sent you installation instructions and your account details</li>
+            <li><strong>Install the plugin</strong> - Download and install the AdsEngineer plugin on your WooCommerce store</li>
+            <li><strong>Connect your accounts</strong> - Link your Google Ads account to start tracking conversions</li>
+            <li><strong>Start tracking</strong> - Within 24 hours you'll see which keywords actually convert to sales</li>
+        </ol>
+    </div>
+    
+    <div class="support-info">
+        <h4>Need Help Getting Started?</h4>
+        <p>Our support team is here to help you get set up:</p>
+        <p>📧 Email: <a href="mailto:support@adsengineer.com">support@adsengineer.com</a></p>
+        <p>📚 Documentation: <a href="/docs">Installation Guide</a></p>
+        <p>💬 Live Chat: Available during business hours</p>
+    </div>
+    
+    <div style="margin: 40px 0;">
+        <a href="/dashboard" class="cta-button">Go to Dashboard</a>
+        <a href="/docs" class="cta-button">View Documentation</a>
+        <a href="mailto:support@adsengineer.com" class="cta-button">Contact Support</a>
+    </div>
+    
+    <p style="color: #666; margin-top: 40px;">
+        <strong>Next billing date:</strong> <span id="next-billing">Loading...</span><br>
+        <strong>Subscription ID:</strong> <span id="subscription-id">Loading...</span>
+    </p>
+</div>
+
+<script>
+    // Get subscription details from URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+    const subscriptionId = urlParams.get('subscription_id');
+    
+    if (subscriptionId) {
+        document.getElementById('subscription-id').textContent = subscriptionId;
+    }
+    
+    // Calculate next billing date (30 days from now)
+    const nextBilling = new Date();
+    nextBilling.setDate(nextBilling.getDate() + 30);
+    document.getElementById('next-billing').textContent = nextBilling.toLocaleDateString();
+    
+    // Track this as a conversion
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'purchase', {
+            'transaction_id': subscriptionId || 'demo_purchase',
+            'value': 99, // Default to starter plan
+            'currency': 'USD',
+            'items': [{
+                'id': 'adsengineer_subscription',
+                'name': 'AdsEngineer Subscription',
+                'category': 'Software',
+                'price': 99,
+                'quantity': 1
+            }]
+        });
+    }
+</script>
+
+</body>
+</html>

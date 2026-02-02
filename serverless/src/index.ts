@@ -11,6 +11,7 @@ import { shopifyRoutes } from './routes/shopify';
 import { tiktokRouter } from './routes/tiktok';
 import { woocommerceRoutes } from './routes/woocommerce';
 import { gtmRoutes } from './routes/gtm';
+import { demoRoutes } from './routes/demo';
 
 const app = new Hono();
 
@@ -50,5 +51,6 @@ app.route('/api/v1/shopify', shopifyRoutes);
 app.route('/api/v1/woocommerce', woocommerceRoutes);
 app.route('/api/v1/ghl', ghlRoutes);
 app.route('/api/v1/gtm', gtmRoutes);
+app.route('/api/v1/demo', demoRoutes);
 
 export default app;

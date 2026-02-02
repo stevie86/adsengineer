@@ -1,0 +1,247 @@
+{
+  "containerVersion": "1",
+  "container": {
+    "accountId": "1000000001",
+    "containerId": "2000000001",
+    "name": "Test Store GTM Container"
+  },
+  "macro": [
+    {
+      "accountId": "1000000001",
+      "containerId": "2000000001",
+      "variableId": "1",
+      "name": "Purchase Value",
+      "type": "GTM_VARIABLE",
+      "parameter": [
+        {
+          "key": "dataLayerVariable",
+          "value": "ecommerce.purchase.total"
+        }
+      ]
+    },
+    {
+      "accountId": "1000000001",
+      "containerId": "2000000001",
+      "variableId": "2",
+      "name": "Currency Code",
+      "type": "GTM_VARIABLE",
+      "parameter": [
+        {
+          "key": "dataLayerVariable",
+          "value": "ecommerce.currencyCode"
+        }
+      ]
+    },
+    {
+      "accountId": "1000000001",
+      "containerId": "2000000001",
+      "variableId": "3",
+      "name": "Email Address",
+      "type": "GTM_VARIABLE",
+      "parameter": [
+        {
+          "key": "dataLayerVariable",
+          "value": "user.hashedEmail"
+        }
+      ]
+    },
+    {
+      "accountId": "1000000001",
+      "containerId": "2000000001",
+      "variableId": "4",
+      "name": "Phone Number",
+      "type": "GTM_VARIABLE",
+      "parameter": [
+        {
+          "key": "dataLayerVariable",
+          "value": "user.phone"
+        }
+      ]
+    },
+    {
+      "accountId": "1000000001",
+      "containerId": "2000000001",
+      "variableId": "5",
+      "name": "Product ID",
+      "type": "GTM_VARIABLE",
+      "parameter": [
+        {
+          "key": "dataLayerVariable",
+          "value": "ecommerce.items.0.item_id"
+        }
+      ]
+    },
+    {
+      "accountId": "1000000001",
+      "containerId": "2000000001",
+      "variableId": "6",
+      "name": "Product Name",
+      "type": "GTM_VARIABLE",
+      "parameter": [
+        {
+          "key": "dataLayerVariable",
+          "value": "ecommerce.items.0.item_name"
+        }
+      ]
+    }
+  ],
+  "tag": [
+    {
+      "accountId": "1000000001",
+      "containerId": "2000000001",
+      "tagId": "1",
+      "name": "Facebook - Purchase",
+      "type": "h5u",
+      "parameter": [
+        {
+          "key": "trackingId",
+          "value": "123456789012345"
+        },
+        {
+          "key": "eventId",
+          "value": "{{Purchase Value}}"
+        },
+        {
+          "key": "currency",
+          "value": "{{Currency Code}}"
+        },
+        {
+          "key": "email",
+          "value": "{{Email Address}}"
+        }
+      ],
+      "priority": {
+        "type": "number",
+        "value": 500
+      }
+    },
+    {
+      "accountId": "1000000001",
+      "containerId": "2000000001",
+      "tagId": "2",
+      "name": "GA4 - Purchase",
+      "type": "GA4_event",
+      "parameter": [
+        {
+          "key": "measurementId",
+          "value": "G-XXXXXXXXXX"
+        },
+        {
+          "key": "eventName",
+          "value": "purchase"
+        },
+        {
+          "key": "eventParams",
+          "value": {
+            "value": "{{Purchase Value}}",
+            "currency": "{{Currency Code}}"
+          }
+        }
+      ],
+"priority": {
+        "type": "number",
+        "value": 400
+      }
+    },
+    {
+      "accountId": "1000000001",
+      "containerId": "2000000001",
+      "tagId": "3",
+      "name": "Google Ads - Conversion",
+      "type": "glc",
+      "parameter": [
+        {
+          "key": "conversionId",
+          "value": "123456789"
+        },
+        {
+          "key": "conversionLabel",
+          "value": "ABCDEFghijklmnoQRSTUVWXYZ"
+        },
+        {
+          "key": "conversionValue",
+          "value": "{{Purchase Value}}"
+        },
+        {
+          "key": "currencyCode",
+          "value": "{{Currency Code}}"
+        }
+      ],
+      "priority": {
+        "type": "number",
+        "value": "450"
+      }
+    },
+    {
+      "accountId": "1000000001",
+      "containerId": "2000000001",
+      "tagId": "4",
+      "name": "Facebook - Lead",
+      "type": "h5u",
+      "parameter": [
+        {
+          "key": "trackingId",
+          "value": "123456789012345"
+        },
+        {
+          "key": "eventId",
+          "value": "{{Email Address}}"
+        },
+        {
+          "key": "phone",
+          "value": "{{Phone Number}}"
+        }
+      ],
+      "priority": {
+        "type": "number",
+        "value": 480
+      }
+    }
+  ],
+  "trigger": [
+    {
+      "accountId": "1000000001",
+      "containerId": "2000000001",
+      "triggerId": "1",
+      "name": "Purchase Event",
+      "type": "CUSTOMEVENT",
+      "filter": [
+        {
+          "type": "STRING",
+          "parameter": [
+            {
+              "key": "key",
+              "value": "event"
+            },
+            {
+              "key": "value",
+              "value": "purchase"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "accountId": "1000000001",
+      "containerId": "2000000001",
+      "triggerId": "2",
+      "name": "Lead Capture",
+      "type": "CUSTOMEVENT",
+      "filter": [
+        {
+          "type": "STRING",
+          "parameter": [
+            {
+              "key": "key",
+              "value": "event"
+            },
+            {
+              "key": "value",
+              "value": "lead"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

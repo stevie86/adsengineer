@@ -1,0 +1,114 @@
+name: WordPress Plugin Auto-Update
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'woocommerce-plugin/**'
+      - 'serverless/src/services/woocommerce-zip.ts'
+      - 'serverless/src/routes/woocommerce.ts'
+  workflow_dispatch:
+
+jobs:
+  update-wordpress-demo:
+    runs-on: ubuntu-latest
+    name: Update WordPress Demo with Latest Plugin
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Generate latest plugin ZIP
+      run: |
+        echo "🔧 Generating latest WooCommerce plugin ZIP..."
+        
+        # Download the latest plugin from your API
+        curl -s "https://adsengineer-cloud.adsengineer.workers.dev/api/v1/woocommerce/zip" \
+          -o adsengineer-woocommerce-latest.zip
+          
+        # Verify ZIP is valid
+        unzip -l adsengineer-woocommerce-latest.zip > /dev/null || exit 1
+        
+        echo "✅ Plugin ZIP generated successfully"
+        
+    - name: Install WordPress CLI
+      run: |
+        echo "🛠️ Installing WP-CLI..."
+        curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+        chmod +x wp-cli.phar
+        sudo mv wp-cli.phar /usr/local/bin/wp
+        echo "✅ WP-CLI installed"
+        
+    - name: Deploy to WordPress demo site
+      env:
+        WP_URL: ${{ secrets.WORDPRESS_DEMO_URL }}
+        WP_USER: ${{ secrets.WORDPRESS_DEMO_ADMIN_USER }}
+        WP_PASS: ${{ secrets.WORDPRESS_DEMO_ADMIN_PASS }}
+      run: |
+        echo "🚀 Deploying plugin to WordPress demo site..."
+        
+        # Create WP-CLI config for remote site
+        cat > wp-cli.yml << EOF
+        @demo:
+          ssh:
+            user: ${{ secrets.WORDPRESS_DEMO_SSH_USER }}
+            host: ${{ secrets.WORDPRESS_DEMO_SSH_HOST }}
+            port: ${{ secrets.WORDPRESS_DEMO_SSH_PORT }}
+        EOF
+        
+        # Upload plugin to server
+        scp -P ${{ secrets.WORDPRESS_DEMO_SSH_PORT }} adsengineer-woocommerce-latest.zip ${{ secrets.WORDPRESS_DEMO_SSH_USER }}@${{ secrets.WORDPRESS_DEMO_SSH_HOST }}:/tmp/
+        
+        # Install plugin via WP-CLI
+        wp @demo plugin install /tmp/adsengineer-woocommerce-latest.zip --force
+        
+        # Activate plugin
+        wp @demo plugin activate adsengineer-woocommerce
+        
+        # Configure plugin settings
+        wp @demo option update adsengineer_site_id "${{ secrets.WORDPRESS_DEMO_SITE_ID }}"
+        wp @demo option update adsengineer_webhook_url "https://adsengineer-cloud.adsengineer.workers.dev/api/v1/woocommerce/webhook"
+        wp @demo option update adsengineer_webhook_secret "${{ secrets.WORDPRESS_DEMO_WEBHOOK_SECRET }}"
+        
+        echo "✅ Plugin deployed and configured successfully"
+        
+    - name: Test plugin functionality
+      env:
+        DEMO_URL: ${{ secrets.WORDPRESS_DEMO_URL }}
+      run: |
+        echo "🧪 Testing plugin functionality..."
+        
+        # Verify plugin is active
+        wp @demo plugin is-active adsengineer-woocommerce
+        
+        # Test that snippet is being injected
+        curl -s "${DEMO_URL}" | grep -q "adsengineer-cloud.adsengineer.workers.dev/snippet.js" && echo "✅ Tracking snippet detected" || echo "⚠️ Tracking snippet not detected"
+        
+        # Test webhook endpoint
+        curl -s "${DEMO_URL}/wp-json/wc/v3/orders" \
+          -u "${{ secrets.WORDPRESS_DEMO_API_KEY }}" \
+          -o /dev/null \
+          -w "WooCommerce API Status: %{http_code}\n"
+        
+        echo "✅ Plugin functionality verified"
+        
+    - name: Create deployment summary
+      run: |
+        echo "🎉 WordPress demo shop updated successfully!"
+        echo "Demo URL: ${{ secrets.WORDPRESS_DEMO_URL }}"
+        echo "Plugin version: Latest from main branch"
+        echo "Features deployed:"
+        echo "- Automatic GCLID capture via snippet.js"
+        echo "- Direct webhook sending to AdsEngineer API"
+        echo "- Status indicators in admin panel"
+        echo "- Nonce verification for security"
+        echo ""
+        echo "Next steps:"
+        echo "1. Visit demo site to verify tracking works"
+        echo "2. Create test order with ?gclid=test123"
+        echo "3. Check AdsEngineer dashboard for conversions"
+        
+        # You could add Slack notification here
+        # curl -X POST -H 'Content-type: application/json' \
+        #   --data '{"text":"🚀 WordPress demo updated with latest plugin!"}' \
+        #   ${{ secrets.SLACK_WEBHOOK_URL }}

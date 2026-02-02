@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "echo \"No tests specified\" && exit 0"
+    "test": "echo \"No tests specified\" && exit 0",
+    "gtm-parser": "tsx src/cli.ts"
   },
   "keywords": [
     "admin",
@@ -19,13 +20,17 @@
   "license": "MIT",
   "dependencies": {
     "@api-platform/admin": "^4.0.8",
+    "commander": "^12.0.0",
+    "inquirer": "^9.2.0",
     "ra-data-simple-rest": "^5.13.5",
     "react": "^18.2.0",
     "react-admin": "^5.13.5",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zod": "^3.22.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.7.0",
+    "tsx": "^4.21.0",
     "vite": "^5.4.21"
   }
 }
