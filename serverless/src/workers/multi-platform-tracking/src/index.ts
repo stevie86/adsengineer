@@ -6,11 +6,11 @@
  */
 
 import { Hono } from 'hono';
-import type { StandardEvent } from './types';
-import { shopifyAdapter } from './adapters/shopify';
 import { generalAdapter } from './adapters/general';
+import { shopifyAdapter } from './adapters/shopify';
 import { woocommerceAdapter } from './adapters/woocommerce';
 import { sendToFacebookCAPI } from './services/facebook';
+import type { StandardEvent } from './types';
 
 const app = new Hono<{
   Bindings: any;

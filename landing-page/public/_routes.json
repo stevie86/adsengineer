@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": [
+    "/assets/*",
+    "/js/*",
+    "/fonts/*",
+    "/images/*",
+    "/favicon.svg"
+  ],
+  "routes": [
+    {
+      "src": "/api/*",
+      "dest": "https://adsengineer-cloud.adsengineer.workers.dev/api/$1",
+      "status": 200
+    },
+    {
+      "src": "/snippet.js",
+      "dest": "https://adsengineer-cloud.adsengineer.workers.dev/snippet.js",
+      "status": 200
+    },
+    {
+      "src": "/__/auth/*",
+      "dest": "/__/auth/$1",
+      "status": 200
+    },
+    {
+      "src": "/__/firebase/*",
+      "dest": "/__/firebase/$1",
+      "status": 200
+    }
+  ]
+}

@@ -1,16 +1,16 @@
-import { zValidator } from '@hono/zod-openapi';
 import { Hono } from 'hono';
 import { z } from 'zod';
 import type { AppEnv } from '../types';
 
-const demoRoutes = new Hono<AppEnv>();
+export const demoRoutes = new Hono<AppEnv>();
 
 const DEMO_PRODUCTS = [
   {
     id: 101,
     name: 'Sustainable Bamboo Toothbrush Set',
     slug: 'sustainable-bamboo-toothbrush-set',
-    description: 'Eco-friendly bamboo toothbrush with charcoal brixtles. Biodegradable handle, cruelty-free packaging. Set of 4 includes 2 soft and 2 medium bristles.',
+    description:
+      'Eco-friendly bamboo toothbrush with charcoal brixtles. Biodegradable handle, cruelty-free packaging. Set of 4 includes 2 soft and 2 medium bristles.',
     price: 12.99,
     regular_price: 14.99,
     category: 'Personal Care',
@@ -21,18 +21,18 @@ const DEMO_PRODUCTS = [
       {
         src: 'https://via.placeholder.com/800x800/2E7D32/FFFFFF?text=Bamboo+Toothbrush',
         alt: 'Bamboo toothbrush set on white background',
-        name: 'Main product image'
-      }
+        name: 'Main product image',
+      },
     ],
     attributes: [
       {
         name: 'Material',
-        options: ['Bamboo', 'Charcoal Bristles']
+        options: ['Bamboo', 'Charcoal Bristles'],
       },
       {
         name: 'Bristle Hardness',
-        options: ['Soft', 'Medium']
-      }
+        options: ['Soft', 'Medium'],
+      },
     ],
     tags: ['eco-friendly', 'sustainable', 'zero-waste', 'bamboo'],
     featured: true,
@@ -43,63 +43,95 @@ const DEMO_PRODUCTS = [
     id: 102,
     name: 'Organic Cotton Tote Bag',
     slug: 'organic-cotton-tote-bag',
-    description: '100% organic cotton tote bag with reinforced handles. Perfect for grocery shopping, farmer\'s market runs, or daily use. Machine washable, durable canvas.',
-    price: 24.00,
-    regular_price: 28.00,
+    description:
+      "100% organic cotton tote bag with reinforced handles. Perfect for grocery shopping, farmer's market runs, or daily use. Machine washable, durable canvas.",
+    price: 24.0,
+    regular_price: 28.0,
     category: 'Accessories',
+    stock_status: 'instock',
+    manage_stock: true,
+    stock_quantity: 100,
+    images: [
+      {
+        src: 'https://via.placeholder.com/800x800/8B4513/FFFFFF?text=Tote+Bag',
+        alt: 'Organic cotton tote bag on white background',
+        name: 'Main product image',
+      },
+    ],
+    attributes: [
+      {
+        name: 'Material',
+        options: ['Organic Cotton', 'Canvas'],
+      },
+      {
+        name: 'Size',
+        options: ['Large'],
+      },
+    ],
+    tags: ['organic', 'sustainable', 'reusable', 'canvas'],
+    featured: false,
+    rating_count: 89,
+    average_rating: 4.6,
+  },
+  {
+    id: 103,
+    name: 'Natural Deodorant Stick',
+    slug: 'natural-deodorant-stick',
+    description:
+      'Aluminum-free natural deodorant stick with essential oils. Long-lasting protection, no harsh chemicals. Gentle on sensitive skin.',
+    price: 8.99,
+    regular_price: 11.99,
+    category: 'Personal Care',
     stock_status: 'instock',
     manage_stock: true,
     stock_quantity: 75,
     images: [
       {
-        src: 'https://via.placeholder.com/800x800/4CAF50/FFFFFF?text=Organic+Cotton+Tote',
-        alt: 'Organic cotton tote bag with natural look',
-        name: 'Main product image'
-      }
+        src: 'https://via.placeholder.com/800x800/4CAF50/FFFFFF?text=Deodorant',
+        alt: 'Natural deodorant stick on white background',
+        name: 'Main product image',
+      },
     ],
     attributes: [
       {
-        name: 'Size',
-        options: ['Standard (15" x 16")', 'Large (18" x 20")']
+        name: 'Scent',
+        options: ['Lavender', 'Citrus', 'Unscented'],
       },
-      {
-        name: 'Color',
-        options: ['Natural', 'Black', 'Charcoal']
-      }
     ],
-    tags: ['organic', 'cotton', 'reusable', 'eco-friendly'],
+    tags: ['natural', 'aluminum-free', 'sensitive-skin'],
     featured: true,
-    rating_count: 89,
-    average_rating: 4.8,
+    rating_count: 156,
+    average_rating: 4.5,
   },
   {
-    id: 103,
-    name: 'Artisan Ceramic Coffee Mug',
-    slug: 'artisan-ceramic-coffee-mug',
-    description: 'Handcrafted ceramic mug made by local artisans. Each piece is unique with subtle variations in glaze. 12oz capacity, dishwasher and microwave safe.',
-    price: 18.50,
-    regular_price: 22.00,
-    category: 'Kitchen',
+    id: 104,
+    name: 'Reusable Water Bottle',
+    slug: 'reusable-water-bottle',
+    description:
+      'Stainless steel reusable water bottle with bamboo lid. Double-wall insulation keeps drinks cold for 24 hours. BPA-free, leak-proof design.',
+    price: 29.99,
+    regular_price: 34.99,
+    category: 'Accessories',
     stock_status: 'instock',
     manage_stock: true,
-    stock_quantity: 30,
+    stock_quantity: 40,
     images: [
       {
-        src: 'https://via.placeholder.com/800x800/795548/FFFFFF?text=Artisan+Ceramic+Mug',
-        alt: 'Handmade ceramic mug with earthy glaze',
-        name: 'Main product image'
-      }
+        src: 'https://via.placeholder.com/800x800/2196F3/FFFFFF?text=Water+Bottle',
+        alt: 'Stainless steel water bottle with bamboo lid',
+        name: 'Main product image',
+      },
     ],
     attributes: [
       {
-        name: 'Color',
-        options: ['Terracotta', 'Sage Green', 'Navy Blue']
-      }
+        name: 'Capacity',
+        options: ['500ml', '750ml'],
+      },
     ],
-    tags: ['handmade', 'ceramic', 'artisan', 'local', 'coffee'],
+    tags: ['stainless-steel', 'insulated', 'bamboo', 'leak-proof'],
     featured: false,
-    rating_count: 45,
-    average_rating: 4.9,
+    rating_count: 201,
+    average_rating: 4.8,
   },
 ];
 
@@ -107,110 +139,56 @@ const DEMO_PRODUCTS = [
  * GET /api/v1/demo/products
  * Returns demo WooCommerce products for testing
  */
-demoRoutes.get(
-  '/products',
-  zValidator(
-    'query',
-    z.object({
-      category: z.string().optional(),
-      featured: z.string().optional(),
-      limit: z.string().optional(),
-    })
-  ),
-  async (c) => {
-    const { category, featured, limit } = c.req.valid('query');
+demoRoutes.get('/products', async (c) => {
+  const { category, featured, limit } = c.req.query();
 
-    let products = [...DEMO_PRODUCTS];
+  let products = [...DEMO_PRODUCTS];
 
-    if (category) {
-      products = products.filter((p) => p.category === category);
-    }
-
-    if (featured === 'true') {
-      products = products.filter((p) => p.featured);
-    }
-
-    const maxLimit = limit ? parseInt(limit, 10) : 10;
-    products = products.slice(0, maxLimit);
-
-    return c.json({
-      success: true,
-      data: {
-        products,
-        total: products.length,
-        meta: {
-          category: category || null,
-          featured: featured === 'true' || false,
-          limit: maxLimit,
-        },
-      },
-    });
+  if (category) {
+    products = products.filter((p) => p.category === category);
   }
-);
 
-/**
- * GET /api/v1/demo/products/:id
- * Returns a single demo product
- */
-demoRoutes.get(
-  '/products/:id',
-  zValidator('param', z.object({ id: z.string() })),
-  async (c) => {
-    const { id } = c.req.valid('param');
-    const product = DEMO_PRODUCTS.find((p) => p.id === parseInt(id, 10));
-
-    if (!product) {
-      return c.json(
-        {
-          success: false,
-          error: 'Product not found',
-        },
-        404
-      );
-    }
-
-    return c.json({
-      success: true,
-      data: { product },
-    });
+  if (featured === 'true') {
+    products = products.filter((p) => p.featured);
   }
-);
 
-/**
- * GET /api/v1/demo/templates/woocommerce-product
- * Returns a WooCommerce product template for manual order testing
- */
-demoRoutes.get('/templates/woocommerce-product', async (c) => {
-  const template = {
-    id: 'TEMPLATE_ID',
-    event: 'orders.created',
-    status: 'completed',
-    customer: {
-      email: 'demo@example.com',
-      phone: '+15551234567',
-      first_name: 'Demo',
-      last_name: 'User',
-    },
-    total: DEMO_PRODUCTS[0].price.toFixed(2),
-    currency: 'USD',
-    line_items: [
-      {
-        product_id: DEMO_PRODUCTS[0].id,
-        quantity: 1,
-        price: DEMO_PRODUCTS[0].price.toFixed(2),
-        name: DEMO_PRODUCTS[0].name,
-      },
-    ],
-    order_key: 'wc_order_demo_001',
-    date_created_gmt: new Date().toISOString(),
-  };
+  let limitNum = 10;
+  if (limit) {
+    limitNum = parseInt(limit, 10);
+  }
 
   return c.json({
     success: true,
-    data: {
-      template,
-      usage: 'POST this payload to https://adsengineer-cloud.adsengineer.workers.dev/api/v1/woocommerce/webhook',
-      endpoint_info: 'https://adsengineer-cloud.adsengineer.workers.dev/api/v1/woocommerce/info',
-    },
+    products: products.slice(0, limitNum),
+    total: products.length,
+    demo: true,
   });
 });
+
+/**
+ * GET /api/v1/demo/products/:id
+ * Returns specific demo product
+ */
+demoRoutes.get('/products/:id', async (c) => {
+  const id = c.req.param('id');
+
+  const product = DEMO_PRODUCTS.find((p) => p.id === parseInt(id, 10));
+
+  if (!product) {
+    return c.json(
+      {
+        success: false,
+        error: 'Product not found',
+      },
+      404
+    );
+  }
+
+  return c.json({
+    success: true,
+    product: product,
+    demo: true,
+  });
+});
+
+

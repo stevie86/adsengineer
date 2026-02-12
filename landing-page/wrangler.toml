@@ -1,8 +1,11 @@
 name = "adsengineer-landing"
 compatibility_date = "2024-01-01"
+pages_build_output_dir = "dist"
 
-[build]
-command = "pnpm build"
+[[kv_namespaces]]
+binding = "LANDING_CACHE"
+id = "landing-page-cache-kv"
 
-[pages_build_output]
-dir = "dist"
+[vars]
+ENVIRONMENT = "production"
+API_BASE_URL = "https://adsengineer-cloud.adsengineer.workers.dev"

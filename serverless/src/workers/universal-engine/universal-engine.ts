@@ -49,7 +49,7 @@ export class UniversalEngine {
       throw new Error(`No config found for customer: ${customerId}`);
     }
 
-    const eventConfig = config.events.find(e => e.eventName === eventData.eventName);
+    const eventConfig = config.events.find((e) => e.eventName === eventData.eventName);
 
     if (!eventConfig) {
       throw new Error(`No config found for event: ${eventData.eventName}`);
@@ -58,7 +58,10 @@ export class UniversalEngine {
     const results: Record<string, any> = {};
 
     if (eventConfig.platformMappings.facebook) {
-      results.facebook = await this.sendFacebookEvent(eventData, eventConfig.platformMappings.facebook);
+      results.facebook = await this.sendFacebookEvent(
+        eventData,
+        eventConfig.platformMappings.facebook
+      );
     }
 
     if (eventConfig.platformMappings.ga4) {
@@ -66,7 +69,10 @@ export class UniversalEngine {
     }
 
     if (eventConfig.platformMappings.googleAds) {
-      results.googleAds = await this.sendGoogleAdsEvent(eventData, eventConfig.platformMappings.googleAds);
+      results.googleAds = await this.sendGoogleAdsEvent(
+        eventData,
+        eventConfig.platformMappings.googleAds
+      );
     }
 
     await this.logEventSuccess(customerId, eventData.eventName, results);
@@ -103,7 +109,10 @@ export class UniversalEngine {
    * @param facebookMapping - Facebook platform mappings
    * @returns Facebook API response
    */
-  private async sendFacebookEvent(eventData: EventData, facebookMapping: Record<string, string>): Promise<any> {
+  private async sendFacebookEvent(
+    eventData: EventData,
+    facebookMapping: Record<string, string>
+  ): Promise<any> {
     const { dataLayer, eventName } = eventData;
 
     const payload: any = {
@@ -134,7 +143,10 @@ export class UniversalEngine {
    * @param ga4Mapping - GA4 platform mappings
    * @returns GA4 API response
    */
-  private async sendGA4Event(eventData: EventData, ga4Mapping: Record<string, string>): Promise<any> {
+  private async sendGA4Event(
+    eventData: EventData,
+    ga4Mapping: Record<string, string>
+  ): Promise<any> {
     const { dataLayer, eventName } = eventData;
 
     const params: Record<string, any> = {};
@@ -163,7 +175,10 @@ export class UniversalEngine {
    * @param googleAdsMapping - Google Ads platform mappings
    * @returns Google Ads API response
    */
-  private async sendGoogleAdsEvent(eventData: EventData, googleAdsMapping: Record<string, string>): Promise<any> {
+  private async sendGoogleAdsEvent(
+    eventData: EventData,
+    googleAdsMapping: Record<string, string>
+  ): Promise<any> {
     const { dataLayer, eventName } = eventData;
 
     const payload: any = {};
@@ -192,18 +207,17 @@ export class UniversalEngine {
    * @param eventName - Event name
    * @param results - Processing results
    */
-  private async logEventSuccess(customerId: string, eventName: string, results: Record<string, any>): Promise<void> {
+  private async logEventSuccess(
+    customerId: string,
+    eventName: string,
+    results: Record<string, any>
+  ): Promise<void> {
     try {
       await this.env.DB.prepare(`
         INSERT INTO event_logs (customer_id, event_name, platforms_sent, sent_at)
         VALUES (?, ?, ?, ?)
       `)
-        .bind(
-          customerId,
-          eventName,
-          JSON.stringify(Object.keys(results)),
-          new Date().toISOString()
-        )
+        .bind(customerId, eventName, JSON.stringify(Object.keys(results)), new Date().toISOString())
         .run();
     } catch (error) {
       console.error('Failed to log event:', error);

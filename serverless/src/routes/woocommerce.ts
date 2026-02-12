@@ -3,9 +3,9 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 import { webhookRateLimit } from '../middleware/rate-limit';
 import { Logger } from '../services/logging';
+import { generateWooCommercePluginZip } from '../services/woocommerce-zip';
 import type { AppEnv } from '../types';
 import { hashGCLID } from '../utils/gclid';
-import { generateWooCommercePluginZip } from '../services/woocommerce-zip';
 
 export const woocommerceRoutes = new Hono<AppEnv>();
 
@@ -72,8 +72,9 @@ woocommerceRoutes.get('/download', async (c) => {
 /**
  * Plugin Name: AdsEngineer Conversion Tracking for WooCommerce
  * Plugin URI: ${apiUrl}
- * Description: Automatically tracks WooCommerce orders and captures Google Click IDs for offline conversion tracking.
- * Version: 1.0.0
+ * Description: Automatically tracks WooCommerce orders and captures Google Click IDs for offline conversion tracking. No code editing required - everything works automatically!
+ * Version: 1.2.0
+ * Build: 2026-02-03
  * Author: AdsEngineer
  * License: GPL v2 or later
  * Text Domain: adsengineer-woocommerce
@@ -189,6 +190,12 @@ class AdsEngineer_WooCommerce {
     ?>
     <div class="wrap">
       <h1>AdsEngineer for WooCommerce</h1>
+      
+      <div style="background: #e7f5e7; border-left: 4px solid #46b450; padding: 12px; margin: 20px 0;">
+        <p><strong>✅ Version 1.2.0 (Build: 2026-02-03)</strong></p>
+        <p>This plugin automatically captures GCLIDs and sends orders to AdsEngineer. No manual code changes required!</p>
+      </div>
+      
       <form method="post" action="options.php">
         <table class="form-table">
           <tr>
@@ -200,6 +207,17 @@ class AdsEngineer_WooCommerce {
       </form>
       <p><strong>Default webhook URL:</strong> ${apiUrl}</p>
       <p><strong>Your site URL:</strong> <?php echo esc_html(get_site_url()); ?></p>
+      
+      <hr style="margin: 20px 0;">
+      
+      <h2>How It Works</h2>
+      <p><strong>Everything is automatic:</strong></p>
+      <ul>
+        <li>✓ Captures GCLIDs from Google Ads clicks automatically</li>
+        <li>✓ Stores attribution data with each order</li>
+        <li>✓ Sends order data to AdsEngineer when order status changes</li>
+        <li>✓ No manual theme edits or functions.php changes needed</li>
+      </ul>
     </div>
     <?php
   }
@@ -238,10 +256,10 @@ woocommerceRoutes.get('/zip', async (c) => {
   } catch (error) {
     console.error('Failed to generate ZIP:', error);
     return c.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to generate plugin ZIP file',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
       500
     );

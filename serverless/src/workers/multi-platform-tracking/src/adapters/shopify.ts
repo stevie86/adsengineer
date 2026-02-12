@@ -5,7 +5,7 @@
  * Shopify logic stays here - Router never sees Shopify internals.
  */
 
-import type { StandardEvent, AdapterResult } from '../types';
+import type { AdapterResult, StandardEvent } from '../types';
 
 /**
  * Shopify Webhook Payload
@@ -70,7 +70,9 @@ export function shopifyAdapter(payload: ShopifyWebhook): AdapterResult<ShopifyWe
     const customData: StandardEvent['customData'] = {
       value: payload.total_price ? parseFloat(payload.total_price) : undefined,
       currency: payload.currency,
-      content_ids: payload.line_items?.map(item => item.product_id || item.variant_id).filter(Boolean),
+      content_ids: payload.line_items
+        ?.map((item) => item.product_id || item.variant_id)
+        .filter(Boolean),
       num_items: payload.line_items?.reduce((sum, item) => sum + (item.quantity || 0), 0),
       order_id: payload.order_id,
     };

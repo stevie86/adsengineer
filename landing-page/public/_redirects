@@ -1,0 +1,18 @@
+# Cloudflare Pages Redirects
+# https://developers.cloudflare.com/pages/configuration/redirects/
+
+# Redirect HTTP to HTTPS (handled automatically by Cloudflare, but good to be explicit)
+# Force trailing slash consistency
+/ /de 302 Country=de,at,ch
+/ /en 302
+
+# Old URLs to new URLs (if you've changed structure)
+# /old-page /new-page 301
+
+# Admin redirects (if you have a separate admin dashboard)
+#/admin/* https://admin.adsengineer.com/:splat 301
+
+# API redirects (handled by _routes.json instead for proxying)
+
+# 404 fallbacks
+# /* /404.html 404

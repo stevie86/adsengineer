@@ -1,0 +1,51 @@
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://api.stripe.com https://adsengineer-cloud.adsengineer.workers.dev; frame-src https://js.stripe.com https://hooks.stripe.com; upgrade-insecure-requests;
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=2592000, immutable
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+  
+/api/*
+  Cache-Control: public, max-age=60, stale-while-revalidate=300
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://api.stripe.com https://adsengineer-cloud.adsengineer.workers.dev; frame-src https://js.stripe.com https://hooks.stripe.com; upgrade-insecure-requests;
+
+# Cache static assets aggressively
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=2592000, immutable
+
+# HTML files - shorter cache with stale-while-revalidate
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+  
+# API endpoints (if any static JSON)
+/api/*
+  Cache-Control: public, max-age=60, stale-while-revalidate=300

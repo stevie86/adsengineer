@@ -7,13 +7,13 @@ const wooPayload = {
     email: 'customer@example.com',
     phone: '+1234567890',
     first_name: 'John',
-    last_name: 'Doe'
+    last_name: 'Doe',
   },
   total_price: '149.99',
   currency: 'EUR',
   line_items: [
     { product_id: 101, name: 'Product A', quantity: 2, price: '75.00' },
-    { product_id: 102, name: 'Product B', quantity: 1, price: '49.99' }
+    { product_id: 102, name: 'Product B', quantity: 1, price: '49.99' },
   ],
   order_key: 'order_abc123',
   date_created: '2025-01-29T10:00:00Z',

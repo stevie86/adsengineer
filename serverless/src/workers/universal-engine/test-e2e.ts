@@ -8,14 +8,14 @@
  * 4. Process sample event data
  */
 
-import { UniversalEngine } from './universal-engine/universal-engine';
 import type { EventData } from './universal-engine/universal-engine';
+import { UniversalEngine } from './universal-engine/universal-engine';
 
 // Sample dataLayer (matches config from test)
 const sampleDataLayer: any = {
   ecommerce: {
     purchase: {
-      total: 150.00,
+      total: 150.0,
     },
     currencyCode: 'USD',
     items: [
@@ -35,11 +35,12 @@ async function testEndToEnd() {
   console.log('=== End-to-End Test: Extract → Config → Worker Send ===\n');
 
   // Load generated config
-  const config = JSON.parse(
-    require('fs').readFileSync('/tmp/test-config.json', 'utf-8')
-  );
+  const config = JSON.parse(require('fs').readFileSync('/tmp/test-config.json', 'utf-8'));
   console.log('Config loaded:', config.customerId);
-  console.log('Events found:', config.events.map((e: any) => e.eventName));
+  console.log(
+    'Events found:',
+    config.events.map((e: any) => e.eventName)
+  );
   console.log('');
 
   // Create mock environment

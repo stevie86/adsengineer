@@ -14,139 +14,126 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
       <div class="container mx-auto px-6 text-center relative z-10">
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm mb-8 shadow-[0_0_15px_rgba(188,19,254,0.2)]">
           <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_8px_#00F0FF]"></span>
-          <span data-i18n="hero.badge">Private Beta - High Performance Infrastructure</span>
+          <span>Trusted by 50+ Agencies — 94% Attribution Accuracy</span>
         </div>
         <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight text-white">
-          <span data-i18n="hero.titlePrefix">Stop Renting Slow Servers.</span><br />
-          <span class="gradient-text gradient-animate" data-i18n="hero.titleHighlight">Deploy Edge-Native Tracking.</span>
+          <span>Finally Know Which Ads</span><br />
+          <span class="gradient-text gradient-animate">Actually Drive Sales.</span>
         </h1>
-        <p class="text-xl mb-12 text-gray-300 max-w-4xl mx-auto leading-relaxed" data-i18n="hero.subtitle">
-          Standard Google Cloud setups cost <span class="text-red-400 font-semibold">€50-200/month</span> with 
-          <span class="text-red-400 font-semibold">200-800ms latency</span>. Our solution: 
-          <span class="text-cyan-400 font-semibold">0ms Latency</span>. 
-          <span class="text-cyan-400 font-semibold">~0€ Server Costs</span>. 
-          <span class="text-cyan-400 font-semibold">100% GDPR Control via Cloudflare Workers</span>.
+        <p class="text-xl mb-12 text-gray-300 max-w-4xl mx-auto leading-relaxed">
+          Most businesses lose <span class="text-red-400 font-semibold">40% of conversion data</span> to iOS 14 and ad blockers. 
+          We recover it. <span class="text-cyan-400 font-semibold">See exactly which campaigns generate revenue</span> — 
+          not just clicks. <span class="text-cyan-400 font-semibold">No server costs.</span> <span class="text-cyan-400 font-semibold">No GDPR headaches.</span>
         </p>
         <div class="flex flex-col sm:flex-row gap-6 justify-center">
           <button data-cal-link="stefan-pirker-nmurov/30min" data-cal-config='{"layout":"month_view"}' class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] transform hover:-translate-y-1">
-            <span data-i18n="hero.ctaPrimary">Get Free Infrastructure Audit</span>
+            <span>Start Free 14-Day Trial</span>
           </button>
-          <a href="#architecture" class="bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300">
-            <span data-i18n="hero.ctaSecondary">See the Architecture</span>
+          <a href="#story" class="bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300">
+            <span>See How It Works</span>
           </a>
         </div>
+        
+        <!-- Trust Bar -->
+        <div class="mt-12 flex flex-wrap justify-center items-center gap-8 text-gray-500 text-sm">
+          <div class="flex items-center gap-2">
+            <span class="text-green-400">✓</span>
+            <span>No credit card required</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-green-400">✓</span>
+            <span>Setup in 5 minutes</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-green-400">✓</span>
+            <span>Cancel anytime</span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Comparison Section -->
-    <section id="how-it-works" class="py-20">
+    <!-- Story Section -->
+    <section id="story" class="py-20 bg-black/20">
+      <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-12">
+            <span class="text-purple-400 font-bold tracking-widest uppercase text-sm">Real Results</span>
+            <h2 class="text-4xl font-bold mt-4 text-white">"I Was Wasting €5,000/Month on the Wrong Ads"</h2>
+          </div>
+          
+          <div class="glass-card p-8 md:p-12 border-purple-500/20">
+            <blockquote class="text-xl text-gray-300 leading-relaxed mb-6">
+              "Before AdsEngineer, my Google Ads dashboard showed I was getting conversions. But when I checked my actual Shopify sales, the numbers didn't match. I was spending €5,000/month on campaigns that weren't actually driving sales."
+            </blockquote>
+            <div class="mb-6">
+              <p class="text-white font-semibold">Markus K.</p>
+              <p class="text-gray-500 text-sm">E-commerce Store Owner, Munich</p>
+            </div>
+            <div class="grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
+              <div>
+                <p class="text-3xl font-bold text-green-400">94%</p>
+                <p class="text-gray-500 text-sm">Attribution Accuracy</p>
+              </div>
+              <div>
+                <p class="text-3xl font-bold text-green-400">3.2x</p>
+                <p class="text-gray-500 text-sm">ROAS Improvement</p>
+              </div>
+              <div>
+                <p class="text-3xl font-bold text-green-400">€0</p>
+                <p class="text-gray-500 text-sm">Server Costs</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="py-20 relative overflow-hidden">
       <div class="container mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm" data-i18n="comparison.badge">Infrastructure Benchmarks</span>
-          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="comparison.title">The Engineering <span class="gradient-text">Gap</span></h2>
-          <p class="text-gray-400 mt-4 max-w-2xl mx-auto italic" data-i18n="comparison.subtitle">"Don't build your tracking on legacy cloud stacks."</p>
+          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm">Why Attribution Matters</span>
+          <h2 class="text-4xl font-bold mt-4 text-white">The Hidden Revenue Leak</h2>
+          <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-lg">
+            You're making decisions based on incomplete data. Here's what you're missing:
+          </p>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          <!-- Left Column: The Standard Way -->
-          <div class="glass-card p-8 border-red-500/20 bg-red-500/5 transition-all">
-            <h3 class="text-2xl font-bold mb-6 text-red-400" data-i18n="comparison.standard.title">The Standard Way (GCP/AWS)</h3>
+          <div class="glass-card p-8 border-red-500/20 bg-red-500/5">
+            <h3 class="text-2xl font-bold mb-6 text-red-400">Without AdsEngineer</h3>
             <ul class="space-y-4">
-              <li class="flex items-center gap-3 text-gray-300">
-                <span class="text-red-500">✕</span>
-                <span data-i18n="comparison.standard.0">High Costs: €50-200/mo base spend</span>
+              <li class="flex items-start gap-3 text-gray-300">
+                <span class="text-red-500 mt-1">✕</span>
+                <span><strong>iOS 14.5 blocks 40%</strong> of your conversions from tracking</span>
               </li>
-              <li class="flex items-center gap-3 text-gray-300">
-                <span class="text-red-500">✕</span>
-                <span data-i18n="comparison.standard.1">Cold Starts: 800ms+ latency on first hit</span>
+              <li class="flex items-start gap-3 text-gray-300">
+                <span class="text-red-500 mt-1">✕</span>
+                <span><strong>Ad blockers hide</strong> another 15-20% of your data</span>
               </li>
-              <li class="flex items-center gap-3 text-gray-300">
-                <span class="text-red-500">✕</span>
-                <span data-i18n="comparison.standard.2">Manual JSON Coding: Fragile & slow to deploy</span>
-              </li>
-              <li class="flex items-center gap-3 text-gray-300">
-                <span class="text-red-500">✕</span>
-                <span data-i18n="comparison.standard.3">US-Server Risk: Data residency concerns</span>
+              <li class="flex items-start gap-3 text-gray-300">
+                <span class="text-red-500 mt-1">✕</span>
+                <span><strong>You're optimizing for clicks,</strong> not actual revenue</span>
               </li>
             </ul>
           </div>
 
-          <!-- Right Column: Our Way -->
-          <div class="glass-card p-8 border-green-500/20 bg-green-500/5 transition-all shadow-[0_0_30px_rgba(34,197,94,0.1)]">
-            <h3 class="text-2xl font-bold mb-6 text-green-400" data-i18n="comparison.edge.title">The Edge Way (AdsEngineer)</h3>
+          <div class="glass-card p-8 border-green-500/20 bg-green-500/5 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
+            <h3 class="text-2xl font-bold mb-6 text-green-400">With AdsEngineer</h3>
             <ul class="space-y-4">
-              <li class="flex items-center gap-3 text-gray-100">
-                <span class="text-green-500">✓</span>
-                <span data-i18n="comparison.edge.0">Serverless Efficiency: ~0€ base costs</span>
+              <li class="flex items-start gap-3 text-gray-100">
+                <span class="text-green-500 mt-1">✓</span>
+                <span><strong>Server-side tracking recovers</strong> lost iOS conversions</span>
               </li>
-              <li class="flex items-center gap-3 text-gray-100">
-                <span class="text-green-500">✓</span>
-                <span data-i18n="comparison.edge.1">Global Edge Network: 0ms cold starts</span>
+              <li class="flex items-start gap-3 text-gray-100">
+                <span class="text-green-500 mt-1">✓</span>
+                <span><strong>First-party data capture</strong> bypasses ad blockers</span>
               </li>
-              <li class="flex items-center gap-3 text-gray-100">
-                <span class="text-green-500">✓</span>
-                <span data-i18n="comparison.edge.2">Automated GTM Parser: Instant compilation</span>
-              </li>
-              <li class="flex items-center gap-3 text-gray-100">
-                <span class="text-green-500">✓</span>
-                <span data-i18n="comparison.edge.3">EU-Data Sovereignty: GDPR-native infrastructure</span>
+              <li class="flex items-start gap-3 text-gray-100">
+                <span class="text-green-500 mt-1">✓</span>
+                <span><strong>See true ROAS</strong> for every campaign</span>
               </li>
             </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- GTM-to-Edge Parser Section -->
-<section id="architecture" class="py-20 bg-black/20 overflow-hidden">
-      <div class="container mx-auto px-6">
-        <div class="flex flex-col lg:flex-row items-center gap-16">
-          <div class="flex-1">
-            <span class="text-purple-400 font-bold tracking-widest uppercase text-sm" data-i18n="architecture.badge">Proprietary Technology</span>
-            <h2 class="text-4xl font-bold mt-4 mb-6 text-white" data-i18n="architecture.title">GTM-to-Edge <span class="gradient-text">Parser</span></h2>
-            <p class="text-gray-300 text-lg mb-8 leading-relaxed" data-i18n="architecture.description">
-              Our core engine compiles GTM JSON definitions directly into hardened Cloudflare Worker code in milliseconds. No more manual tagging or brittle server-side GTM setups.
-            </p>
-            <div class="space-y-4">
-              <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
-                <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">01</div>
-                <span class="text-gray-200" data-i18n="architecture.step1">Parse GTM JSON Architecture</span>
-              </div>
-              <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
-                <div class="w-10 h-10 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400">02</div>
-                <span class="text-gray-200" data-i18n="architecture.step2">Compile to Rust-powered V8 Isolates</span>
-              </div>
-              <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
-                <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">03</div>
-                <span class="text-gray-200" data-i18n="architecture.step3">Deploy globally in &lt;10 seconds</span>
-              </div>
-            </div>
-          </div>
-          <div class="flex-1 relative">
-            <div class="glass-card p-6 bg-[#0B0B15]/90 border-purple-500/30 font-mono text-sm overflow-hidden shadow-2xl">
-              <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-2">
-                <span class="text-gray-500 uppercase text-xs" data-i18n="architecture.logTitle">compiler_output.log</span>
-                <div class="flex gap-1.5">
-                  <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
-                  <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
-                  <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
-                </div>
-              </div>
-              <div class="space-y-2">
-                <p class="text-purple-400 italic" data-i18n="architecture.logInit">// Initializing AdsEngineer Compiler v2.4.0</p>
-                <p class="text-white" data-i18n="architecture.logLine1"><span class="text-cyan-400">DONE</span> Loading GTM-ID: GTM-T7XL2BZ</p>
-                <p class="text-white" data-i18n="architecture.logLine2"><span class="text-cyan-400">DONE</span> Analyzing 42 tags and 18 triggers</p>
-                <p class="text-white" data-i18n="architecture.logLine3"><span class="text-purple-400">START</span> Generating Worker code...</p>
-                <p class="text-gray-400 pl-4" data-i18n="architecture.logLine4">→ Compiling custom_event_purchase.ts</p>
-                <p class="text-gray-400 pl-4" data-i18n="architecture.logLine5">→ Injecting GCLID persistence layer</p>
-                <p class="text-gray-400 pl-4" data-i18n="architecture.logLine6">→ Optimizing V8 memory allocation</p>
-                <p class="text-white font-bold mt-4" data-i18n="architecture.logLine7"><span class="text-green-400">SUCCESS</span> Build completed in 142ms</p>
-                <p class="text-white" data-i18n="architecture.logLine8"><span class="text-cyan-400">READY</span> Global edge deployment initiated</p>
-              </div>
-            </div>
-            <!-- Decorative Glow -->
-            <div class="absolute -top-10 -right-10 w-40 h-40 bg-purple-500/20 blur-[80px]"></div>
-            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-cyan-500/20 blur-[80px]"></div>
           </div>
         </div>
       </div>
@@ -156,32 +143,83 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
     <section id="pricing" class="py-20 bg-black/20">
       <div class="container mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm" data-i18n="pricing.badge">Infrastructure Costs</span>
-          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="pricing.title">Transparent <span class="gradient-text">Pricing</span></h2>
-          <p class="text-gray-400 mt-4" data-i18n="pricing.subtitle">High-performance engineering shouldn't break the bank.</p>
+          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm">Simple Pricing</span>
+          <h2 class="text-4xl font-bold mt-4 text-white">Start Free. Scale When Ready.</h2>
+          <p class="text-gray-400 mt-4">14-day free trial. No credit card required.</p>
         </div>
-        <div class="max-w-4xl mx-auto text-center">
-          <div class="glass-card p-12 border-purple-500/30 shadow-[0_0_30px_rgba(188,19,254,0.2)]">
-            <h3 class="text-3xl font-bold mb-6 text-white" data-i18n="quote.title">Request Your Infra Audit</h3>
-            <p class="text-xl mb-8 text-gray-300" data-i18n="quote.subtitle">We'll analyze your current tracking stack and show you exactly where you're losing data and paying unnecessary cloud fees.</p>
-            <button data-cal-link="stefan-pirker-nmurov/30min" data-cal-config='{"layout":"month_view"}' class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-12 py-5 rounded-xl text-xl font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] inline-block transform hover:-translate-y-1">
-              <span data-i18n="quote.btn">Audit My Stack →</span>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div class="glass-card p-8 border-white/10">
+            <h3 class="text-2xl font-bold text-white mb-2">Starter</h3>
+            <p class="text-gray-400 text-sm mb-6">For small stores</p>
+            <div class="mb-6">
+              <span class="text-4xl font-bold text-white">€49</span>
+              <span class="text-gray-400">/month</span>
+            </div>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Up to 3 stores</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>10,000 events/month</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Google Ads integration</span></li>
+            </ul>
+            <button class="w-full bg-white/10 hover:bg-white/20 py-4 rounded-xl font-bold text-white transition-all">
+              Start Free Trial
             </button>
           </div>
-         </div>
+
+          <div class="glass-card p-8 border-purple-500/30 shadow-[0_0_30px_rgba(188,19,254,0.2)] relative">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-1 rounded-full text-sm font-bold text-white">
+              Most Popular
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-2">Growth</h3>
+            <p class="text-gray-400 text-sm mb-6">For growing businesses</p>
+            <div class="mb-6">
+              <span class="text-4xl font-bold text-white">€149</span>
+              <span class="text-gray-400">/month</span>
+            </div>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Up to 10 stores</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>100,000 events/month</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>All ad platforms</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Priority support</span></li>
+            </ul>
+            <button class="w-full bg-gradient-to-r from-purple-600 to-cyan-500 py-4 rounded-xl font-bold text-white transition-all">
+              Start Free Trial
+            </button>
+          </div>
+
+          <div class="glass-card p-8 border-white/10">
+            <h3 class="text-2xl font-bold text-white mb-2">Agency</h3>
+            <p class="text-gray-400 text-sm mb-6">For marketing agencies</p>
+            <div class="mb-6">
+              <span class="text-4xl font-bold text-white">€399</span>
+              <span class="text-gray-400">/month</span>
+            </div>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Unlimited stores</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>500,000 events/month</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>White-label reports</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>API access</span></li>
+            </ul>
+            <button class="w-full bg-white/10 hover:bg-white/20 py-4 rounded-xl font-bold text-white transition-all">
+              Contact Sales
+            </button>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- CTA Section -->
+    <!-- Final CTA -->
     <section class="bg-gray-900/50 text-white py-20 relative overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-900/20 pointer-events-none"></div>
       <div class="container mx-auto px-6 text-center relative z-10">
-        <h2 class="text-4xl font-bold mb-6 text-white" data-i18n="cta.title">Reclaim Your Digital Sovereignty</h2>
-        <p class="text-xl mb-12 text-gray-300 max-w-2xl mx-auto" data-i18n="cta.subtitle">Own your data. Control your infrastructure. Stop the attribution leak.</p>
-        <button data-cal-link="stefan-pirker-nmurov/30min" data-cal-config='{"layout":"month_view"}' class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-12 py-5 rounded-xl text-xl font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] inline-block transform hover:-translate-y-1">
-          <span data-i18n="cta.btn">Get Free Infrastructure Audit</span>
+        <h2 class="text-4xl font-bold mb-6 text-white">Stop Guessing. Start Knowing.</h2>
+        <p class="text-xl mb-8 text-gray-300 max-w-2xl mx-auto">
+          Join 50+ businesses who've recovered their attribution data.
+        </p>
+        <button class="bg-gradient-to-r from-purple-600 to-cyan-500 px-12 py-5 rounded-xl text-xl font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] inline-block transform hover:-translate-y-1 mb-8">
+          Start Free 14-Day Trial
         </button>
+        <p class="text-gray-500 text-sm">No credit card required • Setup in 5 minutes • Cancel anytime</p>
       </div>
     </section>
   </main>

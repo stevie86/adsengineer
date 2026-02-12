@@ -31,25 +31,25 @@ export class GTMCompiler {
     try {
       const parsed = JSON.parse(json);
       console.log('Parsed JSON keys:', Object.keys(parsed));
-      
+
       const data = GTMContainerSchema.parse(parsed);
       const tags = data.containerVersion.tag || [];
       console.log('Tag count:', tags.length);
-      
-      const ga4Configs = tags.filter(t => t.type === 'gaawc');
-      const ga4Events = tags.filter(t => t.type === 'gaawe');
-      const googleAds = tags.filter(t => t.type === 'awct');
-      
+
+      const ga4Configs = tags.filter((t) => t.type === 'gaawc');
+      const ga4Events = tags.filter((t) => t.type === 'gaawe');
+      const googleAds = tags.filter((t) => t.type === 'awct');
+
       const measurementIds = new Set<string>();
-      ga4Configs.forEach(tag => {
-        const mId = tag.parameter?.find(p => p.key === 'measurementId')?.value;
+      ga4Configs.forEach((tag) => {
+        const mId = tag.parameter?.find((p) => p.key === 'measurementId')?.value;
         if (mId) measurementIds.add(mId);
       });
 
-      const adsConversions = googleAds.map(tag => ({
+      const adsConversions = googleAds.map((tag) => ({
         name: tag.name,
-        conversionId: tag.parameter?.find(p => p.key === 'conversionId')?.value,
-        conversionLabel: tag.parameter?.find(p => p.key === 'conversionLabel')?.value,
+        conversionId: tag.parameter?.find((p) => p.key === 'conversionId')?.value,
+        conversionLabel: tag.parameter?.find((p) => p.key === 'conversionLabel')?.value,
       }));
 
       return {
@@ -71,18 +71,22 @@ export class GTMCompiler {
 
   private static getRecommendations(tags: GTMTag[]) {
     const recs: string[] = [];
-    
-    if (tags.some(t => t.paused)) {
+
+    if (tags.some((t) => t.paused)) {
       recs.push('Remove or resume paused tags to clean up the container.');
     }
-    
-    if (tags.some(t => t.type === 'html')) {
-      recs.push('Custom HTML tags detected. Consider migrating these to server-side logic for better security and performance.');
+
+    if (tags.some((t) => t.type === 'html')) {
+      recs.push(
+        'Custom HTML tags detected. Consider migrating these to server-side logic for better security and performance.'
+      );
     }
 
-    const conversionLinker = tags.find(t => t.type === 'gcl');
+    const conversionLinker = tags.find((t) => t.type === 'gcl');
     if (!conversionLinker) {
-      recs.push('CRITICAL: No Conversion Linker tag found. GCLID preservation will fail without it.');
+      recs.push(
+        'CRITICAL: No Conversion Linker tag found. GCLID preservation will fail without it.'
+      );
     }
 
     return recs;
@@ -90,10 +94,10 @@ export class GTMCompiler {
 
   private static generateWorkerCode(measurementIds: string[], adsConversions: any[]) {
     const mId = measurementIds[0] || 'YOUR_GA4_ID';
-    const conversionConfigs = adsConversions.map(c => 
-      `  // ${c.name}: ID=${c.conversionId}, Label=${c.conversionLabel}`
-    ).join('\n');
-    
+    const conversionConfigs = adsConversions
+      .map((c) => `  // ${c.name}: ID=${c.conversionId}, Label=${c.conversionLabel}`)
+      .join('\n');
+
     return `/**
  * AdsEngineer Edge-Native Tracking Worker
  * Generated from GTM Container Analysis

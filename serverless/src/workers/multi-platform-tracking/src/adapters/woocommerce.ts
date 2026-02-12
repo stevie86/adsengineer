@@ -5,7 +5,7 @@
  * WooCommerce logic stays here - Router never sees WooCommerce internals.
  */
 
-import type { StandardEvent, AdapterResult } from '../types';
+import type { AdapterResult, StandardEvent } from '../types';
 
 /**
  * WooCommerce Webhook Payload
@@ -60,12 +60,12 @@ const WOOCOMMERCE_EVENT_MAP: Record<string, string> = {
   'orders.updated': 'purchase',
   'wc_orders.created': 'purchase',
   'wc_orders.updated': 'purchase',
-  'orders_status_updated': 'purchase',
+  orders_status_updated: 'purchase',
   'customer.created': 'lead',
   'customer.updated': 'lead',
   'product.created': 'view_item',
   'product.updated': 'view_item',
-  'custom_event': 'custom_event',
+  custom_event: 'custom_event',
   completed: 'purchase',
   pending: 'purchase',
   processing: 'purchase',
@@ -108,7 +108,7 @@ export function woocommerceAdapter(payload: WooCommerceWebhook): AdapterResult<W
 
     if (eventName === 'purchase') {
       const contentIds: string[] = [];
-      payload.line_items?.forEach(item => {
+      payload.line_items?.forEach((item) => {
         const productId = extractProductId(item);
         if (productId) {
           for (let i = 0; i < (item.quantity || 1); i++) {
@@ -118,7 +118,10 @@ export function woocommerceAdapter(payload: WooCommerceWebhook): AdapterResult<W
       });
 
       customData = {
-        value: payload.total || payload.total_price ? parseFloat(payload.total || payload.total_price) : undefined,
+        value:
+          payload.total || payload.total_price
+            ? parseFloat(payload.total || payload.total_price)
+            : undefined,
         currency: payload.currency,
         content_ids: contentIds,
         num_items: payload.line_items?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0,
@@ -126,13 +129,13 @@ export function woocommerceAdapter(payload: WooCommerceWebhook): AdapterResult<W
       };
     } else if (eventName === 'view_item') {
       customData = {
-        content_ids: payload.line_items?.map(item => extractProductId(item)).filter(Boolean),
+        content_ids: payload.line_items?.map((item) => extractProductId(item)).filter(Boolean),
         content_name: payload.line_items?.[0]?.name,
       };
     } else if (eventName === 'search') {
       customData = {
         query_string: payload.line_items?.[0]?.name,
-        content_ids: payload.line_items?.map(item => extractProductId(item)).filter(Boolean),
+        content_ids: payload.line_items?.map((item) => extractProductId(item)).filter(Boolean),
       };
     }
 

@@ -7,8 +7,9 @@ const PLUGIN_PHP_CONTENT = `<?php
 /**
  * Plugin Name: AdsEngineer Conversion Tracking for WooCommerce
  * Plugin URI: https://adsengineer.com
- * Description: Automatically tracks WooCommerce orders and captures Google Click IDs for offline conversion tracking with AdsEngineer.
- * Version: 1.1.0
+ * Description: Automatically tracks WooCommerce orders and captures Google Click IDs for offline conversion tracking with AdsEngineer. No code editing required!
+ * Version: 1.2.0
+ * Build: 2026-02-03
  * Author: AdsEngineer
  * License: GPL v2 or later
  * Text Domain: adsengineer-woocommerce
@@ -255,25 +256,36 @@ class AdsEngineer_WooCommerce {
 
       <hr>
 
+      <div style="background: #e7f5e7; border-left: 4px solid #46b450; padding: 12px; margin: 20px 0;">
+        <p><strong>✅ Automatic Setup Enabled</strong></p>
+        <p>This plugin handles everything automatically - no code editing required!</p>
+      </div>
+
       <h2>Setup Instructions</h2>
       <ol>
         <li>Enter your AdsEngineer <strong>Site ID</strong> above (get from dashboard)</li>
         <li>Enter your AdsEngineer <strong>Webhook URL</strong> above (or use default)</li>
         <li>Click <strong>Save Settings</strong></li>
-        <li>The plugin automatically injects the tracking snippet and captures GCLIDs</li>
-        <li>Orders will be automatically sent to AdsEngineer when created or status changes</li>
+        <li>That's it! The plugin automatically:
+          <ul style="margin-top: 8px;">
+            <li>Injects tracking snippet on all pages</li>
+            <li>Captures GCLIDs and UTM parameters automatically</li>
+            <li>Sends orders to AdsEngineer when created</li>
+          </ul>
+        </li>
       </ol>
 
       <h2>How It Works</h2>
-      <p>This plugin handles everything automatically:</p>
+      <p><strong>Everything is automatic - no manual code changes needed:</strong></p>
       <ul>
-        <li><strong>Tracking Snippet:</strong> Automatically injects AdsEngineer tracking script on all pages</li>
-        <li><strong>GCLID Capture:</strong> Captures Google Ads click IDs and other UTM parameters from cookies</li>
-        <li><strong>Order Tracking:</strong> Sends order data and GCLID to AdsEngineer when orders are created</li>
-        <li><strong>No Code Required:</strong> No manual functions.php edits needed!</li>
+        <li><strong>✓ Tracking Snippet:</strong> Automatically injects AdsEngineer script on all pages</li>
+        <li><strong>✓ GCLID Capture:</strong> Captures Google Ads click IDs via JavaScript (not PHP)</li>
+        <li><strong>✓ UTM Tracking:</strong> Captures all UTM parameters automatically</li>
+        <li><strong>✓ Order Sync:</strong> Sends order data with attribution to AdsEngineer</li>
+        <li><strong>✓ No Code Required:</strong> No functions.php edits, no theme changes!</li>
       </ul>
 
-      <h2>Status</h2>
+      <h2>Plugin Status</h2>
       <table class="wp-list-table widefat fixed striped">
         <thead>
           <tr>
@@ -294,8 +306,17 @@ class AdsEngineer_WooCommerce {
             <td>Webhook Secret</td>
             <td><?php echo !empty($webhook_secret) ? '<span style="color:green">✓ Configured</span>' : '<span style="color:orange">Optional</span>'; ?></td>
           </tr>
+          <tr style="background: #f9f9f9;">
+            <td><strong>Plugin Version</strong></td>
+            <td><code>1.2.0 (Build: 2026-02-03)</code></td>
+          </tr>
         </tbody>
       </table>
+      
+      <p style="margin-top: 20px; color: #666; font-size: 12px;">
+        <strong>Note:</strong> This plugin version includes automatic GCLID capture. No manual theme or functions.php edits are required.
+        If you see instructions elsewhere mentioning manual code changes, they are outdated. This plugin handles everything automatically.
+      </p>
     </div>
     <?php
   }
@@ -379,7 +400,9 @@ export async function generateWooCommercePluginZip(): Promise<Uint8Array> {
   const pluginFiles: Record<string, Uint8Array> = {};
 
   // Add the main plugin file
-  pluginFiles['adsengineer-woocommerce/adsengineer-woocommerce.php'] = new TextEncoder().encode(PLUGIN_PHP_CONTENT);
+  pluginFiles['adsengineer-woocommerce/adsengineer-woocommerce.php'] = new TextEncoder().encode(
+    PLUGIN_PHP_CONTENT
+  );
 
   // Add the README file
   pluginFiles['adsengineer-woocommerce/README.md'] = new TextEncoder().encode(README_CONTENT);

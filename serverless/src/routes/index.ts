@@ -2,7 +2,20 @@ import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { cors } from 'hono/cors';
 import type { AppEnv } from '../types';
-import { tiktokRouter } from './routes/tiktok';
+import { tiktokRouter } from './tiktok';
+import { leadsRoutes as leadsRouter } from './leads';
+import { oauthRoutes as oauthRouter } from './oauth';
+import { onboardingRoutes as onboardingRouter } from './onboarding';
+import { waitlistRoutes as waitlistRouter } from './waitlist';
+import { statusRoutes as statusRouter } from './status';
+import { billingRoutes as billingRouter } from './billing';
+import { gdprRoutes as gdprRouter } from './gdpr';
+import { ghlRoutes as ghlRouter } from './ghl';
+import { analyticsRoutes as analyticsRouter } from './analytics';
+import { customEventDefinitionsRoutes as customEventDefinitionsRouter } from './custom-event-definitions';
+import { customEventsRoutes as customEventsRouter } from './custom-events';
+import { shopifyRoutes as shopifyRouter } from './shopify';
+import { trackingRoutes as trackingRouter } from './tracking';
 
 const app = new OpenAPIHono();
 

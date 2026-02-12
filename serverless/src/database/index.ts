@@ -249,7 +249,10 @@ export function createDb(d1: D1Database) {
 
         if (agency.google_ads_config) {
           credentials.googleAds = JSON.parse(
-            await decryptCredential(JSON.parse(agency.google_ads_config), `agency-${agencyId}-googleAds`)
+            await decryptCredential(
+              JSON.parse(agency.google_ads_config),
+              `agency-${agencyId}-googleAds`
+            )
           );
         }
         if (agency.meta_config) {
@@ -270,14 +273,24 @@ export function createDb(d1: D1Database) {
       }
     },
 
-    async validateCredentialFormat(platform: string, credentials: any): Promise<{ valid: boolean; errors?: string[] }> {
+    async validateCredentialFormat(
+      platform: string,
+      credentials: any
+    ): Promise<{ valid: boolean; errors?: string[] }> {
       try {
         switch (platform) {
           case 'googleAds':
-            if (!credentials.apiKey || !credentials.clientId || !credentials.clientSecret || !credentials.developerToken) {
+            if (
+              !credentials.apiKey ||
+              !credentials.clientId ||
+              !credentials.clientSecret ||
+              !credentials.developerToken
+            ) {
               return {
                 valid: false,
-                errors: ['Google Ads credentials require apiKey, clientId, clientSecret, and developerToken']
+                errors: [
+                  'Google Ads credentials require apiKey, clientId, clientSecret, and developerToken',
+                ],
               };
             }
             // Basic format validation
@@ -290,10 +303,13 @@ export function createDb(d1: D1Database) {
             if (!credentials.secretKey || !credentials.publishableKey) {
               return {
                 valid: false,
-                errors: ['Stripe credentials require secretKey and publishableKey']
+                errors: ['Stripe credentials require secretKey and publishableKey'],
               };
             }
-            if (!credentials.secretKey.startsWith('sk_') || !credentials.publishableKey.startsWith('pk_')) {
+            if (
+              !credentials.secretKey.startsWith('sk_') ||
+              !credentials.publishableKey.startsWith('pk_')
+            ) {
               return { valid: false, errors: ['Invalid Stripe key format'] };
             }
             break;
@@ -302,7 +318,7 @@ export function createDb(d1: D1Database) {
             if (!credentials.accessToken || !credentials.appId || !credentials.appSecret) {
               return {
                 valid: false,
-                errors: ['Meta credentials require accessToken, appId, and appSecret']
+                errors: ['Meta credentials require accessToken, appId, and appSecret'],
               };
             }
             break;

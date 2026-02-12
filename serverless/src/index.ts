@@ -4,14 +4,14 @@ import { cors } from 'hono/cors';
 import { devGuardMiddleware, devLoggingMiddleware } from './middleware/dev-guard';
 import { adminRoutes } from './routes/admin';
 import { billingRoutes } from './routes/billing';
+import { demoRoutes } from './routes/demo';
 import { ghlRoutes } from './routes/ghl';
+import { gtmRoutes } from './routes/gtm';
 import { shopifyRoutes } from './routes/shopify';
 // Temporarily commented out evaluation router during development
 // import { evaluationRouter } from './routes/evaluate';
 import { tiktokRouter } from './routes/tiktok';
 import { woocommerceRoutes } from './routes/woocommerce';
-import { gtmRoutes } from './routes/gtm';
-import { demoRoutes } from './routes/demo';
 
 const app = new Hono();
 

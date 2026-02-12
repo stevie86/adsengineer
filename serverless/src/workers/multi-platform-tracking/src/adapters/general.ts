@@ -5,7 +5,7 @@
  * Expects data already in StandardEvent format.
  */
 
-import type { StandardEvent, AdapterResult } from '../types';
+import type { AdapterResult, StandardEvent } from '../types';
 
 /**
  * Convert general payload to StandardEvent
