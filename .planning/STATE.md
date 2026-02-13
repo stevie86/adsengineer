@@ -1,146 +1,122 @@
-# AdsEngineer Nonprofit Grants Compliance Add-On - State
+# Project State: AdsEngineer Phase 1 MVP
 
-**Last Updated:** 2026-02-10  
-**Current Phase:** 1 - Research & Architecture  
-**Status:** In Progress
-
----
-
-## Current Position
-
-**Project Phase:** Phase 1 - Research & Architecture  
-**Phase Status:** Active  
-**Active Task:** Research Grants compliance requirements and GTM analyzer features  
-**Next Action:** Complete Phase 1 planning document
+**Phase:** 1 — Foundation & MVP  
+**Status:** Planning Complete → Ready for Execution  
+**Last Updated:** 2026-02-13
 
 ---
 
-## Progress Summary
+## Current Status
 
-### ✅ Completed
-
-| Item | Date | Details |
-|------|------|---------|
-| PROJECT.md created | 2026-02-03 | Requirements defined, including GTM analyzer feature |
-| Codebase documentation | 2026-02-03 | STRUCTURE.md, CONCERNS.md, ARCHITECTURE.md, INTEGRATIONS.md, TESTING.md, STACK.md, CONVENTIONS.md |
-| PROJECT_ANALYSIS.md | 2026-02-10 | Comprehensive project analysis with recommendations |
-| Research: Grants compliance | 2026-02-10 | CTR 5% minimum, account structure requirements, policy rules |
-| Research: GTM analyzer | 2026-02-10 | JSON structure, orphaned detection, duplicate finder, GA4 validation |
-
-### 🔄 In Progress
-
-| Item | Started | ETA |
-|------|---------|-----|
-| STATE.md | 2026-02-10 | Now |
-| ROADMAP.md | 2026-02-10 | Now |
-| Phase 1 planning | 2026-02-10 | After roadmap |
-
-### ⏳ Pending
-
-| Item | Blocked By | ETA |
-|------|-----------|-----|
-| Phase 1 execution | Phase 1 planning | TBD |
-| Core compliance engine | Phase 1 complete | TBD |
-| GTM analyzer implementation | Phase 1 complete | TBD |
+| Component | State | Notes |
+|-----------|-------|-------|
+| PROJECT.md | ✓ Complete | Initialized 2026-02-13 |
+| Requirements | ✓ Complete | 32 requirements defined, all mapped to Phase 1 |
+| Research | ✓ Complete | 5,404 lines across 7 research documents |
+| ROADMAP.md | ✓ Complete | Single-phase 8-week MVP |
+| STATE.md | ✓ Complete | This file |
+| Next Step | ○ Ready | `/gsd-plan-phase 1` to create task plans |
 
 ---
 
-## Key Decisions Log
+## Project Reference
 
-| Date | Decision | Rationale | Status |
-|------|----------|-----------|--------|
-| 2026-02-03 | Add-on to AdsEngineer | Leverages existing conversion and Ads integrations | Confirmed |
-| 2026-02-03 | Hybrid service model | Combine automation with expert review for trust | Confirmed |
-| 2026-02-03 | Subscription pricing tiers | Fits monitoring + advisory value over time | Pending implementation |
-| 2026-02-10 | Include GTM Container Analyzer | Client-side tool for nonprofits to audit tracking setup | Added to requirements |
-| 2026-02-10 | Complete planning structure first | Reduces risk, enables systematic execution | In progress |
+See: `.planning/PROJECT.md` (updated 2026-02-13)
+
+**Core value:** A customer can sign up, connect their Google Ads, install tracking, and see their conversion data — end to end, with no manual intervention.
+
+**Current focus:** Phase 1 — Foundation & MVP (Weeks 1-8)
 
 ---
 
-## Research Findings
+## Phase 1 Progress
 
-### Google Ads Grants Compliance
+**Requirements:** 32 total | **Completed:** 0 | **In Progress:** 0 | **Pending:** 32
 
-**Critical Metrics:**
-- **CTR Requirement:** 5% account-wide minimum (rolling 30-day average)
-- **Consequence:** Account suspension until requirement met
-- **Monitoring:** Weekly checks recommended
+### By Category
 
-**Account Structure Requirements:**
-- Proper geo-targeting (specific locations)
-- Single account only (no multiples)
-- Valid billing setup (no credit card promos)
-- Meaningful conversion tracking (1+ conversion/month)
+| Category | Count | Status |
+|----------|-------|--------|
+| Authentication (AUTH) | 7 | ○ Pending |
+| Billing (BILL) | 4 | ○ Pending |
+| Security & GDPR (SEC) | 7 | ○ Pending |
+| Dashboard (DASH) | 5 | ○ Pending |
+| Onboarding (ONBOARD) | 5 | ○ Pending |
+| Landing Page (LAND) | 4 | ○ Pending |
 
-**Policy Rules:**
-- No single-word keywords (except branded)
-- No overly generic keywords
-- Keywords must be mission-specific
-- Proper sitelinks and ad assets required
+### Success Criteria
 
-### GTM Container Analyzer Features
-
-**Core Capabilities (based on Analytrix CheckUp Helper):**
-
-1. **Orphaned Element Detection (recursive)**
-   - Tags with no triggers
-   - Triggers not used by any tags
-   - Variables not referenced
-   - Empty folders
-
-2. **Custom HTML Analysis**
-   - Dangerous script detection
-   - Deprecated code patterns
-   - Best practice violations
-
-3. **Duplicate Detection**
-   - Identical triggers
-   - Identical variables
-   - Duplicate tag configurations
-
-4. **GA4 Setup Validation**
-   - GA4 event list generation
-   - Parameter consistency
-   - Server-side configuration
-   - Measurement ID validation
-
-5. **Privacy/Compliance Checks**
-   - Consent mode implementation
-   - GDPR/CCPA indicators
+| # | Criterion | Status |
+|---|-----------|--------|
+| 1 | User completes signup → email verification → subscription → login in <5 minutes | ○ Not Started |
+| 2 | Dashboard shows user's real conversion data (not hardcoded test IDs) | ○ Not Started |
+| 3 | GDPR endpoints require authentication (email ownership verified) | ○ Not Started |
+| 4 | Snippet installation page displays live snippet with copy button and verification | ○ Not Started |
+| 5 | Google Ads OAuth connection works end-to-end | ○ Not Started |
 
 ---
 
-## Blockers & Issues
+## Technical Context
 
-### Active Blockers
+**Backend:** Cloudflare Workers + Hono + D1
+- 20 route files
+- 33 service files  
+- 206 tests passing
+- JWT auth middleware exists (custom implementation)
+- Stripe billing routes exist (needs race-condition fix)
+- GDPR endpoints exist (unauthenticated — CRITICAL)
 
-None currently.
+**Frontend:** React 18 + React Router 7 + Tailwind
+- 5 pages (Login, Signup, Dashboard, Admin, GTMCompiler)
+- 1 shared component (Layout.tsx)
+- Dashboard hardcodes `test-agency-id` — MUST FIX
+- No auth context — MUST CREATE
 
-### Potential Concerns
+**Landing Page:** Astro + Tailwind
+- Live at adsengineer.cloud
+- Brevo integration (single opt-in — needs double)
+- reCAPTCHA (needs hCaptcha)
+- Privacy policy (needs GDPR rewrite)
 
-| Issue | Impact | Mitigation |
-|-------|--------|------------|
-| Google Ads API changes | High | Abstract API client, monitor changelogs |
-| Grants policy updates | Medium | Build policy as configuration |
-| GTM JSON schema changes | Low | GTM API is stable |
-
----
-
-## Environment
-
-**Mode:** YOLO (fast iteration, accept risks)  
-**Profile:** Balanced (planning: glm-4.7-free, execution: minimax-m2.1-free)  
-**Workflow:** Research + Plan Check + Verifier enabled
-
----
-
-## Notes
-
-- Codebase documentation is comprehensive and current (2026-02-03)
-- Existing AdsEngineer platform provides strong foundation
-- GTM analyzer should be client-side (no data sent to servers) as requested
-- Phase 1 should focus on: compliance scoring algorithm design, GTM parser architecture, and technical planning
+**Key Files to Modify:**
+- `frontend/src/pages/Dashboard.tsx` — Kill test-agency-id
+- `frontend/src/context/AuthContext.tsx` — Create (NEW)
+- `serverless/src/routes/gdpr.ts` — Add auth middleware
+- `landing-page/src/pages/privacy-policy.astro` — Rewrite
+- `landing-page/src/components/` — Add hCaptcha
 
 ---
 
-*Next Update: After ROADMAP.md creation and Phase 1 planning*
+## Decisions Log
+
+| Date | Decision | Rationale |
+|------|----------|-----------|
+| 2026-02-13 | Single-phase MVP (8 weeks) | User said "Stop planning. Start shipping." |
+| 2026-02-13 | hCaptcha over Friendly Captcha | Free tier, wider adoption |
+| 2026-02-13 | EU Workers region default | GDPR data residency |
+| 2026-02-13 | Stripe hosted Checkout | Avoid PCI certification ($10K-50K/year) |
+| 2026-02-13 | React Context (not Redux) | Sufficient for JWT auth state |
+
+---
+
+## Blockers
+
+None. Ready to execute.
+
+---
+
+## Next Actions
+
+1. **Run:** `/gsd-plan-phase 1` — Create detailed task plans for Phase 1
+2. **Or:** `/gsd-discuss-phase 1` — Discuss approach before planning
+
+---
+
+## Archive
+
+Previous project (Nonprofit Grants Compliance Add-On) archived:
+`.planning/archive/2026-02-03-nonprofit-grants/`
+
+---
+
+*State file: Update after each phase or milestone*

@@ -35,6 +35,7 @@ A customer can sign up, connect their Google Ads, install tracking, and see thei
 - [ ] Self-service onboarding (Stripe checkout flow, site setup wizard, tracking snippet page)
 - [ ] Replace reCAPTCHA with hCaptcha across all forms
 - [ ] UI-to-Backend mapping documentation in MkDocs
+- [ ] Lock Cloudflare Workers to EU region by default (per-customer override for non-EU)
 
 ### Out of Scope
 
@@ -64,6 +65,7 @@ A customer can sign up, connect their Google Ads, install tracking, and see thei
 - **Security**: Must use existing JWT + HMAC + AES-256-GCM patterns — no shortcuts
 - **GDPR**: EU-compliant — hCaptcha (not reCAPTCHA), double opt-in, Brevo DPA disclosure
 - **Testing**: Must maintain 206 existing test cases, all new features must pass CI/CD
+- **Data Residency**: Cloudflare Workers locked to EU region by default (`placement = { mode = "smart" }` with EU hint, or `wrangler.jsonc` region config). Per-customer override if they want global.
 - **No New Dependencies**: Prefer existing libraries. The stack is complete.
 - **Documentation**: All UI-to-Backend mappings must be documented in MkDocs folder
 
@@ -76,6 +78,7 @@ A customer can sign up, connect their Google Ads, install tracking, and see thei
 | Kill test-agency-id, use real auth | Hardcoded IDs mask integration bugs — must use real auth flow | — Pending |
 | Skip admin panel for MVP | No customers yet — admin tooling is premature | — Pending |
 | Archive nonprofit project | Focus on core product first, revisit add-ons post-revenue | — Pending |
+| EU-default Workers region | GDPR data residency — process data in EU unless customer opts out | — Pending |
 
 ---
 *Last updated: 2026-02-13 after initialization*

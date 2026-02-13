@@ -8,19 +8,19 @@
     "active_profile": "balanced",
     "presets": {
       "quality": {
-        "planning": "opencode/glm-4.7-free",
-        "execution": "opencode/glm-4.7-free",
-        "verification": "opencode/glm-4.7-free"
+        "planning": "anthropic/claude-opus-4-6",
+        "execution": "openai/gpt-5.1-codex",
+        "verification": "anthropic/claude-opus-4-6"
       },
       "balanced": {
-        "planning": "opencode/glm-4.7-free",
-        "execution": "opencode/minimax-m2.1-free",
-        "verification": "opencode/glm-4.7-free"
+        "planning": "anthropic/claude-sonnet-4-5",
+        "execution": "anthropic/claude-sonnet-4",
+        "verification": "anthropic/claude-sonnet-4"
       },
       "budget": {
-        "planning": "opencode/minimax-m2.1-free",
-        "execution": "opencode/grok-code",
-        "verification": "opencode/minimax-m2.1-free"
+        "planning": "anthropic/claude-sonnet-4",
+        "execution": "anthropic/claude-haiku-4-5",
+        "verification": "anthropic/claude-haiku-4-5"
       }
     },
     "custom_overrides": {
