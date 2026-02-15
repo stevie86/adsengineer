@@ -1,0 +1,165 @@
+site_name: AdsEngineer Docs
+site_description: Enterprise Conversion Tracking SaaS - Internal Documentation
+site_url: http://100.111.164.18:8080
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: deep purple
+    accent: indigo
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - tables
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+nav:
+  - Home: README.md
+
+  - Core:
+    - Architecture Overview: 01-architecture-overview.md
+    - Plugin Specification: 02-plugin-specification.md
+    - SaaS Specification: 03-saas-specification.md
+    - Feature Roadmap: 04-feature-roadmap.md
+    - PRD: PRD.md
+    - Product One-Pager: PRODUCT-ONEPAGER.md
+    - Value Proposition: VALUE_PROPOSITION.md
+    - Modularity Analysis: MODULARITY-ANALYSIS.md
+
+  - Architecture:
+    - GA4 vs Google Ads Analysis: architecture-ga4-vs-googleads-analysis.md
+    - Roadmap - sGTM vs Direct GA4: architecture-roadmap-sgtm-vs-direct-ga4.md
+    - sGTM Architecture Proposal: sgtm-architecture-proposal.md
+    - sGTM Cloudflare Alternative: sgtm-cloudflare-alternative.md
+    - sGTM Customer Setup Flow: sgtm-customer-setup-flow.md
+    - sGTM Multi-Tenant: sgtm-multi-tenant-architecture.md
+    - sGTM vs Gateway: sgtm-vs-gateway.md
+    - Cloud Run API Architecture: cloud-run-api-architecture.md
+    - GTM API Single Entrypoint: gtm-api-single-entrypoint-analysis.md
+    - GA4 vs Google Ads Decision: thought-process-ga4-vs-googleads-decision.md
+    - Anonymous Tracking: anonymous-tracking.md
+
+  - GTM Parser:
+    - Template Analysis: gtm-parser/gtm-template-analysis.md
+    - Parser Test Report: gtm-parser/parser-test-report.md
+
+  - Google Ads:
+    - Offline Conversions: google-ads-offline-conversions.md
+    - Queue Implementation: google-ads-queue-implementation.md
+    - Purchase Tracking: PURCHASE_TRACKING_IMPLEMENTATION.md
+    - Multi-Platform Ads Support: multi-platform-ads-support.md
+    - Multi-Platform Tracking Summary: multi-platform-tracking-summary.md
+
+  - Integrations:
+    - Shopify Integration Guide: shopify-integration-guide.md
+    - Shopify Webhook Setup: shopify-webhook-setup.md
+    - Shopify App Outsourcing Brief: shopify-app-outsourcing-brief.md
+    - Wappalyzer Integration: wappalyzer-integration.md
+    - WordPress / WooCommerce Focus: wordpress-woocommerce-focus.md
+
+  - Business & Strategy:
+    - Go-to-Market: 05-go-to-market.md
+    - Sales Playbook: 06-sales-playbook.md
+    - Sales Script: sales-script.md
+    - Pricing Strategy: pricing-strategy.md
+    - Reasonable Pricing Guide: reasonable-pricing-guide.md
+    - Edge Report: edge-report.md
+    - Experience Gap Strategy: experience-gap-strategy.md
+    - Plugin Pivot Analysis: strategic-analysis-plugin-pivot.md
+    - Strategy Session 2024-12-30: strategy-session-2024-12-30.md
+    - Production Roadmap 2025: production-roadmap-2025.md
+
+  - GHL (GoHighLevel):
+    - GHL Pivot Strategy: ghl-pivot-strategy.md
+    - GHL Data Crisis Q1 2026: ghl-data-crisis-q1-2026.md
+    - GHL Data Crisis - Real Numbers: ghl-data-crisis-q1-2026-real-numbers.md
+    - Multi-Customer GHL Optimization: multi-customer-ghl-optimization.md
+
+  - Customers:
+    - MyCannaby Strategy: mycannaby-consolidated-strategy.md
+    - MyCannaby Fast Track: mycannaby-fast-track-guide.md
+    - MyCannaby Website Analysis: mycannaby-website-analysis.md
+    - MyCannaby Connection Check: mycannaby-connection-check.md
+    - MyCannaby Security Emergency: mycannaby-security-emergency.md
+    - Carlos POC Plan: carlos-poc-plan.md
+    - Non-GHL Onboarding: non-ghl-onboarding.md
+    - Customer Onboarding Checklist: customer-onboarding-checklist.md
+
+  - Agency:
+    - Agency Outreach Plan: agency-outreach-plan.md
+    - Agency Master Key Auto-Registration: agency-master-key-auto-registration.md
+    - Beta Agency Recruitment: beta-agency-recruitment.md
+    - Beta Risk Mitigation: beta-risk-mitigation.md
+
+  - GDPR & Legal:
+    - GDPR Compliance Guide: gdpr-compliance-guide.md
+    - GDPR Consent Strategy: gdpr-consent-strategy.md
+    - GDPR Privacy Policy: gdpr-privacy-policy.md
+    - Legal Review 2026-02-13: legal-review-2026-02-13.md
+
+  - DevOps & Deployment:
+    - Deployment Checklist: deployment-checklist.md
+    - Deployment Status: deployment-status.md
+    - Frontend Deployment: frontend-deployment.md
+    - Custom Domain Setup: custom-domain-setup.md
+    - Get CF Token: get-cf-token.md
+    - OpenTofu & Doppler Guide: opentofu-doppler-guide.md
+    - Doppler Implementation Guide: DOPPLER_IMPLEMENTATION_GUIDE.md
+    - Stripe Quickstart: stripe-quickstart.md
+    - Production Stripe Setup: production-stripe-setup.md
+    - Deploy Apprise Scaleway: deploy-apprise-scaleway.md
+    - Email Service Setup: email-service-setup.md
+    - pnpm vs Bun Evaluation: pnpm-vs-bun-evaluation.md
+
+  - n8n Automation:
+    - Full Admin Guide: n8n-full-admin-guide.md
+    - Telegram Admin Guide: n8n-telegram-admin-guide.md
+    - Production Deployment: n8n-production-deployment.md
+    - MyCannaby Workflow: n8n-mycannaby-workflow.md
+
+  - QA & CI:
+    - Testing Requirements: testing-requirements.md
+    - CI Fix Detailed Plan: ci-fix-detailed-plan.md
+    - CI Fix Progress: ci-fix-progress.md
+    - Troubleshooting Playbook: troubleshooting-playbook.md
+    - Production Standards: PRODUCTION_STANDARDS_UPDATE.md
+    - Confidence Level Refinement: confidence-level-refinement-78-percent.md
+
+  - Internal:
+    - Notification System Upgrade: notification-system-upgrade.md
+    - Project Archive: PROJECT-ARCHIVE.md
+    - Mission Audit: MISSION_AUDIT.md
+    - Mission Heal v1: MISSION_HEAL_v1.md
+    - Mission OpenCode: MISSION_OPENCODE.md
+    - OpenCode Report: OPENCODE_REPORT.md
+    - Session 2026-01-17 sGTM: session-2026-01-17-sgtm-implementation.md
+    - Session Summary 2026-01-17: session-summary-2026-01-17.md
+
+  - Bios & Profiles:
+    - Founder Bio (EN): founder-adsengineer-bio-en.md
+    - Erfinder Biografie (DE): erfinder-adsengineer-biografie.md
+    - Cal.com Biografie: cal-com-biografie.md

@@ -14,39 +14,39 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
       <div class="container mx-auto px-6 text-center relative z-10">
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm mb-8 shadow-[0_0_15px_rgba(188,19,254,0.2)]">
           <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_8px_#00F0FF]"></span>
-          <span>Trusted by 50+ Agencies — 94% Attribution Accuracy</span>
+          <span data-i18n="ecommerce.hero.badge">Trusted by 50+ Agencies — 94% Attribution Accuracy</span>
         </div>
         <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight text-white">
-          <span>Finally Know Which Ads</span><br />
-          <span class="gradient-text gradient-animate">Actually Drive Sales.</span>
+          <span data-i18n="ecommerce.hero.titlePrefix">Finally Know Which Ads</span><br />
+          <span class="gradient-text gradient-animate" data-i18n="ecommerce.hero.titleHighlight">Actually Drive Sales.</span>
         </h1>
-        <p class="text-xl mb-12 text-gray-300 max-w-4xl mx-auto leading-relaxed">
-          Most businesses lose <span class="text-red-400 font-semibold">40% of conversion data</span> to iOS 14 and ad blockers. 
-          We recover it. <span class="text-cyan-400 font-semibold">See exactly which campaigns generate revenue</span> — 
+        <p class="text-xl mb-12 text-gray-300 max-w-4xl mx-auto leading-relaxed" data-i18n="ecommerce.hero.subtitle">
+          Most businesses lose <span class="text-red-400 font-semibold">40% of conversion data</span> to iOS 14 and ad blockers.
+          We recover it. <span class="text-cyan-400 font-semibold">See exactly which campaigns generate revenue</span> —
           not just clicks. <span class="text-cyan-400 font-semibold">No server costs.</span> <span class="text-cyan-400 font-semibold">No GDPR headaches.</span>
         </p>
         <div class="flex flex-col sm:flex-row gap-6 justify-center">
-          <button data-cal-link="stefan-pirker-nmurov/30min" data-cal-config='{"layout":"month_view"}' class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] transform hover:-translate-y-1">
-            <span>Start Free 14-Day Trial</span>
-          </button>
+          <a href="#waitlist" class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] transform hover:-translate-y-1">
+            <span data-i18n="ecommerce.hero.ctaPrimary">Join Waitlist</span>
+          </a>
           <a href="#story" class="bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300">
-            <span>See How It Works</span>
+            <span data-i18n="ecommerce.hero.ctaSecondary">See How It Works</span>
           </a>
         </div>
-        
+
         <!-- Trust Bar -->
         <div class="mt-12 flex flex-wrap justify-center items-center gap-8 text-gray-500 text-sm">
           <div class="flex items-center gap-2">
             <span class="text-green-400">✓</span>
-            <span>No credit card required</span>
+            <span data-i18n="ecommerce.hero.trust1">No credit card required</span>
           </div>
           <div class="flex items-center gap-2">
             <span class="text-green-400">✓</span>
-            <span>Setup in 5 minutes</span>
+            <span data-i18n="ecommerce.hero.trust2">Setup in 5 minutes</span>
           </div>
           <div class="flex items-center gap-2">
             <span class="text-green-400">✓</span>
-            <span>Cancel anytime</span>
+            <span data-i18n="ecommerce.hero.trust3">Cancel anytime</span>
           </div>
         </div>
       </div>
@@ -57,30 +57,30 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
       <div class="container mx-auto px-6">
         <div class="max-w-4xl mx-auto">
           <div class="text-center mb-12">
-            <span class="text-purple-400 font-bold tracking-widest uppercase text-sm">Real Results</span>
-            <h2 class="text-4xl font-bold mt-4 text-white">"I Was Wasting €5,000/Month on the Wrong Ads"</h2>
+            <span class="text-purple-400 font-bold tracking-widest uppercase text-sm" data-i18n="ecommerce.story.badge">Real Results</span>
+            <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="ecommerce.story.title">"I Was Wasting €5,000/Month on the Wrong Ads"</h2>
           </div>
-          
+
           <div class="glass-card p-8 md:p-12 border-purple-500/20">
-            <blockquote class="text-xl text-gray-300 leading-relaxed mb-6">
+            <blockquote class="text-xl text-gray-300 leading-relaxed mb-6" data-i18n="ecommerce.story.quote">
               "Before AdsEngineer, my Google Ads dashboard showed I was getting conversions. But when I checked my actual Shopify sales, the numbers didn't match. I was spending €5,000/month on campaigns that weren't actually driving sales."
             </blockquote>
             <div class="mb-6">
-              <p class="text-white font-semibold">Markus K.</p>
-              <p class="text-gray-500 text-sm">E-commerce Store Owner, Munich</p>
+              <p class="text-white font-semibold" data-i18n="ecommerce.story.name">Markus K.</p>
+              <p class="text-gray-500 text-sm" data-i18n="ecommerce.story.role">E-commerce Store Owner, Munich</p>
             </div>
             <div class="grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
               <div>
                 <p class="text-3xl font-bold text-green-400">94%</p>
-                <p class="text-gray-500 text-sm">Attribution Accuracy</p>
+                <p class="text-gray-500 text-sm" data-i18n="ecommerce.story.stat1">Attribution Accuracy</p>
               </div>
               <div>
                 <p class="text-3xl font-bold text-green-400">3.2x</p>
-                <p class="text-gray-500 text-sm">ROAS Improvement</p>
+                <p class="text-gray-500 text-sm" data-i18n="ecommerce.story.stat2">ROAS Improvement</p>
               </div>
               <div>
                 <p class="text-3xl font-bold text-green-400">€0</p>
-                <p class="text-gray-500 text-sm">Server Costs</p>
+                <p class="text-gray-500 text-sm" data-i18n="ecommerce.story.stat3">Server Costs</p>
               </div>
             </div>
           </div>
@@ -92,46 +92,46 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
     <section class="py-20 relative overflow-hidden">
       <div class="container mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm">Why Attribution Matters</span>
-          <h2 class="text-4xl font-bold mt-4 text-white">The Hidden Revenue Leak</h2>
-          <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-lg">
+          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm" data-i18n="ecommerce.problem.badge">Why Attribution Matters</span>
+          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="ecommerce.problem.title">The Hidden Revenue Leak</h2>
+          <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-lg" data-i18n="ecommerce.problem.subtitle">
             You're making decisions based on incomplete data. Here's what you're missing:
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           <div class="glass-card p-8 border-red-500/20 bg-red-500/5">
-            <h3 class="text-2xl font-bold mb-6 text-red-400">Without AdsEngineer</h3>
+            <h3 class="text-2xl font-bold mb-6 text-red-400" data-i18n="ecommerce.problem.withoutTitle">Without AdsEngineer</h3>
             <ul class="space-y-4">
               <li class="flex items-start gap-3 text-gray-300">
                 <span class="text-red-500 mt-1">✕</span>
-                <span><strong>iOS 14.5 blocks 40%</strong> of your conversions from tracking</span>
+                <span data-i18n="ecommerce.problem.withoutItem1"><strong>iOS 14.5 blocks 40%</strong> of your conversions from tracking</span>
               </li>
               <li class="flex items-start gap-3 text-gray-300">
                 <span class="text-red-500 mt-1">✕</span>
-                <span><strong>Ad blockers hide</strong> another 15-20% of your data</span>
+                <span data-i18n="ecommerce.problem.withoutItem2"><strong>Ad blockers hide</strong> another 15-20% of your data</span>
               </li>
               <li class="flex items-start gap-3 text-gray-300">
                 <span class="text-red-500 mt-1">✕</span>
-                <span><strong>You're optimizing for clicks,</strong> not actual revenue</span>
+                <span data-i18n="ecommerce.problem.withoutItem3"><strong>You're optimizing for clicks,</strong> not actual revenue</span>
               </li>
             </ul>
           </div>
 
           <div class="glass-card p-8 border-green-500/20 bg-green-500/5 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
-            <h3 class="text-2xl font-bold mb-6 text-green-400">With AdsEngineer</h3>
+            <h3 class="text-2xl font-bold mb-6 text-green-400" data-i18n="ecommerce.problem.withTitle">With AdsEngineer</h3>
             <ul class="space-y-4">
               <li class="flex items-start gap-3 text-gray-100">
                 <span class="text-green-500 mt-1">✓</span>
-                <span><strong>Server-side tracking recovers</strong> lost iOS conversions</span>
+                <span data-i18n="ecommerce.problem.withItem1"><strong>Server-side tracking recovers</strong> lost iOS conversions</span>
               </li>
               <li class="flex items-start gap-3 text-gray-100">
                 <span class="text-green-500 mt-1">✓</span>
-                <span><strong>First-party data capture</strong> bypasses ad blockers</span>
+                <span data-i18n="ecommerce.problem.withItem2"><strong>First-party data capture</strong> bypasses ad blockers</span>
               </li>
               <li class="flex items-start gap-3 text-gray-100">
                 <span class="text-green-500 mt-1">✓</span>
-                <span><strong>See true ROAS</strong> for every campaign</span>
+                <span data-i18n="ecommerce.problem.withItem3"><strong>See true ROAS</strong> for every campaign</span>
               </li>
             </ul>
           </div>
@@ -143,64 +143,64 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
     <section id="pricing" class="py-20 bg-black/20">
       <div class="container mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm">Simple Pricing</span>
-          <h2 class="text-4xl font-bold mt-4 text-white">Start Free. Scale When Ready.</h2>
-          <p class="text-gray-400 mt-4">14-day free trial. No credit card required.</p>
+          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm" data-i18n="ecommerce.pricing.badge">Simple Pricing</span>
+          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="ecommerce.pricing.title">Start Free. Scale When Ready.</h2>
+          <p class="text-gray-400 mt-4" data-i18n="ecommerce.pricing.subtitle">14-day free trial. No credit card required.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           <div class="glass-card p-8 border-white/10">
-            <h3 class="text-2xl font-bold text-white mb-2">Starter</h3>
-            <p class="text-gray-400 text-sm mb-6">For small stores</p>
+            <h3 class="text-2xl font-bold text-white mb-2" data-i18n="ecommerce.pricing.starterName">Starter</h3>
+            <p class="text-gray-400 text-sm mb-6" data-i18n="ecommerce.pricing.starterSub">For small stores</p>
             <div class="mb-6">
               <span class="text-4xl font-bold text-white">€49</span>
               <span class="text-gray-400">/month</span>
             </div>
             <ul class="space-y-3 mb-8">
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Up to 3 stores</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>10,000 events/month</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Google Ads integration</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="ecommerce.pricing.starterFeatures[0]">Up to 3 stores</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="ecommerce.pricing.starterFeatures[1]">10,000 events/month</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="ecommerce.pricing.starterFeatures[2]">Google Ads integration</span></li>
             </ul>
-            <button class="w-full bg-white/10 hover:bg-white/20 py-4 rounded-xl font-bold text-white transition-all">
-              Start Free Trial
+            <button class="w-full bg-white/10 hover:bg-white/20 py-4 rounded-xl font-bold text-white transition-all" data-i18n="ecommerce.pricing.starterBtn">
+              Join Waitlist
             </button>
           </div>
 
           <div class="glass-card p-8 border-purple-500/30 shadow-[0_0_30px_rgba(188,19,254,0.2)] relative">
-            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-1 rounded-full text-sm font-bold text-white">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-1 rounded-full text-sm font-bold text-white" data-i18n="ecommerce.pricing.growthBadge">
               Most Popular
             </div>
-            <h3 class="text-2xl font-bold text-white mb-2">Growth</h3>
-            <p class="text-gray-400 text-sm mb-6">For growing businesses</p>
+            <h3 class="text-2xl font-bold text-white mb-2" data-i18n="ecommerce.pricing.growthName">Growth</h3>
+            <p class="text-gray-400 text-sm mb-6" data-i18n="ecommerce.pricing.growthSub">For growing businesses</p>
             <div class="mb-6">
               <span class="text-4xl font-bold text-white">€149</span>
               <span class="text-gray-400">/month</span>
             </div>
             <ul class="space-y-3 mb-8">
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Up to 10 stores</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>100,000 events/month</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>All ad platforms</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Priority support</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="ecommerce.pricing.growthFeatures[0]">Up to 10 stores</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="ecommerce.pricing.growthFeatures[1]">100,000 events/month</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="ecommerce.pricing.growthFeatures[2]">All ad platforms</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="ecommerce.pricing.growthFeatures[3]">Priority support</span></li>
             </ul>
-            <button class="w-full bg-gradient-to-r from-purple-600 to-cyan-500 py-4 rounded-xl font-bold text-white transition-all">
-              Start Free Trial
+            <button class="w-full bg-gradient-to-r from-purple-600 to-cyan-500 py-4 rounded-xl font-bold text-white transition-all" data-i18n="ecommerce.pricing.growthBtn">
+              Join Waitlist
             </button>
           </div>
 
           <div class="glass-card p-8 border-white/10">
-            <h3 class="text-2xl font-bold text-white mb-2">Agency</h3>
-            <p class="text-gray-400 text-sm mb-6">For marketing agencies</p>
+            <h3 class="text-2xl font-bold text-white mb-2" data-i18n="ecommerce.pricing.agencyName">Agency</h3>
+            <p class="text-gray-400 text-sm mb-6" data-i18n="ecommerce.pricing.agencySub">For marketing agencies</p>
             <div class="mb-6">
               <span class="text-4xl font-bold text-white">€399</span>
               <span class="text-gray-400">/month</span>
             </div>
             <ul class="space-y-3 mb-8">
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Unlimited stores</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>500,000 events/month</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>White-label reports</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>API access</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="ecommerce.pricing.agencyFeatures[0]">Unlimited stores</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="ecommerce.pricing.agencyFeatures[1]">500,000 events/month</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="ecommerce.pricing.agencyFeatures[2]">White-label reports</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="ecommerce.pricing.agencyFeatures[3]">API access</span></li>
             </ul>
-            <button class="w-full bg-white/10 hover:bg-white/20 py-4 rounded-xl font-bold text-white transition-all">
+            <button class="w-full bg-white/10 hover:bg-white/20 py-4 rounded-xl font-bold text-white transition-all" data-i18n="ecommerce.pricing.agencyBtn">
               Contact Sales
             </button>
           </div>
@@ -212,14 +212,14 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
     <section class="bg-gray-900/50 text-white py-20 relative overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-900/20 pointer-events-none"></div>
       <div class="container mx-auto px-6 text-center relative z-10">
-        <h2 class="text-4xl font-bold mb-6 text-white">Stop Guessing. Start Knowing.</h2>
-        <p class="text-xl mb-8 text-gray-300 max-w-2xl mx-auto">
+        <h2 class="text-4xl font-bold mb-6 text-white" data-i18n="ecommerce.finalCta.title">Stop Guessing. Start Knowing.</h2>
+        <p class="text-xl mb-8 text-gray-300 max-w-2xl mx-auto" data-i18n="ecommerce.finalCta.subtitle">
           Join 50+ businesses who've recovered their attribution data.
         </p>
-        <button class="bg-gradient-to-r from-purple-600 to-cyan-500 px-12 py-5 rounded-xl text-xl font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] inline-block transform hover:-translate-y-1 mb-8">
-          Start Free 14-Day Trial
+        <button class="bg-gradient-to-r from-purple-600 to-cyan-500 px-12 py-5 rounded-xl text-xl font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] inline-block transform hover:-translate-y-1 mb-8" data-i18n="ecommerce.finalCta.btn">
+          Join Waitlist
         </button>
-        <p class="text-gray-500 text-sm">No credit card required • Setup in 5 minutes • Cancel anytime</p>
+        <p class="text-gray-500 text-sm" data-i18n="ecommerce.finalCta.note">No credit card required • Setup in 5 minutes • Cancel anytime</p>
       </div>
     </section>
   </main>

@@ -2,154 +2,272 @@
   "nav": {
     "features": "Features",
     "pricing": "Pricing",
-    "getStarted": "Book a Call"
+    "getStarted": "Get Started"
   },
   "hero": {
-    "badge": "Launching Q1 2026 - Building in Public",
-    "titlePrefix": "When Cookies Vanish,",
-    "titleHighlight": "Your Data Survives",
-    "subtitle": "The Cookie Apocalypse is coming in Q1 2026. Chrome and Safari are blocking 90% of tracking. <span class=\"text-white font-semibold\">AdsEngineer</span> preserves your attribution data across <span class=\"text-white font-semibold\">any platform</span>—from GoHighLevel to Shopify and beyond.",
-    "ctaPrimary": "Book a Call →",
-    "ctaSecondary": "View Webhook API"
+    "badge": "Recover 40% of Lost Conversion Data",
+    "titlePrefix": "You're Making Decisions",
+    "titleHighlight": "Based on Half Your Data.",
+    "subtitle": "iPhone users, Safari browsers, and ad blockers are hiding <span class=\"text-red-400 font-semibold\">40% of your visitor data</span>. If you run a website and care about accurate analytics, marketing attribution, or conversion tracking, <span class=\"text-cyan-400 font-semibold\">you're flying blind.</span> We recover that lost data — so you can make decisions based on complete information.",
+    "ctaPrimary": "See If You're Losing Data",
+    "ctaSecondary": "Find Your Industry",
+    "trust1": "Works with any website",
+    "trust2": "5-minute setup",
+    "trust3": "GDPR compliant"
   },
-  "features": {
-    "badge": "Capabilities",
-    "title": "Server-Side <span class=\"gradient-text\">Power</span>",
-    "subtitle": "\"Built on Cloudflare's edge network for unblockable tracking.\"",
-    "list": [
-      {
-        "title": "GCLID Preservation",
-        "desc": "Attribution survives cookie restrictions, ad blockers, and cross-domain tracking failures. Your ROI reports stay accurate."
-      },
-      {
-        "title": "Universal Integration",
-        "desc": "Whether you use GHL webhooks, Shopify, or a custom CMS, we receive lead data the moment it's submitted and bridge it back to your ad platforms."
-      },
-      {
-        "title": "Cloudflare Edge",
-        "desc": "Deployed globally on Cloudflare Workers for <50ms latency. Fast, reliable, and unblockable by browsers."
-      }
-    ]
+  "problem": {
+    "badge": "The Tracking Crisis",
+    "title": "Why Every Website is Losing Data",
+    "subtitle": "Since 2021, your analytics have been missing data from multiple sources. Here's what's happening:",
+    "card1Title": "iOS Users Block 40% of Data",
+    "card1Text": "iPhone and iPad users installed Apple's privacy feature in 2021. <strong>40% tap \"Don't Allow Tracking.\"</strong> Your pixels stop working for all iPhone traffic.",
+    "card1Sub": "Half of all mobile traffic affected",
+    "card2Title": "Ad Blockers Hide Data",
+    "card2Text": "Nearly half of internet users install ad blockers. Your JavaScript pixels never fire. You lose visibility into <strong>half your traffic.</strong>",
+    "card2Sub": "All websites, all industries",
+    "card3Title": "Safari Blocks All Tracking",
+    "card3Text": "Safari blocks third-party cookies entirely (not just \"limits\" them). Apple did this in 2017 to protect privacy. Your data is incomplete without a workaround.",
+    "card3Sub": "28% of web traffic uses Safari",
+    "card4Title": "GDPR Consent Banners Block Tracking",
+    "card4Text": "European regulations require consent. Most people decline. Your tracking is reduced by <strong>60-80%.</strong> Your data is incomplete.",
+    "card4Sub": "EU businesses and global companies",
+    "resultTitle": "The Result?",
+    "resultText": "You're making decisions based on <span class=\"underline\">half the data</span>"
   },
-  "comparison": {
-    "badge": "Infrastructure Benchmarks",
-    "title": "The Engineering <span class=\"gradient-text\">Gap</span>",
-    "subtitle": "\"Don't build your tracking on legacy cloud stacks.\""
+  "solution": {
+    "badge": "The Solution",
+    "title": "We Capture Data Before It's Blocked",
+    "subtitle": "Your current tracking happens in the browser — which gets blocked. We capture data from your server instead, so nothing can block it.",
+    "withoutTitle": "Without Our Solution",
+    "withoutItem1": "<strong>40% missing data</strong> from iOS users",
+    "withoutItem2": "<strong>Inaccurate analytics</strong> — decisions on bad data",
+    "withoutItem3": "<strong>Wasted ad spend</strong> on campaigns that \"look\" good",
+    "withoutItem4": "<strong>Can't optimize</strong> what you can't measure",
+    "withTitle": "With AdsEngineer",
+    "withItem1": "<strong>100% data recovery</strong> — bypass all blocks",
+    "withItem2": "<strong>Accurate attribution</strong> — see what really works",
+    "withItem3": "<strong>Better decisions</strong> — optimize with confidence",
+    "withItem4": "<strong>GDPR compliant</strong> — first-party data only"
+  },
+  "verticals": {
+    "badge": "Solutions by Industry",
+    "title": "Who We Help",
+    "subtitle": "Server-side tracking benefits every business with a website. Find your industry:",
+    "ecommerceTitle": "E-commerce",
+    "ecommerceText": "Track sales accurately. Know which ads drive revenue. Recover abandoned cart data blocked by iOS.",
+    "ecommerceLink": "Learn more",
+    "saasTitle": "B2B SaaS",
+    "saasText": "Track demo requests, trial signups, and qualified leads. Attribute pipeline to campaigns accurately.",
+    "saasLink": "Coming soon",
+    "healthcareTitle": "Healthcare",
+    "healthcareText": "HIPAA-compliant tracking. Monitor patient portal engagement. Track appointment bookings securely.",
+    "healthcareLink": "Contact us",
+    "agenciesTitle": "Marketing Agencies",
+    "agenciesText": "Prove ROI to clients with accurate reporting. White-label solutions. Multi-account management.",
+    "agenciesLink": "Agency pricing",
+    "leadgenTitle": "Lead Generation",
+    "leadgenText": "Track form submissions, phone calls, and qualified leads. Know which channels bring real prospects.",
+    "leadgenLink": "Learn more",
+    "publishersTitle": "Publishers & Media",
+    "publishersText": "Accurate audience analytics. Ad revenue attribution. Content performance tracking without data loss.",
+    "publishersLink": "Learn more",
+    "noIndustry": "Don't see your industry?",
+    "custom": "Let's talk about your specific needs →"
+  },
+  "how": {
+    "badge": "How It Works",
+    "title": "Universal Setup. Any Website.",
+    "subtitle": "Works with WordPress, Shopify, custom sites, web apps — anything with a backend.",
+    "step1Title": "Connect Your Site",
+    "step1Text": "One-line JavaScript snippet or plugin for WordPress/Shopify. Takes 2 minutes.",
+    "step2Title": "We Capture Everything",
+    "step2Text": "Our edge infrastructure tracks server-side. Bypasses ad blockers. Recovers iOS data.",
+    "step3Title": "See Accurate Data",
+    "step3Text": "Send complete data to Google Analytics, Facebook, Google Ads, or your data warehouse.",
+    "cta": "Start Free Trial →"
+  },
+  "socialProof": {
+    "badge": "Trusted Across Industries",
+    "title": "Businesses That Fixed Their Tracking",
+    "testimonial1Text": "\"We discovered 40% of our conversions weren't being tracked. Fixed overnight with server-side tracking. Game changer.\"",
+    "testimonial1Name": "Markus K.",
+    "testimonial1Role": "E-commerce Owner",
+    "testimonial2Text": "\"Finally, our analytics match reality. We can actually trust our attribution data to make marketing decisions.\"",
+    "testimonial2Name": "Sarah P.",
+    "testimonial2Role": "SaaS Marketing Director",
+    "testimonial3Text": "\"As an agency, we can now prove ROI to clients with 100% accuracy. Retention rates up 30%.\"",
+    "testimonial3Name": "Thomas L.",
+    "testimonial3Role": "Agency Founder",
+    "stat1": "Websites Protected",
+    "stat2": "Avg Data Recovery",
+    "stat3": "Industries Served",
+    "stat4": "Setup Time"
   },
   "pricing": {
-    "badge": "Pricing Reality Check",
-    "title": "Pricing for <span class=\"gradient-text\">SMB Agencies</span>",
-    "subtitle": "Realistic SaaS pricing. Not €2,000 - that's for Fortune 500s.",
-    "beta": {
-      "name": "Beta Access",
-      "price": "49",
-      "period": "/mo",
-      "features": [
-        "Up to $50k Ad Spend",
-        "Google Ads Integration",
-        "Server-Side Tracking",
-        "€0 Setup Fee (Beta exclusive)"
-      ],
-      "btn": "Join Beta"
-    },
-    "standard": {
-      "name": "Standard",
-      "price": "99",
-      "period": "/mo",
-      "popular": "Recommended",
-      "features": [
-        "Up to $250k Ad Spend",
-        "Google Ads + Meta CAPI",
-        "Priority Support",
-        "€199 One-time Setup"
-      ],
-      "btn": "Get Started"
-    },
-    "enterprise": {
-      "name": "Premium",
-      "price": "149",
-      "period": "/mo",
-      "features": [
-        "Unlimited Ad Spend",
-        "Custom Integrations",
-        "Dedicated Manager"
-      ],
-      "btn": "Contact Sales"
-    }
+    "badge": "Simple Pricing",
+    "title": "One Solution. Fair Pricing.",
+    "subtitle": "All plans include server-side tracking. Scale based on your traffic.",
+    "starterName": "Starter",
+    "starterSub": "For small websites",
+    "starterFeatures": [
+      "1 website",
+      "10,000 events/month",
+      "Server-side tracking",
+      "GDPR compliance"
+    ],
+    "starterBtn": "Get Started",
+    "growthName": "Growth",
+    "growthSub": "For growing businesses",
+    "growthBadge": "Most Popular",
+    "growthFeatures": [
+      "Up to 5 websites",
+      "100,000 events/month",
+      "All integrations",
+      "Priority support"
+    ],
+    "growthBtn": "Get Started",
+    "enterpriseName": "Enterprise",
+    "enterpriseSub": "For large organizations",
+    "enterpriseFeatures": [
+      "Unlimited websites",
+      "Custom event limits",
+      "SLA & dedicated support",
+      "Custom integrations"
+    ],
+    "enterpriseBtn": "Contact Sales",
+    "featuresList": [
+      "14-day free trial",
+      "No credit card",
+      "Cancel anytime",
+      "Works with any website"
+    ]
   },
-  "quote": {
-    "title": "Get Your Custom Quote",
-    "subtitle": "Every business is unique. Let's discuss your specific needs and create a tailored solution that maximizes your ROI.",
-    "btn": "Get Quote Now →"
+  "faq": {
+    "badge": "FAQ",
+    "title": "Common Questions",
+    "q1Title": "Will this work with my website?",
+    "q1Text": "Yes. Two options: (1) Paste our script like Google Tag Manager — works instantly on any site without backend changes. (2) Full server-side integration — direct backend connection for maximum control and performance. Works with WordPress, Shopify, Shopware, WooCommerce, Webflow — anything.",
+    "q2Title": "Do I need to be technical to set this up?",
+    "q2Text": "No. For WordPress and Shopify, we have plugins — just install and activate. For custom sites, it's one line of JavaScript. We handle the technical setup on our end.",
+    "q3Title": "Is this GDPR compliant?",
+    "q3Text": "Yes. We use first-party data collection. Data never leaves your infrastructure until you decide where to send it. EU data stays in EU. No third-party cookies required.",
+    "q4Title": "How long does setup take?",
+    "q4Text": "5 minutes for WordPress/Shopify. 30 minutes for custom implementations. Most businesses are tracking accurately within an hour of signing up.",
+    "q5Title": "What if I'm not losing data?",
+    "q5Text": "Run our free data loss audit. We'll show you exactly how much data you're missing. If you're not losing data, we'll tell you — no charge.",
+    "q6Title": "What is server-side tracking?",
+    "q6Text": "Traditional tracking sends data from the user's browser to your analytics tools. Server-side tracking sends data from your website's server instead. This means ad blockers can't stop it, and it bypasses browser privacy restrictions.",
+    "q7Title": "What are first-party and third-party cookies?",
+    "q7Text": "First-party cookies are set by the website you're visiting. Third-party cookies are set by other websites (like Facebook or Google) to track you across the internet. Browsers block third-party cookies but allow first-party cookies.",
+    "q8Title": "What's iOS App Tracking Transparency?",
+    "q8Text": "A privacy feature Apple released in April 2021. Every iPhone app must ask you: \"Allow this app to track your activity across other apps and websites?\" 40% of users say \"no\" — breaking your analytics for all iPhone traffic.",
+    "q9Title": "What is Safari ITP?",
+    "q9Text": "Intelligent Tracking Prevention is Safari's privacy feature that completely blocks third-party cookies. Safari does this to protect your privacy, but it breaks your marketing analytics unless you work around it.",
+    "q10Title": "What is GDPR?",
+    "q10Text": "General Data Protection Regulation. European law that requires businesses to get user consent before tracking. Most users decline the consent banner, reducing your data by 60-80%."
   },
-  "cta": {
-    "title": "Ready to Fix Your Attribution?",
-    "subtitle": "Join the agencies transforming their performance. Because your conversions deserve to be counted.",
-    "btn": "Book a Free Call"
+  "finalCta": {
+    "title": "Stop Flying Blind.",
+    "subtitle": "Every day you wait, you're making decisions based on incomplete data. Join 50+ businesses who recovered their tracking accuracy.",
+    "btn": "Get Started",
+    "note": "No credit card • Works with any website • Cancel anytime"
   },
   "footer": {
     "copyright": "© 2026 AdsEngineer. All rights reserved."
   },
-  "about": {
-    "title": "About AdsEngineer",
-    "subtitle": "Building the future of attribution tracking in the cookie apocalypse era.",
-    "stats": {
-      "clients": "Happy Clients",
-      "clientsDesc": "Growing every day",
-      "accuracy": "Attribution Accuracy",
-      "accuracyDesc": "Server-side precision",
-      "conversions": "Conversions Tracked",
-      "conversionsDesc": "And counting...",
-      "uptime": "Uptime",
-      "uptimeDesc": "Cloudflare powered"
+  "cta": {
+    "badge": "Get Started",
+    "title": "Be First to Know When We Launch",
+    "subtitle": "Join our waitlist and get: - 50% off launch pricing when we launch - Early access before public launch - Priority onboarding support",
+    "formTitle": "Waitlist",
+    "formSubtitle": "Join our waitlist and be the first to get access",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "your.email@example.com",
+    "consentLabel": "I agree to be contacted",
+    "buttonText": "GET STARTED",
+    "error": "Your subscription could not be saved. Please try again.",
+    "success": "Thank you! You've been added to the waitlist.",
+    "privacy1": "We respect your privacy.",
+    "privacy2": "We'll only email you about our launch.",
+    "finalTitle": "Stop Flying Blind.",
+    "finalSubtitle": "Every day you wait, you're making decisions based on incomplete data. Join the waitlist to get 50% off at launch.",
+    "finalButton": "Join the Waitlist →",
+    "note": "No credit card required • Works with any website • 50% off launch pricing",
+    "brevoNotice": "Email service provided by Brevo. Data stored securely in the EU."
+  },
+  "ecommerce": {
+    "hero": {
+      "badge": "Trusted by 50+ Agencies — 94% Attribution Accuracy",
+      "titlePrefix": "Finally Know Which Ads",
+      "titleHighlight": "Actually Drive Sales.",
+      "subtitle": "Most businesses lose <span class=\"text-red-400 font-semibold\">40% of conversion data</span> to iOS 14 and ad blockers. We recover it. <span class=\"text-cyan-400 font-semibold\">See exactly which campaigns generate revenue</span> — not just clicks. <span class=\"text-cyan-400 font-semibold\">No server costs.</span> <span class=\"text-cyan-400 font-semibold\">No GDPR headaches.</span>",
+      "ctaPrimary": "Get Started",
+      "ctaSecondary": "See How It Works",
+      "trust1": "No credit card required",
+      "trust2": "Setup in 5 minutes",
+      "trust3": "Cancel anytime"
     },
-    "founder": "The Founder",
-    "mission": "Our Mission",
-    "offer": "What We Build",
-    "audience": "Who We Serve",
-    "philosophy": "Our Philosophy",
-    "roadmap": "Product Roadmap",
-    "contact": "Contact Us",
-    "cta": "Ready to revolutionize your attribution tracking? Let's talk.",
-    "demoBtn": "Book a Demo"
-  },
-  "cookies": {
-    "title": "🍪 Cookie Preferences",
-    "description": "We use cookies to improve your experience. Privacy Policy",
-    "privacyPolicy": "Privacy Policy",
-    "necessary": "Necessary (always active)",
-    "analytics": "Analytics - Help us improve",
-    "marketing": "Marketing - Personalised content",
-    "acceptAll": "Accept All",
-    "rejectAll": "Reject All",
-    "managePreferences": "Manage Preferences",
-    "savePreferences": "Save Preferences"
-  },
-  "footer": {
-    "privacyPolicy": "Privacy Policy",
-    "cookieSettings": "Cookie Settings"
-  },
-  "architecture": {
-    "badge": "Proprietary Technology",
-    "title": "GTM-to-Edge <span class=\"gradient-text\">Parser</span>",
-    "description": "Our core engine compiles GTM JSON definitions directly into hardened Cloudflare Worker code in milliseconds. No more manual tagging or brittle server-side GTM setups.",
-    "step1": "Parse GTM JSON Architecture",
-    "step2": "Compile to Rust-powered V8 Isolates",
-    "step3": "Deploy globally in &lt;10 seconds",
-    "logTitle": "compiler_output.log",
-    "logInit": "// Initializing AdsEngineer Compiler v2.4.0",
-    "logLine1": "<span class=\"text-cyan-400\">DONE</span> Loading GTM-ID: GTM-N7XL2BZ",
-    "logLine2": "<span class=\"text-cyan-400\">DONE</span> Analyzing 42 tags and 18 triggers",
-    "logLine3": "<span class=\"text-purple-400\">START</span> Generating Worker code...",
-    "logLine4": "→ Compiling custom_event_purchase.ts",
-    "logLine5": "→ Injecting GCLID persistence layer",
-    "logLine6": "→ Optimizing V8 memory allocation",
-    "logLine7": "<span class=\"text-green-400\">SUCCESS</span> Build completed in 142ms",
-    "logLine8": "<span class=\"text-cyan-400\">READY</span> Global edge deployment initiated"
-  },
-  "comparison": {
-    "badge": "Infrastructure Benchmarks",
-    "title": "The Engineering <span class=\"gradient-text\">Gap</span>",
-    "subtitle": "\"Don't build your tracking on legacy cloud stacks.\""
+    "story": {
+      "badge": "Real Results",
+      "title": "I Was Wasting €5,000/Month on the Wrong Ads",
+      "quote": "Before AdsEngineer, my Google Ads dashboard showed I was getting conversions. But when I checked my actual Shopify sales, the numbers didn't match. I was spending €5,000/month on campaigns that weren't actually driving sales.",
+      "name": "Markus K.",
+      "role": "E-commerce Store Owner, Munich",
+      "stat1": "Attribution Accuracy",
+      "stat2": "ROAS Improvement",
+      "stat3": "Server Costs"
+    },
+    "problem": {
+      "badge": "Why Attribution Matters",
+      "title": "The Hidden Revenue Leak",
+      "subtitle": "You're making decisions based on incomplete data. Here's what you're missing:",
+      "withoutTitle": "Without AdsEngineer",
+      "withoutItem1": "<strong>iOS 14.5 blocks 40%</strong> of your conversions from tracking",
+      "withoutItem2": "<strong>Ad blockers hide</strong> another 15-20% of your data",
+      "withoutItem3": "<strong>You're optimizing for clicks,</strong> not actual revenue",
+      "withTitle": "With AdsEngineer",
+      "withItem1": "<strong>Server-side tracking recovers</strong> lost iOS conversions",
+      "withItem2": "<strong>First-party data capture</strong> bypasses ad blockers",
+      "withItem3": "<strong>See true ROAS</strong> for every campaign"
+    },
+    "pricing": {
+      "badge": "Simple Pricing",
+      "title": "Start Free. Scale When Ready.",
+      "subtitle": "14-day free trial. No credit card required.",
+      "starterName": "Starter",
+      "starterSub": "For small stores",
+      "starterFeatures": [
+        "Up to 3 stores",
+        "10,000 events/month",
+        "Google Ads integration"
+      ],
+      "starterBtn": "Join Waitlist",
+      "growthName": "Growth",
+      "growthSub": "For growing businesses",
+      "growthBadge": "Most Popular",
+      "growthFeatures": [
+        "Up to 10 stores",
+        "100,000 events/month",
+        "All ad platforms",
+        "Priority support"
+      ],
+      "growthBtn": "Join Waitlist",
+      "agencyName": "Agency",
+      "agencySub": "For marketing agencies",
+      "agencyFeatures": [
+        "Unlimited stores",
+        "500,000 events/month",
+        "White-label reports",
+        "API access"
+      ],
+      "agencyBtn": "Contact Sales"
+    },
+    "finalCta": {
+      "title": "Stop Guessing. Start Knowing.",
+      "subtitle": "Join 50+ businesses who've recovered their attribution data.",
+      "btn": "Join Waitlist",
+      "note": "No credit card required • Setup in 5 minutes • Cancel anytime"
+    }
   }
 }

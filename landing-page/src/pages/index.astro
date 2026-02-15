@@ -4,6 +4,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
+import RoiCalculator from '../components/RoiCalculator.astro';
 ---
 
 <Layout>
@@ -14,90 +15,101 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
       <div class="container mx-auto px-6 text-center relative z-10">
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm mb-8 shadow-[0_0_15px_rgba(188,19,254,0.2)]">
           <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_8px_#00F0FF]"></span>
-          <span>Server-Side Tracking for Any Website</span>
+          <span data-i18n="hero.badge">Server-Side Tracking for Any Website</span>
         </div>
         <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight text-white">
-          <span>iOS 14 Blocked Your Tracking.</span><br />
-          <span class="gradient-text gradient-animate">We Fixed It.</span>
+          <span data-i18n="hero.titlePrefix">You're Making Decisions</span><br />
+          <span class="gradient-text gradient-animate" data-i18n="hero.titleHighlight">Based on Half Your Data.</span>
         </h1>
-        <p class="text-xl mb-12 text-gray-300 max-w-4xl mx-auto leading-relaxed">
-          Apple and ad blockers now hide <span class="text-red-400 font-semibold">40% of your visitor data</span>. 
-          If you run a website and care about accurate analytics, marketing attribution, or conversion tracking, 
-          <span class="text-cyan-400 font-semibold">you're flying blind.</span> We recover that lost data with 
-          <span class="text-cyan-400 font-semibold">server-side tracking</span> — 
-          works with any website, any platform, any business.
+        <p class="text-xl mb-12 text-gray-300 max-w-4xl mx-auto leading-relaxed" data-i18n="hero.subtitle">
+          iPhone users, Safari browsers, and ad blockers are hiding <span class="text-red-400 font-semibold">40% of your visitor data</span>.
+          If you run a website and care about accurate analytics, marketing attribution, or conversion tracking,
+          <span class="text-cyan-400 font-semibold">you're flying blind.</span> We recover that lost data —
+          so you can make decisions based on complete information.
         </p>
         <div class="flex flex-col sm:flex-row gap-6 justify-center">
-          <button data-cal-link="stefan-pirker-nmurov/30min" data-cal-config='{"layout":"month_view"}' class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] transform hover:-translate-y-1">
-            <span>See If You're Losing Data</span>
-          </button>
+          <a href="https://app.adsengineer.com/signup" class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] transform hover:-translate-y-1">
+            <span data-i18n="hero.ctaPrimary">See If You're Losing Data</span>
+          </a>
           <a href="#verticals" class="bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300">
-            <span>Find Your Industry</span>
+            <span data-i18n="hero.ctaSecondary">Find Your Industry</span>
           </a>
         </div>
-        
+
         <!-- Trust Bar -->
         <div class="mt-12 flex flex-wrap justify-center items-center gap-8 text-gray-500 text-sm">
           <div class="flex items-center gap-2">
             <span class="text-green-400">✓</span>
-            <span>Works with any website</span>
+            <span data-i18n="hero.trust1">Works with any website</span>
           </div>
           <div class="flex items-center gap-2">
             <span class="text-green-400">✓</span>
-            <span>5-minute setup</span>
+            <span data-i18n="hero.trust2">5-minute setup</span>
           </div>
           <div class="flex items-center gap-2">
             <span class="text-green-400">✓</span>
-            <span>GDPR compliant</span>
+            <span data-i18n="hero.trust3">GDPR compliant</span>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- ROI Calculator Section -->
+    <RoiCalculator />
+
     <!-- The Problem: Universal -->
     <section class="py-20 bg-black/20">
       <div class="container mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-red-400 font-bold tracking-widest uppercase text-sm">The Tracking Crisis</span>
-          <h2 class="text-4xl font-bold mt-4 text-white">Why Every Website is Losing Data</h2>
-          <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-lg">
+          <span class="text-red-400 font-bold tracking-widest uppercase text-sm" data-i18n="problem.badge">The Tracking Crisis</span>
+          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="problem.title">Why Every Website is Losing Data</h2>
+          <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-lg" data-i18n="problem.subtitle">
             In 2021, Apple changed everything. Now your analytics are wrong — no matter what business you're in.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           <div class="glass-card p-8 border-red-500/20 bg-red-500/5">
             <div class="text-4xl mb-4">📱</div>
-            <h3 class="text-xl font-bold text-white mb-3">iOS 14.5+ Blocks Tracking</h3>
-            <p class="text-gray-300 mb-4">
-              Apple's App Tracking Transparency lets users opt out. <strong>40% do.</strong> Your Facebook, Google, and analytics pixels stop working.
+            <h3 class="text-xl font-bold text-white mb-3" data-i18n="problem.card1Title">iOS Users Block 40% of Data</h3>
+            <p class="text-gray-300 mb-4" data-i18n="problem.card1Text">
+              iPhone and iPad users installed Apple's privacy feature in 2021. <strong>40% tap "Don't Allow Tracking."</strong> Your pixels stop working for all iPhone traffic.
             </p>
-            <p class="text-red-400 text-sm">Affected: E-commerce, SaaS, Lead gen, Apps</p>
+            <p class="text-red-400 text-sm" data-i18n="problem.card1Sub">Half of all mobile traffic affected</p>
           </div>
 
           <div class="glass-card p-8 border-orange-500/20 bg-orange-500/5">
-            <div class="text-4xl mb-4">🚫</div>
-            <h3 class="text-xl font-bold text-white mb-3">Ad Blockers Hide Data</h3>
-            <p class="text-gray-300 mb-4">
-              42% of internet users block ads and trackers. Your JavaScript pixels never fire. You lose visibility into <strong>half your traffic.</strong>
+            <div class="text-4xl mb-4">🧨</div>
+            <h3 class="text-xl font-bold text-white mb-3" data-i18n="problem.card2Title">Ad Blockers Hide Data</h3>
+            <p class="text-gray-300 mb-4" data-i18n="problem.card2Text">
+              Nearly half of internet users install ad blockers. Your JavaScript pixels never fire. You lose visibility into <strong>half your traffic.</strong>
             </p>
-            <p class="text-orange-400 text-sm">Affected: All websites, all industries</p>
+            <p class="text-orange-400 text-sm" data-i18n="problem.card2Sub">All websites, all industries</p>
+          </div>
+
+          <div class="glass-card p-8 border-indigo-500/20 bg-indigo-500/5">
+            <div class="text-4xl mb-4">🍎</div>
+            <h3 class="text-xl font-bold text-white mb-3" data-i18n="problem.card3Title">Safari Blocks All Tracking</h3>
+            <p class="text-gray-300 mb-4" data-i18n="problem.card3Text">
+              Safari blocks third-party cookies entirely (not just "limits" them). Apple did this in 2017 to protect privacy. Your data is incomplete without a workaround.
+            </p>
+            <p class="text-indigo-400 text-sm" data-i18n="problem.card3Sub">28% of web traffic uses Safari</p>
           </div>
 
           <div class="glass-card p-8 border-yellow-500/20 bg-yellow-500/5">
-            <div class="text-4xl mb-4">🔒</div>
-            <h3 class="text-xl font-bold text-white mb-3">GDPR & Privacy Laws</h3>
-            <p class="text-gray-300 mb-4">
-              European regulations limit third-party cookies. Consent banners reduce tracking by <strong>60-80%.</strong> Your data is incomplete.
+            <div class="text-4xl mb-4">🏛️</div>
+            <h3 class="text-xl font-bold text-white mb-3" data-i18n="problem.card4Title">GDPR Consent Banners Block Tracking</h3>
+            <p class="text-gray-300 mb-4" data-i18n="problem.card4Text">
+              European regulations require consent. Most people decline. Your tracking is reduced by <strong>60-80%.</strong> Your data is incomplete.
             </p>
-            <p class="text-yellow-400 text-sm">Affected: EU businesses, global companies</p>
+            <p class="text-yellow-400 text-sm" data-i18n="problem.card4Sub">EU businesses and global companies</p>
           </div>
         </div>
 
         <div class="text-center mt-12">
           <div class="inline-block glass-card p-8 border-white/10">
-            <p class="text-xl text-gray-300 mb-2">The Result?</p>
-            <p class="text-3xl font-bold text-red-400">You're making decisions based on <span class="underline">half the data</span></p>
+            <p class="text-xl text-gray-300 mb-2" data-i18n="problem.resultTitle">The Result?</p>
+            <p class="text-3xl font-bold text-red-400" data-i18n="problem.resultText">You're making decisions based on <span class="underline">half the data</span></p>
           </div>
         </div>
       </div>
@@ -107,55 +119,54 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
     <section class="py-20 relative overflow-hidden">
       <div class="container mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-green-400 font-bold tracking-widest uppercase text-sm">The Solution</span>
-          <h2 class="text-4xl font-bold mt-4 text-white">Server-Side Tracking:<br/>The Fix That Works for Everyone</h2>
-          <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-lg">
-            Instead of relying on browser pixels that get blocked, we track from your server. 
-            Bypass ad blockers. Recover iOS data. Get complete accuracy.
+          <span class="text-green-400 font-bold tracking-widest uppercase text-sm" data-i18n="solution.badge">The Solution</span>
+          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="solution.title">We Capture Data Before It's Blocked</h2>
+          <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-lg" data-i18n="solution.subtitle">
+            Your current tracking happens in the browser — which gets blocked. We capture data from your server instead, so nothing can block it.
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           <div class="glass-card p-8 border-red-500/20 bg-red-500/5">
-            <h3 class="text-2xl font-bold mb-6 text-red-400">Without Server-Side Tracking</h3>
+            <h3 class="text-2xl font-bold mb-6 text-red-400" data-i18n="solution.withoutTitle">Without Server-Side Tracking</h3>
             <ul class="space-y-4">
               <li class="flex items-start gap-3 text-gray-300">
                 <span class="text-red-500 mt-1">✕</span>
-                <span><strong>40% missing data</strong> from iOS users</span>
+                <span data-i18n="solution.withoutItem1"><strong>40% missing data</strong> from iOS users</span>
               </li>
               <li class="flex items-start gap-3 text-gray-300">
                 <span class="text-red-500 mt-1">✕</span>
-                <span><strong>Inaccurate analytics</strong> — decisions on bad data</span>
+                <span data-i18n="solution.withoutItem2"><strong>Inaccurate analytics</strong> — decisions on bad data</span>
               </li>
               <li class="flex items-start gap-3 text-gray-300">
                 <span class="text-red-500 mt-1">✕</span>
-                <span><strong>Wasted ad spend</strong> on campaigns that "look" good</span>
+                <span data-i18n="solution.withoutItem3"><strong>Wasted ad spend</strong> on campaigns that "look" good</span>
               </li>
               <li class="flex items-start gap-3 text-gray-300">
                 <span class="text-red-500 mt-1">✕</span>
-                <span><strong>Can't optimize</strong> what you can't measure</span>
+                <span data-i18n="solution.withoutItem4"><strong>Can't optimize</strong> what you can't measure</span>
               </li>
             </ul>
           </div>
 
           <div class="glass-card p-8 border-green-500/20 bg-green-500/5 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
-            <h3 class="text-2xl font-bold mb-6 text-green-400">With AdsEngineer SST</h3>
+            <h3 class="text-2xl font-bold mb-6 text-green-400" data-i18n="solution.withTitle">With AdsEngineer SST</h3>
             <ul class="space-y-4">
               <li class="flex items-start gap-3 text-gray-100">
                 <span class="text-green-500 mt-1">✓</span>
-                <span><strong>100% data recovery</strong> — bypass all blocks</span>
+                <span data-i18n="solution.withItem1"><strong>100% data recovery</strong> — bypass all blocks</span>
               </li>
               <li class="flex items-start gap-3 text-gray-100">
                 <span class="text-green-500 mt-1">✓</span>
-                <span><strong>Accurate attribution</strong> — see what really works</span>
+                <span data-i18n="solution.withItem2"><strong>Accurate attribution</strong> — see what really works</span>
               </li>
               <li class="flex items-start gap-3 text-gray-100">
                 <span class="text-green-500 mt-1">✓</span>
-                <span><strong>Better decisions</strong> — optimize with confidence</span>
+                <span data-i18n="solution.withItem3"><strong>Better decisions</strong> — optimize with confidence</span>
               </li>
               <li class="flex items-start gap-3 text-gray-100">
                 <span class="text-green-500 mt-1">✓</span>
-                <span><strong>GDPR compliant</strong> — first-party data only</span>
+                <span data-i18n="solution.withItem4"><strong>GDPR compliant</strong> — first-party data only</span>
               </li>
             </ul>
           </div>
@@ -167,9 +178,9 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
     <section id="verticals" class="py-20 bg-black/20 border-y border-white/5">
       <div class="container mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-purple-400 font-bold tracking-widest uppercase text-sm">Solutions by Industry</span>
-          <h2 class="text-4xl font-bold mt-4 text-white">Who We Help</h2>
-          <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-lg">
+          <span class="text-purple-400 font-bold tracking-widest uppercase text-sm" data-i18n="verticals.badge">Solutions by Industry</span>
+          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="verticals.title">Who We Help</h2>
+          <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-lg" data-i18n="verticals.subtitle">
             Server-side tracking benefits every business with a website. Find your industry:
           </p>
         </div>
@@ -180,12 +191,12 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
             <div class="w-16 h-16 rounded-2xl bg-purple-500/10 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
               🛍️
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">E-commerce</h3>
-            <p class="text-gray-400 leading-relaxed mb-4">
+            <h3 class="text-xl font-bold text-white mb-3" data-i18n="verticals.ecommerceTitle">E-commerce</h3>
+            <p class="text-gray-400 leading-relaxed mb-4" data-i18n="verticals.ecommerceText">
               Track sales accurately. Know which ads drive revenue. Recover abandoned cart data blocked by iOS.
             </p>
             <div class="flex items-center text-cyan-400 text-sm font-medium">
-              <span>Learn more</span>
+              <span data-i18n="verticals.ecommerceLink">Learn more</span>
               <span class="ml-2 group-hover:translate-x-1 transition-transform">→</span>
             </div>
           </a>
@@ -195,12 +206,12 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
             <div class="w-16 h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
               🚀
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">B2B SaaS</h3>
-            <p class="text-gray-400 leading-relaxed mb-4">
+            <h3 class="text-xl font-bold text-white mb-3" data-i18n="verticals.saasTitle">B2B SaaS</h3>
+            <p class="text-gray-400 leading-relaxed mb-4" data-i18n="verticals.saasText">
               Track demo requests, trial signups, and qualified leads. Attribute pipeline to campaigns accurately.
             </p>
             <div class="flex items-center text-cyan-400 text-sm font-medium">
-              <span>Coming soon</span>
+              <span data-i18n="verticals.saasLink">Coming soon</span>
             </div>
           </div>
 
@@ -209,12 +220,12 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
             <div class="w-16 h-16 rounded-2xl bg-green-500/10 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
               🏥
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Healthcare</h3>
-            <p class="text-gray-400 leading-relaxed mb-4">
+            <h3 class="text-xl font-bold text-white mb-3" data-i18n="verticals.healthcareTitle">Healthcare</h3>
+            <p class="text-gray-400 leading-relaxed mb-4" data-i18n="verticals.healthcareText">
               HIPAA-compliant tracking. Monitor patient portal engagement. Track appointment bookings securely.
             </p>
             <div class="flex items-center text-cyan-400 text-sm font-medium">
-              <span>Contact us</span>
+              <span data-i18n="verticals.healthcareLink">Contact us</span>
             </div>
           </div>
 
@@ -223,12 +234,12 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
             <div class="w-16 h-16 rounded-2xl bg-yellow-500/10 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
               🏢
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Marketing Agencies</h3>
-            <p class="text-gray-400 leading-relaxed mb-4">
+            <h3 class="text-xl font-bold text-white mb-3" data-i18n="verticals.agenciesTitle">Marketing Agencies</h3>
+            <p class="text-gray-400 leading-relaxed mb-4" data-i18n="verticals.agenciesText">
               Prove ROI to clients with accurate reporting. White-label solutions. Multi-account management.
             </p>
             <div class="flex items-center text-cyan-400 text-sm font-medium">
-              <span>Agency pricing</span>
+              <span data-i18n="verticals.agenciesLink">Agency pricing</span>
             </div>
           </div>
 
@@ -237,12 +248,12 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
             <div class="w-16 h-16 rounded-2xl bg-pink-500/10 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
               📋
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Lead Generation</h3>
-            <p class="text-gray-400 leading-relaxed mb-4">
+            <h3 class="text-xl font-bold text-white mb-3" data-i18n="verticals.leadgenTitle">Lead Generation</h3>
+            <p class="text-gray-400 leading-relaxed mb-4" data-i18n="verticals.leadgenText">
               Track form submissions, phone calls, and qualified leads. Know which channels bring real prospects.
             </p>
             <div class="flex items-center text-cyan-400 text-sm font-medium">
-              <span>Learn more</span>
+              <span data-i18n="verticals.leadgenLink">Learn more</span>
               <span class="ml-2 group-hover:translate-x-1 transition-transform">→</span>
             </div>
           </div>
@@ -252,22 +263,22 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
             <div class="w-16 h-16 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
               📰
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Publishers & Media</h3>
-            <p class="text-gray-400 leading-relaxed mb-4">
+            <h3 class="text-xl font-bold text-white mb-3" data-i18n="verticals.publishersTitle">Publishers & Media</h3>
+            <p class="text-gray-400 leading-relaxed mb-4" data-i18n="verticals.publishersText">
               Accurate audience analytics. Ad revenue attribution. Content performance tracking without data loss.
             </p>
             <div class="flex items-center text-cyan-400 text-sm font-medium">
-              <span>Learn more</span>
+              <span data-i18n="verticals.publishersLink">Learn more</span>
               <span class="ml-2 group-hover:translate-x-1 transition-transform">→</span>
             </div>
           </div>
         </div>
 
         <div class="text-center mt-12">
-          <p class="text-gray-400 mb-4">Don't see your industry?</p>
-          <button data-cal-link="stefan-pirker-nmurov/30min" class="text-cyan-400 hover:text-cyan-300 font-medium">
+          <p class="text-gray-400 mb-4" data-i18n="verticals.noIndustry">Don't see your industry?</p>
+          <a href="#waitlist" class="text-cyan-400 hover:text-cyan-300 font-medium" data-i18n="verticals.custom">
             Let's talk about your specific needs →
-          </button>
+          </a>
         </div>
       </div>
     </section>
@@ -276,9 +287,9 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
     <section class="py-20">
       <div class="container mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm">How It Works</span>
-          <h2 class="text-4xl font-bold mt-4 text-white">Universal Setup. Any Website.</h2>
-          <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-lg">
+          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm" data-i18n="how.badge">How It Works</span>
+          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="how.title">Universal Setup. Any Website.</h2>
+          <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-lg" data-i18n="how.subtitle">
             Works with WordPress, Shopify, custom sites, web apps — anything with a backend.
           </p>
         </div>
@@ -286,25 +297,25 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           <div class="text-center">
             <div class="w-20 h-20 rounded-full bg-purple-500/20 flex items-center justify-center text-3xl mx-auto mb-6 text-purple-400 font-bold">1</div>
-            <h3 class="text-xl font-bold text-white mb-3">Connect Your Site</h3>
-            <p class="text-gray-400">One-line JavaScript snippet or plugin for WordPress/Shopify. Takes 2 minutes.</p>
+            <h3 class="text-xl font-bold text-white mb-3" data-i18n="how.step1Title">Connect Your Site</h3>
+            <p class="text-gray-400" data-i18n="how.step1Text">One-line JavaScript snippet or plugin for WordPress/Shopify. Takes 2 minutes.</p>
           </div>
 
           <div class="text-center">
             <div class="w-20 h-20 rounded-full bg-cyan-500/20 flex items-center justify-center text-3xl mx-auto mb-6 text-cyan-400 font-bold">2</div>
-            <h3 class="text-xl font-bold text-white mb-3">We Capture Everything</h3>
-            <p class="text-gray-400">Our edge infrastructure tracks server-side. Bypasses ad blockers. Recovers iOS data.</p>
+            <h3 class="text-xl font-bold text-white mb-3" data-i18n="how.step2Title">We Capture Everything</h3>
+            <p class="text-gray-400" data-i18n="how.step2Text">Our edge infrastructure tracks server-side. Bypasses ad blockers. Recovers iOS data.</p>
           </div>
 
           <div class="text-center">
             <div class="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center text-3xl mx-auto mb-6 text-green-400 font-bold">3</div>
-            <h3 class="text-xl font-bold text-white mb-3">See Accurate Data</h3>
-            <p class="text-gray-400">Send complete data to Google Analytics, Facebook, Google Ads, or your data warehouse.</p>
+            <h3 class="text-xl font-bold text-white mb-3" data-i18n="how.step3Title">See Accurate Data</h3>
+            <p class="text-gray-400" data-i18n="how.step3Text">Send complete data to Google Analytics, Facebook, Google Ads, or your data warehouse.</p>
           </div>
         </div>
 
         <div class="text-center mt-12">
-          <a href="#pricing" class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] inline-block transform hover:-translate-y-1">
+          <a href="#pricing" class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-10 py-5 rounded-xl text-lg font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] inline-block transform hover:-translate-y-1" data-i18n="how.cta">
             Start Free Trial →
           </a>
         </div>
@@ -315,8 +326,8 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
     <section class="py-20 bg-black/20">
       <div class="container mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-purple-400 font-bold tracking-widest uppercase text-sm">Trusted Across Industries</span>
-          <h2 class="text-4xl font-bold mt-4 text-white">Businesses That Fixed Their Tracking</h2>
+          <span class="text-purple-400 font-bold tracking-widest uppercase text-sm" data-i18n="socialProof.badge">Trusted Across Industries</span>
+          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="socialProof.title">Businesses That Fixed Their Tracking</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
@@ -324,12 +335,12 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
             <div class="flex items-center gap-1 mb-4">
               <span class="text-yellow-400">★★★★★</span>
             </div>
-            <p class="text-gray-300 mb-6">"We discovered 40% of our conversions weren't being tracked. Fixed overnight with server-side tracking. Game changer."</p>
+            <p class="text-gray-300 mb-6" data-i18n="socialProof.testimonial1Text">"We discovered 40% of our conversions weren't being tracked. Fixed overnight with server-side tracking. Game changer."</p>
             <div class="flex items-center gap-3">
               <div class="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center text-purple-400 font-bold">MK</div>
               <div>
-                <p class="text-white font-medium">Markus K.</p>
-                <p class="text-gray-500 text-sm">E-commerce Owner</p>
+                <p class="text-white font-medium" data-i18n="socialProof.testimonial1Name">Markus K.</p>
+                <p class="text-gray-500 text-sm" data-i18n="socialProof.testimonial1Role">E-commerce Owner</p>
               </div>
             </div>
           </div>
@@ -338,12 +349,12 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
             <div class="flex items-center gap-1 mb-4">
               <span class="text-yellow-400">★★★★★</span>
             </div>
-            <p class="text-gray-300 mb-6">"Finally, our analytics match reality. We can actually trust our attribution data to make marketing decisions."</p>
+            <p class="text-gray-300 mb-6" data-i18n="socialProof.testimonial2Text">"Finally, our analytics match reality. We can actually trust our attribution data to make marketing decisions."</p>
             <div class="flex items-center gap-3">
               <div class="w-12 h-12 bg-cyan-500/20 rounded-full flex items-center justify-center text-cyan-400 font-bold">SP</div>
               <div>
-                <p class="text-white font-medium">Sarah P.</p>
-                <p class="text-gray-500 text-sm">SaaS Marketing Director</p>
+                <p class="text-white font-medium" data-i18n="socialProof.testimonial2Name">Sarah P.</p>
+                <p class="text-gray-500 text-sm" data-i18n="socialProof.testimonial2Role">SaaS Marketing Director</p>
               </div>
             </div>
           </div>
@@ -352,12 +363,12 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
             <div class="flex items-center gap-1 mb-4">
               <span class="text-yellow-400">★★★★★</span>
             </div>
-            <p class="text-gray-300 mb-6">"As an agency, we can now prove ROI to clients with 100% accuracy. Retention rates up 30%."</p>
+            <p class="text-gray-300 mb-6" data-i18n="socialProof.testimonial3Text">"As an agency, we can now prove ROI to clients with 100% accuracy. Retention rates up 30%."</p>
             <div class="flex items-center gap-3">
               <div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 font-bold">TL</div>
               <div>
-                <p class="text-white font-medium">Thomas L.</p>
-                <p class="text-gray-500 text-sm">Agency Founder</p>
+                <p class="text-white font-medium" data-i18n="socialProof.testimonial3Name">Thomas L.</p>
+                <p class="text-gray-500 text-sm" data-i18n="socialProof.testimonial3Role">Agency Founder</p>
               </div>
             </div>
           </div>
@@ -368,19 +379,19 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
           <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
               <p class="text-4xl font-bold text-cyan-400">50+</p>
-              <p class="text-gray-500 text-sm mt-1">Websites Protected</p>
+              <p class="text-gray-500 text-sm mt-1" data-i18n="socialProof.stat1">Websites Protected</p>
             </div>
             <div>
               <p class="text-4xl font-bold text-purple-400">40%</p>
-              <p class="text-gray-500 text-sm mt-1">Avg Data Recovery</p>
+              <p class="text-gray-500 text-sm mt-1" data-i18n="socialProof.stat2">Avg Data Recovery</p>
             </div>
             <div>
               <p class="text-4xl font-bold text-green-400">6</p>
-              <p class="text-gray-500 text-sm mt-1">Industries Served</p>
+              <p class="text-gray-500 text-sm mt-1" data-i18n="socialProof.stat3">Industries Served</p>
             </div>
             <div>
               <p class="text-4xl font-bold text-yellow-400">2min</p>
-              <p class="text-gray-500 text-sm mt-1">Setup Time</p>
+              <p class="text-gray-500 text-sm mt-1" data-i18n="socialProof.stat4">Setup Time</p>
             </div>
           </div>
         </div>
@@ -391,64 +402,64 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
     <section id="pricing" class="py-20 bg-black/20">
       <div class="container mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm">Simple Pricing</span>
-          <h2 class="text-4xl font-bold mt-4 text-white">One Solution. Fair Pricing.</h2>
-          <p class="text-gray-400 mt-4">All plans include server-side tracking. Scale based on your traffic.</p>
+          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm" data-i18n="pricing.badge">Simple Pricing</span>
+          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="pricing.title">One Solution. Fair Pricing.</h2>
+          <p class="text-gray-400 mt-4" data-i18n="pricing.subtitle">All plans include server-side tracking. Scale based on your traffic.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           <div class="glass-card p-8 border-white/10">
-            <h3 class="text-2xl font-bold text-white mb-2">Starter</h3>
-            <p class="text-gray-400 text-sm mb-6">For small websites</p>
+            <h3 class="text-2xl font-bold text-white mb-2" data-i18n="pricing.starterName">Starter</h3>
+            <p class="text-gray-400 text-sm mb-6" data-i18n="pricing.starterSub">For small websites</p>
             <div class="mb-6">
               <span class="text-4xl font-bold text-white">€49</span>
               <span class="text-gray-400">/month</span>
             </div>
             <ul class="space-y-3 mb-8">
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>1 website</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>10,000 events/month</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Server-side tracking</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>GDPR compliance</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="pricing.starterFeatures[0]">1 website</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="pricing.starterFeatures[1]">10,000 events/month</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="pricing.starterFeatures[2]">Server-side tracking</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="pricing.starterFeatures[3]">GDPR compliance</span></li>
             </ul>
-            <button class="w-full bg-white/10 hover:bg-white/20 py-4 rounded-xl font-bold text-white transition-all">
-              Start Free Trial
+            <button class="w-full bg-white/10 hover:bg-white/20 py-4 rounded-xl font-bold text-white transition-all" data-i18n="pricing.starterBtn">
+              Join Waitlist
             </button>
           </div>
 
           <div class="glass-card p-8 border-purple-500/30 shadow-[0_0_30px_rgba(188,19,254,0.2)] relative">
-            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-1 rounded-full text-sm font-bold text-white">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-cyan-500 px-4 py-1 rounded-full text-sm font-bold text-white" data-i18n="pricing.growthBadge">
               Most Popular
             </div>
-            <h3 class="text-2xl font-bold text-white mb-2">Growth</h3>
-            <p class="text-gray-400 text-sm mb-6">For growing businesses</p>
+            <h3 class="text-2xl font-bold text-white mb-2" data-i18n="pricing.growthName">Growth</h3>
+            <p class="text-gray-400 text-sm mb-6" data-i18n="pricing.growthSub">For growing businesses</p>
             <div class="mb-6">
               <span class="text-4xl font-bold text-white">€149</span>
               <span class="text-gray-400">/month</span>
             </div>
             <ul class="space-y-3 mb-8">
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Up to 5 websites</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>100,000 events/month</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>All integrations</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Priority support</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="pricing.growthFeatures[0]">Up to 5 websites</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="pricing.growthFeatures[1]">100,000 events/month</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="pricing.growthFeatures[2]">All integrations</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="pricing.growthFeatures[3]">Priority support</span></li>
             </ul>
-            <button class="w-full bg-gradient-to-r from-purple-600 to-cyan-500 py-4 rounded-xl font-bold text-white transition-all">
-              Start Free Trial
+            <button class="w-full bg-gradient-to-r from-purple-600 to-cyan-500 py-4 rounded-xl font-bold text-white transition-all" data-i18n="pricing.growthBtn">
+              Join Waitlist
             </button>
           </div>
 
           <div class="glass-card p-8 border-white/10">
-            <h3 class="text-2xl font-bold text-white mb-2">Enterprise</h3>
-            <p class="text-gray-400 text-sm mb-6">For large organizations</p>
+            <h3 class="text-2xl font-bold text-white mb-2" data-i18n="pricing.enterpriseName">Enterprise</h3>
+            <p class="text-gray-400 text-sm mb-6" data-i18n="pricing.enterpriseSub">For large organizations</p>
             <div class="mb-6">
               <span class="text-4xl font-bold text-white">Custom</span>
             </div>
             <ul class="space-y-3 mb-8">
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Unlimited websites</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Custom event limits</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>SLA & dedicated support</span></li>
-              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span>Custom integrations</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="pricing.enterpriseFeatures[0]">Unlimited websites</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="pricing.enterpriseFeatures[1]">Custom event limits</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="pricing.enterpriseFeatures[2]">SLA & dedicated support</span></li>
+              <li class="flex items-center gap-2 text-gray-300"><span class="text-green-400">✓</span><span data-i18n="pricing.enterpriseFeatures[3]">Custom integrations</span></li>
             </ul>
-            <button class="w-full bg-white/10 hover:bg-white/20 py-4 rounded-xl font-bold text-white transition-all">
+            <button class="w-full bg-white/10 hover:bg-white/20 py-4 rounded-xl font-bold text-white transition-all" data-i18n="pricing.enterpriseBtn">
               Contact Sales
             </button>
           </div>
@@ -458,19 +469,19 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
           <div class="flex flex-wrap justify-center gap-6 text-gray-500 text-sm">
             <div class="flex items-center gap-2">
               <span class="text-green-400">✓</span>
-              <span>14-day free trial</span>
+              <span data-i18n="pricing.featuresList[0]">14-day free trial</span>
             </div>
             <div class="flex items-center gap-2">
               <span class="text-green-400">✓</span>
-              <span>No credit card</span>
+              <span data-i18n="pricing.featuresList[1]">No credit card</span>
             </div>
             <div class="flex items-center gap-2">
               <span class="text-green-400">✓</span>
-              <span>Cancel anytime</span>
+              <span data-i18n="pricing.featuresList[2]">Cancel anytime</span>
             </div>
             <div class="flex items-center gap-2">
               <span class="text-green-400">✓</span>
-              <span>Works with any website</span>
+              <span data-i18n="pricing.featuresList[3]">Works with any website</span>
             </div>
           </div>
         </div>
@@ -481,55 +492,242 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
     <section class="py-20 bg-black/20">
       <div class="container mx-auto px-6 max-w-4xl">
         <div class="text-center mb-16">
-          <span class="text-purple-400 font-bold tracking-widest uppercase text-sm">FAQ</span>
-          <h2 class="text-4xl font-bold mt-4 text-white">Common Questions</h2>
+          <span class="text-purple-400 font-bold tracking-widest uppercase text-sm" data-i18n="faq.badge">FAQ</span>
+          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="faq.title">Common Questions</h2>
         </div>
 
         <div class="space-y-6">
           <div class="glass-card p-6 border-white/10">
-            <h3 class="text-lg font-bold text-white mb-2">Will this work with my website?</h3>
-            <p class="text-gray-400">Yes. If your website has a backend (which all websites do), we can implement server-side tracking. Works with WordPress, Shopify, Webflow, custom sites, React apps — anything.</p>
+            <h3 class="text-lg font-bold text-white mb-2" data-i18n="faq.q1Title">Will this work with my website?</h3>
+            <p class="text-gray-400" data-i18n="faq.q1Text">Yes. Just add a small script to your site — like Google Tag Manager. No backend changes needed. Works with WordPress, Shopify, Shopware, WooCommerce, Webflow, custom sites — anything. For advanced setups, we also support full server-side integration.</p>
           </div>
 
           <div class="glass-card p-6 border-white/10">
-            <h3 class="text-lg font-bold text-white mb-2">Do I need to be technical to set this up?</h3>
-            <p class="text-gray-400">No. For WordPress and Shopify, we have plugins — just install and activate. For custom sites, it's one line of JavaScript. We handle the technical setup on our end.</p>
+            <h3 class="text-lg font-bold text-white mb-2" data-i18n="faq.q2Title">Do I need to be technical to set this up?</h3>
+            <p class="text-gray-400" data-i18n="faq.q2Text">No. For WordPress and Shopify, we have plugins — just install and activate. For custom sites, it's one line of JavaScript. We handle the technical setup on our end.</p>
           </div>
 
           <div class="glass-card p-6 border-white/10">
-            <h3 class="text-lg font-bold text-white mb-2">Is this GDPR compliant?</h3>
-            <p class="text-gray-400">Yes. We use first-party data collection. Data never leaves your infrastructure until you decide where to send it. EU data stays in EU. No third-party cookies required.</p>
+            <h3 class="text-lg font-bold text-white mb-2" data-i18n="faq.q3Title">Is this GDPR compliant?</h3>
+            <p class="text-gray-400" data-i18n="faq.q3Text">Yes. We use first-party data collection. Data never leaves your infrastructure until you decide where to send it. EU data stays in EU. No third-party cookies required.</p>
           </div>
 
           <div class="glass-card p-6 border-white/10">
-            <h3 class="text-lg font-bold text-white mb-2">How long does setup take?</h3>
-            <p class="text-gray-400">5 minutes for WordPress/Shopify. 30 minutes for custom implementations. Most businesses are tracking accurately within an hour of signing up.</p>
+            <h3 class="text-lg font-bold text-white mb-2" data-i18n="faq.q4Title">How long does setup take?</h3>
+            <p class="text-gray-400" data-i18n="faq.q4Text">5 minutes for WordPress/Shopify. 30 minutes for custom implementations. Most businesses are tracking accurately within an hour of signing up.</p>
           </div>
 
           <div class="glass-card p-6 border-white/10">
-            <h3 class="text-lg font-bold text-white mb-2">What if I'm not losing data?</h3>
-            <p class="text-gray-400">Run our free data loss audit. We'll show you exactly how much data you're missing. If you're not losing data, we'll tell you — no charge.</p>
+            <h3 class="text-lg font-bold text-white mb-2" data-i18n="faq.q5Title">What if I'm not losing data?</h3>
+            <p class="text-gray-400" data-i18n="faq.q5Text">Run our free data loss audit. We'll show you exactly how much data you're missing. If you're not losing data, we'll tell you — no charge.</p>
+          </div>
+
+          <div class="glass-card p-6 border-white/10">
+            <h3 class="text-lg font-bold text-white mb-2" data-i18n="faq.q6Title">What is server-side tracking?</h3>
+            <p class="text-gray-400" data-i18n="faq.q6Text">Traditional tracking sends data from the user's browser to your analytics tools. Server-side tracking sends data from your website's server instead. This means ad blockers can't stop it, and it bypasses browser privacy restrictions.</p>
+          </div>
+
+          <div class="glass-card p-6 border-white/10">
+            <h3 class="text-lg font-bold text-white mb-2" data-i18n="faq.q7Title">What are first-party and third-party cookies?</h3>
+            <p class="text-gray-400" data-i18n="faq.q7Text">First-party cookies are set by the website you're visiting. Third-party cookies are set by other websites (like Facebook or Google) to track you across the internet. Browsers block third-party cookies but allow first-party cookies.</p>
+          </div>
+
+          <div class="glass-card p-6 border-white/10">
+            <h3 class="text-lg font-bold text-white mb-2" data-i18n="faq.q8Title">What's iOS App Tracking Transparency?</h3>
+            <p class="text-gray-400" data-i18n="faq.q8Text">A privacy feature Apple released in April 2021. Every iPhone app must ask you: "Allow this app to track your activity across other apps and websites?" 40% of users say "no" — breaking your analytics for all iPhone traffic.</p>
+          </div>
+
+          <div class="glass-card p-6 border-white/10">
+            <h3 class="text-lg font-bold text-white mb-2" data-i18n="faq.q9Title">What is Safari ITP?</h3>
+            <p class="text-gray-400" data-i18n="faq.q9Text">Intelligent Tracking Prevention is Safari's privacy feature that completely blocks third-party cookies. Safari does this to protect your privacy, but it breaks your marketing analytics unless you work around it.</p>
+          </div>
+
+          <div class="glass-card p-6 border-white/10">
+            <h3 class="text-lg font-bold text-white mb-2" data-i18n="faq.q10Title">What is GDPR?</h3>
+            <p class="text-gray-400" data-i18n="faq.q10Text">General Data Protection Regulation. European law that requires businesses to get user consent before tracking. Most users decline the consent banner, reducing your data by 60-80%.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Final CTA -->
+<!-- Waitlist Section (Brevo Form) -->
+    <section id="waitlist" class="py-20 bg-black/30 border-y border-white/5">
+      <div class="container mx-auto px-6 max-w-2xl mx-auto">
+        <div class="text-center mb-12">
+          <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm">
+            <span data-i18n="cta.badge">Join Waitlist</span>
+          </span>
+          <h2 class="text-4xl font-bold mt-4 text-white" data-i18n="cta.title">
+            Be First to Know When We Launch
+          </h2>
+          <p class="text-gray-400 mt-4 max-w-2xl mx-auto" data-i18n="cta.subtitle">
+            Join our waitlist and get:
+            <br/>- 50% off launch pricing when we launch
+            <br/>- Early access before public launch
+            <br/>- Priority onboarding support
+          </p>
+        </div>
+
+        <!-- Waitlist Form -->
+        <div class="max-w-md mx-auto">
+          <form id="waitlist-form" class="bg-white rounded-xl p-8 shadow-lg space-y-6">
+            <div id="form-error" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+            <div id="form-success" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm" data-i18n="cta.success">Thank you! You've been added to the waitlist.</div>
+            
+            <div>
+              <label for="waitlist-name" class="block text-sm font-medium text-gray-700 mb-2" data-i18n="cta.nameLabel">Name</label>
+              <input 
+                type="text" 
+                id="waitlist-name" 
+                name="name"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+                placeholder="Your Name"
+              />
+            </div>
+            
+            <div>
+              <label for="waitlist-email" class="block text-sm font-medium text-gray-700 mb-2" data-i18n="cta.emailLabel">Email <span class="text-red-500">*</span></label>
+              <input 
+                type="email" 
+                id="waitlist-email" 
+                name="email" 
+                required 
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+                placeholder="your.email@example.com"
+                data-i18n-placeholder="cta.emailPlaceholder"
+              />
+            </div>
+            
+            <div class="flex items-start gap-3">
+              <input 
+                type="checkbox" 
+                id="waitlist-consent" 
+                name="consent"
+                required
+                class="mt-1 w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-600"
+              />
+              <label 
+                for="waitlist-consent" 
+                class="text-sm text-gray-600"
+                data-i18n="cta.consentLabel"
+              >
+                I agree to be contacted <span class="text-red-500">*</span>
+              </label>
+            </div>
+            
+            <div class="h-captcha flex justify-center" data-sitekey="TODO_REPLACE_WITH_HCAPTCHA_SITE_KEY"></div>
+            
+            <button 
+              type="submit" 
+              class="w-full bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 shadow-lg"
+              data-i18n="cta.buttonText"
+            >
+              JOIN WAITLIST
+            </button>
+          </form>
+          
+          <p class="text-center text-gray-400 text-sm mt-6" data-i18n="cta.note">
+            <span data-i18n="cta.privacy1">We respect your privacy.</span>
+            <span data-i18n="cta.privacy2">We'll only email you about our launch.</span>
+          </p>
+          
+          <p class="text-center text-gray-500 text-xs mt-3" data-i18n="cta.brevoNotice">
+            Email service provided by Brevo. Data stored securely in the EU.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA Backup (scrolls to waitlist) -->
     <section class="bg-gray-900/50 text-white py-20 relative overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-900/20 pointer-events-none"></div>
       <div class="container mx-auto px-6 text-center relative z-10">
-        <h2 class="text-4xl font-bold mb-6 text-white">Stop Flying Blind.</h2>
-        <p class="text-xl mb-8 text-gray-300 max-w-2xl mx-auto">
-          Every day you wait, you're making decisions based on incomplete data. 
-          Join 50+ businesses who recovered their tracking accuracy.
+        <h2 class="text-4xl font-bold mb-6 text-white" data-i18n="cta.finalTitle">
+          Stop Flying Blind.
+        </h2>
+        <p class="text-xl mb-8 text-gray-300 max-w-2xl mx-auto" data-i18n="cta.finalSubtitle">
+          Every day you wait, you're making decisions based on incomplete data.
+          Join the waitlist to get 50% off at launch.
         </p>
-        <button data-cal-link="stefan-pirker-nmurov/30min" data-cal-config='{"layout":"month_view"}' class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-12 py-5 rounded-xl text-xl font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] hover:shadow-[0_0_30px_rgba(188,19,254,0.6)] inline-block transform hover:-translate-y-1 mb-8">
-          Start Free 14-Day Trial
-        </button>
-        <p class="text-gray-500 text-sm">No credit card • Works with any website • Cancel anytime</p>
+        <a href="https://app.adsengineer.com/signup" class="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-cyan-500 hover:to-purple-600 px-12 py-5 rounded-xl text-xl font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(188,19,254,0.4)] inline-block transform hover:-translate-y-1 mb-8">
+          <span data-i18n="cta.finalButton">Join the Waitlist →</span>
+        </a>
+        <p class="text-gray-500 text-sm" data-i18n="cta.note">No credit card required • Works with any website • 50% off launch pricing</p>
       </div>
     </section>
   </main>
   <Footer />
   <WhatsAppButton />
 </Layout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('waitlist-form');
+    const errorDiv = document.getElementById('form-error');
+    const successDiv = document.getElementById('form-success');
+    
+    window.submitWaitlistForm = async function() {
+      const email = document.getElementById('waitlist-email').value;
+      const name = document.getElementById('waitlist-name')?.value || '';
+      const consent = document.getElementById('waitlist-consent')?.checked || false;
+      const locale = document.documentElement.lang || 'en';
+      
+      if (typeof hcaptcha === 'undefined') {
+        errorDiv.textContent = 'hCaptcha not loaded. Please refresh the page.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+      
+      const hcaptchaResponse = hcaptcha.getResponse();
+      
+      if (!hcaptchaResponse) {
+        errorDiv.textContent = locale === 'de' 
+          ? 'Bitte bestätigen Sie, dass Sie kein Roboter sind.'
+          : 'Please verify that you are not a robot.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+      
+      errorDiv.classList.add('hidden');
+      successDiv.classList.add('hidden');
+      
+      try {
+        const response = await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, locale, hcaptchaToken: hcaptchaResponse, consentToContact: consent })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+          successDiv.classList.remove('hidden');
+          form.reset();
+          hcaptcha.reset();
+        } else {
+          console.error('API Error:', data);
+          errorDiv.textContent = data.error || (locale === 'de' 
+            ? 'Ihre Anmeldung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.'
+            : 'Your subscription could not be saved. Please try again.');
+          errorDiv.classList.remove('hidden');
+          hcaptcha.reset();
+        }
+      } catch (error) {
+        errorDiv.textContent = locale === 'de' 
+          ? 'Ihre Anmeldung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.'
+          : 'Your subscription could not be saved. Please try again.';
+        errorDiv.classList.remove('hidden');
+        hcaptcha.reset();
+      }
+    };
+    
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        window.submitWaitlistForm();
+      });
+    }
+  });
+</script>

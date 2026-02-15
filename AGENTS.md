@@ -110,6 +110,44 @@ serverless/.opencode/skill/
 └── add-platform/SKILL.md    # Guide for adding new platforms
 ```
 
+## AI TOOLS
+
+### GrepAI - Semantic Code Search
+**Purpose:** Privacy-first semantic code search for AI agents (local, reduces token usage)
+
+**Setup:**
+```bash
+# 1. Ensure Ollama is running
+curl http://localhost:11434/api/tags || echo "Start Ollama first"
+
+# 2. Pull embedding model
+ollama pull nomic-embed-text
+
+# 3. Initialize (already done)
+grepai init
+
+# 4. Start indexing daemon
+grepai watch
+```
+
+**Usage:**
+```bash
+# Search with natural language
+grepai search "authentication middleware"
+grepai search "how conversions are processed"
+
+# Check status
+grepai status
+
+# For AI agents (compact JSON)
+grepai search "error handling" --json --compact
+```
+
+**Configuration:** `.grepai/config.yaml`  
+**Index Storage:** `.grepai/` (gitignored, regenerable)  
+**Size:** ~20-100MB typical  
+**Docs:** https://github.com/yoanbernabeu/grepai
+
 ## ANTI-PATTERNS
 - Committing secrets (Use Doppler)
 - Direct `node_modules` modification
@@ -118,3 +156,4 @@ serverless/.opencode/skill/
 - Hardcoded external API keys
 - Database queries in route handlers
 - Synchronous operations in workers
+- Committing `.grepai/` index (regenerate with `grepai watch`)

@@ -11,24 +11,24 @@ const { show = true } = Astro.props;
     <div class="max-w-6xl mx-auto bg-[#1a1a2e] border border-gray-700 rounded-2xl p-6 md:p-8 shadow-2xl">
       <div class="flex flex-col md:flex-row gap-6 items-start">
         <div class="flex-1">
-          <h3 class="text-lg font-semibold text-white mb-2" data-i18n="cookies.title">🍪 Cookie Preferences</h3>
+          <h3 class="text-lg font-semibold text-white mb-2" data-i18n="cookies.title">🍪 Cookie-Einstellungen</h3>
           <p class="text-gray-300 text-sm mb-4" data-i18n="cookies.description">
-            <span>We use cookies to improve your experience. </span>
-            <a href="/privacy-policy" class="text-purple-400 hover:text-purple-300 underline" data-i18n="cookies.privacyPolicy">Privacy Policy</a>
+            <span>Wir verwenden Cookies, um Ihre Erfahrung zu verbessern. </span>
+            <a href="/privacy-policy" class="text-purple-400 hover:text-purple-300 underline" data-i18n="cookies.privacyPolicy">Datenschutzrichtlinie</a>
           </p>
 
           <div id="cookie-preferences" class="hidden space-y-3 mt-4">
             <label class="flex items-center gap-3 cursor-pointer">
               <input type="checkbox" checked disabled class="w-4 h-4 accent-purple-500">
-              <span class="text-sm text-gray-300" data-i18n="cookies.necessary">Necessary (always active)</span>
+              <span class="text-sm text-gray-300" data-i18n="cookies.necessary">Notwendig (immer aktiv)</span>
             </label>
             <label class="flex items-center gap-3 cursor-pointer">
               <input type="checkbox" id="consent-analytics" class="w-4 h-4 accent-purple-500">
-              <span class="text-sm text-gray-300" data-i18n="cookies.analytics">Analytics - Help us improve</span>
+              <span class="text-sm text-gray-300" data-i18n="cookies.analytics">Analytics - Hilf uns zu verbessern</span>
             </label>
             <label class="flex items-center gap-3 cursor-pointer">
               <input type="checkbox" id="consent-marketing" class="w-4 h-4 accent-purple-500">
-              <span class="text-sm text-gray-300" data-i18n="cookies.marketing">Marketing - Personalised content</span>
+              <span class="text-sm text-gray-300" data-i18n="cookies.marketing">Marketing - Personalisierte Inhalte</span>
             </label>
           </div>
         </div>
@@ -40,21 +40,21 @@ const { show = true } = Astro.props;
               class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium py-3 px-6 rounded-xl transition-all"
               data-i18n="cookies.acceptAll"
             >
-              Accept All
+              Alle akzeptieren
             </button>
             <button
               id="cookie-reject-all"
               class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-xl transition-all"
               data-i18n="cookies.rejectAll"
             >
-              Reject All
+              Alle ablehnen
             </button>
             <button
               id="cookie-manage"
               class="text-purple-400 hover:text-purple-300 text-sm font-medium"
               data-i18n="cookies.managePreferences"
             >
-              Manage Preferences
+              Einstellungen verwalten
             </button>
           </div>
 
@@ -64,7 +64,7 @@ const { show = true } = Astro.props;
               class="w-full bg-purple-600 hover:bg-purple-500 text-white font-medium py-3 px-6 rounded-xl transition-all"
               data-i18n="cookies.savePreferences"
             >
-              Save Preferences
+              Einstellungen speichern
             </button>
           </div>
         </div>

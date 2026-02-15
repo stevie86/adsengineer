@@ -2,154 +2,275 @@
   "nav": {
     "features": "Funktionen",
     "pricing": "Preise",
-    "getStarted": "Termin buchen"
+    "getStarted": "Jetzt starten"
   },
   "hero": {
-    "badge": "Start Q1 2026 - Wir entwickeln transparent",
-    "titlePrefix": "Wenn Cookies verschwinden,",
-    "titleHighlight": "bleiben Ihre Daten bestehen",
-    "subtitle": "Chrome führt Nutzerkontrolle ein. Safari und Firefox blockieren bereits das meiste Tracking. <span class=\"text-white font-semibold\">Das echte Problem: 90% Ihrer Attributionsdaten gehen verloren.</span> <span class=\"text-white font-semibold\">AdsEngineer</span> sichert diese Daten server-seitig und macht Ihr Tracking auf <span class=\"text-white font-semibold\">jeder Plattform</span> unzerstörbar.",
-    "ctaPrimary": "Termin vereinbaren →",
-    "ctaSecondary": "Webhook-API ansehen"
+    "badge": "40 % verlorene Conversions zurückgewinnen",
+    "titlePrefix": "Treffen Sie Entscheidungen",
+    "titleHighlight": "auf Basis der Hälfte Ihrer Daten",
+    "subtitle": "iPhone‑Nutzer, Safari‑Browser und Ad‑Blocker verbergen <span class=\"text-red-400 font-semibold\">40 % Ihrer Besucherdaten</span>. Wenn Sie eine Website betreiben und auf präzise Analysen, Marketing‑Attribution oder Conversion‑Tracking angewiesen sind, <span class=\"text-cyan-400 font-semibold\">fliegen Sie blind</span>. Wir stellen diese verlorenen Daten wieder her – damit Sie fundierte Entscheidungen auf vollständigen Informationen treffen können.",
+    "ctaPrimary": "Datenverlust prüfen",
+    "ctaSecondary": "Ihre Branche finden",
+    "trust1": "Funktioniert mit jeder Website",
+    "trust2": "5‑Minuten‑Setup",
+    "trust3": "DSGVO‑konform"
   },
-  "features": {
-    "badge": "Fähigkeiten",
-    "title": "Server-Side <span class=\"gradient-text\">Power</span>",
-    "subtitle": "\"Gebaut auf dem Edge-Netzwerk von Cloudflare für blockierungsfreies Tracking.\"",
-    "list": [
-      {
-        "title": "GCLID-Sicherung",
-        "desc": "Attribution übersteht Cookie-Beschränkungen, Ad-Blocker und Tracking-Fehler. Ihre ROI-Berichte bleiben präzise."
-      },
-      {
-        "title": "Universelle Integration",
-        "desc": "Egal ob GoHighLevel Webhooks, Shopify oder eigenes CMS – wir empfangen Lead-Daten sofort und übertragen sie an Ihre Werbeplattformen."
-      },
-      {
-        "title": "Cloudflare Edge-Netzwerk",
-        "desc": "Global auf Cloudflare Workers deployed für <50ms Latenz. Schnell, zuverlässig und unblockierbar für Browser."
-      }
-    ]
+  "problem": {
+    "badge": "Die Tracking‑Krise",
+    "title": "Warum jede Website Daten verliert",
+    "subtitle": "Seit 2021 fehlen Ihren Analysen Daten aus mehreren Quellen. Das passiert:",
+    "card1Title": "iOS‑Nutzer blockieren 40 % Ihrer Daten",
+    "card1Text": "iPhone‑ und iPad‑Nutzer haben 2021 die Datenschutzfunktion von Apple aktiviert. <strong>40 % tippen \"Nicht zulassen\"</strong>. Ihre Tracking‑Pixel funktionieren nicht mehr für den gesamten iPhone‑Traffic.",
+    "card1Sub": "Die Hälfte des mobilen Traffics betroffen",
+    "card2Title": "Ad‑Blocker verbergen Daten",
+    "card2Text": "Fast die Hälfte aller Internetnutzer nutzt Ad‑Blocker. Ihre JavaScript‑Pixel werden nie ausgelöst. Sie verlieren Sicht auf <strong>die Hälfte Ihres Traffics</strong>.",
+    "card2Sub": "Alle Websites, alle Branchen",
+    "card3Title": "Safari blockiert das gesamte Tracking",
+    "card3Text": "Safari blockiert Drittanbieter‑Cookies vollständig (nicht nur \"eingeschränkt\"). Apple hat das 2017 zum Schutz der Privatsphäre eingeführt. Ohne Work‑around sind Ihre Daten unvollständig.",
+    "card3Sub": "28 % des Web‑Traffics nutzt Safari",
+    "card4Title": "DSGVO‑Consent‑Banner blockieren Tracking",
+    "card4Text": "EU‑Regelungen verlangen Einwilligung. Die meisten Nutzer lehnen ab. Ihr Tracking wird um <strong>60‑80 %</strong> reduziert. Ihre Daten sind unvollständig.",
+    "card4Sub": "EU‑Unternehmen und globale Firmen",
+    "resultTitle": "Das Ergebnis?",
+    "resultText": "Sie treffen Entscheidungen basierend auf <span class=\"underline\">nur der Hälfte der Daten</span>"
   },
-  "comparison": {
-    "badge": "Infrastruktur-Benchmarks",
-    "title": "Der technische <span class=\"gradient-text\">Unterschied</span>",
-    "subtitle": "\"Bauen Sie Ihr Tracking nicht auf veralteten Cloud-Stacks.\""
+  "solution": {
+    "badge": "Die Lösung",
+    "title": "Wir erfassen Daten, bevor sie blockiert werden",
+    "subtitle": "Ihr aktuelles Tracking läuft im Browser – wo es blockiert wird. Wir erfassen die Daten stattdessen serverseitig, sodass nichts sie aufhalten kann.",
+    "withoutTitle": "Ohne unsere Lösung",
+    "withoutItem1": "<strong>40 % fehlende Daten</strong> von iOS‑Nutzern",
+    "withoutItem2": "<strong>Ungenaue Analysen</strong> – Entscheidungen basierend auf falschen Daten",
+    "withoutItem3": "<strong>Verschwendetes Werbebudget</strong> für Kampagnen, die nur gut aussehen",
+    "withoutItem4": "<strong>Keine Optimierung möglich</strong>, weil Sie nicht messen können",
+    "withTitle": "Mit AdsEngineer",
+    "withItem1": "<strong>100 % Datenwiederherstellung</strong> – Umgeht alle Blockaden",
+    "withItem2": "<strong>Präzise Attribution</strong> – Sie sehen, was wirklich funktioniert",
+    "withItem3": "<strong>Bessere Entscheidungen</strong> – Optimieren Sie mit Vertrauen",
+    "withItem4": "<strong>DSGVO‑konform</strong> – Nur First‑Party‑Daten"
+  },
+  "verticals": {
+    "badge": "Lösungen nach Branche",
+    "title": "Wen wir helfen",
+    "subtitle": "Server‑seitiges Tracking liefert jedem Unternehmen mit Website Mehrwert. Finden Sie Ihre Branche:",
+    "ecommerceTitle": "E‑Commerce",
+    "ecommerceText": "Verfolgen Sie Verkäufe exakt. Erkennen Sie, welche Anzeigen Umsatz generieren. Wir stellen iOS‑blockierte Warenkorbdaten wieder her.",
+    "ecommerceLink": "Mehr erfahren",
+    "saasTitle": "B2B SaaS",
+    "saasText": "Verfolgen Sie Demo‑Anfragen, Test‑Registrierungen und qualifizierte Leads. Präzise Attribution der Pipeline zu Kampagnen.",
+    "saasLink": "Bald verfügbar",
+    "healthcareTitle": "Gesundheitswesen",
+    "healthcareText": "HIPAA‑konformes Tracking. Überwachen Sie das Engagement im Patientenportal. Verfolgen Sie Terminbuchungen sicher.",
+    "healthcareLink": "Kontakt",
+    "agenciesTitle": "Marketing‑Agenturen",
+    "agenciesText": "Beweisen Sie ROI für Kunden mit exakter Berichterstattung. White‑Label‑Lösungen. Multi‑Account‑Management.",
+    "agenciesLink": "Agentur‑Preise",
+    "leadgenTitle": "Lead‑Generierung",
+    "leadgenText": "Verfolgen Sie Formular‑Einreichungen, Anrufe und qualifizierte Leads. Erfahren Sie, welche Kanäle echte Interessenten bringen.",
+    "leadgenLink": "Mehr erfahren",
+    "publishersTitle": "Publisher & Medien",
+    "publishersText": "Präzise Audience‑Analytics. Anzeigen‑Umsatz‑Attribution. Content‑Performance‑Tracking ohne Datenverlust.",
+    "publishersLink": "Mehr erfahren",
+    "noIndustry": "Ihre Branche fehlt?",
+    "custom": "Sprechen Sie mit uns über Ihre individuellen Anforderungen →"
+  },
+  "how": {
+    "badge": "Wie es funktioniert",
+    "title": "Universelles Setup. Jede Website.",
+    "subtitle": "Funktioniert mit WordPress, Shopify, eigenen Websites, Web‑Apps – alles mit Backend.",
+    "step1Title": "Verbinden Sie Ihre Website",
+    "step1Text": "Ein‑Zeilen‑JavaScript‑Snippet oder Plugin für WordPress/Shopify. In 2 Minuten erledigt.",
+    "step2Title": "Wir erfassen alles",
+    "step2Text": "Unsere Edge‑Infrastruktur trackt server‑seitig. Umgeht Ad‑Blocker. Stellt iOS‑Daten wieder her.",
+    "step3Title": "Sehen Sie exakte Daten",
+    "step3Text": "Senden Sie vollständige Daten an Google Analytics, Facebook, Google Ads oder Ihr Data‑Warehouse.",
+    "cta": "Kostenlos testen →"
+  },
+  "socialProof": {
+    "badge": "Vertrauen branchenübergreifend",
+    "title": "Unternehmen, die ihr Tracking repariert haben",
+    "testimonial1Text": "\"Wir haben entdeckt, dass 40 % unserer Conversions nicht erfasst wurden. Über Nacht mit server‑seitigem Tracking behoben. Ein echter Game‑Changer.\"",
+    "testimonial1Name": "Markus K.",
+    "testimonial1Role": "E‑Commerce‑Inhaber",
+    "testimonial2Text": "\"Endlich stimmen unsere Analysen mit der Realität überein. Wir können unseren Attributions‑Daten vertrauen und fundierte Marketing‑Entscheidungen treffen.\"",
+    "testimonial2Name": "Sarah P.",
+    "testimonial2Role": "SaaS‑Marketing‑Direktorin",
+    "testimonial3Text": "\"Als Agentur können wir jetzt ROI mit 100 % Genauigkeit nachweisen. Die Kundenbindung stieg um 30 %.\"",
+    "testimonial3Name": "Thomas L.",
+    "testimonial3Role": "Agentur‑Gründer",
+    "stat1": "Geschützte Websites",
+    "stat2": "Durchschnittliche Daten‑Wiederherstellung",
+    "stat3": "Bediente Branchen",
+    "stat4": "Setup‑Zeit"
   },
   "pricing": {
-    "badge": "Preis-Realitätscheck",
-    "title": "Preise für <span class=\"gradient-text\">SMB-Agenturen</span>",
-    "subtitle": "Realistische SaaS-Preise. Nicht 2.000 € – das ist was Fortune-500-Unternehmen zahlen.",
-    "beta": {
-      "name": "Beta-Zugang",
-      "price": "49",
-      "period": "/Monat",
-      "features": [
-        "Bis zu 50.000 $ Ad-Ausgaben",
-        "Google Ads Integration",
-        "Server-seitiges Tracking",
-        "0 € Setup-Gebühr (Beta-exklusiv)"
-      ],
-      "btn": "Beta beitreten"
-    },
-    "standard": {
-      "name": "Standard",
-      "price": "99",
-      "period": "/Monat",
-      "popular": "Empfohlen",
-      "features": [
-        "Bis zu 250.000 $ Ad-Ausgaben",
-        "Google Ads + Meta Conversions API",
-        "Priority-Support",
-        "199 € Einmaliges Setup"
-      ],
-      "btn": "Jetzt starten"
-    },
-    "enterprise": {
-      "name": "Premium",
-      "price": "149",
-      "period": "/Monat",
-      "features": [
-        "Unbegrenzte Ad-Ausgaben",
-        "Maßgeschneiderte Integrationen",
-        "Dedizierter Account Manager"
-      ],
-      "btn": "Vertrieb kontaktieren"
-    }
+    "badge": "Einfache Preise",
+    "title": "Eine Lösung. Faire Preise.",
+    "subtitle": "Alle Pläne enthalten server‑seitiges Tracking. Skalieren Sie nach Traffic.",
+    "starterName": "Starter",
+    "starterSub": "Für kleine Websites",
+    "starterFeatures": [
+      "1 Website",
+      "10.000 Events/Monat",
+      "Server‑seitiges Tracking",
+      "DSGVO‑konform"
+    ],
+    "starterBtn": "Jetzt starten",
+    "growthName": "Growth",
+    "growthSub": "Für wachsende Unternehmen",
+    "growthBadge": "Beliebteste",
+    "growthFeatures": [
+      "Bis zu 5 Websites",
+      "100.000 Events/Monat",
+      "Alle Integrationen",
+      "Prioritäts‑Support"
+    ],
+    "growthBtn": "Jetzt starten",
+    "enterpriseName": "Enterprise",
+    "enterpriseSub": "Für große Organisationen",
+    "enterpriseFeatures": [
+      "Unbegrenzte Websites",
+      "Individuelle Event‑Limits",
+      "SLA & dedizierter Support",
+      "Individuelle Integrationen"
+    ],
+    "enterpriseBtn": "Vertrieb kontaktieren",
+    "featuresList": [
+      "14‑tägige Testphase",
+      "Keine Kreditkarte erforderlich",
+      "Jederzeit kündbar",
+      "Funktioniert mit jeder Website"
+    ]
   },
-  "quote": {
-    "title": "Erhalten Sie Ihr individuelles Angebot",
-    "subtitle": "Jedes Unternehmen ist einzigartig. Lassen Sie uns Ihre spezifischen Anforderungen besprechen und eine maßgeschneiderte Lösung erstellen, die Ihren ROI maximiert.",
-    "btn": "Jetzt Angebot anfordern →"
+  "faq": {
+    "badge": "FAQ",
+    "title": "Häufige Fragen",
+    "q1Title": "Funktioniert das mit meiner Website?",
+    "q1Text": "Ja. Zwei Optionen: (1) Unser Script wie Google Tag Manager – sofort auf jeder Seite ohne Backend‑Änderungen. (2) Vollständige server‑seitige Integration – direkte Anbindung für maximale Kontrolle und Performance. Funktioniert mit WordPress, Shopify, Shopware, WooCommerce, Webflow – alles.",
+    "q2Title": "Muss ich technisch versiert sein?",
+    "q2Text": "Nein. Für WordPress und Shopify gibt es Plugins – einfach installieren und aktivieren. Für eigene Seiten reicht ein Zeilen‑Script. Wir erledigen das technische Setup für Sie.",
+    "q3Title": "Ist das DSGVO‑konform?",
+    "q3Text": "Ja. Wir nutzen First‑Party‑Datenerfassung. Daten verlassen nie Ihre Infrastruktur, bis Sie entscheiden, wo sie hingehen. EU‑Daten bleiben in der EU. Keine Dritt‑Cookies nötig.",
+    "q4Title": "Wie lange dauert das Setup?",
+    "q4Text": "5 Minuten für WordPress/Shopify. 30 Minuten für individuelle Implementierungen. Die meisten Unternehmen tracken exakt innerhalb einer Stunde nach Anmeldung.",
+    "q5Title": "Was, wenn ich keine Daten verliere?",
+    "q5Text": "Führen Sie unser kostenloses Daten‑Verlust‑Audit durch. Wir zeigen Ihnen exakt, wie viele Daten Ihnen fehlen. Wenn Sie nichts verlieren, sagen wir es – ohne Kosten.",
+    "q6Title": "Was ist server‑seitiges Tracking?",
+    "q6Text": "Traditionelles Tracking sendet Daten vom Browser des Nutzers zu Ihren Analyse‑Tools. Server‑seitiges Tracking sendet Daten vom Server Ihrer Website. Dadurch können Ad‑Blocker nicht mehr blockieren und Browser‑Privatsphäre‑Beschränkungen werden umgangen.",
+    "q7Title": "Was sind First‑Party‑ und Third‑Party‑Cookies?",
+    "q7Text": "First‑Party‑Cookies werden von der besuchten Website gesetzt. Third‑Party‑Cookies stammen von anderen Domains (z. B. Facebook, Google) und verfolgen Sie über das Internet. Browser blockieren Third‑Party‑Cookies, erlauben aber First‑Party‑Cookies.",
+    "q8Title": "Was ist iOS App Tracking Transparency?",
+    "q8Text": "Datenschutz‑Feature von Apple seit April 2021. Jede iPhone‑App muss fragen: \"Darf diese App Ihre Aktivitäten über andere Apps und Websites verfolgen?\" 40 % der Nutzer sagen \"Nein\" – das bricht Ihre Analysen für den gesamten iPhone‑Traffic.",
+    "q9Title": "Was ist Safari ITP?",
+    "q9Text": "Intelligent Tracking Prevention ist Safaris Datenschutz‑Feature, das Dritt‑Party‑Cookies komplett blockiert. Apple schützt damit die Privatsphäre, aber es zerstört Ihr Marketing‑Tracking, sofern Sie nicht umgehen.",
+    "q10Title": "Was ist die DSGVO?",
+    "q10Text": "Datenschutz‑Verordnung. EU‑Gesetz, das Unternehmen verpflichtet, vor dem Tracking die Einwilligung der Nutzer einzuholen. Die meisten Nutzer lehnen das Consent‑Banner ab, wodurch Ihre Daten um 60‑80 % reduziert werden."
+  },
+  "finalCta": {
+    "title": "Hören Sie auf, blind zu fliegen.",
+    "subtitle": "Jeden Tag, den Sie warten, treffen Sie Entscheidungen auf unvollständigen Daten. Schließen Sie sich über 50 Unternehmen an, die ihre Tracking‑Genauigkeit wiederhergestellt haben.",
+    "btn": "Jetzt starten",
+    "note": "Keine Kreditkarte • Funktioniert mit jeder Website • Jederzeit kündbar"
+  },
+  "footer": {
+    "copyright": "© 2026 AdsEngineer. Alle Rechte vorbehalten."
   },
   "cta": {
-    "title": "Bereit, Ihre Attribution zu reparieren?",
-    "subtitle": "Schließen Sie sich Agenturen an, die ihre Performance revolutionieren. Denn Ihre Conversions verdienen es, gezählt zu werden.",
-    "btn": "Kostenlosen Termin buchen"
+    "badge": "Jetzt starten",
+    "title": "Seien Sie der Erste, der von unserem Launch erfährt",
+    "subtitle": "Melden Sie sich für die Warteliste an und erhalten Sie: - 50 % Rabatt beim Launch - Früher Zugang vor dem öffentlichen Launch - Priorisierte Onboarding‑Unterstützung",
+    "formTitle": "Warteliste",
+    "formSubtitle": "Melden Sie sich an und erhalten Sie als Ersten Zugang",
+    "nameLabel": "Name",
+    "emailLabel": "E‑Mail",
+    "emailPlaceholder": "ihre.email@beispiel.de",
+    "consentLabel": "Ich willige ein, kontaktiert zu werden",
+    "buttonText": "JETZT STARTEN",
+    "error": "Ihre Anmeldung konnte nicht gespeichert werden. Bitte erneut versuchen.",
+    "success": "Ihre Anmeldung war erfolgreich.",
+    "privacy1": "Wir respektieren Ihre Privatsphäre.",
+    "privacy2": "Wir senden Ihnen nur E‑Mails zu unserem Launch.",
+    "finalTitle": "Hören Sie auf, blind zu fliegen.",
+    "finalSubtitle": "Jeden Tag, den Sie warten, treffen Sie Entscheidungen auf unvollständigen Daten. Treten Sie der Warteliste bei und erhalten Sie 50 % Rabatt beim Launch.",
+    "finalButton": "Warteliste beitreten →",
+    "note": "Keine Kreditkarte erforderlich • Funktioniert mit jeder Website • 50 % Rabatt beim Launch",
+    "brevoNotice": "E‑Mail‑Service von Brevo. Daten sicher in der EU gespeichert."
   },
-  "footer": {
-    "copyright": "© 2026 AdsEngineer.cloud. Alle Rechte vorbehalten."
-  },
-  "about": {
-    "title": "Über AdsEngineer",
-    "subtitle": "Wir bauen die Zukunft der Attributionsverfolgung in der Cookie-Apokalypse.",
-    "stats": {
-      "clients": "Zufriedene Kunden",
-      "clientsDesc": "Wächst jeden Tag",
-      "accuracy": "Attributionsgenauigkeit",
-      "accuracyDesc": "Server-seitige Präzision",
-      "conversions": "Verfolgte Conversions",
-      "conversionsDesc": "Und es werden mehr...",
-      "uptime": "Verfügbarkeit",
-      "uptimeDesc": "Cloudflare-powered"
+  "ecommerce": {
+    "hero": {
+      "badge": "Vertraut von 50+ Agenturen – 94 % Attribution‑Genauigkeit",
+      "titlePrefix": "Wissen Sie endlich, welche Anzeigen",
+      "titleHighlight": "tatsächlich Verkäufe generieren.",
+      "subtitle": "Die meisten Unternehmen verlieren <span class=\"text-red-400 font-semibold\">40 % ihrer Conversion‑Daten</span> durch iOS 14 und Ad‑Blocker. Wir stellen sie wieder her. <span class=\"text-cyan-400 font-semibold\">Sehen Sie exakt, welche Kampagnen Umsatz bringen</span> – nicht nur Klicks. <span class=\"text-cyan-400 font-semibold\">Keine Server‑Kosten.</span> <span class=\"text-cyan-400 font-semibold\">Keine DSGVO‑Komplikationen.</span>",
+      "ctaPrimary": "Jetzt starten",
+      "ctaSecondary": "So funktioniert es",
+      "trust1": "Keine Kreditkarte nötig",
+      "trust2": "Setup in 5 Minuten",
+      "trust3": "Jederzeit kündbar"
     },
-    "founder": "Der Gründer",
-    "mission": "Unsere Mission",
-    "offer": "Was wir bauen",
-    "audience": "Wen wir bedienen",
-    "philosophy": "Unsere Philosophie",
-    "roadmap": "Produkt-Roadmap",
-    "contact": "Kontakt",
-    "cta": "Bereit, deine Attributionsverfolgung zu revolutionieren? Lass uns reden.",
-    "demoBtn": "Demo buchen"
-  },
-  "cookies": {
-    "title": "🍪 Cookie-Einstellungen",
-    "description": "Wir verwenden Cookies, um Ihre Erfahrung zu verbessern. Datenschutzrichtlinie",
-    "privacyPolicy": "Datenschutzrichtlinie",
-    "necessary": "Notwendig (immer aktiv)",
-    "analytics": "Analytik - Hilf uns zu verbessern",
-    "marketing": "Marketing - Personalisierter Inhalt",
-    "acceptAll": "Alle akzeptieren",
-    "rejectAll": "Alle ablehnen",
-    "managePreferences": "Einstellungen verwalten",
-    "savePreferences": "Einstellungen speichern"
-  },
-  "footer": {
-    "privacyPolicy": "Datenschutzrichtlinie",
-    "cookieSettings": "Cookie-Einstellungen"
-  },
-  "architecture": {
-    "badge": "Patentierte Technologie",
-    "title": "GTM-zu-Edge <span class=\"gradient-text\">Parser</span>",
-    "description": "Unsere Kern-Engine kompiliert GTM-JSON-Definitionen direkt in gehärteten Cloudflare-Worker-Code in Millisekunden. Kein manuelles Tagging mehr oder brüchige server-seitige GTM-Setups.",
-    "step1": "GTM-JSON-Architektur parsen",
-    "step2": "Zu Rust-gesteuerten V8-Isolates kompilieren",
-    "step3": "Globale Bereitstellung in &lt;10 Sekunden",
-    "logTitle": "compiler_output.log",
-    "logInit": "// Initializing AdsEngineer Compiler v2.4.0",
-    "logLine1": "<span class=\"text-cyan-400\">DONE</span> Loading GTM-ID: GTM-N7XL2BZ",
-    "logLine2": "<span class=\"text-cyan-400\">DONE</span> Analyzing 42 tags and 18 triggers",
-    "logLine3": "<span class=\"text-purple-400\">START</span> Generating Worker code...",
-    "logLine4": "→ Compiling custom_event_purchase.ts",
-    "logLine5": "→ Injecting GCLID persistence layer",
-    "logLine6": "→ Optimizing V8 memory allocation",
-    "logLine7": "<span class=\"text-green-400\">SUCCESS</span> Build completed in 142ms",
-    "logLine8": "<span class=\"text-cyan-400\">READY</span> Global edge deployment initiated"
-  },
-  "comparison": {
-    "badge": "Infrastruktur-Benchmarks",
-    "title": "Der technische <span class=\"gradient-text\">Unterschied</span>",
-    "subtitle": "\"Bauen Sie Ihr Tracking nicht auf veralteten Cloud-Stacks.\""
+    "story": {
+      "badge": "Echte Ergebnisse",
+      "title": "Ich habe 5.000 €/Monat für falsche Anzeigen ausgegeben",
+      "quote": "Vor AdsEngineer zeigte mein Google‑Ads‑Dashboard Conversions, aber meine tatsächlichen Shopify‑Verkäufe stimmten nicht überein. Ich habe 5.000 €/Monat für Kampagnen ausgegeben, die keinen Umsatz erzeugten.",
+      "name": "Markus K.",
+      "role": "E‑Commerce‑Inhaber, München",
+      "stat1": "Attributions‑Genauigkeit",
+      "stat2": "ROAS‑Verbesserung",
+      "stat3": "Server‑Kosten"
+    },
+    "problem": {
+      "badge": "Warum Attribution wichtig ist",
+      "title": "Das versteckte Umsatz‑Leck",
+      "subtitle": "Sie treffen Entscheidungen auf unvollständigen Daten. Das fehlt Ihnen:",
+      "withoutTitle": "Ohne AdsEngineer",
+      "withoutItem1": "<strong>iOS 14.5 blockiert 40 %</strong> Ihrer Conversions",
+      "withoutItem2": "<strong>Ad‑Blocker verbergen</strong> weitere 15‑20 % Ihrer Daten",
+      "withoutItem3": "<strong>Sie optimieren für Klicks</strong>, nicht für echten Umsatz",
+      "withTitle": "Mit AdsEngineer",
+      "withItem1": "<strong>Server‑seitiges Tracking stellt wieder her</strong> verlorene iOS‑Conversions",
+      "withItem2": "<strong>First‑Party‑Datenerfassung</strong> umgeht Ad‑Blocker",
+      "withItem3": "<strong>Sie sehen echtes ROAS</strong> für jede Kampagne"
+    },
+    "pricing": {
+      "badge": "Einfache Preise",
+      "title": "Starten Sie kostenlos. Skalieren Sie, wenn Sie bereit sind.",
+      "subtitle": "14‑tägige Testphase. Keine Kreditkarte nötig.",
+      "starterName": "Starter",
+      "starterSub": "Für kleine Shops",
+      "starterFeatures": [
+        "Bis zu 3 Stores",
+        "10.000 Events/Monat",
+        "Google‑Ads‑Integration"
+      ],
+      "starterBtn": "Warteliste beitreten",
+      "growthName": "Growth",
+      "growthSub": "Für wachsende Unternehmen",
+      "growthBadge": "Beliebteste",
+      "growthFeatures": [
+        "Bis zu 10 Stores",
+        "100.000 Events/Monat",
+        "Alle Werbe‑Plattformen",
+        "Prioritäts‑Support"
+      ],
+      "growthBtn": "Warteliste beitreten",
+      "agencyName": "Agentur",
+      "agencySub": "Für Marketing‑Agenturen",
+      "agencyFeatures": [
+        "Unbegrenzte Stores",
+        "500.000 Events/Monat",
+        "White‑Label‑Reports",
+        "API‑Zugang"
+      ],
+      "agencyBtn": "Vertrieb kontaktieren"
+    },
+    "finalCta": {
+      "title": "Hören Sie auf zu raten. Beginnen Sie zu wissen.",
+      "subtitle": "Schließen Sie sich über 50 Unternehmen an, die ihre Attributions‑Daten wiederhergestellt haben.",
+      "btn": "Warteliste beitreten",
+      "note": "Keine Kreditkarte nötig • Setup in 5 Minuten • Jederzeit kündbar"
+    }
+  }
+}
+
   }
 }

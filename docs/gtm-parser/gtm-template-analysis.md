@@ -146,20 +146,23 @@ For each customer:
 
 ## Recommended Next Steps
 
-**Option 1: Complete Universal Engine**
-- Add template engine for Shopify/WooCommerce
-- Keep explicit macro parsing as fallback
-- Test with real Shopify webhooks
+> **Updated 2026-02-13** — Previous options were based on the assumption that macro parsing worked. Testing against [TheNextWeb's production container](https://github.com/thenextweb/gtm/blob/master/container-web.json) revealed the parser fails on all real GTM v2 exports. See [Parser Test Report](../gtm-parser/parser-test-report.md) for full details.
 
-**Option 2: Document-only**
-- Document that GTM Parser requires macro definitions
-- Provide Shopify/WooCommerce variable templates
-- Customers add macros to their GTM containers
+### Step 1: Fix the Parser (BLOCKING — ~2.5 hours)
 
-**Option 3: Shopify-first**
-- Build Shopify webhook receiver
-- Parse Shopify server-side payloads
-- Generate configs from Shopify schema directly
-- Deprioritize GTM export parsing
+The parser cannot handle real containers. 6 fixes needed, in priority order:
 
-Which approach makes sense for your project?
+1. **GTM v2 variable format** — `type: 'v'` variables use `key: 'name'` not `key: 'dataLayerVariable'`. This is why 0 out of 7 dataLayer paths were extracted from the TNW container.
+2. **Extract constants** (`type: 'c'`) — tracking IDs and config values.
+3. **Event Data variables** (`type: 'ed'`) — needed for server-side GTM.
+4. **GA event pattern detection** — most common tag pattern (eventCategory/Action/Label) is unrecognized.
+5. **Trigger parsing** — currently ignored entirely; needed for event→trigger mapping.
+6. **Remove `fs` import** from `config-generator.ts` — breaks browser usage in admin dashboard.
+
+### Step 2: Choose Strategic Direction
+
+Only after Step 1 makes the parser functional:
+
+- **Option A: Universal Parser** — Fix parser + add platform templates (Shopify/WooCommerce) for known event schemas. Fallback to parsed GTM variables for custom setups. Best long-term flexibility.
+- **Option B: Shopify-first** — Build Shopify webhook receiver, generate configs from Shopify schema directly. Faster time-to-value for primary customer segment, but skips GTM parsing entirely.
+- **Option C: Hybrid** — Fix parser (Step 1), ship Shopify templates immediately, add WooCommerce/custom later. Recommended balance of speed and coverage.

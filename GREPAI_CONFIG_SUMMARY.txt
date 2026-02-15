@@ -1,0 +1,108 @@
+================================================================================
+GREPAI CONFIGURATION EXPLORATION - SUMMARY
+================================================================================
+
+FINDINGS:
+
+1. TIMEOUT CONFIGURATION OPTIONS
+   ✅ RPG LLM Timeout: rpg.llm_timeout_ms (default: 8000 ms)
+   ❌ Client-side timeout: NOT AVAILABLE in GrepAI config
+   ✅ Ollama timeout: Set via OLLAMA_REQUEST_TIMEOUT env var (not in config)
+
+2. EMBEDDING BATCH SIZE SETTINGS
+   ✅ Parallelism: embedder.parallelism (default: 4, OpenAI only)
+   ✅ Chunking: chunking.size (default: 512 tokens)
+   ✅ Overlap: chunking.overlap (default: 50 tokens)
+
+3. OLLAMA-SPECIFIC CONFIGURATION
+   ✅ Provider: ollama
+   ✅ Model: nomic-embed-text (default)
+   ✅ Endpoint: http://localhost:11434 (default)
+   ✅ Dimensions: 768 (default for Ollama)
+   ✅ Parallelism: 0 (ignored for Ollama)
+
+4. PERFORMANCE TUNING OPTIONS
+   ✅ Watch debounce: watch.debounce_ms (default: 500)
+   ✅ Trace mode: trace.mode (fast or precise)
+   ✅ Search boost: search.boost.enabled (default: true)
+   ✅ Hybrid search: search.hybrid.enabled (default: false)
+   ✅ Storage backend: store.backend (gob, postgres, qdrant)
+
+5. WAYS TO INCREASE CLIENT TIMEOUT
+   ✅ Set OLLAMA_REQUEST_TIMEOUT environment variable
+   ✅ Increase rpg.llm_timeout_ms for RPG feature
+   ✅ Reduce chunking.size for faster embedding
+   ✅ Reduce embedder.parallelism to avoid rate limits
+   ✅ Increase watch.debounce_ms to reduce indexing frequency
+
+================================================================================
+CURRENT PROJECT CONFIG (.grepai/config.yaml)
+================================================================================
+
+Version: 1
+Embedder: ollama (nomic-embed-text, http://localhost:11434, 768 dims)
+Store: gob (file-based)
+Chunking: 512 tokens, 50 overlap
+Watch: 500ms debounce
+Search: Boost enabled, Hybrid disabled
+Trace: Fast mode
+Ignore: .git, .grepai, node_modules, vendor, bin, dist, etc.
+
+================================================================================
+KEY INSIGHTS
+================================================================================
+
+1. GrepAI does NOT expose client-side timeout settings in config.yaml
+   → Timeouts are controlled at the Ollama server level
+   → Use OLLAMA_REQUEST_TIMEOUT environment variable
+
+2. Parallelism setting only applies to OpenAI embeddings
+   → Ollama and LM Studio handle batching internally
+   → Default: 4 concurrent requests for OpenAI
+
+3. Chunking is the primary performance lever
+   → Smaller chunks (256) = faster embedding, more results
+   → Larger chunks (1024) = better context, fewer results
+   → Auto-rechunking if chunks exceed model's context limit
+
+4. RPG feature has its own LLM timeout
+   → rpg.llm_timeout_ms (default: 8000 ms = 8 seconds)
+   → Only applies when RPG is enabled and using LLM
+
+5. Storage backend affects scalability, not timeout
+   → GOB: Single developer, fast, no setup
+   → PostgreSQL: Teams, scalable, requires Docker
+   → Qdrant: High performance, enterprise
+
+================================================================================
+RECOMMENDED ACTIONS FOR TIMEOUT ISSUES
+================================================================================
+
+IMMEDIATE:
+1. Verify Ollama is running: curl http://localhost:11434/api/tags
+2. Set timeout: export OLLAMA_REQUEST_TIMEOUT=300
+
+SHORT-TERM:
+3. Reduce chunk size: chunking.size: 256
+4. Increase watch debounce: watch.debounce_ms: 1000
+5. Use faster model: embedder.model: all-minilm
+
+LONG-TERM:
+6. Consider PostgreSQL or Qdrant for team environments
+7. Enable hybrid search only if needed
+8. Monitor Ollama performance and resource usage
+
+================================================================================
+DOCUMENTATION GENERATED
+================================================================================
+
+Files created:
+1. GREPAI_CONFIG_EXPLORATION.md - Comprehensive configuration guide
+2. GREPAI_TIMEOUT_TROUBLESHOOTING.md - Timeout troubleshooting guide
+3. GREPAI_CONFIG_SUMMARY.txt - This summary
+
+Source: https://github.com/yoanbernabeu/grepai
+Config file: .grepai/config.yaml
+Generated: 2026-02-13
+
+================================================================================

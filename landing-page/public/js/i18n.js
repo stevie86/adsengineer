@@ -52,11 +52,16 @@ class I18n {
             }
         });
 
+        const localeInput = document.querySelector('input[name="locale"]');
+        if (localeInput) {
+            localeInput.value = lang;
+        }
+
         this.translatePage();
 
         // Update Cal.com floating button if it exists
         if (window.Cal) {
-            const buttonText = lang === 'de' ? 'Termin buchen' : 'Book a Call';
+            const buttonText = lang === 'de' ? 'Warteliste beitreten' : 'Join Waitlist';
             window.Cal("floatingButton", {
               calLink: "stefan-pirker-nmurov/30min",
               buttonText: buttonText,

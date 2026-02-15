@@ -7,54 +7,248 @@ import Layout from '../layouts/Layout.astro';
     <h1 class="text-4xl font-bold text-white mb-8">Privacy Policy</h1>
     
     <div class="prose prose-invert prose-purple max-w-none">
-      <p class="text-gray-300 mb-8">Last updated: January 2026</p>
+      <p class="text-gray-300 mb-8">Last updated: February 13, 2026</p>
 
       <section class="mb-8">
         <h2 class="text-2xl font-semibold text-white mb-4">1. Introduction</h2>
         <p class="text-gray-300">
-          AdsEngineer ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website.
+          AdsEngineer ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website or use our services. We comply with the General Data Protection Regulation (GDPR) and applicable data protection laws in Austria and Germany.
         </p>
       </section>
 
       <section class="mb-8">
-        <h2 class="text-2xl font-semibold text-white mb-4">2. Cookie Usage</h2>
-        <p class="text-gray-300 mb-4">
-          We use cookies to enhance your browsing experience. You have full control over cookie preferences through our consent banner.
-        </p>
+        <h2 class="text-2xl font-semibold text-white mb-4">2. Information We Collect</h2>
         
-        <h3 class="text-xl font-semibold text-white mb-3">Cookie Categories</h3>
+        <h3 class="text-xl font-semibold text-white mb-3">2.1 Contact Information (Waitlist)</h3>
+        <p class="text-gray-300 mb-4">
+          When you join our waitlist, we collect:
+        </p>
         <ul class="list-disc list-inside text-gray-300 space-y-2">
-          <li><strong class="text-white">Necessary Cookies:</strong> Required for the website to function (e.g., session management). These cannot be disabled.</li>
-          <li><strong class="text-white">Analytics Cookies:</strong> Help us understand how visitors interact with our website.</li>
-          <li><strong class="text-white">Marketing Cookies:</strong> Used to deliver personalized advertisements.</li>
+          <li>Name (optional)</li>
+          <li>Email address</li>
+          <li>Preferred language (locale)</li>
+          <li>Consent preferences</li>
+        </ul>
+        <p class="text-gray-300 mt-4">
+          <strong>Lawful basis:</strong> Consent (Art. 6(1)(a) GDPR). You provide explicit consent by checking the consent box before submitting the form.
+        </p>
+
+        <h3 class="text-xl font-semibold text-white mb-3 mt-6">2.2 Calculator Data (Optional)</h3>
+        <p class="text-gray-300 mb-4">
+          With your separate, explicit consent, we may collect business data you enter into our ROI calculator:
+        </p>
+        <ul class="list-disc list-inside text-gray-300 space-y-2">
+          <li>Monthly advertising budget</li>
+          <li>Shop sales figures</li>
+          <li>Google Ads reported conversions</li>
+          <li>Calculated metrics (blindness factor, wasted budget estimates, recommended package)</li>
+        </ul>
+        <p class="text-gray-300 mt-4">
+          <strong>Lawful basis:</strong> Consent (Art. 6(1)(a) GDPR). This is collected via a separate, optional checkbox distinct from the waitlist consent. This data helps us understand tracking gaps and provide personalized recommendations.
+        </p>
+        <p class="text-gray-300 mt-4">
+          <strong>Important:</strong> Only provide business data for which you have authority to share. The calculator results are estimates for informational purposes only and should not be the sole basis for business decisions.
+        </p>
+
+        <h3 class="text-xl font-semibold text-white mb-3 mt-6">2.3 Technical Data</h3>
+        <p class="text-gray-300 mb-4">
+          We automatically collect certain technical information:
+        </p>
+        <ul class="list-disc list-inside text-gray-300 space-y-2">
+          <li>IP address (processed by hCaptcha for security)</li>
+          <li>Browser type and version</li>
+          <li>Device information</li>
+          <li>Cookie preferences</li>
+          <li>Pages visited and time spent</li>
+        </ul>
+        <p class="text-gray-300 mt-4">
+          <strong>Lawful basis:</strong> Legitimate Interest (Art. 6(1)(f) GDPR) for website security, fraud prevention, and service improvement.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-white mb-4">3. Data Processors</h2>
+        <p class="text-gray-300 mb-4">
+          We use the following data processors to provide our services:
+        </p>
+        <table class="w-full text-left text-gray-300 mb-4 border border-gray-700">
+          <thead class="bg-gray-800">
+            <tr>
+              <th class="p-3">Processor</th>
+              <th class="p-3">Purpose</th>
+              <th class="p-3">Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-gray-700">
+              <td class="p-3">Brevo (formerly Sendinblue)</td>
+              <td class="p-3">Email marketing and double opt-in management</td>
+              <td class="p-3">France (EU)</td>
+            </tr>
+            <tr class="border-b border-700">
+              <td class="p-3">hCaptcha (Intuition Machines, Inc.)</td>
+              <td class="p-3">Bot protection and security verification</td>
+              <td class="p-3">USA</td>
+            </tr>
+            <tr>
+              <td class="p-3">Cloudflare, Inc.</td>
+              <td class="p-3">CDN and security services</td>
+              <td class="p-3">USA</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="text-gray-300">
+          All processors have signed Data Processing Agreements (DPAs) with us. For transfers outside the EU (hCaptcha, Cloudflare), we rely on Standard Contractual Clauses (SCCs) approved by the European Commission.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-white mb-4">4. Data Retention</h2>
+        <p class="text-gray-300 mb-4">
+          We retain your data only as long as necessary:
+        </p>
+        <ul class="list-disc list-inside text-gray-300 space-y-2">
+          <li><strong>Waitlist data:</strong> 24 months after your last interaction with us (or until double opt-in is confirmed), then permanently deleted</li>
+          <li><strong>Calculator data:</strong> 12 months after collection, or immediately upon your request</li>
+          <li><strong>Analytics data:</strong> 26 months (anonymized after 14 months)</li>
+          <li><strong>Server logs:</strong> 30 days for security purposes</li>
+        </ul>
+        <p class="text-gray-300 mt-4">
+          When data is no longer needed, we securely delete or anonymize it in accordance with GDPR requirements.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-white mb-4">5. Your Rights Under GDPR</h2>
+        <p class="text-gray-300 mb-4">
+          Under the General Data Protection Regulation, you have the following rights:
+        </p>
+        <ul class="list-disc list-inside text-gray-300 space-y-2">
+          <li><strong>Right to access:</strong> Request a copy of your personal data</li>
+          <li><strong>Right to rectification:</strong> Correct inaccurate or incomplete data</li>
+          <li><strong>Right to erasure ("right to be forgotten"):</strong> Request deletion of your data</li>
+          <li><strong>Right to restrict processing:</strong> Limit how we use your data</li>
+          <li><strong>Right to data portability:</strong> Receive your data in a structured, machine-readable format</li>
+          <li><strong>Right to object:</strong> Object to processing based on legitimate interests or direct marketing</li>
+          <li><strong>Right to withdraw consent:</strong> Withdraw your consent at any time (does not affect processing before withdrawal)</li>
+        </ul>
+        <p class="text-gray-300 mt-4">
+          To exercise any of these rights, contact us at <a href="mailto:privacy@adsengineer.cloud" class="text-purple-400 hover:text-purple-300">privacy@adsengineer.cloud</a>. We will respond within 30 days.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-white mb-4">6. International Data Transfers</h2>
+        <p class="text-gray-300 mb-4">
+          Some of our processors (Google, Cloudflare) are based in the United States. When we transfer your data outside the European Economic Area (EEA), we ensure appropriate safeguards are in place:
+        </p>
+        <ul class="list-disc list-inside text-gray-300 space-y-2">
+          <li>Standard Contractual Clauses (SCCs) approved by the European Commission</li>
+          <li>Technical measures including encryption in transit and at rest</li>
+          <li>Regular review of processor compliance with data protection standards</li>
         </ul>
       </section>
 
       <section class="mb-8">
-        <h2 class="text-2xl font-semibold text-white mb-4">3. Managing Your Preferences</h2>
-        <p class="text-gray-300">
+        <h2 class="text-2xl font-semibold text-white mb-4">7. Cookies and Similar Technologies</h2>
+        <p class="text-gray-300 mb-4">
+          We use cookies and similar technologies to enhance your browsing experience:
+        </p>
+        <h3 class="text-xl font-semibold text-white mb-3">Cookie Categories</h3>
+        <ul class="list-disc list-inside text-gray-300 space-y-2">
+          <li><strong>Necessary Cookies:</strong> Required for the website to function properly. These cannot be disabled.</li>
+          <li><strong>Security Cookies:</strong> Used by hCaptcha to protect our forms from spam and abuse.</li>
+          <li><strong>Analytics Cookies:</strong> Help us understand how visitors interact with our website (only with your consent).</li>
+          <li><strong>Marketing Cookies:</strong> Used to deliver personalized advertisements (only with your consent).</li>
+        </ul>
+        <p class="text-gray-300 mt-4">
           You can update your cookie preferences at any time by clicking "Cookie Settings" in our footer, or by clearing your browser cookies for our domain.
         </p>
       </section>
 
       <section class="mb-8">
-        <h2 class="text-2xl font-semibold text-white mb-4">4. Your Rights (GDPR)</h2>
-        <p class="text-gray-300 mb-4">Under GDPR, you have the following rights:</p>
+        <h2 class="text-2xl font-semibold text-white mb-4">8. Business Data Disclaimer</h2>
+        <p class="text-gray-300 mb-4">
+          Our ROI calculator processes business financial data. By using this feature, you acknowledge and agree that:
+        </p>
         <ul class="list-disc list-inside text-gray-300 space-y-2">
-          <li>Right to access your personal data</li>
-          <li>Right to rectification of inaccurate data</li>
-          <li>Right to erasure ("right to be forgotten")</li>
-          <li>Right to restrict processing</li>
-          <li>Right to data portability</li>
-          <li>Right to withdraw consent at any time</li>
+          <li>You have the authority to share the business data you enter</li>
+          <li>Calculator results are estimates for informational purposes only</li>
+          <li>Results should not be the sole basis for business or financial decisions</li>
+          <li>We are not liable for any business decisions made based on calculator output</li>
+          <li>Actual results may vary based on many factors beyond our control</li>
         </ul>
       </section>
 
       <section class="mb-8">
-        <h2 class="text-2xl font-semibold text-white mb-4">5. Contact Us</h2>
-        <p class="text-gray-300">
-          For privacy-related inquiries, contact us at: <a href="mailto:privacy@adsengineer.cloud" class="text-purple-400 hover:text-purple-300">privacy@adsengineer.cloud</a>
+        <h2 class="text-2xl font-semibold text-white mb-4">9. Data Security</h2>
+        <p class="text-gray-300 mb-4">
+          We implement appropriate technical and organizational measures to protect your data:
         </p>
+        <ul class="list-disc list-inside text-gray-300 space-y-2">
+          <li>Encryption in transit (TLS 1.3)</li>
+          <li>Secure server infrastructure</li>
+          <li>Access controls and authentication</li>
+          <li>Regular security assessments</li>
+          <li>Data minimization practices</li>
+        </ul>
+        <p class="text-gray-300 mt-4">
+          While we take security seriously, no internet transmission is 100% secure. We cannot guarantee the absolute security of your data.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-white mb-4">10. Changes to This Policy</h2>
+        <p class="text-gray-300">
+          We may update this Privacy Policy from time to time. We will notify you of significant changes by posting the new policy on this page and updating the "Last updated" date. Continued use of our services after changes constitutes acceptance of the updated policy.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-white mb-4">11. Contact Us</h2>
+        <p class="text-gray-300 mb-4">
+          For privacy-related inquiries, to exercise your rights, or to file a complaint:
+        </p>
+        <ul class="list-disc list-inside text-gray-300 space-y-2">
+          <li>Email: <a href="mailto:privacy@adsengineer.cloud" class="text-purple-400 hover:text-purple-300">privacy@adsengineer.cloud</a></li>
+          <li>Response time: Within 30 days</li>
+          <li>Right to complain: You have the right to lodge a complaint with your local data protection authority (e.g., DSB in Austria, BfDI in Germany)</li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-white mb-4">12. Legal Basis Summary</h2>
+        <table class="w-full text-left text-gray-300 mb-4 border border-gray-700">
+          <thead class="bg-gray-800">
+            <tr>
+              <th class="p-3">Processing Activity</th>
+              <th class="p-3">Legal Basis</th>
+              <th class="p-3">Can Withdraw?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-gray-700">
+              <td class="p-3">Waitlist contact information</td>
+              <td class="p-3">Consent (Art. 6(1)(a) GDPR)</td>
+              <td class="p-3">Yes, anytime</td>
+            </tr>
+            <tr class="border-b border-gray-700">
+              <td class="p-3">Calculator data (optional)</td>
+              <td class="p-3">Consent (Art. 6(1)(a) GDPR)</td>
+              <td class="p-3">Yes, anytime</td>
+            </tr>
+            <tr class="border-b border-gray-700">
+              <td class="p-3">Security (hCaptcha, logs)</td>
+              <td class="p-3">Legitimate Interest (Art. 6(1)(f) GDPR)</td>
+              <td class="p-3">No (essential)</td>
+            </tr>
+            <tr>
+              <td class="p-3">Analytics cookies</td>
+              <td class="p-3">Consent (Art. 6(1)(a) GDPR)</td>
+              <td class="p-3">Yes, anytime</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
     </div>
   </main>
