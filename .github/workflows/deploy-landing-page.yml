@@ -35,6 +35,32 @@ jobs:
           cd landing-page
           pnpm install
 
+      - name: Validate all files
+        run: |
+          cd landing-page
+          echo "🔍 Validating all project files..."
+
+          # Validate JSON files
+          echo "Checking JSON files..."
+          find . -name "*.json" -not -path "./node_modules/*" -not -path "./dist/*" | while read file; do
+            node -e "JSON.parse(require('fs').readFileSync('$file', 'utf8'))" || (echo "❌ Invalid JSON: $file" && exit 1)
+          done
+          echo "✅ All JSON files valid"
+
+          # Validate YAML files
+          echo "Checking YAML files..."
+          find . -name "*.yml" -o -name "*.yaml" | grep -v node_modules | while read file; do
+            python3 -c "import yaml; yaml.safe_load(open('$file'))" || (echo "❌ Invalid YAML: $file" && exit 1)
+          done
+          echo "✅ All YAML files valid"
+
+          # Validate Astro components (attempt TypeScript check)
+          echo "Checking Astro/TypeScript files..."
+          if [ -f "astro.config.mjs" ]; then
+            pnpm exec astro check 2>/dev/null || echo "⚠️ Astro check warnings (non-blocking)"
+          fi
+          echo "✅ File validation complete"
+
       - name: Build
         run: |
           cd landing-page

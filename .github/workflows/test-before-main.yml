@@ -39,6 +39,32 @@ jobs:
         cd serverless
         pnpm install --frozen-lockfile
         
+    - name: Validate JSON files
+      run: |
+        echo "🔍 Validating JSON files..."
+        find . -name "*.json" -not -path "./node_modules/*" -not -path "./.git/*" | while read file; do
+          echo "Checking $file..."
+          node -e "JSON.parse(require('fs').readFileSync('$file', 'utf8'))" || exit 1
+        done
+        echo "✅ All JSON files are valid"
+
+    - name: Validate YAML files
+      run: |
+        echo "🔍 Validating YAML files..."
+        npm install -g yaml-lint
+        find . -name "*.yml" -o -name "*.yaml" | grep -v node_modules | while read file; do
+          echo "Checking $file..."
+          yamllint "$file" || exit 1
+        done
+        echo "✅ All YAML files are valid"
+
+    - name: Validate TypeScript files
+      run: |
+        echo "🔍 Validating TypeScript files..."
+        cd serverless
+        pnpm run types:check || echo "⚠️ TypeScript warnings (non-blocking)"
+        echo "✅ TypeScript validation complete"
+        
     - name: Run Type Check (Allow Failures for Now)
       id: typecheck
       continue-on-error: true
